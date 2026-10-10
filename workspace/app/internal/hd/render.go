@@ -26,6 +26,15 @@ type Stats struct {
 	Reason                     string `json:"reason"`
 	Matched, Painted, Fallback int
 }
+
+// Origin is the verified tile origin of a completed original map draw.
+type Origin struct {
+	X, Y  int
+	Valid bool
+}
+
+const materialSize = 1254
+
 type Renderer struct {
 	frame   *image.RGBA
 	sources map[string]bool
@@ -84,11 +93,11 @@ func New(rom []byte, dir string) *Renderer {
 			if material(byte(index)) != name {
 				continue
 			}
-			cache := make([]byte, 1044*540*4)
-			for y := 0; y < 540; y++ {
-				for x := 0; x < 1044; x++ {
+			cache := make([]byte, materialSize*materialSize*4)
+			for y := 0; y < materialSize; y++ {
+				for x := 0; x < materialSize; x++ {
 					rr, g, b, _ := im.At(x, y).RGBA()
-					at := (y*1044 + x) * 4
+					at := (y*materialSize + x) * 4
 					for j, v := range []uint32{rr, g, b} {
 						value := float64(v>>8) * shade(byte(index))
 						if value > 255 {
@@ -105,7 +114,7 @@ func New(rom []byte, dir string) *Renderer {
 	return r
 }
 
-func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool) (*image.RGBA, Stats) {
+func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
 	stats := Stats{Fallback: 435, Reason: "original"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
@@ -157,6 +166,10 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		stats.Reason = "scene-mismatch"
 		return r.frame, stats
 	}
+	if !origin.Valid || origin.X < 0 || origin.X > 76 || origin.Y < 0 || origin.Y > 74 {
+		stats.Reason = "origin-unverified"
+		return r.frame, stats
+	}
 	stats.Reason = "matched-city"
 	for y := 34; y < 169; y += 9 {
 		for x := 5; x < 266; x += 9 {
@@ -184,8 +197,12 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					for dy := 0; dy < 4; dy++ {
 						xx, yy := (x+col)*4, (y+row)*4+dy
 						at := (yy*1280 + xx) * 4
-						src := ((yy-136)*1044 + xx - 20) * 4
-						copy(r.frame.Pix[at:at+16], cache[src:src+16])
+						wy := mirror(origin.Y*36 + yy - 136)
+						for dx := 0; dx < 4; dx++ {
+							wx := mirror(origin.X*36 + xx - 20 + dx)
+							src := (wy*materialSize + wx) * 4
+							copy(r.frame.Pix[at+dx*4:at+dx*4+4], cache[src:src+4])
+						}
 					}
 				}
 			}
@@ -194,6 +211,13 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	return r.frame, stats
+}
+func mirror(world int) int {
+	i := world % (2 * materialSize)
+	if i >= materialSize {
+		i = 2*materialSize - 1 - i
+	}
+	return i
 }
 func material(index byte) string {
 	switch {

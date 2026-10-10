@@ -27,7 +27,7 @@
 | dosgolem 啟動 | 冷啟動到主選單與城市選擇通過，兩次主選單畫面及暫存器一致；新增 Caps Lock 補丁通過核心與硬體讀鍵測試 | [啟動基線](docs/re/002-dosgolem-startup.md)、[Caps Lock](docs/spec/007-bios-caps-lock.md)；補丁只在隔離副本與本專案保存 |
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
-| HD | B 材質動態比較原型輸出 1280×800，435 格中 433 格覆繪、2 格回退；正常施工、切換、存退讀與模態回退通過 | [動態原型](docs/spec/010-hd-live-prototype.md)；只涵蓋水面、沙地與樹冠，字型、正式切換及後續批次待確認 |
+| HD | B 材質動態比較原型輸出 1280×800；已修正捲動時材質改變的問題，六組正常位移中 2001 個相同世界地景格逐像素相同，來源及回退核對通過 | [動態原型](docs/spec/010-hd-live-prototype.md)、[原點證據](docs/re/006-map-origin.md)；只涵蓋水面、沙地與樹冠，字型、正式切換及後續批次待確認 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
@@ -74,3 +74,8 @@
 - Windows 前端預檢：[wine_preview_playtest.sh](workspace/tools/wine_preview_playtest.sh)、[wine_preview_playtest.py](workspace/tools/wine_preview_playtest.py)，限 Wine 冷啟動至城市；非正式封包或真機驗收。
 - 正常施工 HD 來源盤點：[hd_source_audit.py](workspace/tools/hd_source_audit.py)，依 [#22](https://github.com/wicanr2/taipei/issues/22) 保留全部相同圖塊來源別名及 ROM 檔案偏移，不猜建物語意。
 - 正常施工 HD 來源證據：[docs/re/005-native-hd-sources.md](docs/re/005-native-hd-sources.md)，指出電線位於成員 39、圖像 45，與現行成員 59 地景批次分開。
+- HD 捲動研究：[hd_scroll_playtest.sh](workspace/tools/hd_scroll_playtest.sh)、[hd_scroll_playtest.py](workspace/tools/hd_scroll_playtest.py)，依 [#23](https://github.com/wicanr2/taipei/issues/23) 走真實冷啟動及視窗按鍵；原型結果不作正式 HD 驗收。
+- HD 捲動獨立核對：[hd_scroll_check.py](workspace/tools/hd_scroll_check.py)，比較完整原版圖塊位移、來源合格數與回退格實際像素，判定門檻先登記於 #23。
+- 原版地圖原點：[docs/re/006-map-origin.md](docs/re/006-map-origin.md)，IDA 唯讀查詢入口為 [ida_camera_probe.sh](workspace/tools/ida_camera_probe.sh)、[ida_camera_probe.py](workspace/tools/ida_camera_probe.py)。
+- 世界座標材質原型：[docs/spec/011-hd-world-origin-prototype.md](docs/spec/011-hd-world-origin-prototype.md)，限 [#24](https://github.com/wicanr2/taipei/issues/24) 的 DRAFT 修正。
+- 呈現層狀態對照：[presentation-audit](workspace/app/cmd/presentation-audit/main.go)，重播正常 GUI 收據，比較有／無原點觀察及 HD 繪圖的原版狀態。

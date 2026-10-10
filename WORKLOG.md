@@ -147,3 +147,22 @@ Wine 初始化出現缺少 syswow64 rundll32 的訊息，但 64-bit 前端與正
 新研究文件 `docs/re/005-native-hd-sources.md` 說明目前覆繪分母、游標未知格及後續批次界線。原始畫面、逐格完整清單及圖塊仍只留本機。本項不擴張成全遊戲圖庫語意逆向，也不宣稱未抽樣的動畫、捲動或正式 HD 完成。
 
 上述 Windows／macOS 預檢及來源盤點提交 `3f5672c` 已推送，#22 附證據結案，主機 gh 回讀為 CLOSED；#9 已回寫實際 Wine 與結構檢查範圍，保持 OPEN。最早未決前沿仍為 #18 字型比較題，尚無使用者選擇；依已載入的 grilling 技能保留正式字型、HD 規格與封包相關分支。沒有把沉默當成同意。本輪結束無殘留 Taipei 容器，Git 僅保存原創程式、文件及保留授權的外部核心補丁。
+
+## 2026-10-11：正常地圖捲動與世界材質相位
+
+先建立 [#23](https://github.com/wicanr2/taipei/issues/23)，登記正常冷啟動、四向捲動、選單與切換，以及圖塊重疊、相異來源數與相符率門檻。路由命中 GUI 還原與文件職責；新增文件及工具皆掛入 `CONTEXT.md`。
+
+24 份收據證實水平與垂直捲動，來源條件及回退像素正確，但六組位移中 2001 個相同世界地景格全部改變 HD 紋理。根因是材質依視窗座標取樣。先保留 `workspace/runs/hd-scroll-before-fix/`，再建立 [#24](https://github.com/wicanr2/taipei/issues/24) 追查原點並修原型。
+
+載入 IDA 9.4 工具鏈入口，沿用已驗證 image 與唯讀 `.i64` 副本。保留原始函式名稱、IDA 線性位址、檔案偏移與 bytes。`sub_1850A` 寫入兩格原點增減，`sub_18594` 以原點及列寬索引原版地圖。EXE MZ 重定位表證實兩個原點段指標，沒有用程式碼位移猜資料位址。重生入口為 `bash workspace/tools/ida_camera_probe.sh`，證據見 `docs/re/006-map-origin.md`。
+
+本作唯讀適配器留在 `workspace/app/internal/original`，不修改 dosgolem 通用層。只有原版完整地圖與游標重繪返回後才記錄原點；段指標失配、超界、未完成事件及捲動未完成均回退原版。HD 繪圖器僅接收分型座標，材質按世界位置取樣，超出既有素材時作鏡像延伸。`011-hd-world-origin-prototype.md` 保持 DRAFT，不把這項修正當成正式字型、操作或素材批次決定。
+
+- `bash workspace/tools/hd_scroll_playtest.sh` 乾淨重跑通過。獨立核對六組原點差與原版圖塊位移相同，2001 個相同世界地景格逐像素相同，改變格數為 0。選單、取消及切換通過，置換圖塊的幾何負對照被拒絕。
+- `presentation-audit` 重播同一正常 GUI 鍵盤收據，兩側各 1,608,000,000 步。只跑原版與加上原點觀察及 HD 繪圖，完整 RAM、CPU、色號、色盤、埠值、OPL 暫存器及讀鍵相同。狀態 SHA-256 `451e505444347378857bbaa785a24e7218a263e0d2fa2b806bdda7d244242f92`，1300 次重繪完成、1668 幀 HD 呈現。
+- 真實 EXE 原點防護、實際城市素材／來源／色盤／未知原點回退，以及鏡像延伸邊界測試通過。第一次測試收據路徑拼錯，另一次含空白 Docker 掛載路徑漏引號；修正命令後在相同 image 乾淨重跑通過，均屬驗證環境問題。
+- 修正後 `TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh` 完成施工、切換、存退讀與兩次原版退出。讀回施工格相同，存檔 SHA-256 仍為 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。
+- `receipt-check` 通過 24 份捲動及 35 份施工存退讀單幀收據。`build_preview.sh` 離線重建及 Windows／macOS 兩架構重編譯通過。Windows 保留既有 YMFM 編譯警告，沒有新增真機試玩或封包完成聲明。
+- 35 個原始檔與 RAR 重新核對 SHA-256 不變。文件相對連結、索引正對照、新輸出 1000:1000 擁有權與 `find workspace -user root -o -type d -name '*.md'` 檢查通過。本批一次性 Docker 工作均已退出並刪除，沒有殘留專案容器，也沒有新建或清理其他專案 image。
+
+#18 字型比較題仍未收到選擇。正式 HD 與封包保留原有確認閘門；本輪只完成已授權、不依賴該決定的 DRAFT 地景修正。

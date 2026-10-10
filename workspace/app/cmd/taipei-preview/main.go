@@ -23,6 +23,7 @@ import (
 	a "github.com/wicanr2/dosgolem/audio"
 	"github.com/wicanr2/taipei/preview/internal/hd"
 	"github.com/wicanr2/taipei/preview/internal/keyboard"
+	"github.com/wicanr2/taipei/preview/internal/original"
 	"github.com/wicanr2/taipei/preview/internal/sound"
 )
 
@@ -78,6 +79,7 @@ type game struct {
 	hdEnabled    bool
 	sound        *sound.Session
 	audioWaits   uint64
+	camera       original.Camera
 }
 
 type inputEvent struct {
@@ -165,6 +167,7 @@ func (g *game) Update() error {
 	}
 	end := g.m.Steps + g.perUpdate
 	for g.m.Steps < end && !g.d.Exited && !g.m.CPU.Halted {
+		g.camera.Observe(g.m)
 		if err := g.m.Step(); err != nil {
 			return err
 		}
@@ -208,7 +211,7 @@ func (g *game) refresh() {
 		g.rgba.Pix[j+2] = pal[p][2]
 		g.rgba.Pix[j+3] = 255
 	}
-	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled)
+	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled, g.camera.Origin(g.m))
 	g.frame.WritePixels(g.presentation.Pix)
 }
 func (g *game) Draw(screen *ebiten.Image)  { screen.DrawImage(g.frame, nil) }
@@ -246,6 +249,7 @@ func (g *game) receipt() error {
 		"original_sha256": originalSHA, "prototype": true,
 		"audio":       audioStats,
 		"audio_waits": g.audioWaits,
+		"map_origin":  g.camera.Origin(g.m), "map_draws": g.camera.Draws,
 	}, "", "  ")
 	if err != nil {
 		return err

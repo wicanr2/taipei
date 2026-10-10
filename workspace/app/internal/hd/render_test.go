@@ -64,16 +64,24 @@ func TestActualCityAndFallbacks(t *testing.T) {
 		t.Fatal(e)
 	}
 	r := New(rom, dir)
-	native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false)
+	origin := Origin{Valid: true}
+	native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false, origin)
 	base := append([]byte(nil), native.Pix...)
 	before := append([]byte(nil), px...)
-	painted, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true)
+	painted, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true, origin)
 	if stats.Matched != 434 || stats.Painted != 433 || stats.Fallback != 2 || bytes.Equal(base, painted.Pix) {
 		t.Fatalf("unexpected city: %+v", stats)
 	}
 	if !bytes.Equal(px, before) {
 		t.Fatal("original indices mutated")
 	}
+	for _, invalid := range []Origin{{}, {X: -1, Valid: true}, {Y: 75, Valid: true}} {
+		got, st := r.Render(px, s.Palette, s.Mode, false, true, invalid)
+		if st.Painted != 0 || !bytes.Equal(base, got.Pix) {
+			t.Fatal("unverified origin painted", invalid, st)
+		}
+	}
+	painted, _ = r.Render(px, s.Palette, s.Mode, s.Blocked, true, origin)
 	for y := 0; y < 800; y++ {
 		for x := 0; x < 1280; x++ {
 			if x >= 20 && x < 1064 && y >= 136 && y < 676 {
@@ -88,26 +96,39 @@ func TestActualCityAndFallbacks(t *testing.T) {
 	// 採實際模態畫面；其完整來源匹配不能繞過場景條件。
 	for _, name := range []string{"file-menu", "save-dialog", "quit-confirm"} {
 		state, frame := load(t, name)
-		im, _ := r.Render(frame, state.Palette, state.Mode, state.Blocked, false)
+		im, _ := r.Render(frame, state.Palette, state.Mode, state.Blocked, false, origin)
 		want := append([]byte(nil), im.Pix...)
-		got, st := r.Render(frame, state.Palette, state.Mode, state.Blocked, true)
+		got, st := r.Render(frame, state.Palette, state.Mode, state.Blocked, true, origin)
 		if st.Painted != 0 || !bytes.Equal(want, got.Pix) {
 			t.Fatal("modal overwritten", name, st)
 		}
 	}
 	wrong := s.Palette
 	wrong[144][0] ^= 1
-	_, st := r.Render(px, wrong, s.Mode, false, true)
+	_, st := r.Render(px, wrong, s.Mode, false, true, origin)
 	if st.Painted != 0 {
 		t.Fatal("palette mismatch painted")
 	}
 	missing := New(rom, t.TempDir())
-	got, st := missing.Render(px, s.Palette, s.Mode, false, true)
+	got, st := missing.Render(px, s.Palette, s.Mode, false, true, origin)
 	if st.Painted != 0 || !bytes.Equal(base, got.Pix) {
 		t.Fatal("withdrawn material painted")
 	}
-	got, _ = r.Render(px, s.Palette, s.Mode, false, false)
+	got, _ = r.Render(px, s.Palette, s.Mode, false, false, origin)
 	if !bytes.Equal(base, got.Pix) {
 		t.Fatal("toggle retained previous HD pixels")
+	}
+}
+
+func TestMirrorMaterialEdges(t *testing.T) {
+	for _, at := range []int{materialSize, materialSize * 2, materialSize * 3} {
+		if mirror(at-1) != mirror(at) {
+			t.Fatal("材質延伸邊緣不連續", at)
+		}
+	}
+	for x := 0; x < 105*36; x++ {
+		if at := mirror(x); at < 0 || at >= materialSize {
+			t.Fatal("材質索引超界", x, at)
+		}
 	}
 }
