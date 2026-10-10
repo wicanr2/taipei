@@ -50,7 +50,8 @@
 | 目前真相與決策 | [CONTEXT.md](CONTEXT.md) | 唯一現況表；不保存完整歷史 |
 | 工作項目與進度 | [GitHub Issues](https://github.com/wicanr2/taipei/issues) | 主機 gh 即時回讀；不另建本機待辦鏡像 |
 | 歷程與交接 | [WORKLOG.md](WORKLOG.md) | 按時間追加，包含驗證與 Docker 清理狀態 |
-| 原版研究 | `docs/re/`，規劃 | 固定輸入雜湊、工具版本、定位與證據等級 |
+| 原版研究 | [docs/re/001-input-baseline.md](docs/re/001-input-baseline.md) | 固定輸入雜湊、工具版本、定位與證據等級 |
+| 原版盤點工具 | [workspace/tools/inventory.py](workspace/tools/inventory.py) | Docker 內唯讀盤點使用者提供的解壓來源 |
 | 正式行為與 HD 契約 | `docs/spec/`，規劃 | DRAFT／READY／CONFORMED；規格回鏈 Issue |
 | 驗收範圍 | [docs/verification-matrix.md](docs/verification-matrix.md) | 串起 Issue、玩家路徑、證據與未驗限制 |
 | 執行與交付摘要 | [README.md](README.md) | 穩定入口；不寫逐輪流水帳 |
