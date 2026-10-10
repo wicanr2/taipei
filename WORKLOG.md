@@ -184,3 +184,22 @@ Wine 初始化出現缺少 syswow64 rundll32 的訊息，但 64-bit 前端與正
 - 新證據 `docs/re/007-running-city.md` 與年度回退契約同步掛入 `CONTEXT.md`，驗收矩陣已更新。35 個原始檔與 RAR 的 SHA-256 不變；相對連結、索引正對照、輸出 1000:1000 擁有權及 `find workspace -user root -o -type d -name '*.md'` 檢查通過。一次性容器均已退出並刪除，未留下 Taipei 容器，未新增 image 或清理其他專案資源。
 
 本批提交、推送與結案回讀保存於 #25、#26 的遠端留言。#5 保留完整來源與動畫研究限制。#18 字型比較仍未收到選擇；正式 HD、切換操作、後續素材與三平台封包維持原有閘門。本項未涵蓋發展後建物、所有未擷取相位或平台真機。
+
+## 2026-10-11：使用者確認 Noto 高清黑體
+
+使用者回覆「Noto 高清黑體」，解除先前字型決策阻塞。先核對主機 gh、遠端 #18、#6 與目前工作樹，再同步 `CONTEXT.md`、`AGENTS.md`。採用已展示的 Noto Sans CJK TC Regular Sans2.004，字型與 OFL 授權檔雜湊重新核對相符。
+
+比較圖 `workspace/prototypes/hd-style/font-comparison/comparison-fonts.png` 的 SHA-256 為 `2ec3eea917c9dc173b31e30b5dbd9042f4ff4fca3f0f62a978281a3db5708c28`。因圖中包含原版畫面，保留本機固定參考及可重生腳本，不將其上傳 Git。六個主選單標題的原型已有 glyph、墨跡與安全矩形收據；本次字型定案不宣稱全遊戲文字已接入，也不代替正式切換與素材批次決策。
+
+先建立 [#27](https://github.com/wicanr2/taipei/issues/27)，再接六個已辨識標題的動態繪字。路由命中 GUI 還原、文件職責與規格閘門，新增 `013-noto-menu-prototype.md` 並掛入 `CONTEXT.md`。採固定字型、授權、原版城市 UI 與文字色盤；字型初始化時驗 glyph 與墨跡，覆繪只寫前端 RGBA。模態與年度視窗仍整幀原版，字型失配只回退文字。
+
+- 真實資源 Go 測試通過：六標題與已展示固定參考逐像素相同，字型撤除、字型／授權損壞與文字色盤失配負對照皆回退，既有地景與原點防護維持。
+- `TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh` 通過冷啟動、施工、存檔、原版退出、全新 EXE 讀檔與再次原版退出。施工格讀回相同，存檔 SHA-256 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。覆字前 35 份封裝保留於 `gui-cold-before-noto/`。
+- GUI image 內 `hd_font_check.py` 通過 35 份原子收據，11 份覆繪六個 Noto 標題、24 份原版回退；實際像素符合已展示樣式，矩形外與原生 F1–F6 保持原版。冷啟動讀檔後文字恢復。
+- 舊 `receipt-check` 首次把合法 Noto 矩形視為地圖區外改動，屬於核對契約尚未更新。新增固定參考雜湊及文字矩形逐像素核對後，同一收據乾淨重跑通過。字型區與矩形間各破壞一像素、同步更新呈現雜湊的負對照均拒絕；沒有將整段 UI 列為免驗區。覆字前封裝也維持相容。
+- `presentation-audit -require-budget -require-font` 通過兩側各 2,400,000,000 步的原版狀態比對，包含 3610 次 Noto 覆繪與 107 次年度回退，狀態 SHA-256 仍為 `b940de4f9be1b6b322152947e8c3d658c6add061d629368a9c00e3241d32e734`。
+- Linux、Windows、macOS 兩架構研究前端重編譯通過；Windows 保留原有 YMFM 警告。正式封包與真機驗收仍未完成。
+
+已提出下一項正式切換操作選擇：沿用原型 F12 即時切換或僅啟動時選主題，尚待使用者回覆。六個標題以外的文字與後續素材批次未定案；本項保持 DRAFT，不以局部覆字取代整體 HD 完成。提交與遠端回讀結果保存於 #18、#27、#6。
+
+本批收尾核對：35 個原始檔與 RAR 的 SHA-256 不變，文件相對連結與索引正對照通過，新程式與輸出均為 1000:1000。`find workspace -user root -o -type d -name '*.md'` 無輸出，一次性容器均已退出並刪除，未留下 Taipei 容器，沒有新建 image 或清理其他專案資源。

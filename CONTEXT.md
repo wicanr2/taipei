@@ -11,9 +11,11 @@
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
 - HD 美術採 B「細緻手繪材質」，以使用者最新改選取代先前的 A。HD 解析度為 1280×800，對應原版 320×200 的四倍。
-- 使用者選定 Windows、Linux、macOS 三平台封包。字型待比較原型確認；平台實機驗收另記限制。原版確有 F1–F6 標示，按鍵語意依原版驗證。
+- 使用者選定 Windows、Linux、macOS 三平台封包，字型採 Noto 高清黑體。固定使用已展示的 Noto Sans CJK TC Regular Sans2.004；平台實機驗收另記限制。原版確有 F1–F6 標示，按鍵語意依原版驗證。
 
-目前最早的待確認決策是 [#18](https://github.com/wicanr2/taipei/issues/18) 字型比較：Noto 高清黑體或保留原版點陣。比較題已提出，尚未收到使用者選擇。正式字型、切換操作與後續素材範圍依共同決策逐項確認；目前原型不自動轉成正式 HD 或封包。
+使用者已回覆「Noto 高清黑體」，[#18](https://github.com/wicanr2/taipei/issues/18) 的字型方向已定。已展示比較圖保存在本機 `workspace/prototypes/hd-style/font-comparison/comparison-fonts.png`，SHA-256 `2ec3eea917c9dc173b31e30b5dbd9042f4ff4fca3f0f62a978281a3db5708c28`；含原版畫面，依素材邊界不入 Git。固定字型 SHA-256 `dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4`，授權為 SIL OFL 1.1。這項決定解鎖 Noto 文字接入；正式切換操作與後續素材批次仍依共同決策逐項確認，不以六個標題原型宣稱全遊戲文字已 HD 化。
+
+目前待確認的是正式原版／HD 切換操作：已提出沿用 F12 即時切換或僅在啟動時選擇的比較題，尚未收到回答。現有 F12 仍限比較原型，後續素材與文字批次範圍亦未定案。
 
 ## 目前狀態表
 
@@ -27,7 +29,7 @@
 | dosgolem 啟動 | 冷啟動到主選單與城市選擇通過，兩次主選單畫面及暫存器一致；新增 Caps Lock 補丁通過核心與硬體讀鍵測試 | [啟動基線](docs/re/002-dosgolem-startup.md)、[Caps Lock](docs/spec/007-bios-caps-lock.md)；補丁只在隔離副本與本專案保存 |
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
-| HD | B 材質動態原型輸出 1280×800；捲動與持續運行抽樣通過，年度預算視窗已修正為整幀原版回退，返回城市恢復 HD | [動態原型](docs/spec/010-hd-live-prototype.md)、[原點證據](docs/re/006-map-origin.md)、[持續運行證據](docs/re/007-running-city.md)；只涵蓋水面、沙地與樹冠，字型、正式切換及後續批次待確認 |
+| HD | B 地景動態原型輸出 1280×800；捲動、持續運行與年度視窗回退通過；六個 Noto 主選單標題已接入並通過冷啟動施工存退讀、參考圖像素及原版狀態比對 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)；地景涵蓋水面、沙地與樹冠，尚未完成其他文字、正式切換與後續素材批次 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
@@ -83,3 +85,6 @@
 - 持續運行核對：[hd_runtime_check.py](workspace/tools/hd_runtime_check.py)，核對來源、原點、回退與相同地景像素；日期裁圖另作人工辨識，不以單純雜湊變化宣稱月份已推進。
 - 城市持續運行證據：[docs/re/007-running-city.md](docs/re/007-running-city.md)，記錄正常月份推進、年度視窗修正與原版機器狀態比對。
 - 年度預算視窗回退原型：[docs/spec/012-budget-window-prototype.md](docs/spec/012-budget-window-prototype.md)，依 [#26](https://github.com/wicanr2/taipei/issues/26) 的正常年度畫面證據修正整幀回退。
+- Noto 主選單動態原型：[docs/spec/013-noto-menu-prototype.md](docs/spec/013-noto-menu-prototype.md)，依 [#27](https://github.com/wicanr2/taipei/issues/27) 接入使用者已選字型，限六個已辨識標題。
+- Noto 實際像素核對：[hd_font_check.py](workspace/tools/hd_font_check.py)，對已展示字型參考逐像素比較，另驗文字回退及矩形外不變。
+- Noto 收據負對照：[hd_font_negative.py](workspace/tools/hd_font_negative.py)，破壞文字或矩形間像素並同步更新呈現雜湊，要求核對器仍拒絕。

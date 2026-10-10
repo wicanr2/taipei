@@ -20,10 +20,12 @@
 收據為 `workspace/runs/gui-cold/result.json`，來源 35 個檔案雜湊不變。
 施工格在全新啟動讀檔後逐 byte 相同。原版音訊已經實際播放器輸出，隔離 monitor 非靜音；合成分段連續、原版狀態不變及平台限制另見[音訊契約](spec/009-opl2-audio.md)。技術擷取不當作人耳試聽。
 
-HD 離線及動態比較原型只涵蓋水面、沙地與樹冠。素材撤除、來源／色盤失配、原版視窗回退、切換與區外像素檢查通過；冷啟動施工存退讀通過，存檔與原版模式相同。詳見[離線契約](spec/008-hd-material-prototype.md)與[動態契約](spec/010-hd-live-prototype.md)。字型、正式切換與其他 HD 批次尚未定案，不當成 #7 或 #8 的正式完成證據。三平台封包仍未建立。
+HD 離線及動態比較原型的地景涵蓋水面、沙地與樹冠。素材撤除、來源／色盤失配、原版視窗回退、切換與區外像素檢查通過；冷啟動施工存退讀通過，存檔與原版模式相同。詳見[離線契約](spec/008-hd-material-prototype.md)與[動態契約](spec/010-hd-live-prototype.md)。字型方向已定 Noto；正式切換與其他 HD 批次尚未定案，不當成 #7 或 #8 的正式完成證據。三平台封包仍未建立。
 
 Windows 研究 binary 已在 Wine 從真實冷啟動到城市畫面，正常鍵盤輸入及原版城市色號與 Linux 相同。收據為 `workspace/runs/wine-preview/result.json`；這項預檢沒有驗 Windows 音訊裝置、存退讀、正式封包或真機。macOS 兩架構只完成編譯及載入命令檢查，最低系統版本欄位為 11.0，未真機執行。
 
 [#23](https://github.com/wicanr2/taipei/issues/23)、[#24](https://github.com/wicanr2/taipei/issues/24) 另抽樣正常 GUI 四向捲動。24 份單幀收據的來源及回退像素通過，六組原版圖塊位移與已證實的世界原點差一致，2001 個相同世界地景格的 HD 像素保持相同。有／無原點觀察及 HD 呈現的原版 RAM、CPU、色號、色盤與讀鍵紀錄相同。證據見[地圖原點研究](re/006-map-origin.md)，契約見[世界座標原型](spec/011-hd-world-origin-prototype.md)。範圍仍為 DRAFT 地景原型，沒有替代正式 #7、#8 或全遊戲動畫驗收。
 
 [#25](https://github.com/wicanr2/taipei/issues/25)、[#26](https://github.com/wicanr2/taipei/issues/26) 從真實冷啟動使用原版速度鍵 `3`，固定間隔抽樣 60 次。人工確認 49 個連續月份，從 80 年 11 月至 84 年 11 月。兩次年度預算視窗已整幀回退，後續城市恢復 HD；23,815 個相同原點與來源的地景格保持相同像素。重播相同正常輸入，兩側各 2,400,000,000 步的原版狀態相同。證據見[持續運行研究](re/007-running-city.md)，契約見[年度視窗原型](spec/012-budget-window-prototype.md)。本項不涵蓋發展後建物、未擷取相位、正式字型、原版退出或平台封包。
+
+[#18](https://github.com/wicanr2/taipei/issues/18) 已取得使用者 Noto 高清黑體定案。[#27](https://github.com/wicanr2/taipei/issues/27) 的六個主選單標題已接入動態比較原型：35 份正常冷啟動施工存退讀收據、固定參考逐像素比對、字型／授權／色盤失配回退與原版機器狀態比對通過，存檔雜湊相同。收據核對器對文字與矩形間像素破壞的有效負對照均拒絕。範圍與命令見 [Noto 動態原型](spec/013-noto-menu-prototype.md)，其他文字與正式切換尚未完成。

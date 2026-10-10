@@ -26,6 +26,8 @@ var materials = map[string]string{
 type Stats struct {
 	Reason                     string `json:"reason"`
 	Matched, Painted, Fallback int
+	FontLabels                 int    `json:"font_labels"`
+	FontReason                 string `json:"font_reason"`
 }
 
 // Origin is the verified tile origin of a completed original map draw.
@@ -41,6 +43,7 @@ type Renderer struct {
 	sources map[string]bool
 	shades  map[byte][]byte
 	reason  string
+	menu    *menuFont
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -76,6 +79,7 @@ func New(rom []byte, dir string) *Renderer {
 		}
 		r.sources[string(b[4:])] = true
 	}
+	r.menu = loadMenuFont(filepath.Join(dir, "fonts"))
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -116,7 +120,7 @@ func New(rom []byte, dir string) *Renderer {
 }
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original"}
+	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -135,6 +139,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	if !enabled {
+		stats.FontReason = "original"
 		return r.frame, stats
 	}
 	if r.reason != "" {
@@ -221,6 +226,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 			stats.Fallback--
 		}
 	}
+	stats.FontLabels, stats.FontReason = r.menu.paint(r.frame, pal)
 	return r.frame, stats
 }
 func mirror(world int) int {

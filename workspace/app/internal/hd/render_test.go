@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/json"
+	"image"
 	"io"
 	"os"
 	"path/filepath"
@@ -87,6 +88,9 @@ func TestActualCityAndFallbacks(t *testing.T) {
 			if x >= 20 && x < 1064 && y >= 136 && y < 676 {
 				continue
 			}
+			if stats.FontLabels == 6 && inMenu(image.Pt(x, y)) {
+				continue
+			}
 			i := (y*1280 + x) * 4
 			if !bytes.Equal(base[i:i+4], painted.Pix[i:i+4]) {
 				t.Fatalf("outside-map change %d,%d", x, y)
@@ -118,6 +122,15 @@ func TestActualCityAndFallbacks(t *testing.T) {
 	if !bytes.Equal(base, got.Pix) {
 		t.Fatal("toggle retained previous HD pixels")
 	}
+}
+
+func inMenu(point image.Point) bool {
+	for i := range menuLabels {
+		if point.In(menuRect(i)) {
+			return true
+		}
+	}
+	return false
 }
 
 func TestMirrorMaterialEdges(t *testing.T) {

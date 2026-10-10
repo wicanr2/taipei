@@ -30,6 +30,7 @@ func main() {
 	receipt := flag.String("receipt", "", "正常 GUI 的原子收據")
 	out := flag.String("out", "", "狀態對照輸出")
 	requireBudget := flag.Bool("require-budget", false, "要求重播實際經過年度視窗回退")
+	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	flag.Parse()
 	z, err := zip.OpenReader(*receipt)
 	must(err)
@@ -65,7 +66,7 @@ func main() {
 	}
 	rom, err := os.ReadFile(filepath.Join(*root, "RS201.ROM"))
 	must(err)
-	var draws, painted uint64
+	var draws, painted, fontFrames uint64
 	reasons := map[string]uint64{}
 	run := func(present bool) []byte {
 		m := dg.New()
@@ -102,6 +103,9 @@ func main() {
 			if present && m.Steps >= refresh {
 				_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
 				reasons[stats.Reason]++
+				if stats.FontLabels > 0 {
+					fontFrames++
+				}
 				if stats.Painted > 0 {
 					painted++
 				}
@@ -131,11 +135,14 @@ func main() {
 	if *requireBudget && reasons["budget-window"] == 0 {
 		panic("重播未實際經過年度視窗回退")
 	}
+	if *requireFont && fontFrames == 0 {
+		panic("重播未實際經過 Noto 標題覆繪")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
-		"hd_reasons": reasons,
-		"scope":      "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；只驗呈現層不改原版狀態，非正式 HD 驗收",
+		"hd_reasons": reasons, "font_frames": fontFrames,
+		"scope": "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；只驗呈現層不改原版狀態，非正式 HD 驗收",
 	}, "", "  ")
 	must(err)
 	must(os.WriteFile(*out, append(result, '\n'), 0600))
