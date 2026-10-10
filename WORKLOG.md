@@ -126,4 +126,22 @@ GUI 容器皆使用有界程序、trap 與 `--rm`，本批完成後無殘留專�
 - `build_preview.sh` 乾淨離線建置、鍵盤／HD 真實資源測試、dosgolem DOS／machine／audio／公開 API 測試通過。完整前端 Linux amd64、Windows amd64、macOS amd64／arm64 編譯通過，入口 `build_preview_cross.sh`。編譯不當作平台真機或正式封包驗收。
 - 35 個原始輸入重新逐檔核對 SHA-256 不變。精確 `find workspace -user root -o -type d -name '*.md'` 無輸出，抽查新原始碼、補丁與 binary 均為 1000:1000。Wine `dosdevices/z:` 是同使用者建立、指向容器根的符號連結；不依跟隨連結的 stat 誤判，更未對其目標改權限。所有本批有界容器已退出並刪除，沒有殘留 Taipei 容器，其他專案未清理。
 
-本批提交與遠端 Issue 結案結果於推送後追加。
+本批提交 `8137a65` 已推送。#4、#17、#20、#21 附提交、命令、證據與限制結案，主機 gh 回讀均為 CLOSED。#5 保留未完成的完整重繪清單與動畫限制，沒有以局部地景原型關閉整個來源研究。
+
+## 2026-10-11：Windows 前端與 macOS 結構預檢
+
+對應 #9 的隔離預檢，先回寫 Issue；正式封包仍須等待 #6、#7、#8。路由命中跨平台試玩，載入 `retro-game-playtest.md`。只使用既有 Wine image，沒有在主機執行 Windows 程式。
+
+`bash workspace/tools/wine_preview_playtest.sh` 通過。由完整 Windows amd64 binary 冷啟動原版，真實按鍵經主選單、新城市與難度選擇至城市畫面，沒有機器快照。城市原版色號 SHA-256 `a838e6e26f6af4f62a2fc9a6c945e2671c2b5fa8194d80f01b028791a20fe000`，與 Linux 相同；再由研究停止請求正常關閉播放器與程式。這項只驗 Wine 冷啟動及輸入，不宣稱 Windows 真機、音訊裝置、存退讀或封包完成。
+
+macOS 兩種架構以固定 otool 匯出系統函式庫與載入命令，入口收錄於 `build_preview_cross.sh`；未真機執行。Windows 靜態匯入表只見 KERNEL32.dll、msvcrt.dll，前端仍可能動態載入 Windows 系統 API，不以這張表宣稱完整裝置相容。
+
+Wine 初始化出現缺少 syswow64 rundll32 的訊息，但 64-bit 前端與正常輸入實際通過，列為 Wine prefix 初始化噪音。工作容器已清理，輸出留在 `workspace/runs/wine-preview/`，原版資料仍唯讀。
+
+## 2026-10-11：正常施工 HD 來源清單
+
+先建立 [#22](https://github.com/wicanr2/taipei/issues/22)，再寫唯讀盤點工具及研究證據，均掛入 `CONTEXT.md`。九個已證實 9×9 圖庫共有 1134 筆來源、1049 個不同圖像；保留全部相同圖像別名及 ROM 檔案偏移，不依外觀猜建物語意。
+
+原版 33 份與 HD 原型 35 份正常 GUI 單幀收據完成來源盤點，HD 的 35 份收據皆在原版抽樣找到相同畫面雜湊，來源映射一致，來源破壞負對照被拒絕。電線施工格唯一匹配成員 39、圖像 45，標頭檔案偏移 `0x8EA07`、色號 `0x8EA0B`；冷啟動讀檔後相同。目前 B 地景只接受成員 59，電線回退有可回查原因，不把沙地材質套到未知電線色號。
+
+新研究文件 `docs/re/005-native-hd-sources.md` 說明目前覆繪分母、游標未知格及後續批次界線。原始畫面、逐格完整清單及圖塊仍只留本機。本項不擴張成全遊戲圖庫語意逆向，也不宣稱未抽樣的動畫、捲動或正式 HD 完成。

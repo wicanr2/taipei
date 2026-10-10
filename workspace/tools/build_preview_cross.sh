@@ -34,6 +34,8 @@ timeout 300s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
         triple=x86_64; if test "$arch" = arm64; then triple=aarch64; fi
         export GOARCH="$arch" CC="$triple-apple-darwin24.5-clang" CXX="$triple-apple-darwin24.5-clang++"
         go build -mod=readonly -p 1 -trimpath -o "/out/taipei-preview-macos-$arch" ./cmd/taipei-preview
+        x86_64-apple-darwin24.5-otool -L "/out/taipei-preview-macos-$arch" > "/out/preview-macos-$arch-dylibs.txt"
+        x86_64-apple-darwin24.5-otool -hv -l "/out/taipei-preview-macos-$arch" > "/out/preview-macos-$arch-load-commands.txt"
       done
     fi
     { go version; go env GOOS GOARCH CC CXX; sha256sum go.mod go.sum;
