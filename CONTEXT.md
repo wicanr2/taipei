@@ -27,7 +27,7 @@
 | dosgolem 啟動 | 冷啟動到主選單與城市選擇通過，兩次主選單畫面及暫存器一致；新增 Caps Lock 補丁通過核心與硬體讀鍵測試 | [啟動基線](docs/re/002-dosgolem-startup.md)、[Caps Lock](docs/spec/007-bios-caps-lock.md)；補丁只在隔離副本與本專案保存 |
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
-| HD | B 材質動態比較原型輸出 1280×800；已修正捲動時材質改變的問題，六組正常位移中 2001 個相同世界地景格逐像素相同，來源及回退核對通過 | [動態原型](docs/spec/010-hd-live-prototype.md)、[原點證據](docs/re/006-map-origin.md)；只涵蓋水面、沙地與樹冠，字型、正式切換及後續批次待確認 |
+| HD | B 材質動態原型輸出 1280×800；捲動與持續運行抽樣通過，年度預算視窗已修正為整幀原版回退，返回城市恢復 HD | [動態原型](docs/spec/010-hd-live-prototype.md)、[原點證據](docs/re/006-map-origin.md)、[持續運行證據](docs/re/007-running-city.md)；只涵蓋水面、沙地與樹冠，字型、正式切換及後續批次待確認 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
@@ -79,3 +79,7 @@
 - 原版地圖原點：[docs/re/006-map-origin.md](docs/re/006-map-origin.md)，IDA 唯讀查詢入口為 [ida_camera_probe.sh](workspace/tools/ida_camera_probe.sh)、[ida_camera_probe.py](workspace/tools/ida_camera_probe.py)。
 - 世界座標材質原型：[docs/spec/011-hd-world-origin-prototype.md](docs/spec/011-hd-world-origin-prototype.md)，限 [#24](https://github.com/wicanr2/taipei/issues/24) 的 DRAFT 修正。
 - 呈現層狀態對照：[presentation-audit](workspace/app/cmd/presentation-audit/main.go)，重播正常 GUI 收據，比較有／無原點觀察及 HD 繪圖的原版狀態。
+- 城市持續運行抽樣：[hd_runtime_playtest.sh](workspace/tools/hd_runtime_playtest.sh)、[hd_runtime_playtest.py](workspace/tools/hd_runtime_playtest.py)，對應 [#25](https://github.com/wicanr2/taipei/issues/25)，使用原版速度按鍵與固定虛擬步數擷取。
+- 持續運行核對：[hd_runtime_check.py](workspace/tools/hd_runtime_check.py)，核對來源、原點、回退與相同地景像素；日期裁圖另作人工辨識，不以單純雜湊變化宣稱月份已推進。
+- 城市持續運行證據：[docs/re/007-running-city.md](docs/re/007-running-city.md)，記錄正常月份推進、年度視窗修正與原版機器狀態比對。
+- 年度預算視窗回退原型：[docs/spec/012-budget-window-prototype.md](docs/spec/012-budget-window-prototype.md)，依 [#26](https://github.com/wicanr2/taipei/issues/26) 的正常年度畫面證據修正整幀回退。

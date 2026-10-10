@@ -132,3 +132,29 @@ func TestMirrorMaterialEdges(t *testing.T) {
 		}
 	}
 }
+
+func TestActualAnnualBudgetIsEntirelyNative(t *testing.T) {
+	dir := os.Getenv("TAIPEI_RUNTIME_RECEIPTS")
+	if dir == "" {
+		t.Skip("需要正常年度預算視窗收據")
+	}
+	t.Setenv("TAIPEI_HD_RECEIPTS", dir)
+	rom, err := os.ReadFile(filepath.Join(os.Getenv("TAIPEI_HD_ORIGINAL"), "RS201.ROM"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r := New(rom, os.Getenv("TAIPEI_HD_MATERIALS"))
+	for _, name := range []string{"running-03", "running-32"} {
+		s, px := load(t, name)
+		before := append([]byte(nil), px...)
+		native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false, Origin{X: 12, Y: 12, Valid: true})
+		want := append([]byte(nil), native.Pix...)
+		got, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true, Origin{X: 12, Y: 12, Valid: true})
+		if stats.Painted != 0 || stats.Reason != "budget-window" || !bytes.Equal(want, got.Pix) {
+			t.Fatal("年度視窗未整幀回退", name, stats)
+		}
+		if !bytes.Equal(before, px) {
+			t.Fatal("年度視窗原版色號被改寫")
+		}
+	}
+}

@@ -22,10 +22,13 @@ def load(path):
         frame=z.read('frame-index.bin');s=json.loads(z.read('status.json'))
     assert len(frame)==64000 and sha(frame)==s['frame_index_sha256']
     return s,frame
+def budget_window(frame):
+    title=b''.join(frame[y*320+18:y*320+117] for y in range(38,60))
+    return sha(title)=='a93af2ea621191dc51663f84eee9ebc40672d149d585a1458b9edf3c60e872bb'
 def scene(s,frame):
     top=b''.join(frame[y*320:y*320+270] for y in range(33))
     colors=bytes(v for i in sorted(MATERIAL) for v in s['palette'][i])
-    return (s['mode']==19 and not s['dos_blocked']
+    return (s['mode']==19 and not s['dos_blocked'] and not budget_window(frame)
             and sha(top)=='b9b27e2010b2d581cb55c349b5944492ea0077104e15126236fc50b859b51eda'
             and sha(colors)=='9bd7a6f66fe9e1da47ea3360ffbd0e114616d466034ff8b999529ae38afe6b0b')
 def main():

@@ -15,6 +15,7 @@ import (
 const romSHA = "0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29"
 const uiSHA = "b9b27e2010b2d581cb55c349b5944492ea0077104e15126236fc50b859b51eda"
 const paletteSHA = "9bd7a6f66fe9e1da47ea3360ffbd0e114616d466034ff8b999529ae38afe6b0b"
+const budgetSHA = "a93af2ea621191dc51663f84eee9ebc40672d149d585a1458b9edf3c60e872bb"
 
 var materials = map[string]string{
 	"water":  "c5946a794cb44daea5e1492ecd880a0e2bb42e9ebe6da62e472a651abfa26015",
@@ -164,6 +165,16 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	}
 	if digest(top) != uiSHA {
 		stats.Reason = "scene-mismatch"
+		return r.frame, stats
+	}
+	// Annual budget receipts have a visible panel while BIOS blocked is false.
+	// The actual title pixels are indexed in spec/012; retain the entire frame.
+	budget := make([]byte, 0, 99*22)
+	for y := 38; y < 60; y++ {
+		budget = append(budget, px[y*320+18:y*320+117]...)
+	}
+	if digest(budget) == budgetSHA {
+		stats.Reason = "budget-window"
 		return r.frame, stats
 	}
 	if !origin.Valid || origin.X < 0 || origin.X > 76 || origin.Y < 0 || origin.Y > 74 {
