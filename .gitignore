@@ -1,0 +1,18 @@
+# 使用者本機原版與自行解壓的來源
+/rs201 模擬台北/
+*.rar
+*.zip
+
+# 工作區中的本機資料、隔離工具鏈與中間產物
+/workspace/original/
+/workspace/dosgolem/
+/workspace/runs/
+/workspace/cache/
+/workspace/prototypes/
+/workspace/ops/
+
+# 正式封包只留本機
+/dist-all/
+.DS_Store
+*.pyc
+__pycache__/
