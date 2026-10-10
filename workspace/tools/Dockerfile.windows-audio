@@ -1,0 +1,11 @@
+# #20：沿用現有 GUI image，只補 Windows OPL2 C++14 交叉編譯器。
+# 不取代 Linux／macOS image。來源與用途見 docs/spec/009-opl2-audio.md。
+# 本機別名須先核對完整 image ID，不能由遠端同名標籤代入。
+FROM taipei-gui-base:c3d8835a9d39
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++-mingw-w64-x86-64-posix=12.2.0-14+deb12u1+25.2+b1 \
+    && mkdir -p /opt/taipei-toolchain \
+    && dpkg-query -W > /opt/taipei-toolchain/packages.txt \
+    && rm -rf /var/lib/apt/lists/*
+USER 1000:1000

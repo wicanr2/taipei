@@ -103,3 +103,11 @@ B 風格離線原型生成水面、沙地與樹冠材質，完整提示詞與原
 
 本批重新核對 35 個原始輸入雜湊不變，沒有 root-owned 檔案或誤建 `.md` 目錄。
 GUI 容器皆使用有界程序、trap 與 `--rm`，本批完成後無殘留專案容器。
+# 2026-10-11：原版建設垂直路徑與音訊核心原型
+
+- 工作依 [#19](https://github.com/wicanr2/taipei/issues/19)、[#17](https://github.com/wicanr2/taipei/issues/17)、[#20](https://github.com/wicanr2/taipei/issues/20) 執行。新增研究文件及音訊契約均掛入 `CONTEXT.md`。
+- 沿用既有 IDA 9.4 py312 image，最小探針、原始 bytes／位址／獨立檔案偏移與實際 INT 16h 堆疊共同核對輸入 owner。新城市初始焦點在工具列，先按 Tab 會切回地圖；撤回把 Tab 當成必需第一步的探索假設。
+- `bash workspace/tools/build_preview.sh` 通過。`bash workspace/tools/gui_playtest.sh` 於全新 EXE 冷啟動經真實 GUI 完成電線施工、存檔、原版退出、全新啟動讀檔與再次退出。施工格逐 byte 相同，存檔 SHA-256 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，讀檔未改寫。細節與定位見 `docs/re/004-native-controls.md`。
+- 即時冷啟動盤點確認原版有 OPL2 音訊及節奏模式。快照載入後觀測紀錄為空不代表無音訊。固定官方 YMFM commit 完成離線標題音訊原型：7214 事件全部消費，73.3968 秒，非靜音、削波 0。Linux、macOS x86_64 與 arm64 編譯通過；Windows 編譯器擴充另在本次可重現 Dockerfile 處理。尚未接正式音訊，未做人耳確認。
+- 字型比較原型已提出，使用者尚未定案。未默認改用新字型。
+- 本批 GUI／IDA／原型容器均為有界 `--rm` 工作。GUI 輸出 UID/GID 為 1000:1000，`workspace/runs/` 無 root-owned 輸出。Windows Docker 建置仍進行中，完成後另核對清理。

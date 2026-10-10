@@ -23,7 +23,7 @@ timeout 120s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
     game_pid=""
     trap '\''if test -n "$game_pid"; then kill "$game_pid" 2>/dev/null || true; fi; kill "$xvfb_pid" 2>/dev/null || true; wait 2>/dev/null || true'\'' EXIT
     for i in {1..50}; do test -S /tmp/.X11-unix/X99 && break; sleep .1; done
-    /workspace/runs/taipei-preview -original /orig -saves /workspace/runs/gui-saves -receipts /workspace/runs/gui-explore -checkpoint /workspace/runs/city-native.state -stop-file /workspace/runs/gui-explore/stop > /workspace/runs/gui-explore/app.log 2>&1 &
+    /workspace/runs/taipei-preview -original /orig -saves /workspace/runs/gui-saves -receipts /workspace/runs/gui-explore -checkpoint /workspace/runs/city-native.state -trace-key-stack -stop-file /workspace/runs/gui-explore/stop > /workspace/runs/gui-explore/app.log 2>&1 &
     game_pid=$!
     python3 /workspace/tools/gui_explore.py > /workspace/runs/gui-explore/playtest.log 2>&1
     wait "$game_pid"

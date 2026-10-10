@@ -18,7 +18,14 @@ actions=[('file-menu','F2'),('save-dialog','space'),('save-name','type:taipei'),
 if os.environ.get('TAIPEI_ACTIONS'):
     actions=[tuple(item.split(':',1)) for item in os.environ['TAIPEI_ACTIONS'].split(',')]
 for name,key in actions:
-    if key.startswith('type:'):
+    if key.startswith('repeat:'):
+        _,native_key,count=key.split(':')
+        for _ in range(int(count)):
+            subprocess.run(['xdotool','keydown',native_key],check=True)
+            time.sleep(.15)
+            subprocess.run(['xdotool','keyup',native_key],check=True)
+            time.sleep(.15)
+    elif key.startswith('type:'):
         subprocess.run(['xdotool','type','--delay','150',key[5:]],check=True)
     else:
         subprocess.run(['xdotool','keydown',key],check=True)

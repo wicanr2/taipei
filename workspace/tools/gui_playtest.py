@@ -81,8 +81,28 @@ for stage in ['new-game','difficulty','city-map']:
     space()
     wait_for(lambda s:s.get('steps',0)>=before+24_000_000,stage)
     capture(stage)
-for label,key in [('cursor-right','Right'),
-                  ('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
+# 新城市初始焦點是工具列。第 2 項是每單位 20 萬的電線。
+# 方向鍵、空白鍵與施工均由原版處理，不注入游標或城市資料。
+for label,key in [('pause','type:0'),('power-tool','Right'),('power-confirm','space')]:
+    action(label,key)
+for _ in range(25):
+    keypress('Right')
+    time.sleep(.15)
+action('land-down','Down')
+capture('before-build')
+action('place-power','space')
+action('uncover-power','Right')
+cell=(230,43)
+def tile(frame, xy):
+    data=Path(frame).read_bytes()
+    assert len(data)==64000
+    x,y=xy
+    return b''.join(data[(y+row)*320+x:(y+row)*320+x+9] for row in range(9))
+base_tile=tile(out/'city-map-frame-index.bin',cell)
+built_tile=tile(out/'uncover-power-frame-index.bin',cell)
+assert built_tile!=base_tile, '原版施工未改變目標圖塊'
+assert len(set(built_tile))>1, '施工結果只有空白色塊'
+for label,key in [('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
                   ('backspace','BackSpace'),('rename','type:4'),('save-accept','space')]:
     action(label,key)
 save_dir=Path(os.environ['TAIPEI_TEST_SAVES'])
@@ -113,10 +133,12 @@ with (out/'app.log').open('w') as log:
             action(label,key)
         assert any(f.get('Op')=='read' and f.get('Name','').upper()=='ROUND4.SAV' for f in status().get('file_ops',[])), '未見原版讀取存檔'
         assert hashlib.sha256(save.read_bytes()).hexdigest()==saved_sha, '讀檔改寫了來源存檔'
+        loaded_tile=tile(out/'load-accept-frame-index.bin',cell)
+        assert loaded_tile==built_tile, '冷啟動讀檔未恢復施工圖塊'
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
-        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'save_sha256':saved_sha,'save_dir':str(save_dir)},indent=2))
-        print('GUI cold save / native exit / cold reload passed',flush=True)
+        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True}},indent=2))
+        print('GUI cold construction / save / native exit / cold reload passed',flush=True)
     finally:
         if p.poll() is None:
             (out/'stop').write_text('stop\n')

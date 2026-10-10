@@ -67,6 +67,7 @@ type game struct {
 	mouseButtons uint16
 	inputs       []inputEvent
 	textMods     keyboard.Modifiers
+	keyStacks    []map[string]any
 }
 
 type inputEvent struct {
@@ -203,6 +204,7 @@ func (g *game) receipt() error {
 		"steps":              g.m.Steps, "frames": g.frames, "mode": g.m.VideoMode(), "registers": g.m.CPU.R,
 		"segments": g.m.CPU.Seg, "ip": g.m.CPU.IP, "ticks": g.m.Ticks,
 		"key_reads": g.d.KeyReads, "key_waits": g.d.KeyWaits, "irq1": g.m.KeyIRQs,
+		"key_stacks":  g.keyStacks,
 		"mouse_polls": len(g.d.Mouse.Polls), "mouse_calls": g.d.Mouse.Calls, "file_ops": g.d.FileOps,
 		"missing": g.d.Missing, "unimplemented": g.d.UnimplementedDetails,
 		"dos_exited":      g.d.Exited,
@@ -260,6 +262,7 @@ func main() {
 	checkpoint := flag.String("checkpoint", "", "診斷快照；正式冷啟動不使用")
 	stopFile := flag.String("stop-file", "", "研究驗證的正常結束請求檔")
 	steps := flag.Uint64("steps-per-update", 400000, "每次更新的固定指令數")
+	traceKeyStack := flag.Bool("trace-key-stack", false, "診斷 INT16 讀鍵前的原始堆疊，不改原版狀態")
 	flag.Parse()
 	if *orig == "" || *saves == "" || *out == "" {
 		log.Fatal("請指定 -original、-saves、-receipts")
@@ -304,6 +307,25 @@ func main() {
 	g.textMods.LeftShift = m.Read8(0x417)&2 != 0
 	g.textMods.RightShift = m.Read8(0x417)&1 != 0
 	g.textMods.CapsHeld = m.Read8(0x418)&64 != 0
+	if *traceKeyStack {
+		previous := m.CPU.IntHook
+		m.CPU.IntHook = func(c *dg.CPU, n uint8) bool {
+			if n == 0x16 && c.R[dg.AX]>>8 == 0 {
+				if _, ok := m.PeekKey(); ok {
+					words := make([]uint16, 12)
+					for i := range words {
+						address := uint32(c.Seg[dg.SS])*16 + uint32(c.R[dg.SP]+uint16(i*2))
+						words[i] = m.Read16(address & 0xfffff)
+					}
+					dsbase := uint32(c.Seg[dg.DS]) * 16
+					focusBase := uint32(m.Read16(dsbase+0x20f2)) * 16
+					g.keyStacks = append(g.keyStacks, map[string]any{"step": m.Steps, "cs": c.Seg[dg.CS], "ip": c.IP, "ss": c.Seg[dg.SS], "sp": c.R[dg.SP], "ds": c.Seg[dg.DS], "es": c.Seg[dg.ES], "words": words,
+						"focus_segment": focusBase / 16, "focus": m.Read8(focusBase + 0x4a), "cursor_x": m.Read16(focusBase + 0x4f), "cursor_y": m.Read16(focusBase + 0x51), "tool_cursor": m.Read8(dsbase + 0xe3c), "tool_committed": m.Read8(dsbase + 0xe3e)})
+				}
+			}
+			return previous(c, n)
+		}
+	}
 	ebiten.SetWindowTitle("模擬台北：原版整合研究原型")
 	ebiten.SetWindowSize(1280, 800)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
