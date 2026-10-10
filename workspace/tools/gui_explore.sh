@@ -17,7 +17,7 @@ timeout 120s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
     mkdir -p /workspace/runs/gui-explore /workspace/runs/gui-saves /workspace/runs/xdg
     chmod 700 /workspace/runs/xdg
     export XDG_RUNTIME_DIR=/workspace/runs/xdg
-    rm -f /workspace/runs/gui-explore/status.json /workspace/runs/gui-explore/stop
+    rm -f /workspace/runs/gui-explore/status.json /workspace/runs/gui-explore/capture.zip /workspace/runs/gui-explore/stop
     Xvfb :99 -screen 0 1280x900x24 -nolisten tcp > /workspace/runs/gui-explore/xvfb.log 2>&1 &
     xvfb_pid=$!
     game_pid=""

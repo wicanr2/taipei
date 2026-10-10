@@ -5,11 +5,13 @@ import os
 import shutil
 import subprocess
 import time
+import zipfile
+import io
 from pathlib import Path
 
 out=Path('/workspace/runs/gui-explore')
 end=time.monotonic()+30
-while not (out/'status.json').exists():
+while not (out/'capture.zip').exists():
     if time.monotonic()>end:
         raise RuntimeError('diagnostic GUI startup timeout')
     time.sleep(.1)
@@ -32,6 +34,9 @@ for name,key in actions:
         time.sleep(.15)
         subprocess.run(['xdotool','keyup',key],check=True)
     time.sleep(3)
-    for ext in ['frame.png','status.json']:
-        shutil.copyfile(out/ext,out/(name+'-'+ext))
+    raw=(out/'capture.zip').read_bytes()
+    (out/(name+'-capture.zip')).write_bytes(raw)
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for ext in ['frame.png','frame-index.bin','status.json']:
+            (out/(name+'-'+ext)).write_bytes(z.read(ext))
 (out/'stop').write_text('stop\n')

@@ -3,9 +3,10 @@
 # 本機別名須先核對完整 image ID，不能由遠端同名標籤代入。
 FROM taipei-gui-base:c3d8835a9d39
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     g++-mingw-w64-x86-64-posix=12.2.0-14+deb12u1+25.2+b1 \
     && mkdir -p /opt/taipei-toolchain \
-    && dpkg-query -W > /opt/taipei-toolchain/packages.txt \
-    && rm -rf /var/lib/apt/lists/*
+    && dpkg-query -W > /opt/taipei-toolchain/packages.txt
 USER 1000:1000

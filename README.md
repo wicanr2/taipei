@@ -1,7 +1,8 @@
 # 模擬台北：dosgolem 與 HD 呈現
 
 本專案以 dosgolem 執行使用者自備的原版《模擬台北》，接入現代前端與 HD 呈現。
-目前已驗證原版冷啟動、主選單與城市選擇。前端、存讀檔及 HD 仍待驗證，尚無可交付遊戲封包。
+目前已驗證原版冷啟動、電線施工、存檔、退出及全新啟動讀檔，並擷取到實際播放器音訊。
+1280×800 的 B 材質動態比較原型涵蓋水面、沙地與樹冠。正式 HD 規格與三平台封包仍在製作，尚無正式交付包。驗證範圍見 [CONTEXT.md](CONTEXT.md)。
 
 玩家須自備合法取得的原版資料。原版執行檔、資料、美術、音訊與權利未明的 HD 素材
 只留本機，不加入此儲存庫或公開封包。
@@ -19,6 +20,8 @@
 
 探針入口為 [workspace/tools/probe.sh](workspace/tools/probe.sh)，只在 Docker 內建置與執行。
 固定版本、原始資料路徑與重播方法見[啟動基線](docs/re/002-dosgolem-startup.md)。
+前端建置與正常 GUI 測試入口見[前端契約](docs/spec/005-frontend-preview.md)。
 
 自有程式及文件使用 [RRSAL-1.0](LICENSE)，
 不把原版素材或第三方依賴納入自有授權。本專案與原版權利人無隸屬關係。
+OPL2 合成使用 [YMFM](https://github.com/aaronsgiles/ymfm) 的 BSD 3-Clause 核心，固定來源與驗證範圍見[音訊契約](docs/spec/009-opl2-audio.md)。

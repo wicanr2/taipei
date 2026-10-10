@@ -111,3 +111,19 @@ GUI 容器皆使用有界程序、trap 與 `--rm`，本批完成後無殘留專�
 - 即時冷啟動盤點確認原版有 OPL2 音訊及節奏模式。快照載入後觀測紀錄為空不代表無音訊。固定官方 YMFM commit 完成離線標題音訊原型：7214 事件全部消費，73.3968 秒，非靜音、削波 0。Linux、macOS x86_64 與 arm64 編譯通過；Windows 編譯器擴充另在本次可重現 Dockerfile 處理。尚未接正式音訊，未做人耳確認。
 - 字型比較原型已提出，使用者尚未定案。未默認改用新字型。
 - 本批 GUI／IDA／原型容器均為有界 `--rm` 工作。GUI 輸出 UID/GID 為 1000:1000，`workspace/runs/` 無 root-owned 輸出。Windows Docker 建置仍進行中，完成後另核對清理。
+
+## 2026-10-11：單幀收據、動態 HD 原型與原版音訊
+
+對應 #4、#5、#17、#20、#21。知識路由命中 GUI、平台規格優先、規格閘門與文件職責；更新 README 前另讀首頁契約。所有新增文件與工具已掛入 `CONTEXT.md`。
+
+- #21 修正收據驗證問題。先前 PNG、色號與 JSON 分別 rename，可能跨更新代擷取。現以單一原子 `capture.zip` 保存原版、色盤、狀態及 1280×800 呈現。獨立 `receipt-check` 驗證原版模式 33 份、HD 比較原型 35 份收據；逐像素核對原版 PNG、呈現雜湊、回退幀及地圖區外像素。只改 JSON 色盤的負對照在 `(0,0)` 被拒絕。GUI 腳本清理前次命名收據，避免主題不同的歷史產物混入新一輪。
+- #5 動態 B 地景比較原型接入研究前端。435 格中 433 格覆繪、2 格回退，實際模態畫面、色盤失配、素材撤除及切回原版測試通過。F12 只作比較原型切換，沒有傳入 DOS。完整正常 GUI 經施工、切換、存退讀通過。HD 分支同幀封裝保存在 `workspace/runs/gui-hd-comparison/`，供後續原版模式重跑後仍能核對。只涵蓋水面、沙地與樹冠，不宣稱正式 HD 或全部建設素材完成。
+- #20 固定官方 YMFM、BSD 授權及來源清單，通用串流保存於第六份 `dosgolem-audio.patch`，SHA-256 `089e143cf811636262ea902d868cd867c01f3ed83a85812443583f8cdaccd8ed`。隔離 dosgolem 提交 `2144a2a`，沒有改動或推送上游。節奏、PC 喇叭、批次連續、有界緩衝及狀態不變測試通過。實際 7214 筆事件兩種批次 PCM 相同；Linux AddressSanitizer、Windows Wine 純核心測試通過。
+- Windows image 沿用既有 GUI base，補固定 MinGW C++ 版本。第一次使用字面 `FROM sha256` 被當成遠端名稱，改為核對 ID 的本機別名；建置器不接受 `--cpus`，改用其支援的建置入口。首次下載超過短逾時，加入 apt cache 並以有界建置完成。均屬工具鏈建置問題。image ID `sha256:80cda80f47353188794d030f468c37821d8e77a3a078e5b306f12cb0a0953c7d`，來源為受版控 Dockerfile。保留上游 MinGW 最佳化警告及實際適用範圍，不把編譯警告隱藏。沒有新增重複用途的 Linux 或 macOS image。
+- #17 原版前端明示 AdLib 存在，`-mute` 只停主機裝置，仍合成並消費原版事件。實際播放器初次在未設定焦點時未持續取樣，環形緩衝溢位；聚焦後的同命令擷取通過。加入裝置就緒與完整批次容量檢查，保留已收輸入，暫停 VM 步進而不丟事件。刻意延後聚焦三秒的乾淨重跑通過，monitor 688984 frames、1236348 個非零聲道樣本、峰值 5584，拒收 0，正常關閉。技術擷取未當成人耳確認。
+- 原版 EXE 相同初始狀態、850000001 步與原生鍵盤輸入，有／無消費音訊的完整 RAM、CPU、畫面、色盤、埠值、OPL 暫存器與讀鍵紀錄相同。狀態 SHA-256 `1dfdcc515013b62b02122dde8b00047752183a7526e6742efc9a95782a13ab57`，重生工具 `audio_state_audit.go`。
+- 原版前端規格由研究證據審查升 READY，再重跑 `TAIPEI_THEME=original bash workspace/tools/gui_playtest.sh`。施工格讀回相同，存檔 SHA-256 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，與 HD 分支相同。前端及音訊規格標 CONFORMED，限明列的原版玩家路徑與 Linux 音訊技術驗證；HD 原型仍 DRAFT，字型與正式切換待定。
+- `build_preview.sh` 乾淨離線建置、鍵盤／HD 真實資源測試、dosgolem DOS／machine／audio／公開 API 測試通過。完整前端 Linux amd64、Windows amd64、macOS amd64／arm64 編譯通過，入口 `build_preview_cross.sh`。編譯不當作平台真機或正式封包驗收。
+- 35 個原始輸入重新逐檔核對 SHA-256 不變。精確 `find workspace -user root -o -type d -name '*.md'` 無輸出，抽查新原始碼、補丁與 binary 均為 1000:1000。Wine `dosdevices/z:` 是同使用者建立、指向容器根的符號連結；不依跟隨連結的 stat 誤判，更未對其目標改權限。所有本批有界容器已退出並刪除，沒有殘留 Taipei 容器，其他專案未清理。
+
+本批提交與遠端 Issue 結案結果於推送後追加。

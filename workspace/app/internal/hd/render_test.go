@@ -1,0 +1,113 @@
+package hd
+
+import (
+	"archive/zip"
+	"bytes"
+	"encoding/json"
+	"io"
+	"os"
+	"path/filepath"
+	"testing"
+)
+
+type fixture struct {
+	Mode    int           `json:"mode"`
+	Blocked bool          `json:"dos_blocked"`
+	Palette [256][3]uint8 `json:"palette"`
+}
+
+func load(t *testing.T, name string) (fixture, []byte) {
+	t.Helper()
+	dir := os.Getenv("TAIPEI_HD_RECEIPTS")
+	if dir == "" {
+		t.Skip("需要本機原版單幀收據")
+	}
+	z, e := zip.OpenReader(filepath.Join(dir, name+"-capture.zip"))
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer z.Close()
+	var s fixture
+	var px []byte
+	for _, f := range z.File {
+		if f.Name != "frame-index.bin" && f.Name != "status.json" {
+			continue
+		}
+		r, e := f.Open()
+		if e != nil {
+			t.Fatal(e)
+		}
+		data, e := io.ReadAll(r)
+		r.Close()
+		if e != nil {
+			t.Fatal(e)
+		}
+		if f.Name == "status.json" {
+			if e = json.Unmarshal(data, &s); e != nil {
+				t.Fatal(e)
+			}
+		} else {
+			px = data
+		}
+	}
+	return s, px
+}
+func TestActualCityAndFallbacks(t *testing.T) {
+	s, px := load(t, "city-map")
+	orig := os.Getenv("TAIPEI_HD_ORIGINAL")
+	dir := os.Getenv("TAIPEI_HD_MATERIALS")
+	if orig == "" || dir == "" {
+		t.Skip("需要唯讀原版 ROM 與本機材質")
+	}
+	rom, e := os.ReadFile(filepath.Join(orig, "RS201.ROM"))
+	if e != nil {
+		t.Fatal(e)
+	}
+	r := New(rom, dir)
+	native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false)
+	base := append([]byte(nil), native.Pix...)
+	before := append([]byte(nil), px...)
+	painted, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true)
+	if stats.Matched != 434 || stats.Painted != 433 || stats.Fallback != 2 || bytes.Equal(base, painted.Pix) {
+		t.Fatalf("unexpected city: %+v", stats)
+	}
+	if !bytes.Equal(px, before) {
+		t.Fatal("original indices mutated")
+	}
+	for y := 0; y < 800; y++ {
+		for x := 0; x < 1280; x++ {
+			if x >= 20 && x < 1064 && y >= 136 && y < 676 {
+				continue
+			}
+			i := (y*1280 + x) * 4
+			if !bytes.Equal(base[i:i+4], painted.Pix[i:i+4]) {
+				t.Fatalf("outside-map change %d,%d", x, y)
+			}
+		}
+	}
+	// 採實際模態畫面；其完整來源匹配不能繞過場景條件。
+	for _, name := range []string{"file-menu", "save-dialog", "quit-confirm"} {
+		state, frame := load(t, name)
+		im, _ := r.Render(frame, state.Palette, state.Mode, state.Blocked, false)
+		want := append([]byte(nil), im.Pix...)
+		got, st := r.Render(frame, state.Palette, state.Mode, state.Blocked, true)
+		if st.Painted != 0 || !bytes.Equal(want, got.Pix) {
+			t.Fatal("modal overwritten", name, st)
+		}
+	}
+	wrong := s.Palette
+	wrong[144][0] ^= 1
+	_, st := r.Render(px, wrong, s.Mode, false, true)
+	if st.Painted != 0 {
+		t.Fatal("palette mismatch painted")
+	}
+	missing := New(rom, t.TempDir())
+	got, st := missing.Render(px, s.Palette, s.Mode, false, true)
+	if st.Painted != 0 || !bytes.Equal(base, got.Pix) {
+		t.Fatal("withdrawn material painted")
+	}
+	got, _ = r.Render(px, s.Palette, s.Mode, false, false)
+	if !bytes.Equal(base, got.Pix) {
+		t.Fatal("toggle retained previous HD pixels")
+	}
+}

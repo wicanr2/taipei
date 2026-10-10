@@ -6,13 +6,17 @@ import os
 import shutil
 import subprocess
 import time
+import zipfile
 from pathlib import Path
 
 out=Path('/workspace/runs/gui-cold')
 def status():
     try:
-        return json.loads((out/'status.json').read_text())
-    except (OSError,json.JSONDecodeError):
+        with zipfile.ZipFile(out/'capture.zip') as z:
+            s=json.loads(z.read('status.json'))
+            assert hashlib.sha256(z.read('frame-index.bin')).hexdigest()==s['frame_index_sha256']
+            return s
+    except (OSError,json.JSONDecodeError,zipfile.BadZipFile):
         return {}
 
 def wait_for(predicate, label, seconds=120):
@@ -35,8 +39,12 @@ def space():
     keypress('space')
 
 def capture(label):
-    for name in ['frame.png','frame-index.bin','status.json']:
-        shutil.copyfile(out/name,out/(label+'-'+name))
+    raw=(out/'capture.zip').read_bytes()
+    (out/(label+'-capture.zip')).write_bytes(raw)
+    import io
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for name in ['frame.png','frame-index.bin','status.json','presentation.png']:
+            (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
     before=status().get('steps',0)
@@ -68,13 +76,11 @@ space()
 wait_for(lambda s:s.get('steps',0)>=800_000_000,'intro-wait')
 space()
 wait_for(lambda s:s.get('frame_index_sha256')=='5442a8135d36552561f03a46fc443978a76989979e0c25dc016027229b24dda4','main-menu')
-for name in ['frame.png','status.json']:
-    shutil.copyfile(out/name,out/('main-menu-'+name))
+capture('main-menu')
 before=status().get('steps',0)
 space()
 wait_for(lambda s:s.get('steps',0)>=before+24_000_000,'city-choice')
-for name in ['frame.png','status.json']:
-    shutil.copyfile(out/name,out/('city-choice-'+name))
+capture('city-choice')
 subprocess.run(['import','-window','root',str(out/'window.png')],check=True)
 for stage in ['new-game','difficulty','city-map']:
     before=status().get('steps',0)
@@ -83,7 +89,17 @@ for stage in ['new-game','difficulty','city-map']:
     capture(stage)
 # 新城市初始焦點是工具列。第 2 項是每單位 20 萬的電線。
 # 方向鍵、空白鍵與施工均由原版處理，不注入游標或城市資料。
-for label,key in [('pause','type:0'),('power-tool','Right'),('power-confirm','space')]:
+action('pause','type:0')
+if os.environ.get('TAIPEI_THEME')=='hd-b':
+    assert status()['hd']['Painted']>400, 'HD 城市未覆繪'
+    key_reads=len(status().get('key_reads',[]))
+    action('theme-original','F12')
+    assert status()['hd_enabled'] is False and status()['hd']['Painted']==0
+    assert len(status().get('key_reads',[]))==key_reads, '主題快捷鍵流入 DOS'
+    action('theme-hd','F12')
+    assert status()['hd_enabled'] is True and status()['hd']['Painted']>400
+    assert len(status().get('key_reads',[]))==key_reads, '主題快捷鍵流入 DOS'
+for label,key in [('power-tool','Right'),('power-confirm','space')]:
     action(label,key)
 for _ in range(25):
     keypress('Right')
@@ -116,10 +132,12 @@ native_exit('quit')
 first_out=out
 out=first_out/'reload'
 out.mkdir(exist_ok=True)
-for name in ['status.json','stop']:
+for name in ['status.json','capture.zip','stop']:
     (out/name).unlink(missing_ok=True)
 with (out/'app.log').open('w') as log:
     p=subprocess.Popen(['/workspace/runs/taipei-preview','-original','/orig','-saves',str(save_dir),
+                        '-mute','-steps-per-update','400000',
+                        '-materials','/workspace/prototypes/hd-style','-theme',os.environ.get('TAIPEI_THEME','original'),
                         '-receipts',str(out),'-stop-file',str(out/'stop')],stdout=log,stderr=subprocess.STDOUT)
     try:
         wait_for(lambda s:s.get('steps',0)>=700_000_000,'reload-intro')

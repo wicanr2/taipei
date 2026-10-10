@@ -2,6 +2,7 @@
 package main
 
 import (
+	"archive/zip"
 	"bytes"
 	"compress/gzip"
 	"crypto/sha256"
@@ -19,7 +20,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	dg "github.com/wicanr2/dosgolem"
+	a "github.com/wicanr2/dosgolem/audio"
+	"github.com/wicanr2/taipei/preview/internal/hd"
 	"github.com/wicanr2/taipei/preview/internal/keyboard"
+	"github.com/wicanr2/taipei/preview/internal/sound"
 )
 
 const originalSHA = "798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3"
@@ -68,6 +72,12 @@ type game struct {
 	inputs       []inputEvent
 	textMods     keyboard.Modifiers
 	keyStacks    []map[string]any
+	presentation *image.RGBA
+	hdRenderer   *hd.Renderer
+	hdStats      hd.Stats
+	hdEnabled    bool
+	sound        *sound.Session
+	audioWaits   uint64
 }
 
 type inputEvent struct {
@@ -85,6 +95,10 @@ func (g *game) Update() error {
 		if _, err := os.Stat(g.stopFile); err == nil {
 			return ebiten.Termination
 		}
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyF12) {
+		g.hdEnabled = !g.hdEnabled
+		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "theme", Text: fmt.Sprint(g.hdEnabled)})
 	}
 	shortcut := ebiten.IsKeyPressed(ebiten.KeyControlLeft) || ebiten.IsKeyPressed(ebiten.KeyAltLeft)
 	// 修飾鍵先送，讓有序文字能按相同的 BIOS 修飾狀態轉換。
@@ -124,7 +138,9 @@ func (g *game) Update() error {
 		}
 	}
 	x, y := ebiten.CursorPosition()
-	if x >= 0 && y >= 0 && x < 320 && y < 200 {
+	inside := x >= 0 && y >= 0 && x < 1280 && y < 800
+	x, y = x/4, y/4
+	if inside {
 		if uint16(x) != g.d.Mouse.X || uint16(y) != g.d.Mouse.Y {
 			g.d.MoveMouse(x, y)
 			g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "mouse-move", X: x, Y: y})
@@ -142,9 +158,19 @@ func (g *game) Update() error {
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "mouse-button", Buttons: buttons})
 		g.mouseButtons = buttons
 	}
+	if g.sound != nil && !g.sound.CanAdvance(g.perUpdate) {
+		g.audioWaits++
+		g.refresh()
+		return nil
+	}
 	end := g.m.Steps + g.perUpdate
 	for g.m.Steps < end && !g.d.Exited && !g.m.CPU.Halted {
 		if err := g.m.Step(); err != nil {
+			return err
+		}
+	}
+	if g.sound != nil {
+		if err := g.sound.Submit(g.m); err != nil {
 			return err
 		}
 	}
@@ -182,10 +208,11 @@ func (g *game) refresh() {
 		g.rgba.Pix[j+2] = pal[p][2]
 		g.rgba.Pix[j+3] = 255
 	}
-	g.frame.WritePixels(g.rgba.Pix)
+	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled)
+	g.frame.WritePixels(g.presentation.Pix)
 }
 func (g *game) Draw(screen *ebiten.Image)  { screen.DrawImage(g.frame, nil) }
-func (g *game) Layout(int, int) (int, int) { return 320, 200 }
+func (g *game) Layout(int, int) (int, int) { return 1280, 800 }
 
 func atomic(path string, data []byte) error {
 	tmp := path + ".tmp"
@@ -198,10 +225,17 @@ func (g *game) receipt() error {
 	if g.out == "" {
 		return nil
 	}
+	var audioStats any
+	if g.sound != nil {
+		audioStats = g.sound.Stats()
+	}
 	b, err := json.MarshalIndent(map[string]any{
 		"inputs":             g.inputs,
 		"frame_index_sha256": fmt.Sprintf("%x", sha256.Sum256(g.m.Indexed())),
-		"steps":              g.m.Steps, "frames": g.frames, "mode": g.m.VideoMode(), "registers": g.m.CPU.R,
+		"palette":            g.m.Palette(),
+		"hd_enabled":         g.hdEnabled, "hd": g.hdStats,
+		"presentation_sha256": fmt.Sprintf("%x", sha256.Sum256(g.presentation.Pix)),
+		"steps":               g.m.Steps, "frames": g.frames, "mode": g.m.VideoMode(), "registers": g.m.CPU.R,
 		"segments": g.m.CPU.Seg, "ip": g.m.CPU.IP, "ticks": g.m.Ticks,
 		"key_reads": g.d.KeyReads, "key_waits": g.d.KeyWaits, "irq1": g.m.KeyIRQs,
 		"key_stacks":  g.keyStacks,
@@ -210,6 +244,8 @@ func (g *game) receipt() error {
 		"dos_exited":      g.d.Exited,
 		"dos_blocked":     g.d.Blocked,
 		"original_sha256": originalSHA, "prototype": true,
+		"audio":       audioStats,
+		"audio_waits": g.audioWaits,
 	}, "", "  ")
 	if err != nil {
 		return err
@@ -224,7 +260,37 @@ func (g *game) receipt() error {
 	if err = png.Encode(&buf, g.rgba); err != nil {
 		return err
 	}
-	return atomic(filepath.Join(g.out, "frame.png"), buf.Bytes())
+	var presented bytes.Buffer
+	if err = png.Encode(&presented, g.presentation); err != nil {
+		return err
+	}
+	if err = atomic(filepath.Join(g.out, "presentation.png"), presented.Bytes()); err != nil {
+		return err
+	}
+	if err = atomic(filepath.Join(g.out, "frame.png"), buf.Bytes()); err != nil {
+		return err
+	}
+	// 正式擷取只讀單一原子封裝，避免多個檔案跨更新代混用。
+	var bundle bytes.Buffer
+	z := zip.NewWriter(&bundle)
+	for _, item := range []struct {
+		name string
+		data []byte
+	}{
+		{"status.json", b}, {"frame-index.bin", g.m.Indexed()}, {"frame.png", buf.Bytes()}, {"presentation.png", presented.Bytes()},
+	} {
+		w, e := z.CreateHeader(&zip.FileHeader{Name: item.name, Method: zip.Store})
+		if e != nil {
+			return e
+		}
+		if _, e = w.Write(item.data); e != nil {
+			return e
+		}
+	}
+	if err = z.Close(); err != nil {
+		return err
+	}
+	return atomic(filepath.Join(g.out, "capture.zip"), bundle.Bytes())
 }
 
 // 與 dosgolem internal/state 的兩段 gzip/gob 相同，只供診斷續跑。
@@ -261,14 +327,23 @@ func main() {
 	out := flag.String("receipts", "", "研究收據目錄")
 	checkpoint := flag.String("checkpoint", "", "診斷快照；正式冷啟動不使用")
 	stopFile := flag.String("stop-file", "", "研究驗證的正常結束請求檔")
-	steps := flag.Uint64("steps-per-update", 400000, "每次更新的固定指令數")
+	steps := flag.Uint64("steps-per-update", 0, "每次更新固定指令數；0 採 dosgolem 名義時鐘")
+	mute := flag.Bool("mute", false, "停用主機音訊裝置，仍驗證原版音訊合成")
 	traceKeyStack := flag.Bool("trace-key-stack", false, "診斷 INT16 讀鍵前的原始堆疊，不改原版狀態")
+	theme := flag.String("theme", "original", "比較原型主題 original 或 hd-b，F12 切換")
+	materials := flag.String("materials", "", "比較原型的本機 B 材質目錄")
 	flag.Parse()
 	if *orig == "" || *saves == "" || *out == "" {
 		log.Fatal("請指定 -original、-saves、-receipts")
 	}
 	if *steps == 0 {
-		log.Fatal("每次更新指令數必須大於零")
+		*steps = uint64(a.StepsPerSecond() / 60)
+	}
+	if !*mute && *steps != uint64(a.StepsPerSecond()/60) {
+		log.Fatal("研究用自訂步速請同時指定 -mute；實際播放器使用名義時鐘")
+	}
+	if *theme != "original" && *theme != "hd-b" {
+		log.Fatal("未知的比較主題")
 	}
 	raw, err := os.ReadFile(filepath.Join(*orig, "RS201.EXE"))
 	if err != nil {
@@ -286,6 +361,8 @@ func main() {
 	if err = m.LoadEXE(raw); err != nil {
 		log.Fatal(err)
 	}
+	// 原版 /A 路線使用 AdLib。靜音只停主機播放器，不改硬體偵測。
+	m.SetAdLib(true)
 	tail := []byte("/A /D /x")
 	base := uint32(dg.PSPSeg) * 16
 	m.Write8(base+0x80, byte(len(tail)))
@@ -302,7 +379,18 @@ func main() {
 	d.Root = *orig
 	d.Scratch = *saves
 	d.BlockingBIOSKeys = true
-	g := &game{m: m, d: d, frame: ebiten.NewImage(320, 200), rgba: image.NewRGBA(image.Rect(0, 0, 320, 200)), out: *out, stopFile: *stopFile, perUpdate: *steps}
+	rom, err := os.ReadFile(filepath.Join(*orig, "RS201.ROM"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	g := &game{m: m, d: d, frame: ebiten.NewImage(1280, 800), rgba: image.NewRGBA(image.Rect(0, 0, 320, 200)), out: *out, stopFile: *stopFile, perUpdate: *steps, hdRenderer: hd.New(rom, *materials), hdEnabled: *theme == "hd-b"}
+	if *checkpoint == "" {
+		g.sound, err = sound.New(*mute)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer g.sound.Close()
+	}
 	g.textMods.CapsLock = m.Read8(0x417)&64 != 0
 	g.textMods.LeftShift = m.Read8(0x417)&2 != 0
 	g.textMods.RightShift = m.Read8(0x417)&1 != 0
@@ -326,14 +414,23 @@ func main() {
 			return previous(c, n)
 		}
 	}
-	ebiten.SetWindowTitle("模擬台北：原版整合研究原型")
+	ebiten.SetWindowTitle("模擬台北：原版與 HD 比較原型 · F12 切換")
 	ebiten.SetWindowSize(1280, 800)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
-	if err = ebiten.RunGame(g); err != nil {
-		log.Print(err)
+	runErr := ebiten.RunGame(g)
+	if g.sound != nil {
+		g.sound.Close()
 	}
 	g.refresh()
-	if err = g.receipt(); err != nil {
-		log.Print(err)
+	receiptErr := g.receipt()
+	if runErr != nil || receiptErr != nil {
+		if runErr != nil {
+			log.Print(runErr)
+		}
+		if receiptErr != nil {
+			log.Print(receiptErr)
+		}
+		d.Close()
+		os.Exit(1)
 	}
 }
