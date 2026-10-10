@@ -1,0 +1,193 @@
+diff --git a/docs/spec/202-bios-int09-default-handler.md b/docs/spec/202-bios-int09-default-handler.md
+index 965d184098b0c4602edc9ee35fcd33e3d9309e92..42b790618692150496502232a095c5ea2f690514 100644
+--- a/docs/spec/202-bios-int09-default-handler.md
++++ b/docs/spec/202-bios-int09-default-handler.md
+@@ -24,6 +24,10 @@
+ 
+ ## 2. 規則
+ 
++硬體 IRQ1 佇列不得因向量指向預設 stub 而停止送鍵。IF、PIC 遮罩與掃描碼節流
++仍有效。舊版 `machine.keyTick` 的 stub 段攔截條件與本規格衝突，必須移除。
++驗證須經完整硬體佇列進入預設向量，不能只直接呼叫 `biosInt9`。
++
+ 向量 9 指向模擬器的 stub 時（程式沒有接管，或接管後 chain 回來），`dos.handle` 的 `0x09`
+ 分支呼叫 `biosInt9`，做真機 BIOS 做的那部分：
+ 
+diff --git a/internal/dos/int9_test.go b/internal/dos/int9_test.go
+index 670d336d5c0205ea61b26075ced4e668a07a897f..811dd370aaf1935fe25a4a18ea05be923a81b529 100644
+--- a/internal/dos/int9_test.go
++++ b/internal/dos/int9_test.go
+@@ -116,3 +116,30 @@ func TestBiosInt9OnlyForOwnStub(t *testing.T) {
+ 		t.Error("程式自己的 ISR 在跑時不該有人替它填 BDA 緩衝")
+ 	}
+ }
++
++// 走完整硬體佇列與預設向量，避免只直接呼叫 biosInt9 而漏驗 IRQ1 路由。
++func TestBiosInt9HardwareQueueDefaultVector(t *testing.T) {
++	m, d := newTest(t)
++	if err := m.LoadCOM([]byte{0xEB, 0xFE}); err != nil {
++		t.Fatal(err)
++	}
++	d.Install()
++	m.CPU.SetFlags(cpu.IF)
++	m.KeyEvery = 20
++	m.SetNextKey(0)
++	m.QueueScanCodes(0x1C, 0x9C)
++	for i := 0; i < 100; i++ {
++		if err := m.Step(); err != nil {
++			t.Fatal(err)
++		}
++	}
++	if got := m.IRQ1Delivered(); got != 2 {
++		t.Fatalf("預設 BIOS 向量送達 %d 次 IRQ1，預期通碼與斷碼各一次", got)
++	}
++	if got := m.BIOSKeyCount(); got != 1 {
++		t.Fatalf("緩衝有 %d 個鍵，預期只有通碼產生一個", got)
++	}
++	if got := readKey(t, d); got != 0x1C0D {
++		t.Fatalf("收到 %04X，預期 Enter 1C0D", got)
++	}
++}
+diff --git a/internal/dos/keyboard_contract_test.go b/internal/dos/keyboard_contract_test.go
+index 5f2fa42b764ef18357ce41c55f77f6e3566c0587..5f977332b90901c14d5722b1afa5ca6f9398dae4 100644
+--- a/internal/dos/keyboard_contract_test.go
++++ b/internal/dos/keyboard_contract_test.go
+@@ -116,35 +116,29 @@ func TestStdinIsSharedAndConsumedOnce(t *testing.T) {
+ 	}
+ }
+ 
+-// 硬體路徑（IRQ1 ＋ 埠 60h）與 BIOS 路徑是分開的。
+-//
+-// **向量還指著 stub 的時候不能送**：送出去等於丟進垃圾桶（stub 只會 iret），
+-// 那個鍵就此消失，症狀是「第一個鍵沒反應、後面的才有」。
+-func TestIRQ1WaitsForTheProgramToInstallItsHandler(t *testing.T) {
++// 程式接管向量時走自己的 ISR，不同時由預設 BIOS 填入 BDA。
++func TestIRQ1UsesProgramHandlerWhenInstalled(t *testing.T) {
+ 	m, _ := newTest(t)
+-	m.QueueScan(0x1E, 0x9E)
+-	m.CPU.SetFlags(m.CPU.Flags | cpu.IF)
+-
+-	before := m.KeyQueueLen()
+-	m.Step()
+-	if m.IRQ1Delivered() != 0 {
+-		t.Fatal("向量還指著 stub 就送了 IRQ1——那個鍵會消失")
+-	}
+-	if m.KeyQueueLen() != before {
+-		t.Fatal("沒送出去卻把鍵從佇列拿走了")
+-	}
+-	if m.KeyStalls() == 0 {
+-		t.Error("沒送出去要記一筆 KeyStalls，否則與「遊戲不理會」分不開")
++	if err := m.LoadCOM([]byte{0xEB, 0xFE}); err != nil {
++		t.Fatal(err)
+ 	}
+-
+-	// 程式裝上自己的處理常式之後就送得出去。
+ 	m.Write16(0x09*4, 0)
+ 	m.Write16(0x09*4+2, 0x0900)
+-	m.WriteBytes(cpu.Addr(0x0900, 0), []byte{0xCF}) // iret
++	m.WriteBytes(cpu.Addr(0x0900, 0), []byte{0xCF})
++	m.CPU.SetFlags(m.CPU.Flags | cpu.IF)
++	m.QueueScan(0x1E, 0x9E)
++	m.KeyEvery = 20
+ 	m.SetNextKey(0)
+-	m.Step()
+-	if m.IRQ1Delivered() == 0 {
+-		t.Error("裝了處理常式還是送不出去")
++	for i := 0; i < 100; i++ {
++		if err := m.Step(); err != nil {
++			t.Fatal(err)
++		}
++	}
++	if m.IRQ1Delivered() != 2 || m.KeyQueueLen() != 0 {
++		t.Fatal("自訂 ISR 應收到通碼與斷碼")
++	}
++	if m.BIOSKeyCount() != 0 {
++		t.Fatal("自訂 ISR 未 chain 時，預設 BIOS 不得填入 BDA")
+ 	}
+ }
+ 
+diff --git a/internal/machine/keyboard.go b/internal/machine/keyboard.go
+index e6e8b1cad775a52c71800ed80ca3c1d12d96bc56..94ffdeb0dddc851f3829de47e6e99fd9882b4723 100644
+--- a/internal/machine/keyboard.go
++++ b/internal/machine/keyboard.go
+@@ -85,11 +85,8 @@ func (m *Machine) KeyQueueLen() int { return len(m.keyQueue) }
+ // IRQ1Delivered 是已經送出去的 IRQ1 次數。
+ func (m *Machine) IRQ1Delivered() uint64 { return m.KeyIRQs }
+ 
+-// KeyStalls 是「佇列裡有鍵、但沒有人裝 int 09h」而沒送出去的次數。
+-//
+-// **送不出去與遊戲不理會是兩件事**，沒有這個數字就分不開：
+-// 兩者的畫面表現都是「按了沒反應」。這個數字大就是前者——
+-// 程式根本沒有自己的 IRQ1 處理常式，鍵要走 BIOS（`-keys`）進去。
++// KeyStalls 保留舊版診斷介面。預設 BIOS 向量已由 dos 層處理（規格 202），
++// 不再因程式沒有自訂 ISR 而攔截 IRQ1；新執行的計數保持為零。
+ func (m *Machine) KeyStalls() uint64 { return m.keyStalls }
+ 
+ // keyTick 送鍵盤中斷（IRQ1 ＝ `int 09h`）。
+@@ -98,9 +95,8 @@ func (m *Machine) KeyStalls() uint64 { return m.keyStalls }
+ // 還沒把上一個掃描碼從 `0x60` 搬走就被覆蓋，而覆蓋是安靜的。
+ // 這裡用指令數當時鐘，與 `tick` 同一個模型（決定性優先）。
+ //
+-// ⚠ **向量還指著 stub 時不送，而且不從佇列拿走。** 送出去等於丟進垃圾桶
+-// （stub 只會記一筆未實作然後 iret），而那個鍵就此消失——症狀是
+-// 「第一個鍵沒反應，後面的才有」。留著等程式裝好處理常式再送。
++// 預設向量也要送：規格 202 的 BIOS int09 handler 會讀取 60h 埠並填 BDA。
++// 是否由 BIOS 或自訂 ISR 處理由 dos 分派，machine 不依向量段猜測。
+ func (m *Machine) keyTick() {
+ 	if len(m.keyQueue) == 0 || m.KeyEvery == 0 || m.Steps < m.nextKey {
+ 		return
+@@ -110,10 +106,6 @@ func (m *Machine) keyTick() {
+ 	if !m.CPU.Flag(cpu.IF) || m.picMask&0x02 != 0 {
+ 		return
+ 	}
+-	if m.Read16(0x09*4+2) == StubSeg {
+-		m.keyStalls++
+-		return
+-	}
+ 	m.nextKey = m.Steps + m.KeyEvery
+ 	ev := m.keyQueue[0]
+ 	m.keyQueue = m.keyQueue[1:]
+diff --git a/internal/machine/keyboard_test.go b/internal/machine/keyboard_test.go
+index a6382eb1f812eea4bc398d29c032c20b220f33ac..c67490f7948063fb0a8cc7c44ab0af8286622cbf 100644
+--- a/internal/machine/keyboard_test.go
++++ b/internal/machine/keyboard_test.go
+@@ -65,16 +65,35 @@ func TestTypeScanRejectsUnknownRune(t *testing.T) {
+ 	}
+ }
+ 
+-func TestKeyboardIRQNeedsAHandlerInstalled(t *testing.T) {
++func TestKeyboardIRQDeliversToDefaultBIOSVector(t *testing.T) {
+ 	m := New()
++	m.CPU.Seg[cpu.SS] = 0x3000
++	m.CPU.R[cpu.SP] = 0xFFF0
+ 	m.CPU.SetFlags(cpu.IF)
+ 	if err := m.TypeScan("f"); err != nil {
+ 		t.Fatal(err)
+ 	}
+ 	m.keyTick()
+-	// 向量還指著 stub 就沒有人會讀掃描碼；這時送出去等於把它丟掉。
+-	if m.KeyIRQs != 0 || m.KeyQueueLen() != 2 {
+-		t.Fatalf("向量還指著 stub 卻送了 %d 次中斷，佇列剩 %d", m.KeyIRQs, m.KeyQueueLen())
++	if m.KeyIRQs != 1 || m.KeyQueueLen() != 1 {
++		t.Fatalf("預設 BIOS 向量送了 %d 次中斷，佇列剩 %d", m.KeyIRQs, m.KeyQueueLen())
++	}
++	if got := m.In8(0x60); got != 0x21 {
++		t.Fatalf("預設向量的 60h 埠收到 %02X，預期 f 通碼 21", got)
++	}
++}
++
++func TestKeyboardIRQHoldsWhilePICMasked(t *testing.T) {
++	m := armKeyboard(t)
++	m.Out8(0x21, 0x02)
++	m.QueueScanCodes(0x1C)
++	m.keyTick()
++	if m.KeyIRQs != 0 || m.KeyQueueLen() != 1 {
++		t.Fatal("PIC 遮罩期間不得送出或丟棄按鍵")
++	}
++	m.Out8(0x21, 0)
++	m.keyTick()
++	if m.KeyIRQs != 1 || m.KeyQueueLen() != 0 {
++		t.Fatal("解除 PIC 遮罩後應送出保留的按鍵")
+ 	}
+ }
+ 

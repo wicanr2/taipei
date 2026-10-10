@@ -52,7 +52,10 @@
 | 歷程與交接 | [WORKLOG.md](WORKLOG.md) | 按時間追加，包含驗證與 Docker 清理狀態 |
 | 原版研究 | [docs/re/001-input-baseline.md](docs/re/001-input-baseline.md) | 固定輸入雜湊、工具版本、定位與證據等級 |
 | 原版盤點工具 | [workspace/tools/inventory.py](workspace/tools/inventory.py) | Docker 內唯讀盤點使用者提供的解壓來源 |
-| 正式行為與 HD 契約 | `docs/spec/`，規劃 | DRAFT／READY／CONFORMED；規格回鏈 Issue |
+| 原版啟動與缺口 | [docs/re/002-dosgolem-startup.md](docs/re/002-dosgolem-startup.md) | 固定工具、四份補丁、冷啟動收據與重播 |
+| 原版探針 | [workspace/tools/probe.sh](workspace/tools/probe.sh) | Docker 內從固定基底與補丁重建，支援範圍見啟動基線 |
+| 正式行為與 HD 契約 | [CONTEXT.md 的文件入口](CONTEXT.md#文件入口) | DRAFT／READY／CONFORMED；規格回鏈 Issue |
+| 自有程式授權 | [LICENSE](LICENSE) | RRSAL-1.0，不授權原版或第三方元件 |
 | 驗收範圍 | [docs/verification-matrix.md](docs/verification-matrix.md) | 串起 Issue、玩家路徑、證據與未驗限制 |
 | 執行與交付摘要 | [README.md](README.md) | 穩定入口；不寫逐輪流水帳 |
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |

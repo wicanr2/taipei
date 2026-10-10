@@ -1,0 +1,265 @@
+diff --git a/docs/spec/008-blocking-console-input.md b/docs/spec/008-blocking-console-input.md
+index c2831d271734f113eeadbb3460906d21f9d80b7c..5141deb6b5d0516639d99d31ea68ccdbcea33d1d 100644
+--- a/docs/spec/008-blocking-console-input.md
++++ b/docs/spec/008-blocking-console-input.md
+@@ -125,3 +125,13 @@ d.KeyWaits       // 累計「佇列空時被要求讀鍵」次數
+ 探針用 `-blocking-bios-keys` 啟用，並在載入狀態檔之後套用。這是執行政策，
+ 與 `NonBlockingKeys` 一樣不寫入原版存檔。平台前提為 RBIL Release 61 的 INT16
+ 讀鍵契約，屬平台規格近似，不宣稱逐週期 BIOS 一致。
++
++## 8. 原生鍵盤接入 DOS 主控台
++
++AH=01/07/08 與 AH=06 輸入依待讀延伸碼、BDA、DOS.Keys、Stdin 的順序取字元。
++AH=0B 只查上述來源、不消耗。硬體按鍵 ASCII 為 0 時先回 00，再回掃描碼；
++AH=0C 清除待讀延伸碼，仍保留回放 Stdin。執行器狀態檔保存待讀延伸碼，
++舊檔缺欄位視為沒有待讀碼。AH=06 仍不阻塞，以 ZF 表示是否讀到字元。
++
++依據 RBIL Release 61：AH=06 輸入與 AH=0B 狀態。此處接通已存在的 BIOS 輸入，
++不實作完整裝置重導向、Ctrl-Break 或 DOS 驅動程式。
+diff --git a/internal/dos/console_keyboard_test.go b/internal/dos/console_keyboard_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..216f5409d3e03f962873e9437b444f64c9a9a4fd
+--- /dev/null
++++ b/internal/dos/console_keyboard_test.go
+@@ -0,0 +1,80 @@
++package dos
++
++import (
++	"bytes"
++	"testing"
++
++	"github.com/wicanr2/dosgolem/internal/cpu"
++)
++
++func TestDOSConsoleReadsHardwareKeyboardOnce(t *testing.T) {
++	m, d := newTest(t)
++	if err := m.LoadCOM([]byte{0xEB, 0xFE}); err != nil {
++		t.Fatal(err)
++	}
++	d.Install()
++	m.CPU.SetFlags(cpu.IF)
++	m.KeyEvery = 20
++	m.SetNextKey(0)
++	m.QueueScanCodes(0x1E, 0x9E)
++	for i := 0; i < 100; i++ {
++		if err := m.Step(); err != nil {
++			t.Fatal(err)
++		}
++	}
++	call(m, d, 0x21, 0x0B00)
++	if uint8(m.CPU.R[cpu.AX]) != 0xFF {
++		t.Fatal("DOS 狀態看不到硬體按鍵")
++	}
++	call(m, d, 0x21, 0x0700)
++	if uint8(m.CPU.R[cpu.AX]) != 'a' || d.Blocked {
++		t.Fatal("DOS 未讀出硬體字母")
++	}
++	call(m, d, 0x21, 0x0B00)
++	if uint8(m.CPU.R[cpu.AX]) != 0 || m.BIOSKeyCount() != 0 {
++		t.Fatal("同一個鍵被讀取後仍存在")
++	}
++}
++
++func TestDOSConsoleExtendedKeySurvivesStateAndFlush(t *testing.T) {
++	m, d := newTest(t)
++	d.PushKey(Key{Scan: 0x4D})
++	call(m, d, 0x21, 0x0700)
++	if uint8(m.CPU.R[cpu.AX]) != 0 || d.Blocked {
++		t.Fatal("延伸鍵應先回 00")
++	}
++	var saved bytes.Buffer
++	if err := d.SaveState(&saved); err != nil {
++		t.Fatal(err)
++	}
++	call(m, d, 0x21, 0x0700)
++	if uint8(m.CPU.R[cpu.AX]) != 0x4D {
++		t.Fatal("第二次應回方向鍵掃描碼")
++	}
++	if err := d.LoadState(&saved); err != nil {
++		t.Fatal(err)
++	}
++	call(m, d, 0x21, 0x0B00)
++	if uint8(m.CPU.R[cpu.AX]) != 0xFF {
++		t.Fatal("狀態往返遺失待讀延伸碼")
++	}
++	call(m, d, 0x21, 0x0C00)
++	call(m, d, 0x21, 0x0B00)
++	if uint8(m.CPU.R[cpu.AX]) != 0 {
++		t.Fatal("清緩衝遺留延伸碼")
++	}
++}
++
++func TestDOSDirectConsoleInputConsumesAvailableKey(t *testing.T) {
++	m, d := newTest(t)
++	d.PushKey(Key{Scan: 0x39, ASCII: ' '})
++	m.CPU.R[cpu.DX] = 0xFF
++	call(m, d, 0x21, 0x0600)
++	if uint8(m.CPU.R[cpu.AX]) != ' ' || m.CPU.Flags&cpu.ZF != 0 {
++		t.Fatal("AH=06 未讀出空白鍵")
++	}
++	call(m, d, 0x21, 0x0600)
++	if uint8(m.CPU.R[cpu.AX]) != 0 || m.CPU.Flags&cpu.ZF == 0 || d.Blocked {
++		t.Fatal("AH=06 空讀必須不阻塞")
++	}
++}
+diff --git a/internal/dos/dos.go b/internal/dos/dos.go
+index f68b959ccbe0b4f843a9908002f34f4c1747d8ca..83fdca342b7350b454aed7bf25a4d1a9b0416d93 100644
+--- a/internal/dos/dos.go
++++ b/internal/dos/dos.go
+@@ -221,6 +221,10 @@ type DOS struct {
+ 	// 舊 API 的空佇列回 AX=0；規格 008-blocking-console-input.md 第 7 節。
+ 	BlockingBIOSKeys bool
+ 
++	// DOS 延伸鍵分兩次讀出：先 00，再讀掃描碼。狀態檔保留尚未讀出的後半。
++	consolePendingScan uint8
++	consoleHasScan     bool
++
+ 	// Blocked 表示這一步停在阻塞式輸入上（佇列空）。取到鍵時清掉。
+ 	// 上層可以據此停下來、餵鍵、再繼續。
+ 	Blocked bool
+diff --git a/internal/dos/dosinfo.go b/internal/dos/dosinfo.go
+index c37bc03752fa35b21438752a57e32c73f60c1d43..24106d27dbe40438658a522e1adf8da90b266962 100644
+--- a/internal/dos/dosinfo.go
++++ b/internal/dos/dosinfo.go
+@@ -28,6 +28,7 @@ import (
+ func (d *DOS) flushAndInput(c *cpu.CPU) {
+ 	d.M.FlushKeys()
+ 	d.Keys = nil
++	d.consoleHasScan = false
+ 	// **直接叫下層，不要遞迴回 `int21`**：那會讓同一次呼叫在 `CallTrace`
+ 	// 裡出現兩筆，而看 trace 的人會以為程式真的叫了兩次。
+ 	switch sub := al(c); sub {
+diff --git a/internal/dos/int21.go b/internal/dos/int21.go
+index 5369d5fdd3079789fc08a63458a850c2ad2cc0f3..2eba7f3ff1676313b92c7a7452bea2e86c3cdede 100644
+--- a/internal/dos/int21.go
++++ b/internal/dos/int21.go
+@@ -46,7 +46,7 @@ func (d *DOS) int21(c *cpu.CPU) {
+ 		d.conOut(c, fn)
+ 
+ 	case 0x0B: // 查有沒有按鍵：AL=FFh 有、AL=00h 沒有
+-		if len(d.Stdin) == 0 {
++		if !d.consoleReady() {
+ 			setAL(c, 0x00)
+ 		} else {
+ 			setAL(c, 0xFF)
+@@ -313,7 +313,8 @@ func (d *DOS) int21(c *cpu.CPU) {
+ //
+ // 要讓它往下走就餵鍵（probe 的 `-keys`、oracle 的 `SendKeys`），不是加大 `-steps`。
+ func (d *DOS) conIn(c *cpu.CPU, fn uint8) {
+-	if len(d.Stdin) == 0 {
++	ch, ok := d.readConsoleKey()
++	if !ok {
+ 		d.KeyWaits++
+ 		if !d.NonBlockingKeys {
+ 			// 阻塞：把 CS:IP 退回這道 INT，讓它下一步重跑。
+@@ -330,9 +331,7 @@ func (d *DOS) conIn(c *cpu.CPU, fn uint8) {
+ 		return
+ 	}
+ 	d.Blocked = false
+-	ch := d.Stdin[0]
+ 	d.noteKey(fmt.Sprintf("int21-AH%02X", fn), ch)
+-	d.Stdin = d.Stdin[1:]
+ 	setAL(c, ch)
+ 	if fn == 0x01 { // 只有 AH=01h 回顯
+ 		d.Console = append(d.Console, ch)
+@@ -350,14 +349,50 @@ func (d *DOS) conOut(c *cpu.CPU, fn uint8) {
+ 	if fn == 0x06 && ch == 0xFF {
+ 		// `DL=0FFh` 是「直接主控台**輸入**」，不是輸出。
+ 		// 沒有按鍵時要回 ZF=1。
+-		setAL(c, 0)
+-		c.SetFlags(c.Flags | cpu.ZF)
++		if key, ok := d.readConsoleKey(); ok {
++			setAL(c, key)
++			c.SetFlags(c.Flags &^ cpu.ZF)
++			d.noteKey("int21-AH06", key)
++		} else {
++			setAL(c, 0)
++			c.SetFlags(c.Flags | cpu.ZF)
++		}
+ 		return
+ 	}
+ 	d.Console = append(d.Console, ch)
+ 	clearCarry(c)
+ }
+ 
++func (d *DOS) consoleReady() bool {
++	return d.consoleHasScan || d.M.BIOSKeyCount() > 0 || len(d.Keys) > 0 || len(d.Stdin) > 0
++}
++
++// readConsoleKey 共用 BIOS 的實體鍵盤來源。延伸鍵依 DOS 契約分兩次回傳。
++func (d *DOS) readConsoleKey() (uint8, bool) {
++	if d.consoleHasScan {
++		d.consoleHasScan = false
++		return d.consolePendingScan, true
++	}
++	word, ok := d.M.PopKey()
++	if !ok && len(d.Keys) > 0 {
++		word, ok = d.Keys[0], true
++		d.Keys = d.Keys[1:]
++	}
++	if ok {
++		d.KeysConsumed++
++		if uint8(word) == 0 {
++			d.consolePendingScan, d.consoleHasScan = uint8(word>>8), true
++		}
++		return uint8(word), true
++	}
++	if len(d.Stdin) > 0 {
++		ch := d.Stdin[0]
++		d.Stdin = d.Stdin[1:]
++		return ch, true
++	}
++	return 0, false
++}
++
+ // parseFilename 是 `AH=29h`：把 `DS:SI` 的檔名解析進 `ES:DI` 的 FCB。
+ //
+ // 這一版只做**實際被用到的部分**：填磁碟機代號與 8.3 名稱、回報有沒有萬用字元、
+diff --git a/internal/dos/state.go b/internal/dos/state.go
+index 5e45d703d9c223a5854cbce2d055fb5fc4e1e477..f78830b2c2982625f7f880e32d2ca09c663d2dcb 100644
+--- a/internal/dos/state.go
++++ b/internal/dos/state.go
+@@ -112,8 +112,10 @@ type dosState struct {
+ 	EMSFrame   [4]emsMapState
+ 	EMSSaved   [4]emsMapState
+ 
+-	Exited   bool
+-	ExitCode uint8
++	Exited             bool
++	ExitCode           uint8
++	ConsolePendingScan uint8
++	ConsoleHasScan     bool
+ }
+ 
+ // SaveState 把 DOS 這一層寫出去。
+@@ -123,13 +125,15 @@ func (d *DOS) SaveState(w io.Writer) error {
+ 		Drive: d.Drive, Dir: d.Dir, RootDir: d.RootDir, Now: d.Now, Root: d.Root,
+ 		FreeSeg: d.freeSeg,
+ 
+-		CurPSP:   d.curPSP,
+-		LastExit: d.lastExit,
+-		Queue:    append([]Queued(nil), d.queue...),
+-		EMB:      map[uint16][]byte{},
+-		NextEMB:  d.nextEMB,
+-		Exited:   d.Exited,
+-		ExitCode: d.ExitCode,
++		CurPSP:             d.curPSP,
++		LastExit:           d.lastExit,
++		Queue:              append([]Queued(nil), d.queue...),
++		EMB:                map[uint16][]byte{},
++		NextEMB:            d.nextEMB,
++		Exited:             d.Exited,
++		ExitCode:           d.ExitCode,
++		ConsolePendingScan: d.consolePendingScan,
++		ConsoleHasScan:     d.consoleHasScan,
+ 	}
+ 	// 滑鼠的座標與按鍵要留，觀測紀錄不留。
+ 	s.Mouse = Mouse{X: d.Mouse.X, Y: d.Mouse.Y, Buttons: d.Mouse.Buttons,
+@@ -210,6 +214,7 @@ func (d *DOS) LoadState(r io.Reader) error {
+ 		d.arena = append(d.arena, memBlock{seg: b.Seg, size: b.Size, free: b.Free})
+ 	}
+ 	d.Exited, d.ExitCode = s.Exited, s.ExitCode
++	d.consolePendingScan, d.consoleHasScan = s.ConsolePendingScan, s.ConsoleHasScan
+ 
+ 	d.handles = map[uint16]*handle{}
+ 	for _, hs := range s.Handles {

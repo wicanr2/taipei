@@ -1,0 +1,23 @@
+diff --git a/cmd/probe/main.go b/cmd/probe/main.go
+index d509c37..116eeb4 100644
+--- a/cmd/probe/main.go
++++ b/cmd/probe/main.go
+@@ -104,6 +104,7 @@ func main() {
+ 	watch := flag.String("watch", "", "監看記憶體寫入，格式 <線性hex>-<線性hex>；"+
+ 		"每次寫入印出步數與 CS:IP（除錯「誰把向量改掉了」）")
+ 	logCalls := flag.Bool("log-calls", false, "統計每一種 (中斷, AH) 呼叫幾次")
++	noCallTrace := flag.Bool("no-call-trace", false, "停用逐次 DOS 呼叫軌跡，供長時間啟動使用；不改執行結果")
+ 	tick := flag.Uint64("tick", 0, "每幾道指令送一次計時器中斷（0 ＝ 用預設）")
+ 	press := flag.String("press", "", "用 IRQ1 送的按鍵，逗號分隔。"+
+ 		"可用名稱：up down left right enter esc space，或單一字元／16 進位掃描碼")
+@@ -363,7 +364,9 @@ func main() {
+ 			d.Enqueue(strings.TrimSpace(q), "")
+ 		}
+ 	}
+-	d.CallTrace = []dos.CallRec{}
++	if !*noCallTrace {
++		d.CallTrace = []dos.CallRec{}
++	}
+ 	if *memTrace {
+ 		d.MemTrace = []dos.MemCall{}
+ 	}

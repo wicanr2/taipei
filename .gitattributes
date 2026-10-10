@@ -1,0 +1,2 @@
+# 補丁的 context 行刻意保留前導空格、tab 與空白行。
+workspace/tools/*.patch -whitespace

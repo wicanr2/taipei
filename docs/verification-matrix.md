@@ -14,3 +14,6 @@
 | HD 接入 | [#7](https://github.com/wicanr2/taipei/issues/7) | 來源／動畫／遮擋／清除／切換，機器狀態與存檔比較 | 圖片存在不代表正確播放 |
 | 玩家抽樣 | [#8](https://github.com/wicanr2/taipei/issues/8) | 先登記情境，正常冷啟動至核心操作及存退讀；有效負對照 | 限實際驗證範圍，不宣稱全程試玩 |
 | 交付 | [#9](https://github.com/wicanr2/taipei/issues/9) | 實際封包啟動、權利、manifest、SHA-256 與平台結果 | Wine、結構及真機驗證分開記錄 |
+
+目前已驗證冷啟動到城市選擇，主選單雙重播一致。四項通用缺口的測試與原版收據見
+[啟動基線](re/002-dosgolem-startup.md)。GUI、核心操作、存退讀與 HD 尚未通過。

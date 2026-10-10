@@ -1,0 +1,134 @@
+diff --git a/cmd/probe/main.go b/cmd/probe/main.go
+index c81a66ab66ef97c6c4acf700505a026159ed8498..d509c37610c9c47a2a8998b5c13303c7b37f555e 100644
+--- a/cmd/probe/main.go
++++ b/cmd/probe/main.go
+@@ -196,6 +196,7 @@ func main() {
+ 			"    直接比對 0040:001A／001C 判斷有沒有按鍵的程式只認這一條。")
+ 	biosKeyEvery := flag.Uint64("bios-key-every", 2_000_000, "兩次送鍵之間隔幾道指令")
+ 	biosKeyFrom := flag.Uint64("bios-key-from", 2_000_000, "第幾道指令開始送第一個鍵")
++	blockingBIOSKeys := flag.Bool("blocking-bios-keys", false, "啟用 int16 AH=00/10 的等待式讀鍵，預設保留舊行為")
+ 	covOut := flag.String("coverage", "",
+ 		"把執行過的線性位址寫成 JSON 區段表。\n"+
+ 			"    打包過的執行檔靜態反組譯是亂碼；這份清單是「哪些 byte 是程式碼」\n"+
+@@ -398,6 +399,7 @@ func main() {
+ 		fmt.Printf("從 %s 接著跑（第 %d 道指令，素材目錄 %s）\n",
+ 			*loadState, m.Steps, d.Root)
+ 	}
++	d.BlockingBIOSKeys = *blockingBIOSKeys
+ 	saves, err := parseSaveState(*saveState)
+ 	if err != nil {
+ 		die(err)
+diff --git a/docs/spec/008-blocking-console-input.md b/docs/spec/008-blocking-console-input.md
+index ee5055f3834b6cdbba0d80cccfb981c7422fa976..c2831d271734f113eeadbb3460906d21f9d80b7c 100644
+--- a/docs/spec/008-blocking-console-input.md
++++ b/docs/spec/008-blocking-console-input.md
+@@ -114,3 +114,14 @@ d.KeyWaits       // 累計「佇列空時被要求讀鍵」次數
+ - `AH=0Ch`（清緩衝後轉呼其他功能）沒實作；目前兩支目標程式都沒呼叫它。
+ - 「該餵什麼鍵」不在本規格範圍。阻塞模型只保證**不說謊**，
+   不保證走得到某個畫面；走得到是 `apps/` 那一層的事。
++
++## 7. BIOS 讀鍵的明示等待模式
++
++`DOS.BlockingBIOSKeys` 預設 false，保留第 3 節記錄的既有行為。明示設為 true 時，
++`int16 AH=00/10` 空佇列用 `CPU.Rewind()` 等待，不改暫存器；BDA、Keys、Stdin 任一
++有鍵時依既有順序只取一個，清除 `Blocked`。AH=01/11 查詢仍不阻塞、不消耗。
++計時器、IF、PIC 與硬體 IRQ1 依原規則執行。
++
++探針用 `-blocking-bios-keys` 啟用，並在載入狀態檔之後套用。這是執行政策，
++與 `NonBlockingKeys` 一樣不寫入原版存檔。平台前提為 RBIL Release 61 的 INT16
++讀鍵契約，屬平台規格近似，不宣稱逐週期 BIOS 一致。
+diff --git a/internal/dos/bios.go b/internal/dos/bios.go
+index 51c27d1762713b99e979e62fdb75db7ec79484a0..07eda9e7dc01526a71f634d2af24b8df1cd85bd7 100644
+--- a/internal/dos/bios.go
++++ b/internal/dos/bios.go
+@@ -304,6 +304,7 @@ func (d *DOS) int16(c *cpu.CPU) {
+ 	switch ah(c) {
+ 	case 0x00, 0x10: // 讀按鍵（真 BIOS 是阻塞的）
+ 		d.KeyPolls++
++		d.Blocked = false
+ 		// **BDA 的環形緩衝優先。** 那是 BIOS 真正的鍵盤佇列，
+ 		// 程式也可能繞過 int 16h 直接讀它（見 machine.PushBIOSKey）；
+ 		// 兩邊各留一份的話，同一個鍵會被讀兩次。
+@@ -321,6 +322,12 @@ func (d *DOS) int16(c *cpu.CPU) {
+ 			return
+ 		}
+ 		if len(d.Stdin) == 0 {
++			if d.BlockingBIOSKeys {
++				d.KeyWaits++
++				d.Blocked = true
++				c.Rewind()
++				return
++			}
+ 			c.R[cpu.AX] = 0
+ 			return
+ 		}
+diff --git a/internal/dos/bios_blocking_test.go b/internal/dos/bios_blocking_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..04e8e3fc2eb105f22a096c5923ce595c735021a3
+--- /dev/null
++++ b/internal/dos/bios_blocking_test.go
+@@ -0,0 +1,49 @@
++package dos
++
++import (
++	"testing"
++
++	"github.com/wicanr2/dosgolem/internal/cpu"
++)
++
++func TestBlockingBIOSReadWaitsAndResumesFromHardware(t *testing.T) {
++	for _, ah := range []byte{0x00, 0x10} {
++		m, d := newTest(t)
++		if err := m.LoadCOM([]byte{0xB4, ah, 0xCD, 0x16, 0xA3, 0x00, 0x02, 0xEB, 0xFE}); err != nil {
++			t.Fatal(err)
++		}
++		d.Install()
++		d.BlockingBIOSKeys = true
++		m.CPU.R[cpu.AX] = 0x00A5
++		m.CPU.SetFlags(cpu.IF)
++		m.Write16(0x1200, 0xABCD)
++		for i := uint64(0); i < 2*m.IRQ0Every+100; i++ {
++			if err := m.Step(); err != nil {
++				t.Fatal(err)
++			}
++		}
++		if !d.Blocked || d.KeyWaits == 0 || m.Read16(0x1200) != 0xABCD {
++			t.Fatalf("AH=%02X 空讀已向後執行：IP=%04X Blocked=%v", ah, m.CPU.IP, d.Blocked)
++		}
++		if m.CPU.R[cpu.AX] != uint16(ah)<<8|0xA5 {
++			t.Fatal("等待時不得偽造 AX")
++		}
++		if m.Ticks == 0 {
++			t.Fatal("等待時 BIOS 計時器仍須前進")
++		}
++		m.KeyEvery = 20
++		m.SetNextKey(m.Steps)
++		m.QueueScanCodes(0x39, 0xB9)
++		for i := 0; i < 100; i++ {
++			if err := m.Step(); err != nil {
++				t.Fatal(err)
++			}
++		}
++		if got := m.Read16(0x1200); got != 0x3920 {
++			t.Fatalf("AH=%02X 收到 %04X，預期空白鍵 3920", ah, got)
++		}
++		if d.Blocked || d.KeysConsumed != 1 || m.BIOSKeyCount() != 0 || m.IRQ1Delivered() != 2 {
++			t.Fatal("按下與放開只能解除一次等待")
++		}
++	}
++}
+diff --git a/internal/dos/dos.go b/internal/dos/dos.go
+index c10cf28a10235c059229b357abacac80638c42bd..f68b959ccbe0b4f843a9908002f34f4c1747d8ca 100644
+--- a/internal/dos/dos.go
++++ b/internal/dos/dos.go
+@@ -217,6 +217,10 @@ type DOS struct {
+ 	// 不是一個安靜說謊的模型。規格 `docs/spec/008`。
+ 	NonBlockingKeys bool
+ 
++	// BlockingBIOSKeys 啟用 int16 AH=00/10 的等待語意。預設 false 保留
++	// 舊 API 的空佇列回 AX=0；規格 008-blocking-console-input.md 第 7 節。
++	BlockingBIOSKeys bool
++
+ 	// Blocked 表示這一步停在阻塞式輸入上（佇列空）。取到鍵時清掉。
+ 	// 上層可以據此停下來、餵鍵、再繼續。
+ 	Blocked bool
