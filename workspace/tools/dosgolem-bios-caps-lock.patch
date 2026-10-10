@@ -1,0 +1,84 @@
+diff --git a/internal/dos/caps_lock_test.go b/internal/dos/caps_lock_test.go
+new file mode 100644
+index 0000000..9d0f4d4
+--- /dev/null
++++ b/internal/dos/caps_lock_test.go
+@@ -0,0 +1,41 @@
++package dos
++
++import "testing"
++
++func TestCapsLockToggleAndTranslation(t *testing.T) {
++	m, d := newTest(t)
++	send := func(code byte) { m.SetKeyPort(code); d.biosInt9(m.CPU) }
++	send(0x3a)
++	send(0x3a)
++	if m.Read8(0x417)&64 == 0 || m.Read8(0x418)&64 == 0 {
++		t.Fatal("Caps make must latch once")
++	}
++	send(0xba)
++	if m.Read8(0x418)&64 != 0 {
++		t.Fatal("Caps release must clear held state")
++	}
++	for _, code := range []byte{0x1e, 0x02, 0x2a, 0x1e, 0x02, 0xaa, 0x1d, 0x1e, 0x9d} {
++		send(code)
++	}
++	var got []byte
++	for {
++		w, ok := m.PopKey()
++		if !ok {
++			break
++		}
++		got = append(got, byte(w))
++	}
++	if string(got) != "A1a!\x01" {
++		t.Fatalf("BIOS read %q", got)
++	}
++	send(0x3a)
++	send(0xba)
++	send(0x1e)
++	if m.Read8(0x417)&64 != 0 {
++		t.Fatal("Second Caps press must unlock")
++	}
++	w, ok := m.PopKey()
++	if !ok || byte(w) != 'a' {
++		t.Fatalf("unlocked key %x", w)
++	}
++}
+diff --git a/internal/dos/int9.go b/internal/dos/int9.go
+index fb5b84b..5429cbc 100644
+--- a/internal/dos/int9.go
++++ b/internal/dos/int9.go
+@@ -79,6 +79,19 @@ func (d *DOS) biosInt9(c *cpu.CPU) {
+ 	code := d.M.In8(0x60)
+ 	scan, release := code&0x7F, code&0x80 != 0
+ 	flags := d.M.Read8(bdaSeg*16 + bdaKbdFlags)
++	if scan == 0x3a {
++		const heldAt = bdaSeg*16 + 0x18
++		held := d.M.Read8(heldAt)
++		if release {
++			held &^= 0x40
++		} else if held&0x40 == 0 {
++			flags ^= 0x40
++			held |= 0x40
++		}
++		d.M.Write8(bdaSeg*16+bdaKbdFlags, flags)
++		d.M.Write8(heldAt, held)
++		return
++	}
+ 
+ 	// 修飾鍵：只更新 BDA 的狀態，不產生按鍵。
+ 	var bit uint8
+@@ -112,7 +125,11 @@ func (d *DOS) biosInt9(c *cpu.CPU) {
+ 	case extendedKey(scan):
+ 		// ASCII ＝ 0
+ 	case scan < 0x80:
+-		if shift {
++		useShift := shift
++		if flags&0x40 != 0 && unshiftedASCII[scan] >= 'a' && unshiftedASCII[scan] <= 'z' {
++			useShift = !useShift
++		}
++		if useShift {
+ 			ascii = shiftedASCII[scan]
+ 		} else {
+ 			ascii = unshiftedASCII[scan]

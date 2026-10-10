@@ -46,7 +46,7 @@ the English translation below is provided for convenience only）。
       著作權人創作的譯文與量測所得的資料表屬於本作品，在著作權人享有權利的
       範圍內依本條款授權；譯文是原版文字的衍生著作，使用譯文重現遊戲仍以
       自備原版為前提。
-  (d) 本儲存庫或發行包中含有的第三方元件（例如 Go 執行環境及建置時引用的 dosgolem）依各自的授權條款提供，不受本條款拘束；其授權聲明
+  (d) 本儲存庫或發行包中含有的第三方元件（例如 Go 執行環境、dosgolem 及 Ebitengine）依各自的授權條款提供，不受本條款拘束；其授權聲明
       隨同散布。
 
 第 3 條　非商業授權
@@ -202,7 +202,7 @@ separate agreement with the copyright holder.
        translations are derivative of the original text, and using them to
        run the game still requires the user's own original copy.
    (d) Third-party components in this repository or its packages (for example
-       the Go runtime and dosgolem used during builds)
+       the Go runtime, dosgolem, and Ebitengine)
        are provided under their own licenses, which are distributed with them,
        and are not governed by this license.
 

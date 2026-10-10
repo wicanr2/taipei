@@ -15,5 +15,10 @@
 | 玩家抽樣 | [#8](https://github.com/wicanr2/taipei/issues/8) | 先登記情境，正常冷啟動至核心操作及存退讀；有效負對照 | 限實際驗證範圍，不宣稱全程試玩 |
 | 交付 | [#9](https://github.com/wicanr2/taipei/issues/9) | 實際封包啟動、權利、manifest、SHA-256 與平台結果 | Wine、結構及真機驗證分開記錄 |
 
-目前已驗證冷啟動到城市選擇，主選單雙重播一致。四項通用缺口的測試與原版收據見
-[啟動基線](re/002-dosgolem-startup.md)。GUI、核心操作、存退讀與 HD 尚未通過。
+目前已驗證正常 GUI 冷啟動、新遊戲、移動游標、檔名輸入及退格、原版實際存檔、
+原版離開、全新 EXE 啟動與實際讀檔，兩次均由原版返回 DOS。沒有使用機器快照。
+收據為 `workspace/runs/gui-cold/result.json`，來源 35 個檔案雜湊不變。
+建設操作、音訊、HD 動態接入與跨平台封包仍未通過。
+
+HD 離線原型只涵蓋水面、沙地與樹冠，素材撤除及完整來源失配負對照通過。
+詳見[原型契約](spec/008-hd-material-prototype.md)，不當成 #7 或 #8 的正式收據。
