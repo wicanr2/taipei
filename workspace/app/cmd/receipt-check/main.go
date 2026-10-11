@@ -26,12 +26,26 @@ func main() {
 	dir := flag.String("dir", "", "GUI 收據目錄")
 	fontReference := flag.String("font-reference", "", "含 Noto 標題時須提供已展示的固定參考圖")
 	uiReference := flag.String("ui-reference", "", "含工具圖示時須提供固定 HD atlas")
+	dialogReference := flag.String("dialog-reference", "", "含說明視窗時須提供固定 Noto 面板參考")
 	flag.Parse()
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
 	var reference image.Image
 	var icons image.Image
+	var dialog image.Image
+	if *dialogReference != "" {
+		raw, err := os.ReadFile(*dialogReference)
+		check(err)
+		if fmt.Sprintf("%x", sha256.Sum256(raw)) != "6bfa6faeffd0950d31af1a5bb9da84aa71af4a34dc36dae374d3d387b1e6c7e9" {
+			panic("說明視窗參考雜湊失配")
+		}
+		dialog, err = png.Decode(bytes.NewReader(raw))
+		check(err)
+		if dialog.Bounds() != image.Rect(0, 0, 944, 528) {
+			panic("說明視窗參考尺寸不符")
+		}
+	}
 	if *uiReference != "" {
 		raw, err := os.ReadFile(*uiReference)
 		check(err)
@@ -83,16 +97,20 @@ func main() {
 			files[f.Name] = p
 		}
 		var s struct {
+			Mode            int          `json:"mode"`
+			Enabled         bool         `json:"hd_enabled"`
 			SHA             string       `json:"frame_index_sha256"`
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
-				Painted    int
-				FontLabels int    `json:"font_labels"`
-				FontReason string `json:"font_reason"`
-				UIIcons    int    `json:"ui_icons"`
-				UIIconMask uint16 `json:"ui_icon_mask"`
-				UIReason   string `json:"ui_reason"`
+				Painted      int
+				FontLabels   int    `json:"font_labels"`
+				FontReason   string `json:"font_reason"`
+				UIIcons      int    `json:"ui_icons"`
+				UIIconMask   uint16 `json:"ui_icon_mask"`
+				UIReason     string `json:"ui_reason"`
+				Dialog       string `json:"dialog"`
+				DialogReason string `json:"dialog_reason"`
 			}
 		}
 		if e = json.Unmarshal(files["status.json"], &s); e != nil {
@@ -108,6 +126,21 @@ func main() {
 		px := files["frame-index.bin"]
 		if len(px) != 64000 || fmt.Sprintf("%x", sha256.Sum256(px)) != s.SHA {
 			return fmt.Errorf("%s: index digest mismatch", path)
+		}
+		if s.HD.Dialog != "" {
+			if s.HD.Dialog != "new-game" || s.HD.DialogReason != "matched-dialog" || dialog == nil || !s.Enabled || s.Mode != 19 || s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 {
+				return fmt.Errorf("%s: invalid dialog metadata or missing reference", path)
+			}
+			var box, colors []byte
+			for y := 37; y < 169; y++ {
+				box = append(box, px[y*320+18:y*320+254]...)
+			}
+			for _, i := range []int{15, 16, 20, 23, 27, 134} {
+				colors = append(colors, s.Palette[i][:]...)
+			}
+			if fmt.Sprintf("%x", sha256.Sum256(box)) != "a6299b68e4e28c3309bcbf10f2e562c4a9be7fb7d2a43f8a4bc79e69a77ccc8b" || fmt.Sprintf("%x", sha256.Sum256(colors)) != "701e28d343effaf04f5e2b535626a87a3b18e4a1c2fcdc10cbb2a6939714e4de" {
+				return fmt.Errorf("%s: dialog source or palette mismatch", path)
+			}
 		}
 		im, e := png.Decode(bytes.NewReader(files["frame.png"]))
 		if e != nil {
@@ -155,7 +188,12 @@ func main() {
 							}
 						}
 					}
-					if icon >= 0 {
+					if s.HD.Dialog == "new-game" && x >= 72 && x < 1016 && y >= 148 && y < 676 {
+						rr, gg, bb, aa := dialog.At(x-72, y-148).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: dialog pixels differ at %d,%d", path, x, y)
+						}
+					} else if icon >= 0 {
 						xx := x - (273+24*(icon%2))*4 + (icon%4)*80
 						yy := y - (5+24*(icon/2))*4 + (icon/4)*80
 						rr, gg, bb, aa := icons.At(xx, yy).RGBA()

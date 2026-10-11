@@ -32,12 +32,16 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | B 地景原型、六個 Noto 標題及十四個工具圖示內部已接入研究前端；捲動與年度回退已有抽樣，最新 35 份冷啟動施工存退讀收據通過，存檔與原版相同 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)、[工具圖示](docs/spec/016-city-tool-icons.md)；其他圖像、框架、文字與場景仍未完成，正式接入另驗 |
+| HD 接入 | B 地景原型、六個 Noto 標題、十四個工具圖示內部與完整新遊戲說明視窗已接入研究前端；最新 37 份冷啟動施工存退讀收據通過，存檔雜湊相同 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)、[工具圖示](docs/spec/016-city-tool-icons.md)、[說明視窗](docs/spec/017-new-game-dialog.md)；其他圖像、框架、文字與場景仍未完成，正式封包另驗 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
+- 新遊戲說明視窗：[docs/spec/017-new-game-dialog.md](docs/spec/017-new-game-dialog.md)，對應 #31，完整來源辨識、B 底板、Noto 原文與回退契約。
+- 說明視窗呈現與失配測試：[dialog.go](workspace/app/internal/hd/dialog.go)、[dialog_test.go](workspace/app/internal/hd/dialog_test.go)。
+- 說明視窗獨立核對：[hd_dialog_check.py](workspace/tools/hd_dialog_check.py)，重算完整來源並核對固定面板與區外像素。
+- 說明視窗負對照：[hd_dialog_negative.py](workspace/tools/hd_dialog_negative.py)，檢查改寫像素與同步更新雜湊仍被拒絕。
 - 規則：[AGENTS.md](AGENTS.md)。
 - 唯一工作狀態：[GitHub Issues](https://github.com/wicanr2/taipei/issues)。
 - 驗收：[docs/verification-matrix.md](docs/verification-matrix.md)。

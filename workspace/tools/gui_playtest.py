@@ -28,7 +28,7 @@ def wait_for(predicate, label, seconds=120):
             return s
         time.sleep(.2)
     s=status()
-    raise RuntimeError(f'GUI 等待逾時：{label}; steps={s.get("steps")}; last_keys={s.get("key_reads",[])[-3:]}')
+    raise RuntimeError(f'GUI 等待逾時：{label}; steps={s.get("steps")}; last_keys={(s.get("key_reads") or [])[-3:]}')
 
 def keypress(key):
     subprocess.run(['xdotool','keydown',key],check=True)
@@ -87,6 +87,17 @@ for stage in ['new-game','difficulty','city-map']:
     space()
     wait_for(lambda s:s.get('steps',0)>=before+24_000_000,stage)
     capture(stage)
+    if stage=='new-game' and os.environ.get('TAIPEI_THEME')=='hd-b':
+        before_dialog=status()
+        assert before_dialog['hd']['dialog']=='new-game', '完整說明視窗未覆繪'
+        reads=before_dialog.get('key_reads',[])
+        for label,enabled in [('new-game-theme-original',False),('new-game-theme-hd',True)]:
+            action(label,'F12')
+            current=status()
+            assert current['hd_enabled'] is enabled
+            assert current['hd']['dialog']==('new-game' if enabled else '')
+            assert current['frame_index_sha256']==before_dialog['frame_index_sha256'], '切換改動原版視窗'
+            assert current.get('key_reads',[])==reads, '視窗切換流入 DOS'
 # 新城市初始焦點是工具列。第 2 項是每單位 20 萬的電線。
 # 方向鍵、空白鍵與施工均由原版處理，不注入游標或城市資料。
 action('pause','type:0')
@@ -155,7 +166,7 @@ with (out/'app.log').open('w') as log:
         assert loaded_tile==built_tile, '冷啟動讀檔未恢復施工圖塊'
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
-        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True}},indent=2))
+        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True}},indent=2))
         print('GUI cold construction / save / native exit / cold reload passed',flush=True)
     finally:
         if p.poll() is None:

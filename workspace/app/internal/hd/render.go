@@ -31,6 +31,8 @@ type Stats struct {
 	UIIcons                    int    `json:"ui_icons"`
 	UIIconMask                 uint16 `json:"ui_icon_mask"`
 	UIReason                   string `json:"ui_reason"`
+	Dialog                     string `json:"dialog"`
+	DialogReason               string `json:"dialog_reason"`
 }
 
 // Origin is the verified tile origin of a completed original map draw.
@@ -48,6 +50,7 @@ type Renderer struct {
 	reason  string
 	menu    *menuFont
 	icons   *toolIcons
+	dialog  *newGameDialog
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -85,6 +88,7 @@ func New(rom []byte, dir string) *Renderer {
 	}
 	r.menu = loadMenuFont(filepath.Join(dir, "fonts"))
 	r.icons = loadToolIcons(rom, dir)
+	r.dialog = loadNewGameDialog(dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -125,7 +129,7 @@ func New(rom []byte, dir string) *Renderer {
 }
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback"}
+	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -146,6 +150,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	if !enabled {
 		stats.FontReason = "original"
 		stats.UIReason = "original"
+		stats.DialogReason = "original"
 		return r.frame, stats
 	}
 	if r.reason != "" {
@@ -154,6 +159,15 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	}
 	if mode != 19 {
 		stats.Reason = "video-mode"
+		return r.frame, stats
+	}
+	// 此完整來源是等待原版輸入的說明面板，與城市地景條件獨立。
+	if dialogSource(px) {
+		stats.DialogReason = r.dialog.paint(r.frame, pal)
+		stats.Reason = stats.DialogReason
+		if stats.DialogReason == "matched-dialog" {
+			stats.Dialog = "new-game"
+		}
 		return r.frame, stats
 	}
 	if blocked {

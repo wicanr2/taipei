@@ -35,6 +35,11 @@ def main():
                 and 0<=origin['X']<=76 and 0<=origin['Y']<=74 and sha(colors)==PALETTE_SHA)
         expected=6 if active else 0
         assert s['hd']['font_labels']==expected,(str(path),s['hd'],'標題數不符來源條件')
+        # 完整面板及區外已由 audit_bundle 中獨立來源／固定參考核對。
+        if s['hd'].get('dialog')=='new-game':
+            sample.update(font_labels=0,font_reason=s['hd']['font_reason'],receipt=str(path.relative_to(args.receipts)))
+            samples.append(sample);counts[0]+=1
+            continue
         for x,y,w,h in RECTS:
             for row in range(y,y+h):
                 at=(row*1280+x)*4
