@@ -22,7 +22,7 @@ type toolIcons struct {
 }
 
 func iconRect(i int) image.Rectangle {
-	x, y := (273+24*(i%2))*4, (5+24*(i/2))*4
+	x, y := (274+23*(i%2))*4, (5+24*(i/2))*4
 	return image.Rect(x, y, x+80, y+80)
 }
 

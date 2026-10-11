@@ -25,6 +25,7 @@ func TestActualToolIconsAndSelectedBorders(t *testing.T) {
 		t.Fatal(err)
 	}
 	r := New(rom, dir)
+	r.chrome = nil // 此測試單獨驗圖示；新外框由 chrome_test 驗完整正常來源。
 	origin := Origin{X: 12, Y: 12, Valid: true}
 	for _, name := range []string{"city-map", "power-tool", "power-confirm", "uncover-power"} {
 		state, frame := load(t, name)
@@ -71,7 +72,7 @@ func TestActualToolIconsAndSelectedBorders(t *testing.T) {
 		}
 	}
 	corrupt := append([]byte(nil), px...)
-	corrupt[5*320+273] ^= 1
+	corrupt[5*320+274] ^= 1
 	got, stats := r.Render(corrupt, s.Palette, s.Mode, false, true, origin)
 	if stats.UIIcons != 13 || stats.UIIconMask != 0x3ffe {
 		t.Fatal("單圖來源失配未獨立回退", stats)

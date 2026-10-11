@@ -10,6 +10,7 @@ from hd_source_audit import EXPECTED, MATERIAL, cell, scene, sha
 from rom_catalog import library
 from hd_dialog_check import audit_dialog
 from hd_panels_check import audit_panel
+from hd_chrome_check import audit_chrome
 
 ORDER=['map-focus','right-10','right-20','right-30','right-40',
        'down-6','down-12','down-18','left-10','left-20','left-30','left-40',
@@ -51,6 +52,7 @@ def audit_bundle(path,sources):
         return s,frame,grid,rgba,{'receipt':path.name,'steps':s['steps'],'painted':0,
             'fallback':435,'fallback_cells':[],'reason':s['hd']['reason'],
             'dialog':s['hd'].get('dialog',''),'panel':s['hd'].get('panel','')}
+    audit_chrome(s,frame,rgba)
     origin=s.get('map_origin')
     active=scene(s,frame) and s['hd_enabled'] and (origin is None or origin['Valid'])
     eligible=0;fallback=[];grid=[]

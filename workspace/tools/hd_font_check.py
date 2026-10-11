@@ -7,6 +7,7 @@ from pathlib import Path
 
 from hd_scroll_check import audit_bundle, source59
 from hd_source_audit import scene, sha
+from hd_chrome_check import covered_native
 
 REFERENCE_SHA='feefbf252a77ab01322c72654a2c6d8b7cb42118494949604f194c20d4f331da'
 FONT_SHA='dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4'
@@ -29,6 +30,7 @@ def main():
     samples=[];counts=collections.Counter()
     for path in sorted(args.receipts.rglob('*-capture.zip')):
         s,frame,grid,rgba,sample=audit_bundle(path,sources)
+        chrome=covered_native(s)
         origin=s.get('map_origin',{})
         colors=bytes(v for i in [15,21,27] for v in s['palette'][i])
         active=(s['hd_enabled'] and scene(s,frame) and origin.get('Valid')
@@ -47,7 +49,7 @@ def main():
                 else:
                     want=bytes(v for xx in range(x,x+w) for v in s['palette'][frame[(row//4)*320+xx//4]]+[255])
                 assert rgba[at:at+w*4]==want,(str(path),x,row,'字型像素不同於定案參考或原版回退')
-        # 矩形外只允許現有地圖覆繪；原生 F1–F6 及其他 UI 逐像素不變。
+        # 矩形外各覆繪由來源與固定參考核對；其餘區外逐像素不變。
         for row in range(800):
             spans=[(0,1280)]
             if 136<=row<676:spans=[(0,20),(1064,1280)]
@@ -58,11 +60,13 @@ def main():
             # #29 工具圖示由獨立 hd_icons_check.py 與固定 atlas 核對。
             # 這裡仍驗其外框，只有實際收據列出的內部矩形交給圖示核對器。
             for i in range(14):
-                x=(273+24*(i%2))*4; y=(5+24*(i//2))*4
+                x=(274+23*(i%2))*4; y=(5+24*(i//2))*4
                 if s['hd'].get('ui_icon_mask',0)&(1<<i) and y<=row<y+80:
                     spans=[part for left,right in spans for part in [(left,min(right,x)),(max(left,x+80),right)] if part[0]<part[1]]
             for left,right in spans:
-                want=bytes(v for xx in range(left,right) for v in s['palette'][frame[(row//4)*320+xx//4]]+[255])
+                # audit_bundle 已獨立核對框架來源與固定參考；此處仍驗其他區外。
+                want=b''.join(rgba[(row*1280+xx)*4:(row*1280+xx+1)*4] if (row//4)*320+xx//4 in chrome
+                              else bytes(s['palette'][frame[(row//4)*320+xx//4]]+[255]) for xx in range(left,right))
                 at=(row*1280+left)*4
                 assert rgba[at:at+(right-left)*4]==want,(str(path),row,left,right,'文字與地圖區外出現差異')
         sample['font_labels']=expected;sample['font_reason']=s['hd']['font_reason']
@@ -72,7 +76,7 @@ def main():
     result={'scope':'Noto 六個主選單標題 DRAFT，非全遊戲文字或正式 HD 驗收',
             'reference_sha256':REFERENCE_SHA,'bundles':len(samples),'font_counts':dict(counts),
             'font_pixels_match_selected_reference':True,'fallback_labels_native':True,
-            'outside_map_labels_and_icons_native':True,'cold_loaded_font_restored':True,'samples':samples}
+            'outside_verified_overlays_native':True,'cold_loaded_font_restored':True,'samples':samples}
     (args.receipts/'font-verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='samples'},ensure_ascii=False,indent=2))
 

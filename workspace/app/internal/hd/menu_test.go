@@ -28,6 +28,7 @@ func TestActualNotoMenuMatchesSelectedReference(t *testing.T) {
 	want := image.NewRGBA(im.Bounds())
 	draw.Draw(want, want.Bounds(), im, image.Point{}, draw.Src)
 	r := New(rom, dir)
+	r.chrome = nil // 六標題原有測試單獨覆字；框架內的 Noto 與缺字型另驗。
 	origin := Origin{X: 12, Y: 12, Valid: true}
 	before := append([]byte(nil), px...)
 	got, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true, origin)

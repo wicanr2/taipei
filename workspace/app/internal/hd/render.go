@@ -24,6 +24,11 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	ChromeParts                int    `json:"chrome_parts"`
+	ChromeMask                 uint8  `json:"chrome_mask"`
+	ChromeRings                int    `json:"chrome_rings"`
+	ChromeRingMask             uint16 `json:"chrome_ring_mask"`
+	ChromeReason               string `json:"chrome_reason"`
 	Reason                     string `json:"reason"`
 	Matched, Painted, Fallback int
 	FontLabels                 int    `json:"font_labels"`
@@ -47,6 +52,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	chrome  *cityChrome
 	frame   *image.RGBA
 	sources map[string]bool
 	shades  map[byte][]byte
@@ -94,6 +100,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.icons = loadToolIcons(rom, dir)
 	r.dialog = loadNewGameDialog(dir)
 	r.panels = loadPanels(dir)
+	r.chrome = loadCityChrome(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -134,7 +141,7 @@ func New(rom []byte, dir string) *Renderer {
 }
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback"}
+	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -157,6 +164,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		stats.UIReason = "original"
 		stats.DialogReason = "original"
 		stats.PanelReason = "original"
+		stats.ChromeReason = "original"
 		return r.frame, stats
 	}
 	if r.reason != "" {
@@ -260,6 +268,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 			stats.Fallback--
 		}
 	}
+	stats.ChromeParts, stats.ChromeMask, stats.ChromeRings, stats.ChromeRingMask, stats.ChromeReason = r.chrome.paint(r.frame, px, pal)
 	stats.FontLabels, stats.FontReason = r.menu.paint(r.frame, pal)
 	stats.UIIcons, stats.UIIconMask, stats.UIReason = r.icons.paint(r.frame, px, pal)
 	return r.frame, stats

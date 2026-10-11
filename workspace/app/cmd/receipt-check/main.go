@@ -74,8 +74,10 @@ func main() {
 	uiReference := flag.String("ui-reference", "", "含工具圖示時須提供固定 HD atlas")
 	dialogReference := flag.String("dialog-reference", "", "含說明視窗時須提供固定 Noto 面板參考")
 	panelManifest := flag.String("panel-manifest", "", "啟動選單固定面板與完整來源 manifest")
+	chromeDir := flag.String("chrome-reference", "", "城市框架及外框固定參考目錄")
 	flag.Parse()
 	panels := readPanels(*panelManifest)
+	chrome := readChrome(*chromeDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -151,6 +153,7 @@ func main() {
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
+				chromeFields
 				Painted        int
 				FontLabels     int    `json:"font_labels"`
 				FontReason     string `json:"font_reason"`
@@ -166,6 +169,9 @@ func main() {
 		}
 		if e = json.Unmarshal(files["status.json"], &s); e != nil {
 			return e
+		}
+		if e = chrome.validate(s.HD.chromeFields); e != nil {
+			return fmt.Errorf("%s: %w", path, e)
 		}
 		if s.HD.FontLabels != 0 && (s.HD.FontLabels != 6 || s.HD.FontReason != "matched-menu" || reference == nil) {
 			return fmt.Errorf("%s: Noto labels require six matched labels and the selected reference", path)
@@ -255,13 +261,14 @@ func main() {
 					icon := -1
 					if x >= 1092 && y >= 20 && y < 676 {
 						for i := 0; i < 14; i++ {
-							left, top := (273+24*(i%2))*4, (5+24*(i/2))*4
+							left, top := (274+23*(i%2))*4, (5+24*(i/2))*4
 							if s.HD.UIIconMask&(1<<i) != 0 && x >= left && x < left+80 && y >= top && y < top+80 {
 								icon = i
 								break
 							}
 						}
 					}
+					chromeImage, cx, cy := chrome.pixel(s.HD.chromeFields, px, x, y)
 					if panel != nil && x >= panel.Native[0]*4 && x < (panel.Native[0]+panel.Native[2])*4 && y >= panel.Native[1]*4 && y < (panel.Native[1]+panel.Native[3])*4 {
 						rr, gg, bb, aa := panel.decoded.At(x-panel.Native[0]*4, y-panel.Native[1]*4).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
@@ -272,8 +279,13 @@ func main() {
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: dialog pixels differ at %d,%d", path, x, y)
 						}
+					} else if chromeImage != nil {
+						rr, gg, bb, aa := chromeImage.At(cx, cy).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 城市框架像素失配 %d,%d", path, x, y)
+						}
 					} else if icon >= 0 {
-						xx := x - (273+24*(icon%2))*4 + (icon%4)*80
+						xx := x - (274+23*(icon%2))*4 + (icon%4)*80
 						yy := y - (5+24*(icon/2))*4 + (icon/4)*80
 						rr, gg, bb, aa := icons.At(xx, yy).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {

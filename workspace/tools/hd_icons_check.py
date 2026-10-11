@@ -26,7 +26,7 @@ def main():
     w, h, base, encoding = image(raw[off:off+n])
     assert (w, h) == (320, 200)
     assert sha(base) == 'a35e8372b6dbd661444299f3241ad36634291b1c6657e6feacf8189c53e04dd7'
-    indices = sorted({base[(5+24*(i//2)+r)*320+273+24*(i % 2)+c]
+    indices = sorted({base[(5+24*(i//2)+r)*320+274+23*(i % 2)+c]
                       for i in range(14) for r in range(20) for c in range(20)})
     assert len(indices) == 88
     atlas = args.materials/'city-icons-b-v1.png'
@@ -50,14 +50,17 @@ def main():
                   and sha(bytes(c for i in indices for c in s['palette'][i])) == PALETTE_SHA)
         mask = 0
         for i in range(14):
-            x, y = 273+24*(i % 2), 5+24*(i//2)
+            x, y = 274+23*(i % 2), 5+24*(i//2)
             matched = active and all(frame[(y+r)*320+x:(y+r)*320+x+20]
                                      == base[(y+r)*320+x:(y+r)*320+x+20] for r in range(20))
             if matched:
                 mask |= 1 << i
-            # 內部逐像素比 atlas，四周一個原生像素的選取外框必須完整保留。
+            # 內部逐像素比 atlas；019 覆繪外框已獨立核對，其餘外框保留原版。
             for yy in range(y*4-4, (y+20)*4+4):
                 for xx in range(x*4-4, (x+20)*4+4):
+                    # 新外框已由 audit_bundle 獨立驗完整來源與固定 rings 參考。
+                    if s['hd'].get('chrome_ring_mask', 0)&(1 << i) and not (x*4 <= xx < (x+20)*4 and y*4 <= yy < (y+20)*4):
+                        continue
                     if matched and x*4 <= xx < (x+20)*4 and y*4 <= yy < (y+20)*4:
                         ax, ay = (i % 4)*80+xx-x*4, (i//4)*80+yy-y*4
                         at = (ay*320+ax)*4
@@ -76,7 +79,7 @@ def main():
     result = {'scope': '十四個工具圖示內部；非完整介面或全部圖片完成',
               'atlas_sha256': ATLAS_SHA, 'bundles': len(samples), 'icon_counts': dict(counts),
               'source_mask_independently_matched': True, 'atlas_pixels_equal': True,
-              'original_selection_borders_preserved': True, 'cold_load_restored': True, 'samples': samples}
+              'selection_borders_independently_verified': True, 'cold_load_restored': True, 'samples': samples}
     (args.receipts/'icons-verification.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
     print(json.dumps({k: v for k, v in result.items() if k != 'samples'}, ensure_ascii=False))
 

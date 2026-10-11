@@ -32,11 +32,22 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | B 地景原型、六個 Noto 標題、十四個工具圖示、新遊戲說明及三種啟動選單已接入研究前端；十三種選取與三場景 F12 通過。40 份選單與 37 份存退讀收據均通過，存檔雜湊相同 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)、[工具圖示](docs/spec/016-city-tool-icons.md)、[說明視窗](docs/spec/017-new-game-dialog.md)、[啟動選單](docs/spec/018-startup-menus.md)；其他圖像、框架、文字與場景仍未完成，正式封包另驗 |
+| HD 接入 | 已接入 B 地景、六 Noto 標題、十四工具、新遊戲說明、三種啟動選單及城市框架／F1–F6。十四工具 42 種外框、五子選單回退、F12 與正常存退讀共 100 份收據通過，存檔雜湊相同 | [框架契約](docs/spec/019-city-chrome.md)、[啟動選單](docs/spec/018-startup-menus.md)；其他圖片、子選單、動態文字、場景及正式封包未完成 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- 城市框架批次：[019-city-chrome.md](docs/spec/019-city-chrome.md)，對應 #29，限六部分與十四外框達 CONFORMED；63 份十四工具與 37 份存退讀收據通過，其餘介面與封包仍未完成。
+- 城市框架載入與遮罩：[chrome.go](workspace/app/internal/hd/chrome.go)，依 019 已審查的六部分及十四外框逐項辨識、失配回退；正式封包另驗。
+- 框架獨立核對：[hd_chrome_check.py](workspace/tools/hd_chrome_check.py)，重算六部分、42 種工具外框來源與使用中色盤，核對固定參考及失配回退。
+- 單幀框架參考核對：[receipt-check/chrome.go](workspace/app/cmd/receipt-check/chrome.go)，`-chrome-reference` 指向本機 `city-chrome-v1/`，逐像素檢查固定參考及原版區外。
+- 框架實際來源測試：[chrome_test.go](workspace/app/internal/hd/chrome_test.go)，驗十四工具 42 狀態、子選單及缺素材／字型、來源與色盤失配。
+- 框架有效負對照：[hd_chrome_negative.py](workspace/tools/hd_chrome_negative.py)，重算雜湊與原版 PNG 後，驗框架、F 鍵、外框、動態欄位、來源、色盤與偽造遮罩。
+- 框架同狀態收據：`workspace/runs/chrome-state-audit.json` 與 `chrome-state-provenance.json`。正常 GUI 唯一鍵盤輸入、固定 EXE／dosgolem／虛擬時間兩側各 2,304,000,000 步，包含 3,113 幀完整框架；原版 RAM、CPU、畫面、色盤、埠、OPL、讀鍵與檔案操作相同。唯讀輸入為 `city-chrome-before-cache/theme-hd-capture.zip`，不以不同 GUI 即時時序猜測精確對拍。
+- 城市框架離線組合：[chrome-prototype](workspace/app/cmd/chrome-prototype/main.go)，固定生成素材及 Noto；本機提示與來源記錄為 `workspace/prototypes/hd-style/city-chrome-generation.json`，完整參考輸出為 `city-chrome-v1/`，正式辨識範圍依 019。
+- 框架及外框來源盤點：[city_chrome_catalog.py](workspace/tools/city_chrome_catalog.py)，本機輸出 `workspace/runs/city-chrome/catalog.json`，未審查候選不接入產品。
+- 框架正常 GUI：[city_chrome_playtest.sh](workspace/tools/city_chrome_playtest.sh)、[city_chrome_playtest.py](workspace/tools/city_chrome_playtest.py)，十四工具依原版方向選取、確認及 Tab 取消。
 
 - 啟動選單完整面板載入：[panels.go](workspace/app/internal/hd/panels.go)，契約見 [018](docs/spec/018-startup-menus.md)。本機生成提示為 `workspace/prototypes/hd-style/startup-menu-generation.json`。
 - 啟動面板獨立核對：[hd_panels_check.py](workspace/tools/hd_panels_check.py)，驗完整來源、固定參考及區外，不免驗面板區域；負對照見 [hd_panels_negative.py](workspace/tools/hd_panels_negative.py)。

@@ -277,3 +277,20 @@ F12 決策已回寫 [#6 留言](https://github.com/wicanr2/taipei/issues/6#issue
 - `build_preview.sh` 及 `build_preview_cross.sh windows|macos` 完成 Linux amd64、Windows amd64、macOS amd64／arm64 編譯；Windows 保留既有 YMFM 編譯警告。沒有新增平台真機、音訊或正式封包驗收聲明。
 
 018 限上述範圍達 CONFORMED。#31、#7 與完整 HD 母項保持開啟；七座城市各自開局、災難分支、其他圖片及介面仍需後續批次。35 個原始檔與 RAR 雜湊不變，新檔入口、相對連結與 1000:1000 擁有權通過。容器內指定 `find` 無輸出，所有本批容器已退出並刪除，沒有新建 image 或清理其他專案資源。程式與文件依明確清單提交、推送，實際提交回鏈 #31 及 #7。
+
+## 2026-10-11：城市框架、F 鍵與十四工具外框
+
+接續 [#29 的預登記](https://github.com/wicanr2/taipei/issues/29#issuecomment-6106670436)。主機 gh auth 與遠端 Issue 回讀成功，沿用使用者已定 B、1280×800、Noto、F12 及原版版面。路由命中復古重製、規格閘門、正常玩家路徑、文件職責與 imagegen，載入相應入口；沒有新增產品取捨。
+
+- 固定 ROM1 底圖與 66 份正常城市來源比較，確認六部分框架及動態排除範圍。正常 61 份來源走十四工具三種完整外框，共 42 種；工具 2、5、9、10、11 先開原版子選單。底部日期、資金及費用保持原版，後續依 #31 追文字來源。
+- 新證據推翻 016 左欄等距公式。實際外框 x=273／296，內部 x=274／297；舊左欄圖示包含一列外框，選取後會失配回退。另確認 Tab 回到已選工具仍為 32，移到其他工具才為 186。先保留 `city-chrome-initial-source/` 與 `city-chrome-submenu-source/`，再訂正來源、規格及定位。工具 5 的第一次 Space 是開子選單，沒有改寫成確認失敗或猜測費用規則。
+- 內建 imagegen 依原版與 B 素材生成銀灰板、淺綠板與透明柱飾。依 alpha 包圍盒做柱飾幾何裁切與縮放，提示、原始輸出、全部來源及雜湊保存在本機 `city-chrome-generation.json`。離線 `chrome-prototype` 組合原位框架，六個 F 鍵實際 Noto 墨跡通過安全矩形檢查，中文標題保留 013 固定像素。PNG、字型及生成素材均未加入 Git。
+- 019 先 DRAFT，來源與完整離線參考審查後升 READY，再實作 `chrome.go`。六部分來源與使用中色盤各自完整匹配；十四外框驗完整 22×22 來源及 84 個同色邊界點。未知或失配獨立回退，模態及年度視窗整幀回退，每幀從原版重建。快取 RGBA 後直接複製已核對像素，完整參考重生雜湊不變。
+- 真實資源 Go 測試通過全部 42 種來源、子選單、來源／色盤／素材／形狀／字型／授權失配及既有功能。既有字型測試人工替換單一 renderer 層，未同步替換框架中的已載入字型；修為單項測試隔離，新框架另驗真正缺檔及失配。獨立核對器第一次把已驗證完整面板再次當成原版框架，補齊責任分派後乾淨重跑。兩者均屬驗證工具問題。
+- 最終 binary 再跑 `TAIPEI_THEME=hd-b bash workspace/tools/city_chrome_playtest.sh`。63 份收據包含十四工具三種來源、五個子選單回退、確認、Tab 取消、F2 與 F12；`program-provenance.txt` 固定實際執行檔及工具。`hd_chrome_check.py --require-all-tools` 重算全部來源與固定參考，Go `receipt-check -chrome-reference` 驗逐像素與區外，全部通過。該探索末尾採有界停止，沒有冒充原版退出。
+- 最終 binary 另走完整施工、存退讀及兩次原版退出。37 份收據的 Go、框架、Noto、圖示及區外核對通過，冷讀施工格相同，存檔 SHA-256 維持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。前次保留於 `gui-cold-before-chrome/`。本批兩條正常 GUI 共 100 份收據。
+- 八個有效負對照包含框架、F 鍵、外框、動態欄位、來源、色盤與兩種偽造遮罩，受影響雜湊與原版 PNG 同步保持一致，仍被來源或像素核對器拒絕。結果逐項區分責任，來源／色盤由 Python、動態欄位由 Go 全區外核對，不將其中一方未驗的項目稱為通過。
+- `presentation-audit -require-chrome -require-dialog -require-font -require-icons` 使用保留的唯一正常輸入 `city-chrome-before-cache/theme-hd-capture.zip`。有／無呈現兩側各 2,304,000,000 步，RAM、CPU、原版畫面、色盤、埠、OPL、讀鍵與檔案操作完全相同，包含 3,113 幀完整框架及 65 幀說明。狀態 SHA-256 `60b1cc6b5b29372caebb3a19eec50f96a3c86371908c7781402872e6e0a5f649`，固定輸入、程式及工具鏈見 `chrome-state-provenance.json`。不外推不同亂數實作或逐骰規則對拍。
+- Linux amd64、Windows amd64、macOS amd64／arm64 編譯通過，Windows 只有既有 YMFM 警告。沒有新增真機、音訊或正式封包完成聲明。
+
+019 限六部分與十四外框達 CONFORMED。#29、#7 及完整 HD 母項保持開啟；其餘圖片、子選單、動態文字、場景、動畫與正式封包繼續依原範圍處理。35 個原始檔及 RAR 雜湊不變，文件入口與相對連結檢查通過。新檔、素材及四平台 binary 為 1000:1000，容器內指定 `find` 無輸出，本批容器均已退出並刪除。沒有新建 image、改動 dosgolem 上游或清理其他專案資源。程式與文件按明確清單提交並推送，實際提交回鏈 #29 與 #7。
