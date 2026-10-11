@@ -54,7 +54,7 @@ def capture(label):
             (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
-    if label in ('pause','reload-pause') and (os.environ.get('TAIPEI_TEST_BUDGET')=='1' or os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1'):
+    if label in ('pause','reload-pause') and any(os.environ.get(k)=='1' for k in ['TAIPEI_TEST_BUDGET','TAIPEI_TEST_INFRASTRUCTURE','TAIPEI_TEST_POWER_FACILITY']):
         os.environ.setdefault('TAIPEI_CITY_MENU_RUN',os.environ['TAIPEI_GUI_RUN'])
         import city_menu_playtest as base
         base.out=out
@@ -182,6 +182,11 @@ if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1':
     infrastructure_exercise(out)
     capture('infrastructure-before-save')
     built_money=footer_decode((out/'infrastructure-before-save-frame-index.bin').read_bytes(),footer_refs,1)[2]
+if os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
+    from power_facility_gui import exercise as power_exercise,check_reload as power_check_reload
+    power_exercise(out)
+    capture('power-before-save')
+    built_money=footer_decode((out/'power-before-save-frame-index.bin').read_bytes(),footer_refs,1)[2]
 for label,key in [('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
                   ('backspace','BackSpace'),('rename','type:4'),('save-accept','space')]:
     action(label,key)
@@ -218,7 +223,7 @@ with (out/'app.log').open('w') as log:
         assert any(f.get('Op')=='read' and f.get('Name','').upper()=='ROUND4.SAV' for f in status().get('file_ops',[])), '未見原版讀取存檔'
         assert hashlib.sha256(save.read_bytes()).hexdigest()==saved_sha, '讀檔改寫了來源存檔'
         loaded_cell=cell
-        if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1':
+        if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1' or os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
             loaded_origin=status()['map_origin']
             assert loaded_origin['Valid']
             col,row=construction_world[0]-loaded_origin['X'],construction_world[1]-loaded_origin['Y']
@@ -235,6 +240,10 @@ with (out/'app.log').open('w') as log:
             # 冷讀城市仍會推進；先經原版 0 與讀鍵同步固定正常驗收條件。
             action('reload-pause','0')
             exercise(out,adjust=False)
+        if os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
+            action('reload-pause','0')
+            power_check_reload(out,first_out)
+            capture('power-reload-complete')
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
         (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'loaded_native_xy':loaded_cell,'world_xy':construction_world,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))

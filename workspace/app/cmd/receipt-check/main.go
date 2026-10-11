@@ -80,6 +80,7 @@ func main() {
 	footerDir := flag.String("footer-reference", "", "底部固定字形與背景的素材根")
 	fileDir := flag.String("file-reference", "", "檔案視窗固定參考的素材根")
 	budgetDir := flag.String("budget-reference", "", "預算固定參考的素材根")
+	powerDir := flag.String("power-reference", "", "火力 READY 前完整原型及固定來源的素材根")
 	originalDir := flag.String("original", "", "核對檔案視窗來源的唯讀原版目錄")
 	flag.Parse()
 	panels := readPanels(*panelManifest, "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d", 13)
@@ -89,6 +90,7 @@ func main() {
 	footer := readFooter(*footerDir)
 	fileRef := readFileReference(*fileDir, *originalDir)
 	budgetRef := readBudgetReference(*budgetDir, *originalDir)
+	powerRef := readPowerReference(*powerDir, *originalDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -158,12 +160,18 @@ func main() {
 			files[f.Name] = p
 		}
 		var s struct {
+			Blocked bool `json:"dos_blocked"`
+			Origin  struct {
+				X, Y  int
+				Valid bool
+			} `json:"map_origin"`
 			Mode            int          `json:"mode"`
 			Enabled         bool         `json:"hd_enabled"`
 			SHA             string       `json:"frame_index_sha256"`
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
+				powerFields
 				chromeFields
 				footerFields
 				fileFields
@@ -205,6 +213,10 @@ func main() {
 		fileImage, fileBox, fileErr := fileRef.compose(px, s.Palette, s.Mode, s.Enabled, s.HD.fileFields)
 		if fileErr != nil {
 			return fmt.Errorf("%s: %w", path, fileErr)
+		}
+		powerImage, powerErr := powerRef.audit(px, s.Palette, s.Mode, s.Enabled, s.Blocked, s.Origin.Valid, s.Origin.X, s.Origin.Y, s.HD.powerFields)
+		if powerErr != nil {
+			return fmt.Errorf("%s: %w", path, powerErr)
 		}
 		budgetImage, budgetErr := budgetRef.compose(px, s.Palette, s.Mode, s.Enabled, s.HD.budgetFields)
 		if budgetErr != nil {
@@ -301,6 +313,7 @@ func main() {
 						}
 					}
 					chromeImage, cx, cy := chrome.pixel(s.HD.chromeFields, px, x, y)
+					powerTile, powerX, powerY := powerImage.pixel(x, y)
 					if budgetImage != nil && x >= 72 && x < 1012 && y >= 148 && y < 676 {
 						rr, gg, bb, aa := budgetImage.At(x-72, y-148).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
@@ -342,6 +355,11 @@ func main() {
 						rr, gg, bb, aa := reference.At(x, y).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: Noto pixels differ from selected reference at %d,%d", path, x, y)
+						}
+					} else if powerTile != nil {
+						rr, gg, bb, aa := powerTile.At(powerX, powerY).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 火力完整原型像素失配 %d,%d", path, x, y)
 						}
 					} else if s.HD.Painted == 0 || x < 20 || x >= 1064 || y < 136 || y >= 676 {
 						c := s.Palette[px[(y/4)*320+x/4]]

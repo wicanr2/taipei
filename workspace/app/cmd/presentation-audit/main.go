@@ -34,6 +34,7 @@ func main() {
 	requireBudget := flag.Bool("require-budget", false, "要求重播實際經過年度視窗回退")
 	requireBudgetHD := flag.Bool("require-budget-hd", false, "要求完整預算 HD，並逐抽樣點比對原版狀態")
 	requireInfrastructure := flag.Bool("require-infrastructure", false, "要求道路與電線 HD，逐抽樣點比對原版狀態")
+	requirePowerFacility := flag.Bool("require-power-facility", false, "要求火力 36 格 HD，逐抽樣點比對原版狀態")
 	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	requireIcons := flag.Bool("require-icons", false, "要求重播實際經過十四個工具圖示覆繪")
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
@@ -45,7 +46,7 @@ func main() {
 	requireFiles := flag.Bool("require-file-dialogs", false, "要求實際經過檔案視窗與離開提示兩家族")
 	renderInterval := flag.Uint64("render-interval-steps", 400000, "HD 抽樣間距，400000 的正整數倍，最多 24000000")
 	flag.Parse()
-	sampleStates := *requireBudgetHD || *requireInfrastructure
+	sampleStates := *requireBudgetHD || *requireInfrastructure || *requirePowerFacility
 	if *renderInterval == 0 || *renderInterval%400000 != 0 || *renderInterval > 24000000 {
 		panic("HD 抽樣間距須為 400000 的正整數倍，最多 24000000")
 	}
@@ -98,6 +99,8 @@ func main() {
 	budgetRows := map[int]uint64{}
 	infrastructureImages := map[int]uint64{}
 	var infrastructureFrames uint64
+	powerFacilityImages := map[int]uint64{}
+	var powerFacilityFrames uint64
 	var checkpoints []string
 	durations := map[string]float64{}
 	var observedFrames uint64
@@ -183,7 +186,14 @@ func main() {
 						}
 					}
 					if stats.Budget {
+						// 預算與電廠使用獨立呈現家族。
 						budgetRows[stats.BudgetSelection]++
+					}
+					if stats.PowerFacility.Painted > 0 {
+						powerFacilityFrames++
+						for index, count := range stats.PowerFacility.Images {
+							powerFacilityImages[index] += uint64(count)
+						}
 					}
 					if stats.FileDialog != "" {
 						fileFamilies[stats.FileDialog]++
@@ -277,6 +287,9 @@ func main() {
 			panic("重播缺少正常道路／電線 HD 或逐點原版狀態抽樣")
 		}
 	}
+	if *requirePowerFacility && (len(powerFacilityImages) != 36 || powerFacilityFrames == 0 || len(checkpoints) == 0) {
+		panic("重播缺少火力完整 36 格 HD 或逐點原版狀態抽樣")
+	}
 	if *requireFont && fontFrames == 0 {
 		panic("重播未實際經過 Noto 標題覆繪")
 	}
@@ -319,6 +332,8 @@ func main() {
 		"budget_hd_rows":                             budgetRows,
 		"infrastructure_images":                      infrastructureImages,
 		"infrastructure_frames":                      infrastructureFrames,
+		"power_facility_images":                      powerFacilityImages,
+		"power_facility_frames":                      powerFacilityFrames,
 		"sampled_original_state_sha256":              checkpoints,
 		"sampled_original_states_equal":              sampleStates,
 		"normal_gui_frame_palette_reads_files_equal": *requireFiles || sampleStates,

@@ -24,6 +24,7 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	PowerFacility              powerFacilityStats  `json:"power_facility"`
 	Infrastructure             infrastructureStats `json:"infrastructure"`
 	Budget                     bool                `json:"budget"`
 	BudgetText                 [11]string          `json:"budget_text"`
@@ -65,6 +66,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	powerFacility  *powerFacilitySet
 	infrastructure *infrastructureSet
 	budget         *budgetPanel
 	files          *fileDialogs
@@ -126,6 +128,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.files = loadFileDialogs(rom, dir)
 	r.budget = loadBudgetPanel(rom, dir)
 	r.infrastructure = loadInfrastructure(rom, dir)
+	r.powerFacility = loadPowerFacilities(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -309,6 +312,27 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.Infrastructure.Images[candidate.image]++
 				} else {
 					stats.Infrastructure.Fallback++
+				}
+				continue
+			}
+			if candidate := r.powerFacility.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.PowerFacility.Matched++
+				reason := r.powerFacility.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				if stats.PowerFacility.Reasons == nil {
+					stats.PowerFacility.Reasons = map[string]int{}
+				}
+				stats.PowerFacility.Reasons[reason]++
+				if reason == "matched-power-facility" {
+					stats.Painted++
+					stats.Fallback--
+					stats.PowerFacility.Painted++
+					if stats.PowerFacility.Images == nil {
+						stats.PowerFacility.Images = map[int]int{}
+					}
+					stats.PowerFacility.Images[candidate.image]++
+				} else {
+					stats.PowerFacility.Fallback++
 				}
 				continue
 			}
