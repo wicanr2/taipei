@@ -34,11 +34,18 @@
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
 | HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6，以及底部費用、年月與資金。最新 144 份正常收據、二十九城市選取、六場景 F12、十四項有效負對照、施工存退讀及兩次退出通過；兩側各 51.84 億步、216 次明示 HD 抽樣原版狀態相同 | [城市選單契約](docs/spec/022-city-function-menus.md)、[工具子選單](docs/spec/021-tool-submenus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
+| 存讀檔與離開提示 HD | 243 份完整來源、729 項單像素負對照、94 字元及清單／邊界／覆寫探索、198 字形獨立墨跡與八 W 原位原型通過，023 達 READY | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；尚未接入產品，正式 F12、正常存退讀、原版狀態、負對照、四平台另驗 |
 | 跨平台編譯 | 本批 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
+- 檔案視窗離線原型：[file-dialog-prototype](workspace/app/cmd/file-dialog-prototype/main.go)，固定 Noto、既有 B 面板與來源字碼，產生 95 ASCII 雙色及八個中文墨跡、原位空白面板與離開提示。僅研究原型，未接入產品。
+- 檔案視窗契約：[023](docs/spec/023-file-dialogs.md)，READY；固定本作完整來源、正常操作、素材、失配隔離與正式驗證閘門，尚未接入產品。
+- 檔案視窗獨立原型檢查：[hd_file_dialogs_check.py](workspace/tools/hd_file_dialogs_check.py)，從 PNG 重算 198 個字形的 alpha 墨跡、安全矩形與完整離開提示組合；尚未包含正式接入驗收。
+- 檔名正常輸入核對：[file_dialog_inputs_check.py](workspace/tools/file_dialog_inputs_check.py)，回讀九十四字元、原版讀鍵、退格、八／九字元、取消與空清單確認；完整收據和色盤參考留本機。
+- 存讀檔與離開確認來源：[#38](https://github.com/wicanr2/taipei/issues/38)，[file_dialog_catalog.py](workspace/tools/file_dialog_catalog.py) 重建 ROM3 完整檔案視窗、八列 ASCII 字模及 ROM1 底部離開提示，審查結果 `workspace/runs/file-dialog-source-ready/catalog.json`。首批八份原型輸入另留 `file-dialog-source/catalog.json`，未覆寫前批正常 GUI。
+- 檔案視窗正常探索：[file_dialog_playtest.sh](workspace/tools/file_dialog_playtest.sh)、[file_dialog_playtest.py](workspace/tools/file_dialog_playtest.py)，從正常冷啟動查實際檔名字集、長度、退格、空清單、分頁、取消與離開選否；輸出 `workspace/runs/file-dialogs-native/`。只作來源探索，有界停止不代替原版退出驗收。
 - 城市六功能正式驗證：[city_menu_hd_playtest.py](workspace/tools/city_menu_hd_playtest.py)，由既有 shell 入口指定 `TAIPEI_THEME=hd-b TAIPEI_CITY_MENU_RUN=city-menus-hd`，一次正常冷啟動遍歷二十九選取及六場景 F12，107 份收據通過。實際資源測試為 [city_panels_test.go](workspace/app/internal/hd/city_panels_test.go)，共用五工具的完整來源、區外及故障隔離斷言，全套 21.819 秒無跳過。
 - 城市面板獨立核對：[hd_city_panels_check.py](workspace/tools/hd_city_panels_check.py)，驗二十九選取、六場景 F12、來源、固定 PNG 與所有區外像素；有效負對照沿用 [hd_tool_panels_negative.py](workspace/tools/hd_tool_panels_negative.py) 的 `--family city`，逐項更新受影響雜湊與原版 PNG。
 - 城市面板整批核對：[city_panels_verify.sh](workspace/tools/city_panels_verify.sh)，144 份正常收據、大小面板十四項有效負對照、標題／工具冷讀通過；兩側完整 5,184,000,000 步，216 次明示 24,000,000 步抽樣含二十九城市選取共 164 次、說明一次及城市各層 14 次。狀態相同，SHA-256 `df85c5d5f612ff996d7b671bd81ba1238e41e55bff926dc293c90975ece21174`；結果為 `workspace/runs/city-panels-state-audit.json`，過程在 `city-panels-verification.log`，非逐幀對拍。

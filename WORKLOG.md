@@ -361,3 +361,17 @@ F12 決策已回寫 [#6 留言](https://github.com/wicanr2/taipei/issues/6#issue
 Linux 產品從現行來源再次建至獨立暫存檔，與實際 GUI 使用的程式逐 byte 相同，暫存副本已刪除。35 原始檔與 RAR 雜湊保持基準，施工及冷讀資金均為 79980。022 限本批面板達 CONFORMED；其他視窗／圖表／圖片／場景／動畫、模態外、真機與正式封包仍未完成，#31 與完整 HD 母項保持開啟。
 
 最終 338 個相對文件連結、五個新入口及既有入口正對照、Python／shell 語法、Go 格式、變更檔案 1000:1000 擁有權與容器內指定 `find` 通過，結果為 `workspace/runs/city-panels-final-hygiene.json`。本批容器均已退出並刪除，沒有新建 image、改動 dosgolem 上游或清理其他專案資源。只以明確清單提交二十二份原創程式、腳本與文件，原版、擷取、原文衍生資料、字型及美術不入 Git；提交推送及 #37 結案結果回鏈遠端，#31、#7 與完整 HD 母項繼續開啟。
+
+## 2026-10-11：#38 檔案視窗與離開提示來源達 READY
+
+先以主機 gh 回讀遠端並建立 [#38](https://github.com/wicanr2/taipei/issues/38)。沿用原產品 `1f10d0c`、固定 Docker 與唯讀原版，沒有修改前端、HD 正式程式或 dosgolem 上游。路由載入規格閘門、文字反查、正常試玩、GUI 還原與文件職責入口。
+
+- `file_dialog_catalog.py` 重建 ROM3 的 7169 像素檔案視窗、ROM1 加中文／ASCII 的 4032 像素離開提示。首批八份輸入保留 `file-dialog-source/`；後續審查 `file-dialog-source-ready/catalog.json` 共 243 份，其中 238 個檔案視窗、五個離開提示，729 個單像素破壞全部拒絕。來源包含重複狀態，不把份數當成不同狀態。
+- 正常探索先後保留 `file-dialogs-native/`、`file-dialogs-native-extra/`、`file-dialogs-native-list/`、`file-dialogs-native-edges/`、`file-dialogs-native-missing/`。首兩次停止分別推翻「最後字元退格後畫面一定空白」與「F2 重開一定選第一項」假設；原版已讀鍵，並非漏鍵或產品缺陷。後續改為保留可見殘留、按完整 F2 來源選項同步，不重掃已完成九十四字元。
+- `file_dialog_inputs_check.py` 回讀全量原子收據，驗六十二英數接受、小寫轉大寫、三十二符號忽略、八字元上限、第九字已讀而畫面不變、最後字元殘留由新輸入覆蓋。十檔清單二十三取樣、七列捲動、邊界、取消、空清單／空白確認與離開選否通過。未選清單文字實際墨色為 31，選中為 32；沒有沿用 ROM 範本占位字的墨色猜測。
+- 覆寫測試只改私有副本 ALPHA001.SAV。原版開／關檔、93567 bytes、實際輸出 SHA-256 `59388c3837d65bec89eceb8743cf01e3d5535d06f441e3cd4d3273ecdd8d1044` 及其餘九份 SAV 不變通過。讀檔清單收到八字 `MISSING9`，完整畫面仍不變，保留原版選檔操作。
+- 核對腳本曾把整個私有執行目錄應空白及 `FileOps` 應有 write 當成斷言。005 已指定獨立 scratch，目錄已有兩份 ROM 副本；固定 dosgolem 的 AH=40h 記在 `Wrote`，前端未匯出，`FileOps` 沒有 write。依來源訂正後核對 SAV、原版開／關檔、落地雜湊、大小與兄弟檔案，乾淨重跑通過，沒有為腳本假失敗修改產品。
+- Go 離線原型固定 Noto 與既有 B 材質，198 個字形驗安全矩形；調暗底色後白／紅字可辨讀。獨立 `hd_file_dialogs_check.py` 重算 PNG alpha 與完整提示組合通過，結果 `file-dialog-ink-dim.json`。八 W 原位比較 `file-dialog-wide-proof.png` 已目視無裁切，原版背景與原型清楚分開；這不是產品 HD 收據。初版亮底素材與 Go 來源保留 `file-dialog-prototype-first/`。
+- 023 經完整來源、正常操作、獨立墨跡與視覺審查升 READY。正式實作前登記每 24,000,000 步抽樣，要求同一正常 GUI 輸入兩側完整原版步數且兩類視窗實際出現。未知外部刪檔／損壞、裝置錯誤及其他介面留在母項，未宣稱全遊戲 HD 完成。
+
+本批所有探針及原型在既有 Docker 執行，有界停止不代替原版退出驗收。末尾檢查原始 35 檔、RAR、來源與產物雜湊、文件入口、語法、1000:1000 擁有權與指定 find，結果保存 `workspace/runs/file-dialog-research-hygiene.json`；檢查結果完成後回鏈遠端。沒有新建 image。研究容器均退出並刪除，沒有清理其他專案資源。只提交原創工具及 READY 文件；#38 與母項維持開啟，下一步是正式呈現接入及其驗證。
