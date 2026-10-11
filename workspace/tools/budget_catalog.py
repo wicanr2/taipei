@@ -69,6 +69,8 @@ def decode_budget(frame, refs):
         fields.append({**slot, 'text': text, 'color': color})
     if raw != rebuilt:
         return None
+    if sum(s['color'] == 12 for s in fields[:5]) != 1 or any(s['color'] != 0 for s in fields[5:]):
+        return None
     return {'fields': fields, 'source_sha256': sha(raw),
             'percent': [int(s['text']) for s in fields if s['kind'] == 'percent'],
             'selected_rows': [s['row'] for s in fields if s['kind'] == 'percent' and s['color'] == 12]}

@@ -20,6 +20,8 @@ def main():
     assert hashlib.sha256(manifest).hexdigest() == '699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5'
     choices = {s['source_sha256']: s['selection'] for s in json.loads(manifest)['states'] if s['id'] == 'city-f3'}
     records = []
+    mode = os.environ.get('TAIPEI_BUDGET_MODE', 'full')
+    assert mode in ('full', 'persistence', 'scenario')
 
     def state():
         with zipfile.ZipFile(root/'capture.zip') as z:
@@ -28,7 +30,7 @@ def main():
 
     def key(label, value):
         before = base.status()
-        base.action(label, value)
+        base.action(label, value, acknowledge=True)
         s, _, decoded = state()
         assert len(s['key_reads']) == len(before['key_reads'])+1, (label, '讀鍵數')
         records.append({'label': label, 'key': value, 'before_steps': before['steps'], 'after_steps': s['steps'],
@@ -62,9 +64,82 @@ def main():
             '/workspace/prototypes/hd-style', '-theme', 'original', '-stop-file', str(root/'stop')],
             stdout=log, stderr=subprocess.STDOUT)
         try:
+            if mode == 'scenario':
+                # 只探索正常災難城市入口，不把未知畫面假定為某個選單。
+                base.wait_for(lambda s: s.get('steps', 0) >= 700_000_000, 'intro', progress=True)
+                subprocess.run(['xdotool', 'search', '--name', '模擬台北', 'windowfocus'], check=True)
+                base.action('intro-space', 'space')
+                base.wait_for(lambda s: s.get('steps', 0) >= 800_000_000, 'intro-wait')
+                base.action('main', 'space')
+                base.wait_for(lambda s: s.get('frame_index_sha256') == '5442a8135d36552561f03a46fc443978a76989979e0c25dc016027229b24dda4', 'main-ready')
+                key('scenario-choice', 'Right')
+                key('scenario-open', 'space')
+                # 此順序已由 scenario-extra 的逐幀原件查證：台北、說明、難度、城市。
+                # 本批只有普通按鍵改為明示讀取確認；不注入狀態或改動資料。
+                for index, value in enumerate(['space','space','space','0','F3','space']):
+                    key(f'scenario-step-{index:02d}', value)
+                model = state()[2]
+                assert model is not None, '災難城市預算完整來源未重建'
+                key('scenario-escape', 'Escape')
+                (root/'result.json').write_text(json.dumps({'normal_gui': True, 'checkpoint': False,
+                    'mode': mode, 'records': records, 'final_budget': model,
+                    'ordinary_acknowledgments': base.ordinary_sync,
+                    'arrow_acknowledgments': base.sync,
+                    'scope': '正常災難入口逐幀研究；有界停止，非原版退出或 HD 完成'}, ensure_ascii=False, indent=2)+'\n')
+                return
             base.cold_city()
             pause = state()[1]
             initial = open_budget('first')
+            if mode == 'persistence':
+                key('tax-decrease', 'Right')
+                key('select-safety', 'Down')
+                adjusted = key('safety-decrease', 'Right')
+                key('adjusted-escape', 'Escape')
+                reopened = open_budget('changed-reopen')
+                enter = key('enter', 'Return')
+                if enter is not None:
+                    key('enter-return', 'Escape')
+                key('save-menu', 'F2')
+                file_menu = json.loads(manifest)['states']
+                file_selections = {s['source_sha256']: s['selection'] for s in file_menu if s['id'] == 'city-f2'}
+                for i in range(4):
+                    current = file_selections.get(hashlib.sha256(crop(state()[1], (53, 35, 68, 64))).hexdigest())
+                    assert current is not None
+                    if current == 0: break
+                    key(f'save-choice-{i}', 'Down')
+                else: raise AssertionError('沒有到達存檔選項')
+                key('save-open', 'space')
+                before = base.status()
+                subprocess.run(['xdotool', 'type', '--clearmodifiers', '--delay', '150', '--', 'BUDGET39'], check=True)
+                base.wait_for(lambda s: len(s.get('key_reads', [])) == len(before['key_reads'])+8, 'save-name-read')
+                base.capture('save-name')
+                key('save-confirm', 'space')
+                saved = Path(saves)/'BUDGET39.SAV'
+                saved_data = saved.read_bytes()
+                assert len(saved_data) == 93567
+                open_budget('after-save')
+                modified_after_save = key('tax-second-decrease', 'Right')
+                key('load-return', 'Escape')
+                key('load-menu', 'F2')
+                for i in range(4):
+                    current = file_selections.get(hashlib.sha256(crop(state()[1], (53, 35, 68, 64))).hexdigest())
+                    assert current is not None
+                    if current == 1: break
+                    key(f'load-choice-{i}', 'Down')
+                else: raise AssertionError('沒有到達讀檔選項')
+                key('load-open', 'space')
+                key('load-confirm', 'space')
+                assert any(f.get('Op') == 'read' and f.get('Name', '').upper() == 'BUDGET39.SAV' for f in base.status()['file_ops'])
+                loaded = open_budget('after-load')
+                key('loaded-return', 'Escape')
+                assert saved.read_bytes() == saved_data
+                (root/'result.json').write_text(json.dumps({'normal_gui': True, 'checkpoint': False,
+                    'mode': mode, 'initial': initial, 'adjusted': adjusted, 'reopened': reopened,
+                    'enter_kept_window': enter is not None, 'modified_after_save': modified_after_save,
+                    'loaded': loaded, 'saves': saves, 'save_sha256': hashlib.sha256(saved_data).hexdigest(),
+                    'records': records, 'acknowledged_keys': base.sync, 'ordinary_acknowledgments': base.ordinary_sync,
+                    'scope': '原版 Escape／Enter、實際存檔及正常 F2 重讀；尚未 HD 或全新 EXE 重讀驗收'}, ensure_ascii=False, indent=2)+'\n')
+                return
             for i in range(6):
                 assert key(f'down-{i+1}', 'Down') is not None
             for i in range(6):
@@ -98,7 +173,7 @@ def main():
                 'pause_frame_sha256': hashlib.sha256(pause).hexdigest(),
                 'after_escape_frame_sha256': hashlib.sha256(after_escape).hexdigest(),
                 'after_space_frame_sha256': hashlib.sha256(after_space).hexdigest(),
-                'records': records, 'acknowledged_keys': base.sync, 'idle_return': idle,
+                'records': records, 'acknowledged_keys': base.sync, 'ordinary_acknowledgments': base.ordinary_sync, 'idle_return': idle,
                 'scope': '預算來源探索；有界停止，不代替原版正常退出'}
             (root/'result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
         finally:

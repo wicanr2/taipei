@@ -7,7 +7,9 @@ test -d "$orig_dir"
 test -d "$project_dir/workspace"
 test -f "$project_dir/workspace/runs/taipei-preview"
 run_name="${TAIPEI_BUDGET_RUN:-budget-native}"
-case "$run_name" in budget-native|budget-native-entry|budget-native-fixed|budget-native-ranges|budget-native-annual) ;; *) exit 2 ;; esac
+case "$run_name" in budget-native|budget-native-entry|budget-native-fixed|budget-native-ranges|budget-native-annual|budget-native-scenario|budget-native-scenario-extra|budget-native-scenario-final|budget-native-source-ready) ;; *) exit 2 ;; esac
+mode="${TAIPEI_BUDGET_MODE:-full}"
+case "$mode" in full|persistence|scenario) ;; *) exit 2 ;; esac
 test ! -e "$project_dir/workspace/runs/$run_name"
 timeout 900s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" --name taipei-budget-native \
@@ -15,6 +17,7 @@ timeout 900s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
   --mount "type=bind,src=$orig_dir,dst=/orig,readonly" \
   -e DISPLAY=:99 -e LIBGL_ALWAYS_SOFTWARE=1 -e GOMAXPROCS=2 \
   -e "TAIPEI_BUDGET_RUN=$run_name" -w /workspace \
+  -e "TAIPEI_BUDGET_MODE=$mode" \
   sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3 bash -c '
     set -euo pipefail
     run_dir="/workspace/runs/$TAIPEI_BUDGET_RUN"

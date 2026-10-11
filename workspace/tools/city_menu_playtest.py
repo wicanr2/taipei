@@ -11,6 +11,7 @@ from pathlib import Path
 root = Path('/workspace/runs')/os.environ['TAIPEI_CITY_MENU_RUN']
 out = root
 sync = []
+ordinary_sync = []
 
 
 def status():
@@ -23,13 +24,19 @@ def status():
         return {}
 
 
-def wait_for(predicate, label):
-    end = time.monotonic()+120
+def wait_for(predicate, label, seconds=120, progress=False):
+    assert 0 < seconds <= 180
+    end = time.monotonic()+seconds
+    last_steps = status().get('steps', 0)
     while time.monotonic() < end:
         s = status()
         if predicate(s):
             print(out.name, label, s['steps'], s['frame_index_sha256'], flush=True)
             return s
+        if progress and s.get('steps', 0) > last_steps:
+            # 只供有限步數的啟動閘門；完整生命週期仍由 shell 的外層逾時擁有。
+            last_steps = s['steps']
+            end = time.monotonic()+seconds
         time.sleep(.2)
     raise RuntimeError(f'功能選單等待逾時 {out.name}/{label}; {status().get("steps")}')
 
@@ -38,7 +45,7 @@ def capture(label):
     (out/(label+'-capture.zip')).write_bytes((out/'capture.zip').read_bytes())
 
 
-def action(label, key):
+def action(label, key, acknowledge=False):
     before = status()
     scan = {'Left': 0x4b, 'Right': 0x4d, 'Up': 0x48, 'Down': 0x50,
             'Escape': 1, **{f'F{i}': 0x3a+i for i in range(1, 7)}}.get(key)
@@ -57,12 +64,26 @@ def action(label, key):
     else:
         time.sleep(.15)
         subprocess.run(['xdotool', 'keyup', key], check=True)
-        wait_for(lambda s: s.get('steps', 0) >= before['steps']+24_000_000, label)
+        if acknowledge:
+            ascii_keys = {'space': (32, 0x39), 'Return': (13, 0x1c), 'BackSpace': (8, 0x0e),
+                          **{str(i): (48+i, 0x0b if i == 0 else i+1) for i in range(10)}}
+            assert key in ascii_keys, '普通讀鍵確認只支援已核對的按鍵'
+            ascii_code, scan_code = ascii_keys[key]
+            reads = sum(k.get('Key') == ascii_code for k in before.get('key_reads') or [])
+            breaks = sum(k.get('kind') == 'keyboard' and k.get('scan') == scan_code+128 for k in before.get('inputs', []))
+            read = wait_for(lambda s: sum(k.get('Key') == ascii_code for k in s.get('key_reads') or []) >= reads+1, label+'-ascii-read')
+            released = wait_for(lambda s: sum(k.get('kind') == 'keyboard' and k.get('scan') == scan_code+128 for k in s.get('inputs', [])) >= breaks+1, label+'-ascii-release')
+            matching = [k for k in released.get('key_reads') or [] if k.get('Key') == ascii_code]
+            assert len(matching) == reads+1, '普通按鍵重複被原版讀取'
+            ordinary_sync.append({'label': label, 'key': key, 'ascii': ascii_code,
+                'original_read': matching[-1], 'read_receipt_steps': read['steps'], 'release_receipt_steps': released['steps']})
+        else:
+            wait_for(lambda s: s.get('steps', 0) >= before['steps']+24_000_000, label)
     capture(label)
 
 
 def cold_city():
-    wait_for(lambda s: s.get('steps', 0) >= 700_000_000, 'intro')
+    wait_for(lambda s: s.get('steps', 0) >= 700_000_000, 'intro', progress=True)
     subprocess.run(['xdotool', 'search', '--name', '模擬台北', 'windowfocus'], check=True)
     action('intro-space', 'space')
     wait_for(lambda s: s.get('steps', 0) >= 800_000_000, 'intro-wait')
@@ -70,7 +91,7 @@ def cold_city():
     wait_for(lambda s: s.get('frame_index_sha256') == '5442a8135d36552561f03a46fc443978a76989979e0c25dc016027229b24dda4', 'main-ready')
     for label in ['city-choice', 'new-game', 'difficulty', 'city-map']:
         action(label, 'space')
-    action('pause', '0')
+    action('pause', '0', acknowledge=True)
 
 
 def main():
