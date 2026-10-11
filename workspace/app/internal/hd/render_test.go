@@ -66,6 +66,7 @@ func TestActualCityAndFallbacks(t *testing.T) {
 	}
 	r := New(rom, dir)
 	r.chrome = nil // 此測試保留既有地景邊界檢查；新框架另驗固定來源與區外。
+	r.footer = nil // 動態欄位另驗。
 	origin := Origin{Valid: true}
 	native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false, origin)
 	base := append([]byte(nil), native.Pix...)

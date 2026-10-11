@@ -26,6 +26,7 @@ func TestActualToolIconsAndSelectedBorders(t *testing.T) {
 	}
 	r := New(rom, dir)
 	r.chrome = nil // 此測試單獨驗圖示；新外框由 chrome_test 驗完整正常來源。
+	r.footer = nil // 動態欄位另驗。
 	origin := Origin{X: 12, Y: 12, Valid: true}
 	for _, name := range []string{"city-map", "power-tool", "power-confirm", "uncover-power"} {
 		state, frame := load(t, name)

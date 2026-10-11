@@ -24,12 +24,15 @@ var materials = map[string]string{
 }
 
 type Stats struct {
-	ChromeParts                int    `json:"chrome_parts"`
-	ChromeMask                 uint8  `json:"chrome_mask"`
-	ChromeRings                int    `json:"chrome_rings"`
-	ChromeRingMask             uint16 `json:"chrome_ring_mask"`
-	ChromeReason               string `json:"chrome_reason"`
-	Reason                     string `json:"reason"`
+	FooterMask                 uint8     `json:"footer_mask"`
+	FooterText                 [4]string `json:"footer_text"`
+	FooterReason               string    `json:"footer_reason"`
+	ChromeParts                int       `json:"chrome_parts"`
+	ChromeMask                 uint8     `json:"chrome_mask"`
+	ChromeRings                int       `json:"chrome_rings"`
+	ChromeRingMask             uint16    `json:"chrome_ring_mask"`
+	ChromeReason               string    `json:"chrome_reason"`
+	Reason                     string    `json:"reason"`
 	Matched, Painted, Fallback int
 	FontLabels                 int    `json:"font_labels"`
 	FontReason                 string `json:"font_reason"`
@@ -52,6 +55,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	footer  *cityFooter
 	chrome  *cityChrome
 	frame   *image.RGBA
 	sources map[string]bool
@@ -101,6 +105,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.dialog = loadNewGameDialog(dir)
 	r.panels = loadPanels(dir)
 	r.chrome = loadCityChrome(rom, dir)
+	r.footer = loadCityFooter(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -271,6 +276,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	stats.ChromeParts, stats.ChromeMask, stats.ChromeRings, stats.ChromeRingMask, stats.ChromeReason = r.chrome.paint(r.frame, px, pal)
 	stats.FontLabels, stats.FontReason = r.menu.paint(r.frame, pal)
 	stats.UIIcons, stats.UIIconMask, stats.UIReason = r.icons.paint(r.frame, px, pal)
+	stats.FooterMask, stats.FooterText, stats.FooterReason = r.footer.paint(r.frame, px, pal)
 	return r.frame, stats
 }
 func mirror(world int) int {

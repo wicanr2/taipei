@@ -7,7 +7,7 @@ import time
 import zipfile
 from pathlib import Path
 
-out = Path('/workspace/runs/city-chrome-gui')
+out = Path('/workspace/runs')/os.environ.get('TAIPEI_CHROME_RUN','city-chrome-gui')
 
 
 def receipt():
@@ -107,6 +107,13 @@ if os.environ.get('TAIPEI_THEME') == 'hd-b':
         assert s['frame_index_sha256'] == before['frame_index_sha256']
         assert (s.get('key_reads') or []) == (before.get('key_reads') or [])
     roundtrip = True
+if os.environ.get('TAIPEI_FOOTER_TIME') == '1':
+    initial_date = receipt()[0]['hd']['footer_text'][1:3]
+    action('resume-time', '3')
+    wait_for(lambda s: s.get('hd',{}).get('footer_mask') == 3 and s['hd']['footer_text'][1:3] != initial_date, 'month-update')
+    capture('month-update')
+    action('pause-after-time','0')
+
 (out/'result.json').write_text(json.dumps({'normal_gui': True, 'checkpoint': False,
     'hover_and_confirmed_tools': order, 'tab_cancel_restores_selected': True,
     'tool_submenus': submenus,

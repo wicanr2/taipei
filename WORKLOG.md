@@ -294,3 +294,19 @@ F12 決策已回寫 [#6 留言](https://github.com/wicanr2/taipei/issues/6#issue
 - Linux amd64、Windows amd64、macOS amd64／arm64 編譯通過，Windows 只有既有 YMFM 警告。沒有新增真機、音訊或正式封包完成聲明。
 
 019 限六部分與十四外框達 CONFORMED。#29、#7 及完整 HD 母項保持開啟；其餘圖片、子選單、動態文字、場景、動畫與正式封包繼續依原範圍處理。35 個原始檔及 RAR 雜湊不變，文件入口與相對連結檢查通過。新檔、素材及四平台 binary 為 1000:1000，容器內指定 `find` 無輸出，本批容器均已退出並刪除。沒有新建 image、改動 dosgolem 上游或清理其他專案資源。程式與文件按明確清單提交並推送，實際提交回鏈 #29 與 #7。
+
+## 2026-10-11：底部費用、年月與資金高清化
+
+接續 [#31 的預登記](https://github.com/wicanr2/taipei/issues/31#issuecomment-6107137732)。本輪先回讀現況與遠端 OPEN Issue，路由命中重製技能、規格閘門、字模索引還原、文件職責；GUI 漏鍵追查另載入正常玩家試玩入口，README 現況修正依專用入口。沿既有 B、Noto、1280×800、F12 及原版版面，不重開決策。
+
+- 以 ROM1 完整底圖、成員 56 數字與成員 57／58 索引 107–110 重建兩個完整原生矩形，68 份來源與 408 個單點負對照通過。「每單位／萬」的 15×14 墨跡及 5×7 數字均有正常像素證據；沒有把舊路徑未呼叫的 ASCII 函式改寫成已追蹤。補充證據回鏈 RE009 與 020，原位、原始定位與推論界線保留。
+- 020 先 DRAFT，完成原始來源、完整欄位與字形審查後進 READY，再實作 `footer.go`。固定 B 框架取相同座標作底板，Noto 十八字形生成透明 atlas，數字 28 點、費用中文字 52 點、右欄單位 28 點；所有實際 alpha 墨跡落在安全矩形，重生 PNG 與 manifest 雜湊不變。原圖與 atlas 僅留本機。右下語意未確認的原符號保留原始四倍像素。
+- 正式辨識先從 ROM 重建背景及實際原版字模，完整矩形 bytes、使用中色盤、字型／授權、固定參考都符合才逐欄覆繪。來源或素材失配整欄回退，每幀先恢復原版，再畫目前字串。真實資源 Go 測試包含正常來源、分欄色盤及來源破壞、五項素材缺失／竄改、縮短數字背景恢復，全部通過。
+- `TAIPEI_THEME=hd-b TAIPEI_CHROME_RUN=footer-gui TAIPEI_FOOTER_TIME=1 bash workspace/tools/city_chrome_playtest.sh` 取得 66 份正常收據，涵蓋十四工具、42 種外框、五個子選單回退、F2／取消／F12 及原版速度鍵 `3`。費用含最長實際六位 100000，80 年 9 月正常推進至 10 月。`program-provenance.txt` 固定實際 Linux binary SHA-256 `9c2f97887f5ea4089447ae25af7acfd09dd3a80a2aa340a1be287e5cc8293977`。
+- 完整施工腳本初次固定 wall-clock 連發少送兩次 Right，原版施工與扣款已發生，但落在 (212,43)，未達預定 (230,43)。失敗收據保留 `gui-cold-footer-missed-input/`，先開 [#34](https://github.com/wicanr2/taipei/issues/34) 再修工具。25 次移動改為各自等原版讀鍵及前端 release 的原子收據，沒有注入游標、放寬位置或改遊戲程式。`movement-sync.json` 保存每次 press／release 步數及讀鍵計數；同 image／命令乾淨重跑通過。
+- 最終正常施工、原版存檔、兩次原版退出及全新啟動讀檔取得 37 份收據，冷讀施工格與資金 79980 相符。存檔 SHA-256 保持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，施工格保持 `4aa14e7ead003f1071348ea65f64f5d6cb430efe4b2cd51c8bb78bb3ff364139`。原來源保留 `gui-cold-before-footer/`。
+- 103 份正常收據由 Python 重算來源、字串與色盤，Go 另依固定 atlas／背景核對完整像素與區外。首次獨立核對把已驗主選單覆蓋的底部座標當成原版欄位，修正面板責任分派後乾淨重跑，屬核對工具問題。八個重算雜湊及原版 PNG 的有效負對照被拒絕；來源／色盤由底部核對器直接拒絕，不借其他框架失配代替。Go 不重算這兩種來源，結果明列互補責任。
+- `presentation-audit -require-footer -require-chrome -require-dialog -require-font -require-icons` 重播唯一正常輸入 `footer-gui/pause-after-time-capture.zip`。兩側各 2,352,000,000 步，包含 3,236 幀兩欄覆繪，RAM、CPU、原版畫面、色盤、埠、OPL、讀鍵及檔案操作一致。狀態 SHA-256 `93808909ec3603a2b2e933e1af782c28178f9f27663ad0842f103be6b2707daa`，輸入與工具來源保存在 `footer-state-provenance.json`。不外推不同亂數實作或未驗規則。
+- Linux amd64、Windows amd64、macOS amd64／arm64 編譯通過，Windows 保留既有 YMFM 警告。沒有新增真機、音訊或正式封包完成聲明。35 個來源檔與 RAR 雜湊不變；156 個文件相對連結、八個新入口的正對照索引及抽查 1000:1000 擁有權通過，容器內指定 `find` 無異常。
+
+020 限費用、年月與資金達 CONFORMED，#31、#7 及完整 HD 母項保持開啟。右下原符號、負資金、超出辨識槽、其他子選單／視窗／圖表、圖片／動畫與正式封包繼續依原範圍處理。本批容器全部退出並刪除，沒有新建 image、改動 dosgolem 上游或清理其他專案資源。程式與文件按明確清單提交推送，結果回鏈 #31、#7、#34。

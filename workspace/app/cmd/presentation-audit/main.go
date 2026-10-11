@@ -35,6 +35,7 @@ func main() {
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
 	requirePanels := flag.Bool("require-panels", false, "要求重播實際經過十三種啟動選單狀態")
 	requireChrome := flag.Bool("require-chrome", false, "要求實際經過完整城市框架及十四外框")
+	requireFooter := flag.Bool("require-footer", false, "要求實際經過完整底部動態欄位")
 	flag.Parse()
 	z, err := zip.OpenReader(*receipt)
 	must(err)
@@ -72,6 +73,7 @@ func main() {
 	must(err)
 	var draws, painted, fontFrames, iconFrames, dialogFrames uint64
 	var chromeFrames uint64
+	var footerFrames uint64
 	reasons := map[string]uint64{}
 	panelStates := map[string]uint64{}
 	run := func(present bool) []byte {
@@ -117,6 +119,9 @@ func main() {
 				}
 				if stats.FontLabels > 0 {
 					fontFrames++
+				}
+				if stats.FooterMask == 3 {
+					footerFrames++
 				}
 				if stats.UIIcons == 14 {
 					iconFrames++
@@ -169,12 +174,16 @@ func main() {
 	if *requireChrome && chromeFrames == 0 {
 		panic("重播未實際經過完整城市框架")
 	}
+	if *requireFooter && footerFrames == 0 {
+		panic("重播未經過完整底部欄位")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
 		"hd_reasons": reasons, "font_frames": fontFrames,
 		"icon_frames":   iconFrames,
 		"chrome_frames": chromeFrames,
+		"footer_frames": footerFrames,
 		"dialog_frames": dialogFrames,
 		"panel_states":  panelStates,
 		"scope":         "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；只驗呈現層不改原版狀態，非正式 HD 驗收",

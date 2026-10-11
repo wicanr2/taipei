@@ -8,6 +8,7 @@ from pathlib import Path
 from hd_scroll_check import audit_bundle, source59
 from hd_source_audit import scene, sha
 from hd_chrome_check import covered_native
+from hd_footer_check import covered_native as footer_covered
 
 REFERENCE_SHA='feefbf252a77ab01322c72654a2c6d8b7cb42118494949604f194c20d4f331da'
 FONT_SHA='dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4'
@@ -30,7 +31,7 @@ def main():
     samples=[];counts=collections.Counter()
     for path in sorted(args.receipts.rglob('*-capture.zip')):
         s,frame,grid,rgba,sample=audit_bundle(path,sources)
-        chrome=covered_native(s)
+        chrome=covered_native(s) | footer_covered(s)
         origin=s.get('map_origin',{})
         colors=bytes(v for i in [15,21,27] for v in s['palette'][i])
         active=(s['hd_enabled'] and scene(s,frame) and origin.get('Valid')

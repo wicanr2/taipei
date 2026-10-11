@@ -75,9 +75,11 @@ func main() {
 	dialogReference := flag.String("dialog-reference", "", "含說明視窗時須提供固定 Noto 面板參考")
 	panelManifest := flag.String("panel-manifest", "", "啟動選單固定面板與完整來源 manifest")
 	chromeDir := flag.String("chrome-reference", "", "城市框架及外框固定參考目錄")
+	footerDir := flag.String("footer-reference", "", "底部固定字形與背景的素材根")
 	flag.Parse()
 	panels := readPanels(*panelManifest)
 	chrome := readChrome(*chromeDir)
+	footer := readFooter(*footerDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -154,6 +156,7 @@ func main() {
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
 				chromeFields
+				footerFields
 				Painted        int
 				FontLabels     int    `json:"font_labels"`
 				FontReason     string `json:"font_reason"`
@@ -169,6 +172,10 @@ func main() {
 		}
 		if e = json.Unmarshal(files["status.json"], &s); e != nil {
 			return e
+		}
+		footerImage, footerErr := footer.compose(s.HD.footerFields)
+		if footerErr != nil {
+			return fmt.Errorf("%s: %w", path, footerErr)
 		}
 		if e = chrome.validate(s.HD.chromeFields); e != nil {
 			return fmt.Errorf("%s: %w", path, e)
@@ -278,6 +285,11 @@ func main() {
 						rr, gg, bb, aa := dialog.At(x-72, y-148).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: dialog pixels differ at %d,%d", path, x, y)
+						}
+					} else if footerPoint(s.HD.footerFields, x, y) {
+						rr, gg, bb, aa := footerImage.At(x, y).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 底部參考像素失配 %d,%d", path, x, y)
 						}
 					} else if chromeImage != nil {
 						rr, gg, bb, aa := chromeImage.At(cx, cy).RGBA()

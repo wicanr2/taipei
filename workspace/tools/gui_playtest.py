@@ -112,9 +112,21 @@ if os.environ.get('TAIPEI_THEME')=='hd-b':
     assert len(status().get('key_reads',[]))==key_reads, '主題快捷鍵流入 DOS'
 for label,key in [('power-tool','Right'),('power-confirm','space')]:
     action(label,key)
-for _ in range(25):
-    keypress('Right')
-    time.sleep(.15)
+# #34：以原子收據確認原版讀鍵及前端 release，避免負載下漏掉短脈衝。
+movement_sync=[]
+for index in range(25):
+    before=status()
+    reads=sum(k.get('Word')==0x4d00 for k in before.get('key_reads',[]))
+    breaks=sum(k.get('kind')=='keyboard' and k.get('scan')==0xcd for k in before.get('inputs',[]))
+    subprocess.run(['xdotool','keydown','Right'],check=True)
+    try:
+        pressed=wait_for(lambda s:sum(k.get('Word')==0x4d00 for k in s.get('key_reads',[]))>=reads+1,f'land-right-{index+1:02d}-read')
+    finally:
+        subprocess.run(['xdotool','keyup','Right'],check=True)
+    released=wait_for(lambda s:sum(k.get('kind')=='keyboard' and k.get('scan')==0xcd for k in s.get('inputs',[]))>=breaks+1,f'land-right-{index+1:02d}-release')
+    assert sum(k.get('Word')==0x4d00 for k in released.get('key_reads',[]))==reads+1,'連續 Right 重複送達'
+    movement_sync.append({'index':index+1,'press_receipt_step':pressed['steps'],'release_receipt_step':released['steps'],'original_reads_before':reads,'original_reads_after':reads+1,'breaks_before':breaks,'breaks_after':breaks+1})
+(out/'movement-sync.json').write_text(json.dumps(movement_sync,indent=2)+'\n')
 action('land-down','Down')
 capture('before-build')
 action('place-power','space')

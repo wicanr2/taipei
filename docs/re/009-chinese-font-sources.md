@@ -54,3 +54,14 @@
 - 範圍限制：這條正常路徑只呼叫上述函式六次，不是全部遊戲文字。成員 22 的完整說明視窗含已烘製文字，見 [008](008-full-asset-inventory.md)；「說、明、目、標」等字不在 402 字子集。不能只替換共用字庫就宣稱所有介面已用 Noto。
 
 在固定 GUI image 內建置 `go build -mod=readonly -p 1 -trimpath -o /out/text-source-audit ./cmd/text-source-audit` 後，執行 `text-source-audit -original /orig -receipt /runs/gui-cold-before-icons/uncover-power-capture.zip -out /out/text-runtime.json -expected-state 9a439a04692635051b9967b5e204f18073c87f1d16fe4d7495eba26c22898e68`。原版與收據唯讀，輸出只寫 `/out`。實際函式證據與像素比對已足以限定這條路徑，停止擴挖其他不相干 helper；後續依可見視窗逐批重繪與覆字。
+
+## 底部動態欄位的後續證據
+
+2026-10-11，依 [#31](https://github.com/wicanr2/taipei/issues/31#issuecomment-6107137732) 以 [footer_catalog.py](../../workspace/tools/footer_catalog.py) 重建正常十四工具與施工收據的完整兩欄。使用相同固定 EXE、ROM 與 GUI image，Python 3.13.16 在盤點 image `sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c` 執行。定位基準為 ROM 檔案偏移、零起算字模索引及 320×200 原生畫面座標；沒有新增函式呼叫追蹤。
+
+- 已證實：成員 57 的索引 107–110 與成員 58 字碼，分別為「每、單、位、萬」。在 (19,177)、(35,177)、(51,177)、(103,177) 的 15×14 紅色墨跡逐點符合。
+- 已證實：正常費用、年月與資金的數字墨跡符合成員 56 的七列高五 bits，字距六點；保留完整欄位前置空白與背景。
+- 已證實：ROM1 底圖加原始字模，完整重建 68 份收據的兩欄。408 個背景、墨跡或單位單點破壞均被拒絕，不能只比前景或挑相近字。
+- 範圍：這補足數字的正常像素來源證據；上節 `sub_15BCE` 在先前 1.2B 步路徑未被呼叫的紀錄仍有效，不將這次畫面匹配改寫成該函式已執行。
+
+完整來源、色盤、前置空白、固定字型參考與呈現閘門見 [020](../spec/020-city-footer.md)。本機來源保留於 `city-chrome-native/`、`gui-cold-before-footer/`，重建與負對照位於 `workspace/runs/footer-source/catalog.json`。右下未確認語意的符號仍為原版，負資金尚未走正常玩家路徑，不因 ASCII 字模能解碼就宣稱已驗全範圍。

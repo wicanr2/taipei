@@ -32,11 +32,22 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | 已接入 B 地景、六 Noto 標題、十四工具、新遊戲說明、三種啟動選單及城市框架／F1–F6。十四工具 42 種外框、五子選單回退、F12 與正常存退讀共 100 份收據通過，存檔雜湊相同 | [框架契約](docs/spec/019-city-chrome.md)、[啟動選單](docs/spec/018-startup-menus.md)；其他圖片、子選單、動態文字、場景及正式封包未完成 |
+| HD 接入 | 已接入 B 地景、六 Noto 標題、十四工具、說明與啟動選單、城市框架／F1–F6，以及底部費用、年月與資金。最新 103 份正常收據、月份及施工資金更新、F12 與存退讀通過，存檔雜湊相同 | [底部契約](docs/spec/020-city-footer.md)、[框架契約](docs/spec/019-city-chrome.md)；右下原符號、其他圖片、子選單、文字／圖表、場景及正式封包未完成 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- 底部動態文字批次：[020-city-footer.md](docs/spec/020-city-footer.md)，對應 #31，限費用、年月與資金達 CONFORMED；103 份正常收據、八項有效負對照與 3,236 幀同狀態覆繪通過，右下原符號及其他介面仍未完成。
+- 底部欄位來源：[footer_catalog.py](workspace/tools/footer_catalog.py)，由 ROM1／56／57／58 重建整個矩形，保存正常字串及單點破壞負對照；輸出 `workspace/runs/footer-source/catalog.json`。
+- 底部固定字形：[footer-prototype](workspace/app/cmd/footer-prototype/main.go)，離線繪製十八個 Noto 字形並檢查實際墨跡；輸出本機 `workspace/prototypes/hd-style/footer-v1/`，不入 Git。
+- 底部欄位接入：[footer.go](workspace/app/internal/hd/footer.go)，依 020 重建完整欄位、分欄核對色盤、固定字形與背景，失配整欄回退；正常工具、時間、施工及冷讀已抽樣。
+- 底部獨立核對：[hd_footer_check.py](workspace/tools/hd_footer_check.py)，從固定 ROM 重新辨字及完整回建，核對 Noto 字形、背景、原符號與回退；由共同正常收據核對入口呼叫。
+- 底部單幀參考：[receipt-check/footer.go](workspace/app/cmd/receipt-check/footer.go)，`-footer-reference` 指向本機素材根，按收據字串與固定 atlas 核對整欄及原版區外；來源與字串由 Python 另行重算。
+- 底部來源與失配測試：[footer_test.go](workspace/app/internal/hd/footer_test.go)，正常字模、整欄負對照、獨立色盤回退、缺失／竄改素材及縮短數字背景恢復。
+- 底部有效負對照：[hd_footer_negative.py](workspace/tools/hd_footer_negative.py)，重算受影響雜湊及原版 PNG，分別驗字形、背景、原符號、區外、來源、色盤、遮罩及字串。
+- 底部同狀態收據：`workspace/runs/footer-state-audit.json`、`footer-state-provenance.json`；相同唯一正常輸入兩側各 2,352,000,000 步，3,236 幀底部覆繪，原版狀態相同。正常 GUI 為 `footer-gui/` 與 `gui-cold/`，來源前件保留 `gui-cold-before-footer/`。
+- 連續方向鍵驗證修正：[gui_playtest.py](workspace/tools/gui_playtest.py)，依 [#34](https://github.com/wicanr2/taipei/issues/34) 逐次確認 25 次原版讀鍵及前端 release；不注入狀態。初次漏鍵證據 `gui-cold-footer-missed-input/`、修正後 `gui-cold/movement-sync.json`。
 
 - 城市框架批次：[019-city-chrome.md](docs/spec/019-city-chrome.md)，對應 #29，限六部分與十四外框達 CONFORMED；63 份十四工具與 37 份存退讀收據通過，其餘介面與封包仍未完成。
 - 城市框架載入與遮罩：[chrome.go](workspace/app/internal/hd/chrome.go)，依 019 已審查的六部分及十四外框逐項辨識、失配回退；正式封包另驗。
