@@ -13,6 +13,7 @@ import (
 // spec/018：完整正常來源及固定 Noto 面板。原文與衍生素材僅留本機。
 const panelManifestSHA = "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d"
 const toolPanelManifestSHA = "288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e"
+const cityPanelManifestSHA = "699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5"
 
 type panelState struct {
 	ID             string `json:"id"`
@@ -40,6 +41,11 @@ func loadPanels(dir string) *panelSet {
 // spec/021：十八個已審查的正常工具子選單，與啟動選單分開載入。
 func loadToolPanels(dir string) *panelSet {
 	return loadPanelSet(dir, "tool-menus-v1", toolPanelManifestSHA, 18)
+}
+
+// spec/022：六功能下拉面板的二十九種完整來源。
+func loadCityPanels(dir string) *panelSet {
+	return loadPanelSet(dir, "city-menus-v1", cityPanelManifestSHA, 29)
 }
 
 func loadPanelSet(dir, folder, manifestSHA string, count int) *panelSet {

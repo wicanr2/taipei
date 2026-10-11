@@ -75,11 +75,13 @@ func main() {
 	dialogReference := flag.String("dialog-reference", "", "含說明視窗時須提供固定 Noto 面板參考")
 	panelManifest := flag.String("panel-manifest", "", "啟動選單固定面板與完整來源 manifest")
 	toolManifest := flag.String("tool-panel-manifest", "", "五工具子選單固定面板與完整來源 manifest")
+	cityManifest := flag.String("city-panel-manifest", "", "六功能選單固定面板與完整來源 manifest")
 	chromeDir := flag.String("chrome-reference", "", "城市框架及外框固定參考目錄")
 	footerDir := flag.String("footer-reference", "", "底部固定字形與背景的素材根")
 	flag.Parse()
 	panels := readPanels(*panelManifest, "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d", 13)
 	panels = append(panels, readPanels(*toolManifest, "288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e", 18)...)
+	panels = append(panels, readPanels(*cityManifest, "699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5", 29)...)
 	chrome := readChrome(*chromeDir)
 	footer := readFooter(*footerDir)
 	if *dir == "" {

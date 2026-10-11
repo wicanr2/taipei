@@ -1,6 +1,6 @@
 # 城市六功能選單
 
-狀態：READY，限六個完整下拉面板、二十九種選取。尚未接入產品或達 CONFORMED。對應 [#37](https://github.com/wicanr2/taipei/issues/37)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。
+狀態：CONFORMED，限六個完整下拉面板、二十九種選取。對應 [#37](https://github.com/wicanr2/taipei/issues/37)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。確認後的功能視窗與完整 HD 另驗。
 
 本批處理 F1–F6 城市功能入口的完整下拉面板，保留原版文字、選取、互動及矩形。沿用 B 細緻手繪材質、1280×800、Noto 與 F12。功能確認後開啟的存讀檔、預算、圖表、災害及其他視窗仍各自驗證。
 
@@ -24,11 +24,11 @@
 
 正常來源工具為 [city_menu_playtest.sh](../../workspace/tools/city_menu_playtest.sh)／[city_menu_playtest.py](../../workspace/tools/city_menu_playtest.py)，每個入口由真實冷啟動進城市，原版速度 0 暫停，逐次等待原版讀鍵與前端 release。收尾採有界停止，只作來源探索；原版退出另以完整正常存退讀路徑驗證。
 
-## READY 呈現契約
+## 呈現契約
 
 - 由 [city_menu_catalog.py](../../workspace/tools/city_menu_catalog.py) 重建完整交錯邊框、背景及全部原字模；每個選取狀態與正常完整矩形相同才登錄。原字碼、候選 Unicode 與字形對應需審查，不用未知字猜補。
 - 沿用固定 `menu-blue-b-v1.png`，SHA-256 `eeb1aa620c179a7fa0233bdfc9d9ad6abf8719d36f1ad05dc93c84343a164ea9`。Noto 中文採 52 點，DOS 英文採 28 點，72 DPI、無 hinting；保留原位及字距，先掃描實際墨跡再檢查完整畫面。
-- 固定字型、授權、manifest、來源完整矩形、使用中色盤及面板 PNG 全部匹配才覆繪。每幀先恢復原版，只改完整面板矩形；矩形外維持原版四倍像素。主動態標題或模態背景未在此批覆繪時仍列為完整 HD 的未完成項。
+- 固定字型、授權、manifest、來源完整矩形、使用中色盤及面板 PNG 全部匹配才覆繪。每幀先恢復原版，只改完整面板矩形；矩形外維持原版四倍像素。選取中的頂部標題或模態背景未在此批覆繪時仍列為完整 HD 的未完成項。
 - 不改原版 F1–F6、方向、確認或取消操作；F12 不送入 DOS。來源或資產失配完整回退，單張素材故障不影響其他已確認面板。
 
 輸入為原版 64,000 bytes 色號、256×3 色盤、顯示模式與主題。只在模式 0x13、HD 啟用且完整來源及使用中色盤符合固定狀態時接受。面板列入獨立二十九狀態集，於阻塞輸入回退前辨識；既有啟動、說明及工具面板優先順序保留。命中時輸出 `panel=city-fN`、`panel_selection=0..count-1`、`panel_reason=matched-panel`，其他覆繪層計數為零。失配時保留完整原版像素，不以部分文字匹配覆蓋畫面。
@@ -74,4 +74,26 @@
   -sources-sha eb98c1def205eb39e533f9646ad9336fafc7268559998e93e3a1ed1c7157f870
 ```
 
-本文件入口由 [CONTEXT](../../CONTEXT.md) 索引。READY 只授權本批完整面板實作，尚未接入產品；#37、#31 與完整 HD 母項保持開啟。
+本節記錄來源審查時點的 READY 狀態，產品結果見下節。本文件入口由 [CONTEXT](../../CONTEXT.md) 索引。
+
+## 2026-10-11 產品驗證
+
+固定來源已接入 [panels.go](../../workspace/app/internal/hd/panels.go) 及 [render.go](../../workspace/app/internal/hd/render.go)，在阻塞輸入回退前辨識。既有啟動、說明與工具面板保持優先；只有本批完整矩形接受固定 Noto PNG，其他覆繪層計數為零，區外保持原版四倍像素。
+
+| 閘門 | 實際結果 | 本機證據 |
+|---|---|---|
+| 正常六功能 HD | 一次冷啟動、107 份收據、二十九選取、八十二次讀鍵／release、上下與左右循環、六次 Escape 復原；六場景 F12 不送入 DOS | `workspace/runs/city-menus-hd/controls-verification.json`、`city-panels-verification.json` |
+| 原子單幀及區外 | 六功能 107 份及完整存退讀 37 份，原版 PNG／色號／色盤、固定 HD 參考及全部區外均通過 | `workspace/runs/city-panels-verification.log` |
+| 有效竄改 | F1 小面板與 F5 十列面板各七項，更新受影響雜湊及原版 PNG，Python／Go 全部拒絕 | `workspace/runs/city-panels-negative/f1/`、`f5/` |
+| 實際資源故障 | Go 全套 21.819 秒、無跳過；全二十九來源及區外、來源／色盤／模式／主題、必要檔案缺失／竄改及單張故障隔離通過 | `workspace/runs/city-panels-go-tests.log` |
+| 正常存退讀 | 施工、原版存檔、兩次原版退出、全新 EXE 讀回原施工格；存檔及資金保持基準，標題與工具冷讀恢復 | `workspace/runs/gui-cold/result.json`、字型／工具 verification JSON |
+| 原版狀態 | 同一正常輸入兩側各 5,184,000,000 步，216 次明示 HD 抽樣涵蓋二十九城市選取共 164 次、說明一次及城市各層 14 次，原版狀態相同 | `workspace/runs/city-panels-state-audit.json`、`city-panels-state-provenance.json` |
+| 平台及輸入 | Linux amd64、Windows amd64、macOS amd64／arm64 編譯與架構通過；Linux 由現行來源重建逐 byte 相同，35 原始檔與 RAR 雜湊不變 | `workspace/runs/city-panels-state-provenance.json` |
+
+存檔 SHA-256 維持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，冷讀施工格維持 `4aa14e7ead003f1071348ea65f64f5d6cb430efe4b2cd51c8bb78bb3ff364139`。前批完整 GUI 原件保存於 `workspace/runs/gui-cold-before-city-menus/`，沒有覆寫 021 證據。
+
+狀態重播使用 `city-menus-hd/f6/escape-capture.zip` 的唯一正常硬體輸入、固定 dosgolem 初始狀態與虛擬時間，原版 RNG 未改。原版側 398.045 秒、HD 側 351.661 秒；RAM、CPU、色號、色盤、埠、OPL、讀鍵、DOS 狀態與檔案操作相同，狀態 SHA-256 為 `df85c5d5f612ff996d7b671bd81ba1238e41e55bff926dc293c90975ece21174`。HD 間距為預登記的 24,000,000 步，沒有宣稱逐幀或跨 RNG 實作精確對拍。
+
+重現入口為 [city_menu_playtest.sh](../../workspace/tools/city_menu_playtest.sh)，指定 `TAIPEI_THEME=hd-b TAIPEI_CITY_MENU_RUN=city-menus-hd`，以及 [city_panels_verify.sh](../../workspace/tools/city_panels_verify.sh)。完整存退讀另由 [gui_playtest.sh](../../workspace/tools/gui_playtest.sh) 執行。每次重跑前保存既有收據，保留固定 image、程式、輸入與斷言；本批工具及全部收據雜湊由 [city_panels_provenance.py](../../workspace/tools/city_panels_provenance.py) 彙整。
+
+本批達 CONFORMED。選取中的頂部標題、模態背景、確認後的視窗／圖表、其他圖片／場景／動畫、平台真機及正式封包仍未完成，#31 與 HD 母項保持開啟。全部原版及衍生素材只留本機。

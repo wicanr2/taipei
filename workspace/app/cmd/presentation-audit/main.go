@@ -39,6 +39,7 @@ func main() {
 	requireChrome := flag.Bool("require-chrome", false, "要求實際經過完整城市框架及十四外框")
 	requireFooter := flag.Bool("require-footer", false, "要求實際經過完整底部動態欄位")
 	requireTools := flag.Bool("require-tool-panels", false, "要求實際經過十八種工具子選單狀態")
+	requireCity := flag.Bool("require-city-panels", false, "要求實際經過二十九種城市功能選單狀態")
 	renderInterval := flag.Uint64("render-interval-steps", 400000, "HD 抽樣間距，400000 的正整數倍，最多 24000000")
 	flag.Parse()
 	if *renderInterval == 0 || *renderInterval%400000 != 0 || *renderInterval > 24000000 {
@@ -84,6 +85,7 @@ func main() {
 	reasons := map[string]uint64{}
 	panelStates := map[string]uint64{}
 	toolStates := map[string]uint64{}
+	cityStates := map[string]uint64{}
 	durations := map[string]float64{}
 	var observedFrames uint64
 	run := func(present bool) []byte {
@@ -137,6 +139,8 @@ func main() {
 					states := panelStates
 					if strings.HasPrefix(stats.Panel, "tool-") {
 						states = toolStates
+					} else if strings.HasPrefix(stats.Panel, "city-f") {
+						states = cityStates
 					}
 					states[fmt.Sprintf("%s/%d", stats.Panel, stats.PanelSelection)]++
 				}
@@ -208,6 +212,9 @@ func main() {
 	if *requireTools && len(toolStates) != 18 {
 		panic("重播未經過十八種工具子選單狀態")
 	}
+	if *requireCity && len(cityStates) != 29 {
+		panic("重播未經過二十九種城市功能選單狀態")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
@@ -218,6 +225,7 @@ func main() {
 		"dialog_frames":          dialogFrames,
 		"panel_states":           panelStates,
 		"tool_panel_states":      toolStates,
+		"city_panel_states":      cityStates,
 		"render_interval_steps":  *renderInterval,
 		"observed_render_frames": observedFrames,
 		"phase_elapsed_seconds":  durations,

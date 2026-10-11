@@ -66,6 +66,7 @@ type Renderer struct {
 	dialog     *newGameDialog
 	panels     *panelSet
 	toolPanels *panelSet
+	cityPanels *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -106,6 +107,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.dialog = loadNewGameDialog(dir)
 	r.panels = loadPanels(dir)
 	r.toolPanels = loadToolPanels(dir)
+	r.cityPanels = loadCityPanels(dir)
 	r.chrome = loadCityChrome(rom, dir)
 	r.footer = loadCityFooter(rom, dir)
 	for name, want := range materials {
@@ -201,6 +203,14 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	}
 	// 工具子選單等待 BIOS 輸入，完整來源須先於阻塞回退判斷。
 	id, selection, reason := r.toolPanels.paint(r.frame, px, pal)
+	if reason != "scene-fallback" {
+		stats.Panel, stats.PanelSelection, stats.PanelReason = id, selection, reason
+		stats.Reason = reason
+		if reason == "matched-panel" || reason == "panel-art-mismatch" || reason == "panel-art-shape" || reason == "panel-palette-mismatch" {
+			return r.frame, stats
+		}
+	}
+	id, selection, reason = r.cityPanels.paint(r.frame, px, pal)
 	if reason != "scene-fallback" {
 		stats.Panel, stats.PanelSelection, stats.PanelReason = id, selection, reason
 		stats.Reason = reason

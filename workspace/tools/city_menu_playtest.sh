@@ -27,6 +27,11 @@ timeout 900s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
     trap '\''kill "$xvfb_pid" 2>/dev/null || true; wait 2>/dev/null || true'\'' EXIT
     for i in {1..50}; do test -S /tmp/.X11-unix/X99 && break; sleep .1; done
     { go version; python3 --version; sha256sum /workspace/runs/taipei-preview /orig/RS201.EXE /orig/RS201.ROM; } > "$run_dir/program-provenance.txt"
-    python3 /workspace/tools/city_menu_playtest.py > "$run_dir/playtest.log" 2>&1
+    if test "$TAIPEI_THEME" = hd-b; then
+      test "$TAIPEI_CITY_MENU_RUN" = city-menus-hd
+      python3 /workspace/tools/city_menu_hd_playtest.py > "$run_dir/playtest.log" 2>&1
+    else
+      python3 /workspace/tools/city_menu_playtest.py > "$run_dir/playtest.log" 2>&1
+    fi
     find "$run_dir" -user root -o -type d -name "*.md"
   '

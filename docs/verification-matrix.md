@@ -54,4 +54,6 @@ Windows 研究 binary 已在 Wine 從真實冷啟動到城市畫面，正常鍵�
 
 本批相同唯一正常輸入兩側各 4,080,000,000 步，依 [#36](https://github.com/wicanr2/taipei/issues/36) 預登記每 24,000,000 步抽樣 HD，共 170 次，含十八工具狀態共 99 次、說明一次及城市各層 33 次。原版 RAM、CPU、原畫面、色盤、埠、OPL、讀鍵及檔案操作相同；這是明示抽樣，不代表逐幀對拍。完整存退讀外層預算依 [#35](https://github.com/wicanr2/taipei/issues/35) 改為 600 秒，同 binary／image 乾淨重跑通過，逾時前件保留。Linux、Windows、macOS 兩架構編譯與結構通過；模態外仍保持原版四倍像素，其他視窗／圖表／圖片／場景／動畫、真機及正式封包未完成。#31 與 HD 母項保持開啟。
 
-[#37](https://github.com/wicanr2/taipei/issues/37) 的[城市六功能選單](spec/022-city-function-menus.md) 已完成來源及離線原型，規格為 READY。137 份正常原子收據的 PNG／色號／色盤及原版四倍呈現通過 Go 核對；二十九種完整來源由 ROM 邊框及字模重建，246 個來源單點破壞不符。八十二次原版讀鍵及 release、上下循環、左右跨選單與邊界、六次 Escape 復原通過。599 項 Noto 實際墨跡位於安全矩形且互不重疊，三十一檔乾淨重生相同，原五工具二十檔亦不變。這批未改產品 renderer，HD 正式接入、F12、竄改負對照、狀態及存退讀重驗仍待執行，未達 CONFORMED；母項保持開啟。
+[#37](https://github.com/wicanr2/taipei/issues/37) 的[城市六功能選單](spec/022-city-function-menus.md) 限六個完整下拉面板、二十九選取達 CONFORMED。137 份原版來源、246 個來源破壞、599 項 Noto 實際墨跡及三十一檔重生先完成 READY 審查。正式產品再以一次正常冷啟動取得 107 份收據，驗全部二十九選取、八十二次讀鍵／release、上下循環、左右跨選單及邊界、六次 Escape 與六場景 F12。完整來源、固定面板與全部區外均由 Python／Go 獨立核對，大小面板十四項重算雜湊及原版 PNG 的有效竄改被拒絕；實際資源 Go 全套 21.819 秒無跳過。
+
+另 37 份正常施工存退讀收據通過，兩次原版退出及全新 EXE 讀回原施工格，存檔雜湊與資金 79980 維持基準，冷讀標題／圖示恢復。相同唯一正常輸入兩側各 5,184,000,000 步，預登記每 24,000,000 步抽樣，共 216 次，含二十九城市選取共 164 次、說明一次與城市各層 14 次；原版狀態相同，非逐幀對拍。Linux、Windows、macOS 兩架構編譯與架構檢查通過，Linux 由現行來源重建逐 byte 相同，35 原始檔及 RAR 不變。證據為 `city-panels-state-audit.json`、`city-panels-state-provenance.json` 及最新 `gui-cold/`；021 原件保留 `gui-cold-before-city-menus/`。模態外、確認後的視窗／圖表、其他圖片／場景／動畫、平台真機與正式封包仍未完成，母項保持開啟。

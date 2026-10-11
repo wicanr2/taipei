@@ -11,10 +11,14 @@ import (
 )
 
 func TestActualToolPanels(t *testing.T) {
-	fixtures := os.Getenv("TAIPEI_TOOL_PANEL_RECEIPTS")
+	testActualFixedPanels(t, "TAIPEI_TOOL_PANEL_RECEIPTS", "tool-menus-v1", 18, "tool-02", "tool-05", loadToolPanels, func(r *Renderer) **panelSet { return &r.toolPanels })
+}
+
+func testActualFixedPanels(t *testing.T, fixtureEnv, folder string, count int, firstID, otherID string, loader func(string) *panelSet, slot func(*Renderer) **panelSet) {
+	fixtures := os.Getenv(fixtureEnv)
 	dir, orig := os.Getenv("TAIPEI_HD_MATERIALS"), os.Getenv("TAIPEI_HD_ORIGINAL")
 	if fixtures == "" || dir == "" || orig == "" {
-		t.Skip("需要五工具十八狀態正常收據及固定素材")
+		t.Skip("需要完整面板正常收據及固定素材：" + fixtureEnv)
 	}
 	t.Setenv("TAIPEI_HD_RECEIPTS", fixtures)
 	rom, err := os.ReadFile(filepath.Join(orig, "RS201.ROM"))
@@ -22,8 +26,9 @@ func TestActualToolPanels(t *testing.T) {
 		t.Fatal(err)
 	}
 	r := New(rom, dir)
-	if r.toolPanels.reason != "scene-fallback" || len(r.toolPanels.states) != 18 {
-		t.Fatal(r.toolPanels.reason)
+	panels := *slot(r)
+	if panels.reason != "scene-fallback" || len(panels.states) != count {
+		t.Fatal(panels.reason)
 	}
 	paths := []string{}
 	err = filepath.WalkDir(fixtures, func(path string, d fs.DirEntry, err error) error {
@@ -45,7 +50,7 @@ func TestActualToolPanels(t *testing.T) {
 	byState := map[string]string{}
 	for _, name := range paths {
 		_, px := load(t, name)
-		for _, state := range r.toolPanels.states {
+		for _, state := range panels.states {
 			b := state.Native
 			var source []byte
 			for y := b[1]; y < b[1]+b[3]; y++ {
@@ -56,10 +61,10 @@ func TestActualToolPanels(t *testing.T) {
 			}
 		}
 	}
-	if len(byState) != 18 {
+	if len(byState) != count {
 		t.Fatal("正常來源狀態缺少", len(byState))
 	}
-	for key, state := range r.toolPanels.states {
+	for key, state := range panels.states {
 		t.Run(state.ID+"/"+byState[key], func(t *testing.T) {
 			s, px := load(t, byState[key])
 			input := append([]byte(nil), px...)
@@ -110,28 +115,31 @@ func TestActualToolPanels(t *testing.T) {
 	}
 	// 真實檔案缺失及竄改不改動原素材，並驗單張故障的範圍。
 	names := []string{"fonts/NotoSansCJKtc-Regular.otf", "fonts/LICENSE"}
-	entries, err := os.ReadDir(filepath.Join(dir, "tool-menus-v1"))
+	entries, err := os.ReadDir(filepath.Join(dir, folder))
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, e := range entries {
 		if !e.IsDir() {
-			names = append(names, "tool-menus-v1/"+e.Name())
+			names = append(names, folder+"/"+e.Name())
 		}
 	}
 	var first, other *panelState
-	for _, state := range r.toolPanels.states {
-		if state.ID == "tool-02" && state.Selection == 0 {
+	for _, state := range panels.states {
+		if state.ID == firstID && state.Selection == 0 {
 			first = state
 		}
-		if state.ID == "tool-05" && state.Selection == 0 {
+		if state.ID == otherID && state.Selection == 0 {
 			other = state
 		}
+	}
+	if first == nil || other == nil {
+		t.Fatal("故障隔離正對照缺少", firstID, otherID)
 	}
 	s, px := load(t, byState[first.SourceSHA])
 	a, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false, Origin{})
 	native := append([]byte(nil), a.Pix...)
-	for _, target := range []string{"tool-menus-v1/manifest.json", "tool-menus-v1/" + first.Image, "fonts/NotoSansCJKtc-Regular.otf", "fonts/LICENSE"} {
+	for _, target := range []string{folder + "/manifest.json", folder + "/" + first.Image, "fonts/NotoSansCJKtc-Regular.otf", "fonts/LICENSE"} {
 		for _, corrupt := range []bool{false, true} {
 			tmp := t.TempDir()
 			for _, name := range names {
@@ -155,20 +163,20 @@ func TestActualToolPanels(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			old := r.toolPanels
-			r.toolPanels = loadToolPanels(tmp)
+			old := *slot(r)
+			*slot(r) = loader(tmp)
 			a, st := r.Render(px, s.Palette, s.Mode, s.Blocked, true, Origin{})
 			if st.Panel != "" || !bytes.Equal(a.Pix, native) {
 				t.Fatal(target, corrupt, "素材失配未回退", st)
 			}
-			if target == "tool-menus-v1/"+first.Image {
+			if target == folder+"/"+first.Image {
 				s2, px2 := load(t, byState[other.SourceSHA])
 				_, st = r.Render(px2, s2.Palette, s2.Mode, s2.Blocked, true, Origin{})
 				if st.Panel != other.ID {
 					t.Fatal("單張素材失配影響其他面板", st)
 				}
 			}
-			r.toolPanels = old
+			*slot(r) = old
 		}
 	}
 }

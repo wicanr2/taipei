@@ -12,11 +12,15 @@ MANIFEST_SHA = 'daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d
 DEFAULT_MANIFEST = Path('/workspace/prototypes/hd-style/startup-menus-v1/manifest.json')
 TOOL_MANIFEST = Path('/workspace/prototypes/hd-style/tool-menus-v1/manifest.json')
 TOOL_MANIFEST_SHA = '288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e'
+CITY_MANIFEST = Path('/workspace/prototypes/hd-style/city-menus-v1/manifest.json')
+CITY_MANIFEST_SHA = '699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5'
 
 
-@functools.lru_cache(maxsize=2)
+@functools.lru_cache(maxsize=3)
 def references(path=DEFAULT_MANIFEST):
     expected, count = (TOOL_MANIFEST_SHA, 18) if path == TOOL_MANIFEST else (MANIFEST_SHA, 13)
+    if path == CITY_MANIFEST:
+        expected, count = CITY_MANIFEST_SHA, 29
     assert sha(path.read_bytes()) == expected, '完整面板 manifest 失配'
     data = json.loads(path.read_bytes())
     assert data['schema'] == 1 and len(data['states']) == count
@@ -36,6 +40,8 @@ def matching_state(s, frame, manifest=DEFAULT_MANIFEST):
     candidates = references(manifest)
     if manifest == DEFAULT_MANIFEST and TOOL_MANIFEST.exists():
         candidates = candidates+references(TOOL_MANIFEST)
+    if manifest == DEFAULT_MANIFEST and CITY_MANIFEST.exists():
+        candidates = candidates+references(CITY_MANIFEST)
     for state, pixels in candidates:
         x, y, w, h = state['native']
         box = b''.join(frame[row*320+x:row*320+x+w] for row in range(y, y+h))

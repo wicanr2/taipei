@@ -102,12 +102,18 @@ func TestActualCityAndFallbacks(t *testing.T) {
 			}
 		}
 	}
-	// 採實際模態畫面；其完整來源匹配不能繞過場景條件。
+	// F2 已由 022 接入；未辨識的存檔及退出確認仍須整幀回退。
 	for _, name := range []string{"file-menu", "save-dialog", "quit-confirm"} {
 		state, frame := load(t, name)
 		im, _ := r.Render(frame, state.Palette, state.Mode, state.Blocked, false, origin)
 		want := append([]byte(nil), im.Pix...)
 		got, st := r.Render(frame, state.Palette, state.Mode, state.Blocked, true, origin)
+		if name == "file-menu" {
+			if st.Panel != "city-f2" || st.PanelSelection != 0 || st.PanelReason != "matched-panel" || st.Painted != 0 || st.FontLabels != 0 || st.UIIcons != 0 || bytes.Equal(want, got.Pix) {
+				t.Fatal("F2 完整來源未接入", st)
+			}
+			continue
+		}
 		if st.Painted != 0 || !bytes.Equal(want, got.Pix) {
 			t.Fatal("modal overwritten", name, st)
 		}

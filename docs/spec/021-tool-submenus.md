@@ -82,7 +82,7 @@ TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh
 | 正常 HD 操作 | 82 份完整收據，十八種選取、原版循環／無效鍵／返回、五場景 F12 | `workspace/runs/tool-submenus-hd/tool-panels-verification.json` |
 | 有效竄改負對照 | 大小面板各七項，Python 及 Go 均拒絕；受影響雜湊與原版 PNG 維持一致 | `workspace/runs/tool-panels-negative-small/result.json`、`tool-panels-negative-large/result.json` |
 | 真實資源測試 | HD 全套 Go 測試通過，25.360 秒，沒有跳過 | `workspace/runs/tool-panels-go-test.log` |
-| 施工、存退讀與退出 | 37 份收據完整參考及區外通過；兩次原版退出、冷讀原施工格及資金相同 | `workspace/runs/gui-cold/result.json`、字型／圖示／底部 verification JSON |
+| 施工、存退讀與退出 | 37 份收據完整參考及區外通過；兩次原版退出、冷讀原施工格及資金相同 | `workspace/runs/gui-cold-before-city-menus/result.json`、字型／圖示／底部 verification JSON |
 | 原版狀態不變 | 相同唯一正常輸入，兩側各 4,080,000,000 步；170 次 HD 抽樣含十八工具狀態共 99 次、說明一次及城市各層 33 次 | `workspace/runs/tool-panels-state-audit.json`、`tool-panels-state-provenance.json` |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 通過，產品 SHA-256 與架構重新核對 | `workspace/runs/tool-panels-input-hygiene.json` |
 

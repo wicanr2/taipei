@@ -344,3 +344,20 @@ F12 決策已回寫 [#6 留言](https://github.com/wicanr2/taipei/issues/6#issue
 正式接入的下一步是以固定 manifest `699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5` 建立獨立二十九狀態集，於阻塞輸入回退前辨識，再驗全部正常 HD、F12、有效負對照、存退讀及兩側原版狀態。尚未達 CONFORMED，沒有重跑或宣稱本批跨平台、音訊或正式封包驗收；#37、#31、#7 與完整 HD 母項保持開啟。
 
 35 個原始檔及 RAR 雜湊不變，Git 核對產品呈現與核心原始碼沒有差異。178 個文件相對連結、五個新入口與正對照索引、Python／shell 語法、Go 格式、137 份收據的 24,000,000 步對齊及抽查 1000:1000 擁有權通過，結果為 `workspace/runs/city-menu-source/final-hygiene.json`。容器內指定 `find` 無輸出，所有本批容器已退出並刪除；沒有新建 image、改動 dosgolem 上游或清理其他專案資源。只明列程式、腳本與文件提交推送，原版及衍生資料未上傳，實際提交與階段結果回鏈 #37、#31。
+
+## 2026-10-11：六功能二十九選取接入與正常驗證
+
+依 [#37](https://github.com/wicanr2/taipei/issues/37) 與 READY 022 實作。路由命中規格閘門、文件職責、驗證交接及 README 現況，載入對應入口與必要 reference。沿用使用者已確認的 B、Noto、1280×800、F12、原版版面與六入口操作，沒有改原版 EXE、規則或存檔。
+
+- 呈現層新增固定 `city-menus-v1` 二十九狀態集，保留啟動、說明、五工具及城市的辨識順序。完整來源、使用中色盤、manifest、字型／授權及 PNG 均須匹配；單張故障只回退該面板，模態外維持原版四倍像素。
+- Go 實際資源測試共用完整來源與區外斷言，保留五工具十八狀態，加入城市二十九狀態。初跑 21.489 秒僅因既有 `file-menu` 仍要求原版回退而失敗，原 log 保存 `city-panels-go-tests-before-fixture-update.log`；依 022 更新為 F2 面板正對照後，全套 21.819 秒通過且沒有 SKIP。未知存檔／退出確認與年度預算的整幀回退仍驗證，沒有放寬斷言。
+- `TAIPEI_THEME=hd-b TAIPEI_CITY_MENU_RUN=city-menus-hd bash workspace/tools/city_menu_playtest.sh` 從一次真實冷啟動進城市，完成六選單二十九選取、八十二次原版讀鍵／release、上下循環、左右跨選單與兩端循環、六次 Escape 復原，以及六場景 F12 往返。沒有狀態注入；探索末尾有界停止仍不當作原版退出。107 份原子收據的完整來源、固定面板及所有區外由 Python／Go 獨立核對通過，實際十列災難面板已視覺確認沒有裁切。
+- 保留前批 37 份完整收據於 `gui-cold-before-city-menus/`，修正 021 證據入口，再以 `TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh` 重跑。施工、存檔、兩次原版退出及全新 EXE 讀回原施工格通過，最新 37 份原子收據完整像素通過。存檔 SHA-256 維持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，存檔目錄為 `gui-cold-saves.zRF8kg/`，施工格 SHA-256 維持 `4aa14e7ead003f1071348ea65f64f5d6cb430efe4b2cd51c8bb78bb3ff364139`。專用標題／圖示核對亦證明冷讀後恢復。
+- F1 小面板與 F5 十列面板各驗文字、背景、區外、來源、色盤、選取與 ID，重算受影響雜湊與原版 PNG，十四項有效負對照均被 Python／Go 拒絕。擴充負對照工具的 `--family city` 後，預設五工具入口另以原工具 02 的七項竄改回歸通過。
+- Linux、Windows、macOS amd64／arm64 以既有固定 image 與鎖定依賴編譯通過，Windows 保留既有 YMFM 編譯警告，沒有新增平台真機或音訊確認聲明。重播及單幀工具加入城市參考與二十九狀態要求；整批核對入口為 `bash workspace/tools/city_panels_verify.sh`，狀態重播仍在進行。
+
+狀態重播最終退出 0。相同唯一正常輸入兩側各 5,184,000,000 步，原版側 398.045 秒、HD 側 351.661 秒。216 次預登記的 24,000,000 步 HD 抽樣涵蓋全部二十九城市選取共 164 次、說明一次、城市各層 14 次；RAM、CPU、原版色號、色盤、埠、OPL、讀鍵、DOS 狀態與檔案操作相同。狀態 SHA-256 `df85c5d5f612ff996d7b671bd81ba1238e41e55bff926dc293c90975ece21174`，結果在 `city-panels-state-audit.json`，全部命令、來源、工具、素材、四平台架構／雜湊及 144 份正常收據雜湊在 `city-panels-state-provenance.json`。未宣稱逐幀或跨 RNG 實作精確對拍。
+
+Linux 產品從現行來源再次建至獨立暫存檔，與實際 GUI 使用的程式逐 byte 相同，暫存副本已刪除。35 原始檔與 RAR 雜湊保持基準，施工及冷讀資金均為 79980。022 限本批面板達 CONFORMED；其他視窗／圖表／圖片／場景／動畫、模態外、真機與正式封包仍未完成，#31 與完整 HD 母項保持開啟。
+
+最終 338 個相對文件連結、五個新入口及既有入口正對照、Python／shell 語法、Go 格式、變更檔案 1000:1000 擁有權與容器內指定 `find` 通過，結果為 `workspace/runs/city-panels-final-hygiene.json`。本批容器均已退出並刪除，沒有新建 image、改動 dosgolem 上游或清理其他專案資源。只以明確清單提交二十二份原創程式、腳本與文件，原版、擷取、原文衍生資料、字型及美術不入 Git；提交推送及 #37 結案結果回鏈遠端，#31、#7 與完整 HD 母項繼續開啟。
