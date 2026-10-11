@@ -576,3 +576,19 @@ Linux 以 `go build -a` 乾淨重建逐 byte 相同，SHA-256 仍為 `2821c65bfb
 獨立 Python 使用另一套 ROM 解析器，核對兩個來源、四份正常收據、固定插畫、字型及授權；完整 1,024,000 個呈現像素、字墨外、四字實際墨跡及原版／B 比較通過。三個來源檔及五個原型檔乾淨重生逐 byte 相同，保留 `ending-scene-native-repro/` 及 `ending-scene-v1-repro/`。DRAFT 028 建立後完成證據審查，只將已見完整靜態底圖升 READY，其他變化及動畫仍 DRAFT。
 
 正式素材匯出兩檔至 `ending-scene-ready-v1/`，manifest SHA-256 `009fcda9e87d5fcea175ae3112a5a5a610b04833a0d278f2e68b99dd4311ef57`，完整 PNG `b37fddad8ea9cc3bbc505af3a3daad1f5cb59e86c213d98d12bbf279da81cfb0`。這批只完成來源與原型，未接產品，不宣稱 GUI 或 CONFORMED。工具入口同次加入 CONTEXT。來源、原型與重生容器均已刪除，目前只有 #46 的有界正常 GUI 容器；原版及衍生素材未加入 Git。
+
+## 2026-10-12：#46 火力靜態 36 格達 CONFORMED
+
+r3 完整正常 GUI 通過施工、兩次 F12、兩軸捲動、36 格同世界原始來源、返回原點、存檔、兩次原版退出及全新 EXE 冷讀。讀回完整火力 36 格、電線與資金 29980。實際 SAV 在 `gui-cold-saves.zsEQND/ROUND4.SAV`，93567 bytes，SHA-256 `1b7522328f296547dfc1505fd408c04c486c9b23ceed1a8c49a4d2ff66b4972c`，與預登記及權威 result.json 相同。Python／Go 全部 162 份原子收據通過，93 份實際覆繪火力，Go 完整逐像素核對通過。先前五項有效破壞及兩個正對照保留。
+
+正式唯一輸入先在 #46 預登記，再完整執行兩側各 8,064,402,774 步。336 個原版狀態抽樣相同，實際覆繪 164 個火力畫面及 36 個來源，最終原版畫面、色盤、讀鍵、檔案操作符合 GUI，落地 SAV 與實際保存相同。狀態 SHA-256 `df7b442241b71a292822bd4162d7a14a591c870bad80c28ba8e80fe336deda36`，結果檔 SHA-256 `0321c247af7e451f0d26ed6fc38ef276730e72741f509fd4eecb1fa6613a6c90`。兩側 513.8／499.6 秒。此結論以已登記的 binary／audit 版本及正常路徑為界，不宣稱逐幀、核能、其他相位或全部 HD。
+
+收尾總核對 `power-facility-thermal-native/final-verification-r1.json` 通過：原始 35 檔、7919834 bytes 及 RAR 雜湊不變；Linux 乾淨重建相同，Windows amd64 與 macOS amd64／arm64 編譯及結構通過，真機未驗。輸出 UID/GID 1000，指定 find 為空。實際正常畫面原件 `normal-power-hd-r3.png` SHA-256 `2a89a2ccefa5515bf0f062898c7fa3c961e20fc5940f862d354fd4898e45b5b4`，直接取自正常收據，與先前畫面 bytes 相同，沒有後製。Docker 已無專案容器殘留。依規格路由審查後，只將 027 靜態火力升 CONFORMED；核能及其他相位未完成，#46 保持 OPEN。
+
+## 2026-10-12：#47 政績底圖呈現與獨立核對接入
+
+028 READY 後接入完整底圖呈現，完整來源 SHA、模式 0x13、阻塞、23 個已用色盤、固定 manifest／PNG、字型及授權均符合才覆繪，來源失配或素材故障完整回退。F12、模式 3 及其他城市家族隔離有測試。首次測試誤將 `image.Image` 當 RGBA，修正測試參考型別並保留 r1 編譯失敗紀錄；r2 的完整／來源／23 色盤／九種實際載入故障／家族隔離 16.160 秒通過。全部 HD／鍵盤回歸 116.613 秒通過。
+
+Go／Python 獨立核對器直接讀原版與 READY 前完整畫面，已接整張像素、家族及回退檢查。準備七項有效破壞與兩個正對照，等待實際新 GUI 收據，沒有以合成收據冒充正常原件。正常 GUI 工具已加入兩次退出各自 F12、完整非 theme 輸入及讀鍵隔離；原版狀態工具加入 `-require-ending-screen`。新 audit 編至 sibling `presentation-audit-ending-r1`，沒有覆寫 #46 的已登記 audit。正式兩檔素材乾淨重生也逐 byte 相同。
+
+本批尚未重建前端、執行正式 GUI、有效負對照、固定輸入狀態或四平台驗收，因此仍 READY。目前無專案容器殘留；全部新工具及來源已同次加入 CONTEXT，原版及衍生素材不入 Git。

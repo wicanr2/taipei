@@ -1,6 +1,6 @@
 # 發電廠圖塊
 
-狀態：READY，限火力電廠已見完整來源的 36 格靜態呈現。核能電廠、其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。尚未宣稱正式 GUI／存退讀完成。
+狀態：CONFORMED，限火力電廠已見完整來源的 36 格靜態呈現。核能電廠、其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。不宣稱完整發電廠、全部 HD、真機或正式封包完成。
 
 沿用 B、1280×800、Noto、F12 及原版構圖。原版 EXE 管理火力／核能電廠選項、費用、建造、供電、發展、動畫與 SAV；本批只重繪已證實來源，不重寫規則。
 
@@ -50,4 +50,16 @@ r3 正常 GUI 依 [預登記](https://github.com/wicanr2/taipei/issues/46#issuec
 
 正式驗收預登記：正常新城市先建一格電線，再經工具 11 的火力選項施工；游標移開，核對原版資金 29980、完整 36 格、F12 不送 DOS 鍵，兩軸各正常捲動兩格及同世界圖塊；正常 F2 存檔、兩次原版退出、全新 EXE 冷讀後恢復電線與火力原始圖塊及資金。另驗 2,916 個來源反例、逐已用色、未用色、真實素材缺失／損壞、完整區外及有效收據負對照。正式狀態重播由這條正常 GUI 的唯一輸入產生後另登記固定步數及 24000000 步抽樣，原版狀態與實際 SAV 須相同。
 
-本節 READY 只授權這一靜態來源呈現，不把核能、完整動畫、其他建物、全部 HD、真機或封包列完成；其未知不由程式猜補。
+本規格 CONFORMED 只適用於這一已見靜態來源、以下版本及正常抽樣路徑；其餘未知不由程式猜補。
+
+## 2026-10-12 正常 GUI 與原版狀態驗收
+
+`gui-power-facility-cold-r3/` 從全新 EXE 正常新城市、暫停、電線及火力施工，資金 29980、完整 36 格通過。兩次 F12 只新增 theme 事件，原版讀鍵、其餘全部輸入、完整游標外與廠區來源相同。一次無輸入對照未見游標變化，不要求特定閃爍週期。水平 13 次 Right 使原點 (12,12)→(14,12)，垂直 12 次 Down 到 (14,14)，正常返回 (12,12)；各階段逐一核對 36 格的世界座標及原始來源。
+
+正常 F2 保存、兩次原版退出與全新 EXE 冷讀通過，原電線格及火力 36 格來源相同，讀回資金 29980。實際 `gui-cold-saves.zsEQND/ROUND4.SAV` 為 93567 bytes，SHA-256 `1b7522328f296547dfc1505fd408c04c486c9b23ceed1a8c49a4d2ff66b4972c`。Go／Python 獨立核對 162 份原子收據，其中 93 份實際覆繪火力；完整像素、來源、色盤、回退及統計通過。五項重算 PNG／雜湊的有效破壞兩側均拒絕，原件及未用色盤兩個正對照通過。
+
+依 [正式重播預登記](https://github.com/wicanr2/taipei/issues/46#issuecomment-6113948686)，唯一 GUI 收據 SHA-256 `30b4949f89d34f38e16fb0935d31e8086c2b08030149ac5d63e0abd4ba7004e9`。兩側各完整執行 8,064,402,774 步，每 24,000,000 步抽樣，共 336 個原版狀態相同，實際抽到 36 個火力來源及 164 個火力畫面、檔案六次及離開確認三次。最終原版畫面、色盤、讀鍵及檔案操作符合實際 GUI；落地 SAV 同為上述實際雜湊。原版狀態 SHA-256 `df7b442241b71a292822bd4162d7a14a591c870bad80c28ba8e80fe336deda36`，結果檔 `power-facility-thermal-native/normal-state-r1.json` SHA-256 `0321c247af7e451f0d26ed6fc38ef276730e72741f509fd4eecb1fa6613a6c90`。兩側依次 513.8／499.6 秒，沒有以不同時間的游標像素作相同狀態判準。
+
+本批 GUI binary SHA-256 `2821c65bfb4daad6e46677bb0c72b199c13f772c8eeae7262dbc17b2e69ee9d1`，原創呈現實作提交 `d32b35d`，正常驗證工具提交 `f5e21ff`；dosgolem 與七補丁未變。Linux 乾淨重建逐 byte 相同，保留 `workspace/runs/taipei-preview-power-clean-r1`。Windows amd64 及 macOS amd64／arm64 編譯與結構通過，真機仍未驗。全部 HD 及鍵盤回歸通過；本批原始 35 檔與 RAR 雜湊不變，輸出 UID/GID 1000，指定 root-owned／`.md` 目錄檢查為空，相關容器均已刪除。
+
+總核對在 `power-facility-thermal-native/final-verification-r1.json`，正式正常畫面原件為同目錄 `normal-power-hd-r3.png`，SHA-256 `2a89a2ccefa5515bf0f062898c7fa3c961e20fc5940f862d354fd4898e45b5b4`，直接取自真實正常收據，沒有後製。核能正常成功施工與其他相位尚無充分來源，#46 保持 OPEN。

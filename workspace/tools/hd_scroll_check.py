@@ -16,6 +16,7 @@ from hd_file_dialogs_check import audit_file
 from hd_budget_check import audit_budget
 from hd_infrastructure_check import audit_infrastructure
 from hd_power_facility_check import audit_power_facility
+from hd_ending_screen_check import audit_ending
 
 ORDER=['map-focus','right-10','right-20','right-30','right-40',
        'down-6','down-12','down-18','left-10','left-20','left-30','left-40',
@@ -53,7 +54,7 @@ def audit_bundle(path,sources):
     rgba=subprocess.run(['convert','png:-','-depth','8','rgba:-'],input=png,stdout=subprocess.PIPE,check=True).stdout
     assert len(rgba)==1280*800*4 and sha(rgba)==s['presentation_sha256']
     power_facility=audit_power_facility(s,frame,rgba)
-    if audit_budget(s,frame,rgba) or audit_file(s,frame,rgba) or audit_panel(s,frame,rgba) or audit_dialog(s,frame,rgba):
+    if audit_ending(s,frame,rgba) or audit_budget(s,frame,rgba) or audit_file(s,frame,rgba) or audit_panel(s,frame,rgba) or audit_dialog(s,frame,rgba):
         grid=[cell(frame,x,y) for y in range(34,169,9) for x in range(5,266,9)]
         return s,frame,grid,rgba,{'receipt':path.name,'steps':s['steps'],'painted':0,
             'fallback':435,'fallback_cells':[],'reason':s['hd']['reason'],

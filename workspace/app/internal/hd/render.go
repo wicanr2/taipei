@@ -24,6 +24,8 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	EndingScreen               string              `json:"ending_screen"`
+	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
 	Infrastructure             infrastructureStats `json:"infrastructure"`
 	Budget                     bool                `json:"budget"`
@@ -66,6 +68,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	ending         *endingScreen
 	powerFacility  *powerFacilitySet
 	infrastructure *infrastructureSet
 	budget         *budgetPanel
@@ -129,6 +132,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.budget = loadBudgetPanel(rom, dir)
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
+	r.ending = loadEndingScreen(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -171,6 +175,7 @@ func New(rom []byte, dir string) *Renderer {
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
 	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
 	stats.BudgetSelection, stats.BudgetReason = -1, "scene-fallback"
+	stats.EndingReason = "scene-fallback"
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -189,6 +194,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	if !enabled {
+		stats.EndingReason = "original"
 		stats.BudgetReason = "original"
 		stats.FileReason = "original"
 		stats.FontReason = "original"
@@ -204,6 +210,14 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	}
 	if mode != 19 {
 		stats.Reason = "video-mode"
+		return r.frame, stats
+	}
+	if endingScreenSource(px) {
+		stats.EndingReason = r.ending.paint(r.frame, pal, blocked)
+		stats.Reason = stats.EndingReason
+		if stats.EndingReason == "matched-ending-screen" {
+			stats.EndingScreen = "achievement-base"
+		}
 		return r.frame, stats
 	}
 	stats.Panel, stats.PanelSelection, stats.PanelReason = r.panels.paint(r.frame, px, pal)

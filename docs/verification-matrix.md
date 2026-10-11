@@ -18,6 +18,7 @@
 | 城市介面 | [#29](https://github.com/wicanr2/taipei/issues/29) | 工具圖示、外框與選取狀態逐像素核對，原版命中範圍不變 | 十四個圖示內部不代表完整介面 |
 | 全部地圖 | [#30](https://github.com/wicanr2/taipei/issues/30) | 地景、道路、電線、建物、設施與災害的來源、遮擋及相位 | 未接入或未知回退仍列未完成 |
 | 道路與電線 | [#44](https://github.com/wicanr2/taipei/issues/44) | 完整來源、別名、固定整格、資源故障、有效負對照；正常施工／F12／雙向捲動／存退讀及原版狀態 | [026](spec/026-infrastructure-tiles.md) 限第一批 25 張 CONFORMED；105 正常收據、九格同世界像素、五項有效呈現破壞及 206 點原版狀態通過。其餘 18 張 DRAFT，完整批次及交付仍未完成 |
+| 火力電廠 | [#46](https://github.com/wicanr2/taipei/issues/46) | 完整 36 格來源／重組、回退、實際素材故障、有效負對照；正常施工／F12／雙向捲動／存退讀及兩次退出 | [027](spec/027-power-facility.md) 限已見靜態來源 CONFORMED；162 正常收據、36 格同世界來源、五項有效破壞及 336 點原版狀態與實際 SAV 相同。核能及其他相位 DRAFT，全部 HD／封包未完成 |
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
 | 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；正常 F12、取消、存退讀與狀態對照 | 022 限六面板二十九選取 CONFORMED；確認後視窗另驗 |
 | 存讀檔與離開提示 | [#38](https://github.com/wicanr2/taipei/issues/38) | 完整來源、正常輸入邊界與選取、F12、施工存退讀、有效負對照及原版狀態 | 023 限兩家族 CONFORMED；外部檔案錯誤與模態外另驗 |

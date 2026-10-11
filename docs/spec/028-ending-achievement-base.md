@@ -1,6 +1,6 @@
 # 正常離開的政績靜態底圖
 
-狀態：READY，限正常退出時已見完整靜態底圖。對應 [#47](https://github.com/wicanr2/taipei/issues/47)，母項 [#32](https://github.com/wicanr2/taipei/issues/32)。取得政績後的圖案、文字變化及動畫仍 DRAFT，不宣稱完整政績畫面已 HD 化。正式呈現與正常 GUI 尚未完成。
+狀態：READY，限正常退出時已見完整靜態底圖。對應 [#47](https://github.com/wicanr2/taipei/issues/47)，母項 [#32](https://github.com/wicanr2/taipei/issues/32)。取得政績後的圖案、文字變化及動畫仍 DRAFT，不宣稱完整政績畫面已 HD 化。呈現已實作並通過回歸，正常 GUI 與正式驗收尚未完成。
 
 沿用使用者已確認的 B 細緻手繪材質、1280×800、Noto Sans CJK TC 與 F12。保留原版構圖、內容、十個圖案位置、阻塞輸入及正常退出。此層不重算政績或寫入任何原版狀態。
 
@@ -54,4 +54,6 @@ DRAFT 後重新核對完整原版來源、兩個別名、四份正常退出、23
 
 以上證據足以將本底圖的靜態呈現升 READY。正式素材由 [ending_scene_ready.py](../../workspace/tools/ending_scene_ready.py) 匯出至 `workspace/prototypes/hd-style/ending-scene-ready-v1/`，僅包含 manifest 及固定完整 PNG；輸入及字型依上述雜湊，原型獨立核對與八檔重生皆為必要前置。正式 manifest 匯出後固定雜湊，再接產品。取得政績後的變化沒有正常證據，不由本批填補。
 
-正式 manifest SHA-256 為 `009fcda9e87d5fcea175ae3112a5a5a610b04833a0d278f2e68b99dd4311ef57`；`screen.png` bytes 與已核對原型完全相同，SHA-256 `b37fddad8ea9cc3bbc505af3a3daad1f5cb59e86c213d98d12bbf279da81cfb0`。尚未接產品，不宣稱 CONFORMED。
+正式 manifest SHA-256 為 `009fcda9e87d5fcea175ae3112a5a5a610b04833a0d278f2e68b99dd4311ef57`；`screen.png` bytes 與已核對原型完全相同，SHA-256 `b37fddad8ea9cc3bbc505af3a3daad1f5cb59e86c213d98d12bbf279da81cfb0`。兩檔亦乾淨重生逐 byte 相同，結果 `ending-scene-native/ready-reproducibility.json`。
+
+[ending_screen.go](../../workspace/app/internal/hd/ending_screen.go) 已依 READY 接入完整來源、色盤、模式、阻塞、固定圖片及字型／授權閘門。只讀來源，整幀覆繪，失配保留原版。實際呈現測試核對 READY 前原型、F12 往返、五處來源失配、23 個已用色盤、未用色盤、模式及相位、九種真實載入故障與城市家族隔離，16.160 秒通過。首次測試的 `image.Image` 參考型別誤用已修正，原失敗紀錄保留。全部 HD／鍵盤回歸 116.613 秒通過；正常 GUI、有效收據破壞、原版狀態及跨平台仍待驗，不宣稱 CONFORMED。

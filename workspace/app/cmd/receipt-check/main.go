@@ -81,6 +81,7 @@ func main() {
 	fileDir := flag.String("file-reference", "", "檔案視窗固定參考的素材根")
 	budgetDir := flag.String("budget-reference", "", "預算固定參考的素材根")
 	powerDir := flag.String("power-reference", "", "火力 READY 前完整原型及固定來源的素材根")
+	endingDir := flag.String("ending-reference", "", "政績 READY 前完整原型及原版來源的素材根")
 	originalDir := flag.String("original", "", "核對檔案視窗來源的唯讀原版目錄")
 	flag.Parse()
 	panels := readPanels(*panelManifest, "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d", 13)
@@ -91,6 +92,7 @@ func main() {
 	fileRef := readFileReference(*fileDir, *originalDir)
 	budgetRef := readBudgetReference(*budgetDir, *originalDir)
 	powerRef := readPowerReference(*powerDir, *originalDir)
+	endingRef := readEndingReference(*endingDir, *originalDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -171,6 +173,7 @@ func main() {
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
+				endingFields
 				powerFields
 				chromeFields
 				footerFields
@@ -209,6 +212,13 @@ func main() {
 		px := files["frame-index.bin"]
 		if len(px) != 64000 || fmt.Sprintf("%x", sha256.Sum256(px)) != s.SHA {
 			return fmt.Errorf("%s: index digest mismatch", path)
+		}
+		endingImage, endingErr := endingRef.audit(px, s.Palette, s.Mode, s.Enabled, s.Blocked, s.HD.endingFields)
+		if endingErr != nil {
+			return fmt.Errorf("%s: %w", path, endingErr)
+		}
+		if endingImage != nil && (s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 || s.HD.Dialog != "" || s.HD.Panel != "" || s.HD.ChromeMask != 0 || s.HD.FooterMask != 0 || s.HD.FileDialog != "" || s.HD.Budget || s.HD.PowerFacility.Painted != 0) {
+			return fmt.Errorf("%s: 政績底圖疊加其他家族", path)
 		}
 		fileImage, fileBox, fileErr := fileRef.compose(px, s.Palette, s.Mode, s.Enabled, s.HD.fileFields)
 		if fileErr != nil {
@@ -314,7 +324,12 @@ func main() {
 					}
 					chromeImage, cx, cy := chrome.pixel(s.HD.chromeFields, px, x, y)
 					powerTile, powerX, powerY := powerImage.pixel(x, y)
-					if budgetImage != nil && x >= 72 && x < 1012 && y >= 148 && y < 676 {
+					if endingImage != nil {
+						rr, gg, bb, aa := endingImage.At(x, y).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 政績完整原型像素不符 %d,%d", path, x, y)
+						}
+					} else if budgetImage != nil && x >= 72 && x < 1012 && y >= 148 && y < 676 {
 						rr, gg, bb, aa := budgetImage.At(x-72, y-148).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: 預算視窗像素不符 %d,%d", path, x, y)

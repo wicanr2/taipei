@@ -13,6 +13,7 @@ from footer_catalog import source as footer_source, decode as footer_decode
 out=Path('/workspace/runs')/os.environ.get('TAIPEI_GUI_RUN','gui-cold')
 footer_refs=footer_source(Path('/orig/RS201.ROM').read_bytes())
 file_toggles=[]
+ending_toggles=[]
 def status():
     try:
         with zipfile.ZipFile(out/'capture.zip') as z:
@@ -54,7 +55,7 @@ def capture(label):
             (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
-    if label in ('pause','reload-pause') and any(os.environ.get(k)=='1' for k in ['TAIPEI_TEST_BUDGET','TAIPEI_TEST_INFRASTRUCTURE','TAIPEI_TEST_POWER_FACILITY']):
+    if label in ('pause','reload-pause') and any(os.environ.get(k)=='1' for k in ['TAIPEI_TEST_BUDGET','TAIPEI_TEST_INFRASTRUCTURE','TAIPEI_TEST_POWER_FACILITY','TAIPEI_TEST_ENDING_SCENE']):
         os.environ.setdefault('TAIPEI_CITY_MENU_RUN',os.environ['TAIPEI_GUI_RUN'])
         import city_menu_playtest as base
         base.out=out
@@ -81,9 +82,28 @@ def native_exit(label):
              any(k.get('Via')=='int21-AH07' and k.get('Key')==89
                  for k in s.get('key_reads',[])), label+'-score')
     capture(label+'-score')
+    if os.environ.get('TAIPEI_TEST_ENDING_SCENE')=='1':
+        ending_f12_roundtrip(label+'-ending')
     space()
     wait_for(lambda s:s.get('dos_exited') is True,label+'-native-exit')
     capture(label+'-native-exit')
+
+def ending_f12_roundtrip(label):
+    before=status()
+    assert before['frame_index_sha256']=='0040b4374f37464862ae2f89da5bc897ddb7f53d539edd597cf8b2b6ff784ebd'
+    assert before['mode']==19 and before['dos_blocked'] and not before['dos_exited']
+    assert before['hd']['ending_screen']=='achievement-base'
+    for name,enabled in [('original',False),('hd',True)]:
+        action(label+'-theme-'+name,'F12')
+        after=status()
+        assert after['hd_enabled'] is enabled and after['dos_blocked'] and not after['dos_exited']
+        assert after['frame_index_sha256']==before['frame_index_sha256']
+        assert after['key_reads']==before['key_reads']
+        assert [i for i in after['inputs'] if i['kind']!='theme']==[i for i in before['inputs'] if i['kind']!='theme']
+        assert after['hd']['ending_screen']==('achievement-base' if enabled else '')
+    ending_toggles.append({'label':label,'family':'achievement-base','original_frame_unchanged':True,
+                           'no_dos_keyboard':True,'only_theme_input':True})
+
 
 def file_f12_roundtrip(label,family):
     if os.environ.get('TAIPEI_THEME')!='hd-b':return
@@ -240,11 +260,19 @@ with (out/'app.log').open('w') as log:
             # 冷讀城市仍會推進；先經原版 0 與讀鍵同步固定正常驗收條件。
             action('reload-pause','0')
             exercise(out,adjust=False)
+        if os.environ.get('TAIPEI_TEST_ENDING_SCENE')=='1':
+            action('reload-pause','0')
         if os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
             action('reload-pause','0')
             power_check_reload(out,first_out)
             capture('power-reload-complete')
         native_exit('reload-quit')
+        if os.environ.get('TAIPEI_TEST_ENDING_SCENE')=='1':
+            assert len(ending_toggles)==2
+            (first_out/'ending-gui.json').write_text(json.dumps({'issue':47,'normal_gui':True,
+                'checkpoint':False,'f12_roundtrips':ending_toggles,'native_exits':2,
+                'save_sha256':saved_sha,'scope':'正常兩次政績底圖與 F12；完整像素及原版狀態另由獨立核對'},
+                ensure_ascii=False,indent=2)+'\n')
         assert p.wait(timeout=10)==0
         (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'loaded_native_xy':loaded_cell,'world_xy':construction_world,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))
         print('GUI cold construction / save / native exit / cold reload passed',flush=True)
