@@ -1,6 +1,6 @@
 # Noto 主選單文字動態原型
 
-狀態：**DRAFT**。對應 [#27](https://github.com/wicanr2/taipei/issues/27)，以使用者在 [#18](https://github.com/wicanr2/taipei/issues/18) 選定的 Noto 高清黑體接入 [010](010-hd-live-prototype.md) 比較原型。正式切換操作與後續文字批次仍依 #6 定案。
+狀態：**DRAFT**。對應 [#27](https://github.com/wicanr2/taipei/issues/27)，以使用者在 [#18](https://github.com/wicanr2/taipei/issues/18) 選定的 Noto 高清黑體接入 [010](010-hd-live-prototype.md) 比較原型。正式 F12 切換已依 #6 定案，見 [014](014-live-theme-switch.md)；後續文字批次仍待範圍確認。
 
 ## 固定字型與已展示樣式
 
