@@ -91,6 +91,9 @@ func TestActualCityAndFallbacks(t *testing.T) {
 			if stats.FontLabels == 6 && inMenu(image.Pt(x, y)) {
 				continue
 			}
+			if inIcons(image.Pt(x, y), stats.UIIconMask) {
+				continue
+			}
 			i := (y*1280 + x) * 4
 			if !bytes.Equal(base[i:i+4], painted.Pix[i:i+4]) {
 				t.Fatalf("outside-map change %d,%d", x, y)
@@ -127,6 +130,15 @@ func TestActualCityAndFallbacks(t *testing.T) {
 func inMenu(point image.Point) bool {
 	for i := range menuLabels {
 		if point.In(menuRect(i)) {
+			return true
+		}
+	}
+	return false
+}
+
+func inIcons(point image.Point, mask uint16) bool {
+	for i := 0; i < 14; i++ {
+		if mask&(1<<i) != 0 && point.In(iconRect(i)) {
 			return true
 		}
 	}

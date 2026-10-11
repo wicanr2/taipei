@@ -10,14 +10,20 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--receipt',type=Path,required=True)
     ap.add_argument('--reference',type=Path,required=True)
+    ap.add_argument('--ui-reference',type=Path)
     ap.add_argument('--checker',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
     args=ap.parse_args()
     with zipfile.ZipFile(args.receipt) as z:files={name:z.read(name) for name in z.namelist()}
     original=json.loads(files['status.json']);assert original['hd']['font_labels']==6
     results=[]
-    for name,x,y,expected in [('font',28,40,'Noto pixels differ from selected reference'),
-                              ('gap',200,40,'presentation changed native pixel')]:
+    cases=[('font',28,40,'Noto pixels differ from selected reference'),
+           ('gap',200,40,'presentation changed native pixel')]
+    if args.ui_reference:
+        assert original['hd']['ui_icons']==14
+        cases += [('icon',1092,20,'tool icon pixels differ'),
+                  ('selection-border',1184,16,'presentation changed native pixel')]
+    for name,x,y,expected in cases:
         png=subprocess.run(['convert','png:-','-fill','rgb(255,0,0)','-draw',f'point {x},{y}',
                             '-define','png:color-type=6','png:-'],input=files['presentation.png'],
                             stdout=subprocess.PIPE,check=True).stdout
@@ -30,7 +36,9 @@ def main():
         path=directory/'mutated-capture.zip'
         with zipfile.ZipFile(path,'w',compression=zipfile.ZIP_STORED) as z:
             for member,data in changed.items():z.writestr(member,data)
-        run=subprocess.run([str(args.checker),'-dir',str(directory),'-font-reference',str(args.reference)],
+        command=[str(args.checker),'-dir',str(directory),'-font-reference',str(args.reference)]
+        if args.ui_reference:command+=['-ui-reference',str(args.ui_reference)]
+        run=subprocess.run(command,
                            stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         assert run.returncode!=0 and expected in run.stdout,(name,run.returncode,run.stdout)
         results.append({'negative_control':name,'presentation_hash_updated':True,

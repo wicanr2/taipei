@@ -50,6 +50,12 @@ def main():
                 spans=[];left=0
                 for x,_,w,_ in RECTS:spans.append((left,x));left=x+w
                 spans.append((left,1280))
+            # #29 工具圖示由獨立 hd_icons_check.py 與固定 atlas 核對。
+            # 這裡仍驗其外框，只有實際收據列出的內部矩形交給圖示核對器。
+            for i in range(14):
+                x=(273+24*(i%2))*4; y=(5+24*(i//2))*4
+                if s['hd'].get('ui_icon_mask',0)&(1<<i) and y<=row<y+80:
+                    spans=[part for left,right in spans for part in [(left,min(right,x)),(max(left,x+80),right)] if part[0]<part[1]]
             for left,right in spans:
                 want=bytes(v for xx in range(left,right) for v in s['palette'][frame[(row//4)*320+xx//4]]+[255])
                 at=(row*1280+left)*4
@@ -61,7 +67,7 @@ def main():
     result={'scope':'Noto 六個主選單標題 DRAFT，非全遊戲文字或正式 HD 驗收',
             'reference_sha256':REFERENCE_SHA,'bundles':len(samples),'font_counts':dict(counts),
             'font_pixels_match_selected_reference':True,'fallback_labels_native':True,
-            'outside_map_and_labels_native':True,'cold_loaded_font_restored':True,'samples':samples}
+            'outside_map_labels_and_icons_native':True,'cold_loaded_font_restored':True,'samples':samples}
     (args.receipts/'font-verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='samples'},ensure_ascii=False,indent=2))
 

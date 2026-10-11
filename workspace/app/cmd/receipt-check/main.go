@@ -11,6 +11,7 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"math/bits"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,11 +25,25 @@ func check(e error) {
 func main() {
 	dir := flag.String("dir", "", "GUI 收據目錄")
 	fontReference := flag.String("font-reference", "", "含 Noto 標題時須提供已展示的固定參考圖")
+	uiReference := flag.String("ui-reference", "", "含工具圖示時須提供固定 HD atlas")
 	flag.Parse()
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
 	var reference image.Image
+	var icons image.Image
+	if *uiReference != "" {
+		raw, err := os.ReadFile(*uiReference)
+		check(err)
+		if fmt.Sprintf("%x", sha256.Sum256(raw)) != "9ad97735f45cab2c968e23d8f1d6924c6b1937854fa4cda1c1c7a5ee90a089ab" {
+			panic("工具圖示參考雜湊失配")
+		}
+		icons, err = png.Decode(bytes.NewReader(raw))
+		check(err)
+		if icons.Bounds() != image.Rect(0, 0, 320, 320) {
+			panic("工具圖示參考尺寸不符")
+		}
+	}
 	if *fontReference != "" {
 		raw, err := os.ReadFile(*fontReference)
 		check(err)
@@ -75,6 +90,9 @@ func main() {
 				Painted    int
 				FontLabels int    `json:"font_labels"`
 				FontReason string `json:"font_reason"`
+				UIIcons    int    `json:"ui_icons"`
+				UIIconMask uint16 `json:"ui_icon_mask"`
+				UIReason   string `json:"ui_reason"`
 			}
 		}
 		if e = json.Unmarshal(files["status.json"], &s); e != nil {
@@ -82,6 +100,10 @@ func main() {
 		}
 		if s.HD.FontLabels != 0 && (s.HD.FontLabels != 6 || s.HD.FontReason != "matched-menu" || reference == nil) {
 			return fmt.Errorf("%s: Noto labels require six matched labels and the selected reference", path)
+		}
+		if s.HD.UIIconMask>>14 != 0 || bits.OnesCount16(s.HD.UIIconMask) != s.HD.UIIcons ||
+			(s.HD.UIIcons != 0 && (s.HD.UIReason != "matched-icons" || icons == nil)) {
+			return fmt.Errorf("%s: tool icons require a valid mask and fixed atlas", path)
 		}
 		px := files["frame-index.bin"]
 		if len(px) != 64000 || fmt.Sprintf("%x", sha256.Sum256(px)) != s.SHA {
@@ -123,7 +145,24 @@ func main() {
 							fontPixel = fontPixel || (x >= 28+i*176 && x < 164+i*176)
 						}
 					}
-					if fontPixel {
+					icon := -1
+					if x >= 1092 && y >= 20 && y < 676 {
+						for i := 0; i < 14; i++ {
+							left, top := (273+24*(i%2))*4, (5+24*(i/2))*4
+							if s.HD.UIIconMask&(1<<i) != 0 && x >= left && x < left+80 && y >= top && y < top+80 {
+								icon = i
+								break
+							}
+						}
+					}
+					if icon >= 0 {
+						xx := x - (273+24*(icon%2))*4 + (icon%4)*80
+						yy := y - (5+24*(icon/2))*4 + (icon/4)*80
+						rr, gg, bb, aa := icons.At(xx, yy).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: tool icon pixels differ at %d,%d", path, x, y)
+						}
+					} else if fontPixel {
 						rr, gg, bb, aa := reference.At(x, y).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: Noto pixels differ from selected reference at %d,%d", path, x, y)

@@ -1,6 +1,6 @@
 # Noto 主選單文字動態原型
 
-狀態：**DRAFT**。對應 [#27](https://github.com/wicanr2/taipei/issues/27)，以使用者在 [#18](https://github.com/wicanr2/taipei/issues/18) 選定的 Noto 高清黑體接入 [010](010-hd-live-prototype.md) 比較原型。正式 F12 切換已依 #6 定案，見 [014](014-live-theme-switch.md)；後續文字批次仍待範圍確認。
+狀態：**DRAFT**。對應 [#27](https://github.com/wicanr2/taipei/issues/27)，以使用者在 [#18](https://github.com/wicanr2/taipei/issues/18) 選定的 Noto 高清黑體接入 [010](010-hd-live-prototype.md) 比較原型。正式 F12 切換見 [014](014-live-theme-switch.md)；使用者已確認全部圖片與操作介面，後續文字依 [015](015-full-hd-scope.md) 與 #31 執行。
 
 ## 固定字型與已展示樣式
 
@@ -13,9 +13,9 @@
 
 固定 EXE SHA-256 `798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3`，ROM 及 dosgolem 依 [持續運行研究](../re/007-running-city.md)。字型只寫入前端 1280×800 呈現緩衝，不讀寫 DOS 文字或遊戲語意資料。
 
-既有城市模式、原版阻塞、色盤、頂部 UI、年度視窗及已完成地圖原點條件都通過後，才替換六個完整標題矩形。原生矩形為 `(7+44*i,10,34,17)`，輸出矩形為 `(28+176*i,40,136,68)`，`i=0..5`。字型墨跡原點相對矩形為 `(12,54)`。原生 F1–F6、邊框、點擊位置與矩形外畫面保持原版或原有地景覆繪。
+既有城市模式、原版阻塞、色盤、頂部 UI、年度視窗及已完成地圖原點條件都通過後，才替換六個完整標題矩形。原生矩形為 `(7+44*i,10,34,17)`，輸出矩形為 `(28+176*i,40,136,68)`，`i=0..5`。字型墨跡原點相對矩形為 `(12,54)`。原生 F1–F6、邊框與點擊位置保持原版。矩形外的地景及後續工具圖示，分別依 [010](010-hd-live-prototype.md) 與 [016](016-city-tool-icons.md) 核對。
 
-原版正常收據的矩形色號使用 15、21、27，其 RGB 串接 SHA-256 為 `1acb802a98b9fb298f4d68b1f4e5a74b0d3bfca88cba6d347795dbafbab63a1e`。這三色失配時，只回退文字矩形；地景仍依自己的色盤與來源條件判定。字型或授權缺失、雜湊失配、缺 glyph 或墨跡越界，也只回退文字，不猜換另一套字型。
+原版正常收據的矩形色號使用 15、21、27，其 RGB 串接 SHA-256 為 `1acb802a98b9fb298f4d68b1f4e5a74b0d3bfca88cba6d347795dbafbab63a1e`。這三色失配時，只回退文字矩形；地景仍依自己的色盤與來源條件判定。字型或授權缺失、雜湊失配、缺 glyph 或墨跡越界，也只回退文字，不猜換另一套字型。後續 [016](016-city-tool-icons.md) 的圖示獨立驗來源及像素，不將文字矩形外的圖示區直接免驗。
 
 證據等級：已證實，限正常城市完整頂部指紋、已展示的六個標題、安全矩形與實際色盤。這不是全遊戲文字來源或動態字串解碼契約。開場、視窗、建物與未辨識文字保留原版；整幀回退狀態不另外覆字。
 
@@ -28,7 +28,7 @@
 - 同一正常鍵盤輸入的原版機器狀態與存檔不因 Noto 覆字而改變。
 - Linux、Windows、macOS 兩架構研究前端重編譯；真機與正式封包另驗。
 
-含 Noto 的單幀封裝以 `receipt-check -dir /workspace/runs/gui-cold -font-reference /workspace/prototypes/hd-style/font-comparison/noto-font.png` 核對。字型參考須固定雜湊，六個矩形比對實際參考像素，其他區域仍依原版或既有地景規則驗證；不把新增文字區域直接列為免驗區。沒有 Noto 的歷史封裝仍可使用原有命令。
+含 Noto 的單幀封裝以 `receipt-check -dir /workspace/runs/gui-cold -font-reference /workspace/prototypes/hd-style/font-comparison/noto-font.png` 核對。若另含 [016](016-city-tool-icons.md) 的圖示，須追加 `-ui-reference /workspace/prototypes/hd-style/city-icons-b-v1.png`。參考圖須固定雜湊，各矩形逐像素比較，其他區域仍依原版或既有地景規則驗證；不把新增區域直接列為免驗區。沒有 Noto 或圖示的歷史封裝仍可使用原有命令。
 
 ## 已執行驗證
 
