@@ -1,6 +1,6 @@
 # 正常離開的政績靜態底圖
 
-狀態：READY，限正常退出時已見完整靜態底圖。對應 [#47](https://github.com/wicanr2/taipei/issues/47)，母項 [#32](https://github.com/wicanr2/taipei/issues/32)。取得政績後的圖案、文字變化及動畫仍 DRAFT，不宣稱完整政績畫面已 HD 化。呈現已實作並通過回歸，正常 GUI 與正式驗收尚未完成。
+狀態：CONFORMED，限正常退出時已見完整靜態底圖。對應 [#47](https://github.com/wicanr2/taipei/issues/47)，母項 [#32](https://github.com/wicanr2/taipei/issues/32)。取得政績後的圖案、文字變化及動畫仍 DRAFT，不宣稱完整政績畫面已 HD 化。
 
 沿用使用者已確認的 B 細緻手繪材質、1280×800、Noto Sans CJK TC 與 F12。保留原版構圖、內容、十個圖案位置、阻塞輸入及正常退出。此層不重算政績或寫入任何原版狀態。
 
@@ -56,4 +56,24 @@ DRAFT 後重新核對完整原版來源、兩個別名、四份正常退出、23
 
 正式 manifest SHA-256 為 `009fcda9e87d5fcea175ae3112a5a5a610b04833a0d278f2e68b99dd4311ef57`；`screen.png` bytes 與已核對原型完全相同，SHA-256 `b37fddad8ea9cc3bbc505af3a3daad1f5cb59e86c213d98d12bbf279da81cfb0`。兩檔亦乾淨重生逐 byte 相同，結果 `ending-scene-native/ready-reproducibility.json`。
 
-[ending_screen.go](../../workspace/app/internal/hd/ending_screen.go) 已依 READY 接入完整來源、色盤、模式、阻塞、固定圖片及字型／授權閘門。只讀來源，整幀覆繪，失配保留原版。實際呈現測試核對 READY 前原型、F12 往返、五處來源失配、23 個已用色盤、未用色盤、模式及相位、九種真實載入故障與城市家族隔離，16.160 秒通過。首次測試的 `image.Image` 參考型別誤用已修正，原失敗紀錄保留。全部 HD／鍵盤回歸 116.613 秒通過；正常 GUI、有效收據破壞、原版狀態及跨平台仍待驗，不宣稱 CONFORMED。
+[ending_screen.go](../../workspace/app/internal/hd/ending_screen.go) 已依 READY 接入完整來源、色盤、模式、阻塞、固定圖片及字型／授權閘門。只讀來源，整幀覆繪，失配保留原版。實際呈現測試核對 READY 前原型、F12 往返、五處來源失配、23 個已用色盤、未用色盤、模式及相位、九種真實載入故障與城市家族隔離，16.160 秒通過。首次測試的 `image.Image` 參考型別誤用已修正，原失敗紀錄保留。全部 HD／鍵盤回歸 116.613 秒通過。以上為 READY 後實作紀錄，正常驗收見下節。
+
+## 2026-10-12 正常產品驗收
+
+產品與工具固定提交 `70fc29dc91a3422b97554c219c59f8b7fc42fc71`，image `sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3`，Go 1.24.13／Python 3.11.2，dosgolem 基線與七補丁不變。正常 GUI 使用 400000 steps/update，驗收條件及唯一狀態輸入均先回寫 #47，再執行。
+
+| 閘門 | 結果 | `workspace/runs/` 本機證據 |
+|---|---|---|
+| 正常玩家路徑 | 冷啟動、新城市、電線施工、存檔、兩次原版退出、全新 EXE 冷讀施工格與資金 79980；兩次政績 F12 保留完整來源、讀鍵及非 theme 輸入 | `gui-ending-scene-cold-r1/result.json`、`ending-gui.json` |
+| 獨立完整畫面 | Go／Python 全部 50 份原子收據通過，4 份實際覆繪政績；完整像素、家族及回退均核對 | `ending-scene-native/normal-receipts-r1.json`、`normal-go-check-r1.log` |
+| 有效破壞 | 背景、標題、來源、相位、模式、色盤及家族 7 項，重算 PNG／雜湊後雙側拒絕；原件與未用色盤 2 個正對照通過 | `ending-scene-hd-negative-r1/result.json` |
+| 原版狀態及 SAV | 兩側各 3,000,802,774 步、125 個抽樣點相同，實際覆繪政績 6 點；最終正常 GUI 原畫面、色盤、讀鍵、檔案操作及落地 SAV 相同 | `ending-scene-native/normal-state-r1.json` |
+| 平台及輸入 | 四架構編譯與結構通過，Linux 乾淨重建 byte 相同，35 原始檔及 RAR 不變 | `ending-scene-native/build-input-integrity-r1.json`、`final-verification-r1.json` |
+
+狀態採預登記每 24,000,000 步抽樣。唯一正常退出收據 SHA-256 `4ddce3987d53d0636a7d238c825989eaaab085b041bf4cd9a5253db6fa4030d7`，audit SHA-256 `b80f2aa5ff75d0b69a280fc0aa8961c5b2990298abfd1cce9fa0246c7f14168f`。兩側 221.223／213.623 秒，狀態 SHA-256 `d49e1d61592afb3dbf77e7787b5ee9e10c6af9bc8cfb5ccf5f724eb2a7dfd3d6`，結果檔 SHA-256 `ae4c6b201dad45516539f1de345c3b0457600dc6c3c93a83d28bafaf841fb6f9`。實際 `gui-cold-saves.GR4gqL/ROUND4.SAV` 93567 bytes，SHA-256 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，與完整冷讀及狀態重播相同。
+
+Linux SHA-256 `3df9783e2ca9229666f0f49b5fda9647b5bd94cf4271afc53a723d91acf46654`，另保留相同的 `taipei-preview-ending-clean-r1`。Windows amd64、macOS amd64／arm64 雜湊與標頭見完整性收據。實際畫面 `ending-scene-native/normal-ending-hd-r1.png` 直接取自正常收據，與 READY 前固定 PNG byte 相同，沒有後製，已檢視。輸出 UID/GID 1000，指定 find 為空，本批容器全部退出刪除。
+
+正常 GUI 入口為 [gui_playtest.sh](../../workspace/tools/gui_playtest.sh) 的 `TAIPEI_TEST_ENDING_SCENE=1 TAIPEI_GUI_RUN=gui-ending-scene-cold-r1 TAIPEI_THEME=hd-b`；獨立核對為 [ending_screen_verify.sh](../../workspace/tools/ending_screen_verify.sh) 的 `normal`／`negative`。前件皆保留，工具拒絕覆寫。狀態使用 [presentation-audit](../../workspace/app/cmd/presentation-audit/main.go) 的 `-require-ending-screen -require-file-dialogs -render-interval-steps 24000000`，完整輸入及輸出依 #47 預登記。
+
+本規格僅靜態底圖達 CONFORMED。其他政績、動畫、全部 HD、本批 Windows Wine／macOS 真機及正式封包未完成；母項保持開啟，素材只留本機。
