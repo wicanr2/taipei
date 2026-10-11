@@ -38,6 +38,7 @@
 | 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
 | 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
 | 發電廠 | #46 的火力已見 36 格靜態來源達 READY 並接入呈現層；完整／部分重組、色盤、2,916 項來源反例及五種真實載入故障通過。正式正常 GUI 驗收執行中 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)；核能及其他相位仍 DRAFT，不宣稱完整發電廠、全部 HD 或封包完成 |
+| 政績靜態底圖 | #47 的兩個 ROM 來源與四份正常退出收據相同，B／Noto 原型完整合成、實際字墨及八檔乾淨重生通過。028 限已見底圖達 READY，尚未接產品 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
@@ -45,6 +46,11 @@
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- 正常離開靜態畫面：[來源核對工具](workspace/tools/ending_scene_source_check.py)，對應 [#47](https://github.com/wicanr2/taipei/issues/47)、母項 [#32](https://github.com/wicanr2/taipei/issues/32)。直接重讀 ROM23／ROMA1、完整 320×200 色號及正常兩次退出；只研究已見底圖，取得政績後的變化與動畫未知，尚未 READY 或接產品。
+- 政績底圖可撤回原型：[ending-scene-prototype](workspace/app/cmd/ending-scene-prototype/main.go)，參數 `-source <來源核對目錄> -art <B 插畫原件> -font <固定 Noto> -out <新原型目錄>`，輸出固定 1280×800、實際字墨、安全矩形與原版／B 比較。只在 Docker 內建置及執行，仍為 DRAFT，沒有接產品。
+- 政績底圖原型核對：[ending_scene_prototype_check.py](workspace/tools/ending_scene_prototype_check.py)，獨立重讀兩個 ROM 來源、正常收據、固定 B 素材及字型，核對四字墨跡、完整合成與比較圖；不呼叫產品呈現器，不代替正常玩家驗收。
+- 政績底圖正式素材：[ending_scene_ready.py](workspace/tools/ending_scene_ready.py)，依 [028 READY](docs/spec/028-ending-achievement-base.md) 檢查獨立原型核對及八檔乾淨重生，匯出固定 manifest 與完整 PNG 至 `workspace/prototypes/hd-style/ending-scene-ready-v1/`。只有已見完整靜態底圖，其他政績或動畫維持原版。
 
 - 發電廠批次：[027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)，火力來源靜態呈現達 READY，核能及其他相位仍 DRAFT；探針 [power_facility_playtest.py](workspace/tools/power_facility_playtest.py)、[power_facility_playtest.sh](workspace/tools/power_facility_playtest.sh) 使用正常鍵盤，不注入城市或座標，保留未知變更格及原子收據。
 - 發電廠原型核對：[power_facility_prototype_check.py](workspace/tools/power_facility_prototype_check.py) 獨立重讀 ROM 九圖庫、原子收據、完整插畫與 36 格切片，核對來源、全部別名、2,916 項像素反例、完整重組與原版／B 比較；離線核對不當作正式 GUI 完成。
@@ -56,7 +62,7 @@
 - 火力原版狀態核對：[presentation-audit](workspace/app/cmd/presentation-audit/main.go) 的 `-require-power-facility` 要求實際抽到火力 36 個來源、完整執行原版兩側步數並核對每次原版狀態、正常 GUI 最終來源與實際 SAV；固定輸入與步數由正常 GUI 產生後先回寫 #46。
 - 火力有效負對照：[hd_power_facility_negative.py](workspace/tools/hd_power_facility_negative.py)，破壞實際正常原子收據的火力像素、切片、來源、回退區與統計，再重算原版 PNG／呈現 PNG／雜湊，要求 Go 與 Python 都拒絕；原件與未用色盤為正對照。
 - 火力正常收據驗證入口：[power_facility_verify.sh](workspace/tools/power_facility_verify.sh)，`normal` 核對完整冷啟動、Go／Python 與全部回退，`negative` 驗證五項有效破壞及兩個正對照；輸出限既有 `workspace/runs/`，拒絕覆寫原件。
-- 火力正常 GUI 段落：[power_facility_gui.py](workspace/tools/power_facility_gui.py)，由既有冷啟動電線施工後接正常火力施工、F12、兩軸捲動及全新 EXE 冷讀 36 格；執行入口為 `TAIPEI_TEST_POWER_FACILITY=1 TAIPEI_GUI_RUN=gui-power-facility-cold-r2 TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh`。r1 實見完整火力 36 格及 F12 不送 DOS 鍵，但原版大游標在 (149,61,54,54) 閃爍，跨時間全畫面相等斷言停止；r2 增加無輸入閃爍對照及全部游標外相等，原件保留，沒有改產品或遊戲速度。
+- 火力正常 GUI 段落：[power_facility_gui.py](workspace/tools/power_facility_gui.py)，入口 `TAIPEI_TEST_POWER_FACILITY=1 TAIPEI_GUI_RUN=gui-power-facility-cold-r3 TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh`。r1/r2 的跨時間游標假設已撤回；固定步數診斷兩側各 39.36 億步、164 點原版狀態及最終原版畫面符合實際 r1 收據，證明游標差異不需要 F12，內部原因未知。r3 核對游標外全部像素、完整廠區及 F12 全部非 theme 輸入，兩軸捲動逐一核對 36 格世界來源，再存退讀；[預登記](https://github.com/wicanr2/taipei/issues/46#issuecomment-6113688837)。原件保留，沒有改產品或遊戲速度，正式 GUI 尚未完成。
 - 發電廠來源核對：[power_facility_source_check.py](workspace/tools/power_facility_source_check.py) 從原始 ROM 位移直接重讀九圖庫、原子畫面、原版讀鍵及全部變更，分列複合來源與游標等未知格，輸出限本機技術原圖及 `source-check.json`；正常兩選項完成後才執行。
 - 發電廠首件：`workspace/runs/power-facility-native/source-check-thermal-prefix.json` 只核對首件部分流程，實見 6×6 格、原版矩形 (203,61,54,54)。24 次 Right 在大游標下使原點 12→14，固定原點斷言停止；施工前最後一份及移開游標後均在 (14,12)，36 格完整來源已另核對，沒有當成完整兩選項／HD／存退讀完成。核能窄補查從全新 EXE 於 (22,3) 施工，輸出 `power-facility-nuclear-native/`。
 - 工業筆觸素材：內建 imagegen 的 `workspace/prototypes/hd-style/industrial-paint-b-v1-generated.png` 與 `industrial-paint-b-v1.png`，完整提示詞及後處理在同目錄 `industrial-paint-b-v1.prompt.txt`。固定 1254×1254 輸出 SHA-256 `25e851a18d35960f95be339337b706e3b2c433686a6ecd32e9cfc176cdde8094`；全數留本機，只供 027 可丟棄原型，尚未接正式呈現。

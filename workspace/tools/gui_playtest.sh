@@ -5,13 +5,13 @@ orig_dir="${TAIPEI_ORIG:-$project_dir/rs201 模擬台北/模擬台北/RS201}"
 test -d "$orig_dir"
 test -f "$project_dir/workspace/runs/taipei-preview"
 run_name="${TAIPEI_GUI_RUN:-gui-cold}"
-case "$run_name" in gui-cold|gui-file-dialogs-cold|gui-dos-clock-cold|gui-budget-cold|gui-budget-cold-r2|gui-budget-cold-r3|gui-budget-cold-r4|gui-infrastructure-cold-r1|gui-infrastructure-cold-r2|gui-power-facility-cold-r1|gui-power-facility-cold-r2) ;; *) exit 2 ;; esac
+case "$run_name" in gui-cold|gui-file-dialogs-cold|gui-dos-clock-cold|gui-budget-cold|gui-budget-cold-r2|gui-budget-cold-r3|gui-budget-cold-r4|gui-infrastructure-cold-r1|gui-infrastructure-cold-r2|gui-power-facility-cold-r1|gui-power-facility-cold-r2|gui-power-facility-cold-r3) ;; *) exit 2 ;; esac
 # #35：包含逐次讀鍵及兩次正常退出的完整流程，保留有界執行。
 batch_seconds=600
 # #39 額外包含兩次五列 F12 與數值操作，整批上限按新增步數擴充。
 case "$run_name" in gui-budget-cold|gui-budget-cold-r2|gui-budget-cold-r3|gui-budget-cold-r4) batch_seconds=2400 ;; esac
 case "$run_name" in gui-infrastructure-cold-r1|gui-infrastructure-cold-r2) batch_seconds=2400 ;; esac
-case "$run_name" in gui-power-facility-cold-r1|gui-power-facility-cold-r2) batch_seconds=3600 ;; esac
+case "$run_name" in gui-power-facility-cold-r1|gui-power-facility-cold-r2|gui-power-facility-cold-r3) batch_seconds=3600 ;; esac
 timeout "${batch_seconds}s" docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" --name taipei-gui-cold \
   --mount "type=bind,src=$project_dir/workspace,dst=/workspace" \

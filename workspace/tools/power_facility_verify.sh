@@ -15,7 +15,7 @@ timeout 900s docker run --rm --network none --user "$(id -u):$(id -g)" \
   -w /workspace -e "TAIPEI_POWER_VERIFY_MODE=$mode" \
   sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3 bash -c '
     set -euo pipefail
-    root=/workspace/runs/gui-power-facility-cold-r2
+    root=/workspace/runs/gui-power-facility-cold-r3
     output=/workspace/runs/power-facility-thermal-native
     test "$(stat -c %u:%g "$output")" = "$(id -u):$(id -g)"
     if test "$TAIPEI_POWER_VERIFY_MODE" = negative; then

@@ -57,6 +57,12 @@ def exercise(root):
     assert int(funds)==29980
     cells=[{'world':[origin['X']+col,origin['Y']+row],
         'source_sha256':sha(cell(frame,5+col*9,34+row*9))} for row in range(3,9) for col in range(22,28)]
+    def same_world_sources(s,current):
+        for record in cells:
+            col=record['world'][0]-s['map_origin']['X']
+            row=record['world'][1]-s['map_origin']['Y']
+            assert 0<=col<29 and 0<=row<15
+            assert sha(cell(current,5+col*9,34+row*9))==record['source_sha256']
     cursor_rect=[149,61,54,54]
     def stable_outside_cursor(a,b):
         for y in range(200):
@@ -65,25 +71,27 @@ def exercise(root):
                 assert a[y*320+203:(y+1)*320]==b[y*320+203:(y+1)*320]
             else:assert a[y*320:(y+1)*320]==b[y*320:(y+1)*320]
     idle=[]
-    for sample in range(12):
+    # 原版無呈現重播已重現 r1 的游標差異；不假設固定閃爍週期。
+    for sample in range(1):
         step=base.status()['steps']
         base.wait_for(lambda s:s.get('steps',0)>=step+24_000_000,f'power-cursor-idle-{sample}')
         s,current=model(root)
         assert s['key_reads']==built['key_reads']
+        assert s['inputs']==built['inputs']
         stable_outside_cursor(frame,current)
+        same_world_sources(s,current)
         base.capture(f'power-cursor-idle-{sample}')
         idle.append({'steps':s['steps'],'cursor_changed':current!=frame,'outside_cursor_equal':True})
-        if current!=frame:break
-    else:raise AssertionError('有界無輸入對照未觀察到已見原版大游標閃爍')
     toggles=[]
     for name,enabled in [('original',False),('hd',True)]:
         base.action('power-theme-'+name,'F12')
         s,current=model(root)
         stable_outside_cursor(frame,current)
         assert s['key_reads']==built['key_reads']
-        assert [i for i in s['inputs'] if i['kind']=='keyboard']==[i for i in built['inputs'] if i['kind']=='keyboard']
+        assert [i for i in s['inputs'] if i['kind']!='theme']==[i for i in built['inputs'] if i['kind']!='theme']
         assert s['hd_enabled'] is enabled and s['hd']['power_facility']['painted']==(36 if enabled else 0)
-        toggles.append({'enabled':enabled,'original_outside_cursor_unchanged':True,'no_dos_keyboard':True})
+        same_world_sources(s,current)
+        toggles.append({'enabled':enabled,'original_outside_cursor_unchanged':True,'no_dos_keyboard':True,'only_theme_input':True})
     # 改回已查證的單格電線游標，再走正常邊界捲動。
     key('power-small-cursor-toolbar','Tab')
     for row in range(5):key(f'power-small-cursor-row-{row}','Up')
@@ -94,12 +102,13 @@ def exercise(root):
         base.capture('power-scroll-'+axis+'-before')
         for i in range(limit):
             key(f'power-scroll-{axis}-{i}',direction)
-            after,_=model(root)
+            after,current=model(root)
             if after['map_origin'][axis]!=before['map_origin'][axis]:break
         else:raise AssertionError(('正常捲動未發生',axis))
         assert after['map_origin'][axis]==before['map_origin'][axis]+2
         assert after['map_origin']['Y' if axis=='X' else 'X']==before['map_origin']['Y' if axis=='X' else 'X']
         assert after['hd']['power_facility']['painted']==36
+        same_world_sources(after,current)
         base.capture('power-scroll-'+axis+'-after')
         scrolls.append({'axis':axis,'before':before['map_origin'],'after':after['map_origin'],'keys':i+1})
     for axis,direction,limit in [('Y','Up',18),('X','Left',32)]:
@@ -109,8 +118,9 @@ def exercise(root):
             assert s['map_origin'][axis]==origin[axis]+2
             key(f'power-return-{axis}-{i}',direction)
         else:raise AssertionError(('未返回原點',axis))
-    final,_=model(root)
+    final,current=model(root)
     assert final['map_origin']==origin and final['hd']['power_facility']['painted']==36
+    same_world_sources(final,current)
     base.capture('power-before-save')
     result={'issue':46,'normal_gui':True,'checkpoint':False,'cells':cells,'funds':int(funds),
         'f12':toggles,'cursor_rect':cursor_rect,'cursor_idle_control':idle,'scrolls':scrolls,'final_origin':final['map_origin'],
