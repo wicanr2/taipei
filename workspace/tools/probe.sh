@@ -31,7 +31,7 @@ timeout 180s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
     mkdir -p "$stage"
     git -C /dg archive "$base_commit" | tar -x -C "$stage"
     cd "$stage"
-    for patch in /tools/dosgolem-bios-irq1.patch /tools/dosgolem-bios-blocking.patch /tools/dosgolem-console-keyboard.patch /tools/dosgolem-probe-trace.patch /tools/dosgolem-bios-caps-lock.patch; do
+    for patch in /tools/dosgolem-bios-irq1.patch /tools/dosgolem-bios-blocking.patch /tools/dosgolem-console-keyboard.patch /tools/dosgolem-probe-trace.patch /tools/dosgolem-bios-caps-lock.patch /tools/dosgolem-audio.patch /tools/dosgolem-system-clock.patch; do
       git apply --check "$patch"
       git apply "$patch"
     done

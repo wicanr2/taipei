@@ -5,7 +5,7 @@ orig_dir="${TAIPEI_ORIG:-$project_dir/rs201 模擬台北/模擬台北/RS201}"
 test -d "$orig_dir"
 test -f "$project_dir/workspace/runs/taipei-preview"
 run_name="${TAIPEI_GUI_RUN:-gui-cold}"
-case "$run_name" in gui-cold|gui-file-dialogs-cold) ;; *) exit 2 ;; esac
+case "$run_name" in gui-cold|gui-file-dialogs-cold|gui-dos-clock-cold) ;; *) exit 2 ;; esac
 # #35：包含逐次讀鍵及兩次正常退出的完整流程，保留有界執行。
 timeout 600s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" --name taipei-gui-cold \

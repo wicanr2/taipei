@@ -18,7 +18,10 @@
 | 城市介面 | [#29](https://github.com/wicanr2/taipei/issues/29) | 工具圖示、外框與選取狀態逐像素核對，原版命中範圍不變 | 十四個圖示內部不代表完整介面 |
 | 全部地圖 | [#30](https://github.com/wicanr2/taipei/issues/30) | 地景、道路、電線、建物、設施與災害的來源、遮擋及相位 | 未接入或未知回退仍列未完成 |
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
-| 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；接入後正常 F12、取消、存退讀與狀態對照 | 目前僅來源及原型 READY，產品尚未接入 |
+| 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；正常 F12、取消、存退讀與狀態對照 | 022 限六面板二十九選取 CONFORMED；確認後視窗另驗 |
+| 存讀檔與離開提示 | [#38](https://github.com/wicanr2/taipei/issues/38) | 完整來源、正常輸入邊界與選取、F12、施工存退讀、有效負對照及原版狀態 | 023 限兩家族 CONFORMED；外部檔案錯誤與模態外另驗 |
+| 預算與稅率視窗 | [#39](https://github.com/wicanr2/taipei/issues/39) | 完整 ROM2、十一動態欄位、五列選取、原位 Noto 墨跡、正常調整／返回及 HD 狀態對照 | 33 份來源、132 項來源負對照及正常控制已通過；未達 READY，尚未接 HD |
+| DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 
 目前已驗證正常 GUI 冷啟動、新遊戲、電線施工、檔名輸入及退格、原版實際存檔、

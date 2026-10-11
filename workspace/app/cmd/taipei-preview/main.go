@@ -240,6 +240,8 @@ func (g *game) receipt() error {
 		"presentation_sha256": fmt.Sprintf("%x", sha256.Sum256(g.presentation.Pix)),
 		"steps":               g.m.Steps, "frames": g.frames, "mode": g.m.VideoMode(), "registers": g.m.CPU.R,
 		"segments": g.m.CPU.Seg, "ip": g.m.CPU.IP, "ticks": g.m.Ticks,
+		"bios_ticks":  uint32(g.m.Read16(0x46c)) | uint32(g.m.Read16(0x46e))<<16,
+		"pit_divisor": g.m.PITDivisor(), "pit_hz": g.m.PITHz(),
 		"key_reads": g.d.KeyReads, "key_waits": g.d.KeyWaits, "irq1": g.m.KeyIRQs,
 		"key_stacks":  g.keyStacks,
 		"mouse_polls": len(g.d.Mouse.Polls), "mouse_calls": g.d.Mouse.Calls, "file_ops": g.d.FileOps,

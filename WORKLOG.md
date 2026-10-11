@@ -405,3 +405,21 @@ Linux、Windows amd64、macOS amd64／arm64 編譯與架構核對通過；Window
 最初候選腳本誤用標題 y=37，核對失敗後回查既有來源契約，訂正為 y=38；再依 `full_asset_catalog.image` 的 None 返回契約略過不支援形態。修正只涉及研究腳本，沒有改動產品或對未支援資料強解。`initial-candidates.json` 保存原版 ROM 直接圖片候選的完整偏移、形狀與解碼雜湊；候選左上 99×22 均未直接匹配標題，不能由此宣稱 ROM 沒有該來源。
 
 下一個精確閘門是從正常功能選單抵達預算／稅率視窗，確認與年度入口的關係，再重建完整背景、固定文字、動態數值、選取與返回。完整來源模型仍未知，沒有新 READY 規格或正式接入。產物留在 workspace/，原版唯讀、UID／GID 1000，研究容器已退出刪除；#39 與 HD 母項繼續開啟。
+
+## 2026-10-11：#39 完整預算來源與 #40 時鐘缺口修正
+
+本輪回讀主機 gh、Git 與遠端 Issue，再依 #39 研究正常入口。路由命中 GUI 還原、字形反查、平台規格先行、IDA 9.4 與文件職責，載入各任務的單一入口及必要 reference。使用者已定案的 B、1280×800、Noto、F12 及全部圖片／操作介面範圍不變。
+
+- 完整背景為 ROM2，檔案偏移 12662，235×132，原位 `(18,37)`。標題在背景局部 y=1，解釋先前只比左上角候選不符的原因。`budget_catalog.py` 重建五個百分比、四個費用、稅收及淨額共十一個 ASCII 欄位，逐像素核對完整面板，不略過數值區。33 份正常來源符合，132 項單點破壞全拒絕；原字形別名與無精確字碼對應的烘製文字保留未知，沒有直接猜補 Noto 字串。
+- `budget-native/` 在 F3 選取後過早返回；`budget-native-entry/` 的年度視窗在一次 Down 後亦已消失。輸入收據證明只讀一次原版按鍵，不能推論方向鍵關窗。兩前件保留，沒有加快擷取或拉長等待來掩蓋差異。先建立 [#40](https://github.com/wicanr2/taipei/issues/40)，再研究時鐘缺口。
+- IDA 既有資料庫唯讀掛載，另製可寫副本，窄範圍匯出 `sub_2465E` 與讀鍵函式原始名稱、位址、bytes、檔案偏移及 xrefs。預算 owner 在 IDA 線性 `24747h–2478Eh` 比較秒欄位，閒置計數大於 14h 後離開。第一次查到的 `1EFF4h` 是呼叫後返回位置，依 call 關係追到真正 owner，沒有把 KeyRead caller 當成目前執行函式。IDA 匯出初次 UTF-8 與未知函式斷言失敗均修正查詢工具，再以新副本重跑；不是產品缺陷，未改原資料庫。
+- dosgolem 的 DOS `clock()` 誤用 raw PIT IRQ 次數；BDA BIOS 時鐘及 INT1A 已有獨立計數。公開 DOS 契約與固定 commit 的 DOSBox Staging／MS-DOS 原始碼全文存檔後，建立 024 DRAFT 與四組受控紅測試。固定同一 BDA、只變 raw IRQ 即得錯誤時間；INT1A 設定未反映到 DOS 時間。證據審查後升 READY，才新增第七份隔離補丁，改讀既有 BDA。保留原整數近似，不深挖原版 ISR、硬體 driver 或改動閒置上限。
+- 四組紅測試轉綠。DOS、狀態、oracle 與 probe 的 236 項頂層測試通過，五項既有無 fixture 測試跳過，名稱完整保存在 `dos-clock-source/provenance.json`。HD、鍵盤及原點十六項實際資源測試通過，無跳過。Linux、Windows amd64、macOS amd64／arm64 均以既有固定 image 編譯及結構核對；Windows 仍有既有 YMFM 編譯警告，沒有新增 Wine 或真機驗收。
+- `budget-native-fixed/` 正常冷啟動 F3 的 41 份收據通過。Down／Up 五列循環，Right 各減一、Left 還原，Escape 回同一暫停地圖、重開與閒置返回皆正常。Space 保留視窗。第一份預算的 PIT divisor=2982、raw IRQ=36452、BIOS tick=1622；閒置離開沒有新增原版讀鍵。Escape 前變更已逐項還原，不據此推論 Escape 撤銷尚未還原的調整。
+- `gui-dos-clock-cold/` 從 HD 真實冷啟動完成 F12、電線施工、存檔、原版退出、全新 EXE 讀檔與第二次原版退出，45 份新收據由 Go／Python 獨立核對完整來源、固定呈現與全部區外。專用字型、圖示、底欄核對通過。施工格讀回相同，兩次資金均為 79980，實際存檔 SHA-256 仍為 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。舊四架構、來源及正常 GUI 原件均保留，沒有宣稱舊、新時鐘核心的全部狀態相同。
+
+本批 Linux SHA-256 為 `52b65f10bd009c0f94741eaaa1aa36d0349342dbea646453bb9eff7ce9c40b8f`。`dos_clock_provenance.py` 核對兩批共 86 份新正常收據、七補丁、四架構、測試、平台全文、35 原始檔與 RAR，輸出 `dos-clock-source/provenance.json`。`probe.sh` 亦從乾淨基底套用七補丁、重新編譯並執行一指令的有界入口測試通過；這只驗工具鏈，不當作新玩家路徑。
+
+預算完整來源已取得，#39 的 Noto 靜態文字、非零金額、未還原調整保存語意及正式 HD 尚未完成。其他視窗、地圖建物、場景、動畫與正式平台封包依母項繼續，沒有改動 dosgolem 上游或公開上傳原版及衍生素材。
+
+收尾 378 個相對連結、七個新工具入口及 024 入口、既有入口正對照、Python／shell 語法、Go 格式、1000:1000 擁有權與容器內指定 find 通過。Linux 再從現行來源建至容器暫存檔，與正常 GUI 使用程式逐 byte 相同，副本刪除。重建初次命令誤寫 `-p1`，改回 Go 的 `-p 1` 後同容器乾淨重跑通過；初次檢查未帶 Docker `-i` 而未接到 stdin，也已補正重跑並取得實際 JSON，不把空輸出視為檢查通過。結果保存 `dos-clock-source/final-hygiene.json`。本批容器均退出刪除，無新建 image，未清理其他專案。024 限時鐘來源升 CONFORMED，#40 的提交與結案回鏈遠端；#39 與完整 HD 母項維持開啟。

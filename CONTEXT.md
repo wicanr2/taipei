@@ -35,13 +35,23 @@
 | HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金，以及存讀檔視窗與離開提示。023 的 109 份正常收據、十八項有效負對照、施工存退讀與兩次退出通過；兩側各 26.88 億步、112 次明示 HD 抽樣原版狀態及實際存檔相同 | [檔案視窗契約](docs/spec/023-file-dialogs.md)、[城市選單](docs/spec/022-city-function-menus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
-| 預算與稅率視窗 | 已先建立 #39，保留兩份正常年度原版線索與直接圖片候選清單；完整視窗／動態欄位模型未知，未達 READY，沒有新增產品呈現 | [#39](https://github.com/wicanr2/taipei/issues/39)；下一個閘門是正常選單入口與完整來源重建 |
+| 預算與稅率視窗 | #39 已重建 ROM2 完整 235×132 背景及十一個 ASCII 動態欄位，33 份正常來源精確匹配，132 項單像素破壞全拒絕；五列循環、原版左右調整、Escape、重開及閒置返回通過 | [#39](https://github.com/wicanr2/taipei/issues/39)；Noto 靜態文字來源、未還原調整的保存語意、非零金額及正式 HD 仍待驗，未達 READY |
+| 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
 | 跨平台編譯 | 本批 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
-- 預算與稅率來源：[#39](https://github.com/wicanr2/taipei/issues/39)，本機 `workspace/runs/budget-source/initial-sources.json` 保存兩份歷史正常年度收據雜湊、步數與原版四倍圖；`initial-candidates.json` 保存原版 ROM 直接圖片候選、偏移與雜湊。標題區 `(18,38,99,22)` 依既有 `hd_source_audit.budget_window`，只識別線索，完整視窗、動態欄位及正常選單入口尚待研究。原版素材不入 Git。
+- DOS 時間收尾：`workspace/runs/dos-clock-source/final-hygiene.json` 保存本批文件入口、相對連結、語法、格式、擁有權、容器內指定 find 與 Linux 重建比較；Docker 生命週期另由主機回讀。本批不建立正式交付目錄。
+- DOS 時間證據彙整：[dos_clock_provenance.py](workspace/tools/dos_clock_provenance.py)，已核對本批原始輸入、固定七補丁、四架構、86 份正常收據、施工存退讀、兩次退出及獨立畫面檢查；輸出 `workspace/runs/dos-clock-source/provenance.json`。現行 Linux SHA-256 `52b65f10bd009c0f94741eaaa1aa36d0349342dbea646453bb9eff7ce9c40b8f`；舊四架構與來源收據保留 `before-build/`。
+- DOS 時間測試：[dos_clock_verify.sh](workspace/tools/dos_clock_verify.sh)，先由現行建置入口重生七補丁，再執行 DOS、狀態、oracle、probe 與實際 HD 素材測試；輸出 `workspace/runs/dos-clock-source/`，正式正常 GUI 與封包不由此代替。
+- DOS 時間修正補丁：[dosgolem-system-clock.patch](workspace/tools/dosgolem-system-clock.patch)，固定基底及原六補丁後套用的第七份補丁；沿用既有 Go image 與 [build_preview.sh](workspace/tools/build_preview.sh)。正常 GUI 由 `TAIPEI_THEME=hd-b TAIPEI_GUI_RUN=gui-dos-clock-cold bash workspace/tools/gui_playtest.sh` 驗證，拒絕覆寫既有收據。
+- DOS 時間契約：[024](docs/spec/024-dos-system-clock.md)，#40 的公開平台前提、時間來源及驗證閘門。研究輸出 `workspace/runs/dos-clock-source/`，保留未修版本四組紅測試及固定 commit 的平台全文；新產品正常操作及存退讀已通過。
+- 預算字形來源候選：`workspace/runs/budget-source/static-glyph-candidates.json`、`rom2-x4.png`，保留 ROM2 背景與原字模的精確匹配及別名；部分烘製文字沒有對應 ROM57 字碼，未猜補為正式文字。
+- 預算輸入定位：[ida_budget_probe.py](workspace/tools/ida_budget_probe.py)，以 IDA Pro 9.4 及唯讀既有資料庫的複本匯出窄範圍函式；輸出 `workspace/runs/ida-39/`，保留原始名稱、bytes、IDA 線性位址與 EXE 檔案偏移。
+- 預算正常入口研究：[budget_playtest.sh](workspace/tools/budget_playtest.sh)、[budget_playtest.py](workspace/tools/budget_playtest.py)，從正常冷啟動經 F3 預算選項探索數值、選取及返回；有界停止不取代原版退出。
+- 預算完整來源研究：[budget_catalog.py](workspace/tools/budget_catalog.py)，ROM2 在 `(18,37)` 的 235×132 背景及十一個 ASCII 動態欄位。屬 #39 研究探針，未達 READY，尚未接入產品。
+- 預算與稅率來源：[#39](https://github.com/wicanr2/taipei/issues/39)，本機 `workspace/runs/budget-source/full-model/catalog.json` 保存 33 份完整來源與 132 項單像素負對照；ROM2 檔案偏移 12662，解碼 SHA-256 `db92d35996a6c8fc112d129ab0a92d1018384495cd38b31d637df468b52c7967`，原位 `(18,37,235,132)`，標題位於局部 y=1。正常操作 `budget-native-fixed/result.json` 含五列選取與原版 Right 減一／Left 還原；兩個未修時鐘前件保留。初始線索仍在 `initial-sources.json` 與 `initial-candidates.json`。原版素材不入 Git，來源符合不等於 HD 已接入。
 - 檔案視窗正式呈現：[file_dialogs.go](workspace/app/internal/hd/file_dialogs.go)，依 023 完整來源與使用中色盤辨識，接入固定 B／Noto；限本批達 CONFORMED。
 - 檔案視窗實際素材測試：[file_dialogs_test.go](workspace/app/internal/hd/file_dialogs_test.go)，核對 243 筆完整來源、整框與區外、色盤及真實素材故障。
 - 檔案視窗獨立 Go 收據核對：[files.go](workspace/app/cmd/receipt-check/files.go)，`receipt-check -file-reference <素材根> -original <原版目錄>`；重建完整來源與動態文字，不引用產品呈現器。

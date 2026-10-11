@@ -1,0 +1,131 @@
+--- a/internal/dos/dos.go
++++ b/internal/dos/dos.go
+@@ -21,34 +21,20 @@
+ 	"github.com/wicanr2/dosgolem/internal/machine"
+ )
+ 
+-// Time 是回給 `int 21h AH=2Ch` 的時刻。
+-//
+-// **固定值。** 時間會餵進亂數種子，浮動的話同一組按鍵每次跑到不同畫面
+-// （`rich2/CLAUDE.md` §8：截圖驗收要帶固定 seed）。
+-//
+-// **預設全 0，這是刻意與原版那邊的固定種子版對齊的。**
+-// `rich2/tools/patch_seed.py` 把 `TIMER` 內部的 `mov ah,2Ch / int 21h`
+-// 換成 `xor cx,cx / xor dx,dx`；我們這邊不改 binary，讓 `AH=2Ch` 直接
+-// 回 CX=DX=0，效果相同。兩邊的 `RANDOMIZE TIMER` 因此拿到同一個種子，
+-// 逐點對拍才有意義（`docs/spec/001` MVP-B）。
++// Time 是 DOS AH=2Ch 的固定初始時刻。運行中的時間另由 BIOS 計數推進。
++// 固定初始值及相同輸入可重播；不使用主機 wall-clock。
+ type Time struct{ Hour, Min, Sec, Hundredth uint8 }
+ 
+-// clock 是 `AH=2Ch` 回報的時刻：Now 當基準，再加上 PIT tick 推出來的時間。
+-//
+-// ⚠ **時鐘不能是固定值。** 第一版 `AH=2Ch` 直接回 `Now`，於是任何
+-// 「等 N 個百分之一秒」的迴圈都轉不出來——智冠《三國演義》的識別畫面
+-// 就卡在這裡，六百一十二萬次呼叫問同一個時刻。從外面看是「程式還活著」，
+-// 與「在算很久」分不開。
+-//
+-// 推進的依據是 **PIT tick 不是牆上的時間**：時鐘掛在指令數上，
+-// 同樣的輸入永遠得到同樣的時刻，對拍才是決定性的
+-// （與 `machine.tick` 的模型一致）。18.2 Hz ＝ 一個 tick 約 5.4925 個
+-// 百分之一秒。
++// clock 與 INT1A AH=00 共用 BDA 0040:006C 的 BIOS 時間計數。
++// PIT raw IRQ 次數會隨程式重設分頻而改變，不能當成固定 18.2 Hz。
++// 平台參考：DOSBox Staging src/dos/dos.cpp 的 AH=2Ch → INT1A 路徑。
++// 換算保留既有 5493/1000 的整數近似，不宣稱逐週期實機時序。
+ func (d *DOS) clock() Time {
+ 	base := (uint64(d.Now.Hour)*3600+uint64(d.Now.Min)*60+uint64(d.Now.Sec))*100 +
+ 		uint64(d.Now.Hundredth)
+-	// 5493/1000 ≈ 100/18.2，用整數算避免浮點進到決定性的路徑上。
+-	total := (base + d.M.Ticks*5493/1000) % (24 * 3600 * 100)
++	const at = 0x0040*16 + 0x6C
++	ticks := uint64(d.M.Read16(at)) | uint64(d.M.Read16(at+2))<<16
++	total := (base + ticks*5493/1000) % (24 * 3600 * 100)
+ 	return Time{
+ 		Hour:      uint8(total / 360000),
+ 		Min:       uint8(total / 6000 % 60),
+--- /dev/null
++++ b/internal/dos/system_clock_test.go
+@@ -0,0 +1,82 @@
++package dos
++
++import (
++	"bytes"
++	"testing"
++
++	"github.com/wicanr2/dosgolem/internal/cpu"
++)
++
++// #40：DOS 系統時間與 INT1A 共用 BIOS 計數；raw PIT IRQ 不是系統時鐘。
++func TestDOSSystemClockUsesBIOSTicks(t *testing.T) {
++	for _, rawIRQs := range []uint64{0, 18, 7200, 100000} {
++		m, d := newTest(t)
++		m.Ticks = rawIRQs
++		m.Write16(0x46c, 18)
++		if got := d.clock(); got != (Time{Sec: 0, Hundredth: 98}) {
++			t.Errorf("raw IRQ=%d，BIOS=18：時間=%+v，預期 00:00:00.98", rawIRQs, got)
++		}
++		m.Write16(0x46c, 182)
++		if got := d.clock(); got != (Time{Sec: 9, Hundredth: 99}) {
++			t.Errorf("BIOS=182：時間=%+v，預期 00:00:09.99", got)
++		}
++	}
++}
++
++func TestDOSSystemClockInt1ASetAndTimeRegisters(t *testing.T) {
++	m, d := newTest(t)
++	m.Ticks = 700000
++	m.CPU.R[cpu.CX], m.CPU.R[cpu.DX] = 1, 6464 // 72000 BIOS ticks
++	call(m, d, 0x1a, 0x0100)
++	call(m, d, 0x21, 0x2c00)
++	if m.CPU.R[cpu.CX] != 0x0105 || m.CPU.R[cpu.DX] != 0x3660 {
++		t.Fatalf("DOS 時間 CX=%04x DX=%04x，預期 01:05:54.96", m.CPU.R[cpu.CX], m.CPU.R[cpu.DX])
++	}
++	call(m, d, 0x1a, 0)
++	if m.CPU.R[cpu.CX] != 1 || m.CPU.R[cpu.DX] != 6464 {
++		t.Fatal("DOS 讀時鐘不得修改 BIOS 計數")
++	}
++}
++
++func TestDOSSystemClockInitialOffsetAndDayRemainder(t *testing.T) {
++	m, d := newTest(t)
++	d.Now = Time{Hour: 23, Min: 59, Sec: 59, Hundredth: 99}
++	if got := d.clock(); got != d.Now {
++		t.Fatalf("初始時間遺失：%+v", got)
++	}
++	m.Ticks = 900000
++	m.Write16(0x46c, 1)
++	if got := d.clock(); got != (Time{Hundredth: 4}) {
++		t.Fatalf("跨日餘數=%+v，預期 00:00:00.04", got)
++	}
++}
++
++func TestDOSSystemClockMachineAndDOSState(t *testing.T) {
++	m, d := newTest(t)
++	m.Write16(0x46c, 1000)
++	m.Ticks = 90000
++	d.Now = Time{Hour: 2, Min: 3, Sec: 4, Hundredth: 5}
++	want := Time{Hour: 2, Min: 3, Sec: 58, Hundredth: 98}
++	if got := d.clock(); got != want {
++		t.Fatalf("快照前時間=%+v，預期 %+v", got, want)
++	}
++	var machineState, dosState bytes.Buffer
++	if err := m.SaveState(&machineState); err != nil {
++		t.Fatal(err)
++	}
++	if err := d.SaveState(&dosState); err != nil {
++		t.Fatal(err)
++	}
++	m.Write16(0x46c, 0)
++	m.Ticks = 0
++	d.Now = Time{}
++	if err := m.LoadState(&machineState); err != nil {
++		t.Fatal(err)
++	}
++	if err := d.LoadState(&dosState); err != nil {
++		t.Fatal(err)
++	}
++	if got := d.clock(); got != want {
++		t.Fatalf("快照後時間=%+v，預期 %+v", got, want)
++	}
++}
