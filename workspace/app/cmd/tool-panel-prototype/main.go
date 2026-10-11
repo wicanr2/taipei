@@ -1,4 +1,4 @@
-// #31：五工具子選單的離線 B 素材與 Noto 組合，不執行 DOS。
+// #31／#37：已審查來源的離線 B 面板與 Noto 組合，不執行 DOS。
 package main
 
 import (
@@ -85,12 +85,20 @@ func main() {
 	out := flag.String("out", "", "本機完整面板輸出")
 	layoutSHA := flag.String("layout-sha", "", "已審查版面 SHA-256")
 	sourcesSHA := flag.String("sources-sha", "", "已審查來源 SHA-256")
+	family := flag.String("family", "tool", "tool 五工具，city 六功能選單")
+	stateCount := flag.Int("state-count", 18, "已審查完整來源狀態數")
 	flag.Parse()
 	if *dir == "" || *out == "" || len(*layoutSHA) != 64 || len(*sourcesSHA) != 64 {
 		panic("需指定素材、輸出及兩項已審查 SHA-256")
 	}
-	layoutRaw := read(filepath.Join(*dir, "tool-menu-layout-v1.json"))
-	sourceRaw := read(filepath.Join(*dir, "tool-menu-sources-v1.json"))
+	prefix, sceneCount := "tool-menu", 5
+	if *family == "city" && *stateCount > 0 {
+		prefix, sceneCount = "city-menu", 6
+	} else if *family != "tool" || *stateCount != 18 {
+		panic("面板 family 或來源數不符")
+	}
+	layoutRaw := read(filepath.Join(*dir, prefix+"-layout-v1.json"))
+	sourceRaw := read(filepath.Join(*dir, prefix+"-sources-v1.json"))
 	if hash(layoutRaw) != *layoutSHA || hash(sourceRaw) != *sourcesSHA {
 		panic("來源或版面失配")
 	}
@@ -107,7 +115,7 @@ func main() {
 	}
 	must(json.Unmarshal(layoutRaw, &layout))
 	must(json.Unmarshal(sourceRaw, &catalog))
-	if layout.Schema != 1 || len(layout.Scenes) != 5 || catalog.Schema != 1 || len(catalog.States) != 18 || catalog.LayoutSHA != *layoutSHA || catalog.ROMSHA != "0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29" {
+	if layout.Schema != 1 || len(layout.Scenes) != sceneCount || catalog.Schema != 1 || len(catalog.States) != *stateCount || catalog.LayoutSHA != *layoutSHA || catalog.ROMSHA != "0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29" {
 		panic("來源形狀失配")
 	}
 	raw := read(filepath.Join(*dir, "fonts", "NotoSansCJKtc-Regular.otf"))
@@ -116,9 +124,16 @@ func main() {
 	}
 	parsed, e := opentype.Parse(raw)
 	must(e)
-	face, e := opentype.NewFace(parsed, &opentype.FaceOptions{Size: 52, DPI: 72, Hinting: font.HintingNone})
-	must(e)
-	defer face.Close()
+	faces := map[float64]font.Face{}
+	for _, size := range []float64{52, 28} {
+		if size == 28 && *family != "city" {
+			continue
+		}
+		face, e := opentype.NewFace(parsed, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingNone})
+		must(e)
+		defer face.Close()
+		faces[size] = face
+	}
 	arts := map[string]image.Image{}
 	for name, want := range layout.Arts {
 		if filepath.Base(name) != name {
@@ -150,7 +165,8 @@ func main() {
 			scale(im, rect(b.Rect), arts[b.Art], 8)
 		}
 		for ci, c := range s.Cells {
-			if c.Size != 52 {
+			face, ok := faces[c.Size]
+			if !ok {
 				panic("字型大小失配")
 			}
 			if strings.TrimSpace(c.Text) == "" {
@@ -169,6 +185,9 @@ func main() {
 			}
 			mask := image.NewRGBA(image.Rect(0, 0, 64, 64))
 			dot := fixed.P(4, 50)
+			if c.Size == 28 {
+				dot = fixed.P(0, 26)
+			}
 			bounds, _ := font.BoundString(face, c.Text)
 			placed := bounds.Add(dot)
 			declared := image.Rect(placed.Min.X.Floor(), placed.Min.Y.Floor(), placed.Max.X.Ceil(), placed.Max.Y.Ceil())
@@ -199,8 +218,8 @@ func main() {
 	must(e)
 	b = append(b, '\n')
 	must(os.WriteFile(filepath.Join(*out, "manifest.json"), b, 0600))
-	v, e := json.MarshalIndent(map[string]any{"font_sha256": fontSHA, "states": 18, "all_ink_contained": true, "samples": inks}, "", "  ")
+	v, e := json.MarshalIndent(map[string]any{"font_sha256": fontSHA, "states": *stateCount, "all_ink_contained": true, "samples": inks}, "", "  ")
 	must(e)
 	must(os.WriteFile(filepath.Join(*out, "ink-verification.json"), append(v, '\n'), 0600))
-	fmt.Printf("十八個子選單面板；%d 項實際墨跡；manifest SHA-256 %s\n", len(inks), hash(b))
+	fmt.Printf("%s %d 個完整面板；%d 項實際墨跡；manifest SHA-256 %s\n", *family, *stateCount, len(inks), hash(b))
 }

@@ -18,6 +18,7 @@
 | 城市介面 | [#29](https://github.com/wicanr2/taipei/issues/29) | 工具圖示、外框與選取狀態逐像素核對，原版命中範圍不變 | 十四個圖示內部不代表完整介面 |
 | 全部地圖 | [#30](https://github.com/wicanr2/taipei/issues/30) | 地景、道路、電線、建物、設施與災害的來源、遮擋及相位 | 未接入或未知回退仍列未完成 |
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
+| 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；接入後正常 F12、取消、存退讀與狀態對照 | 目前僅來源及原型 READY，產品尚未接入 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 
 目前已驗證正常 GUI 冷啟動、新遊戲、電線施工、檔名輸入及退格、原版實際存檔、
@@ -52,3 +53,5 @@ Windows 研究 binary 已在 Wine 從真實冷啟動到城市畫面，正常鍵�
 [#31](https://github.com/wicanr2/taipei/issues/31) 的[五工具子選單](spec/021-tool-submenus.md) 限十八選取狀態達 CONFORMED。101 份原版來源、186 個來源單點破壞、462 項 Noto 實際墨跡及二十檔乾淨重生通過。82 份正常 HD 收據驗完整面板、原版循環／無效鍵／確認返回及五場景 F12；另 37 份施工存退讀與兩次原版退出通過，共 119 份。大小面板各七項同步更新雜湊與原版 PNG 的竄改，Python 與 Go 均拒絕；真實資源 Go 全套無跳過，存檔及冷讀施工格維持基準。
 
 本批相同唯一正常輸入兩側各 4,080,000,000 步，依 [#36](https://github.com/wicanr2/taipei/issues/36) 預登記每 24,000,000 步抽樣 HD，共 170 次，含十八工具狀態共 99 次、說明一次及城市各層 33 次。原版 RAM、CPU、原畫面、色盤、埠、OPL、讀鍵及檔案操作相同；這是明示抽樣，不代表逐幀對拍。完整存退讀外層預算依 [#35](https://github.com/wicanr2/taipei/issues/35) 改為 600 秒，同 binary／image 乾淨重跑通過，逾時前件保留。Linux、Windows、macOS 兩架構編譯與結構通過；模態外仍保持原版四倍像素，其他視窗／圖表／圖片／場景／動畫、真機及正式封包未完成。#31 與 HD 母項保持開啟。
+
+[#37](https://github.com/wicanr2/taipei/issues/37) 的[城市六功能選單](spec/022-city-function-menus.md) 已完成來源及離線原型，規格為 READY。137 份正常原子收據的 PNG／色號／色盤及原版四倍呈現通過 Go 核對；二十九種完整來源由 ROM 邊框及字模重建，246 個來源單點破壞不符。八十二次原版讀鍵及 release、上下循環、左右跨選單與邊界、六次 Escape 復原通過。599 項 Noto 實際墨跡位於安全矩形且互不重疊，三十一檔乾淨重生相同，原五工具二十檔亦不變。這批未改產品 renderer，HD 正式接入、F12、竄改負對照、狀態及存退讀重驗仍待執行，未達 CONFORMED；母項保持開啟。

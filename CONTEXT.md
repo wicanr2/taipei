@@ -33,10 +33,17 @@
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
 | HD 接入 | 已接入 B 地景、六 Noto 標題、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6，以及底部費用、年月與資金。最新 119 份正常收據、十八種選取、五場景 F12、十四項有效負對照、施工存退讀及兩次退出通過；兩側各 40.8 億步、170 次明示 HD 抽樣原版狀態相同 | [子選單契約](docs/spec/021-tool-submenus.md)、[底部契約](docs/spec/020-city-footer.md)；右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
+| 城市六功能選單 | 原版完整來源與 Noto 原型已 READY：六入口、二十九選取、137 份正常來源、599 項實際墨跡及三十一檔重生通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；產品尚未接入，正式 HD 驗證仍待執行 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- 城市六功能入口研究：[#37](https://github.com/wicanr2/taipei/issues/37)，[city_menu_playtest.sh](workspace/tools/city_menu_playtest.sh)、[city_menu_playtest.py](workspace/tools/city_menu_playtest.py)。正常冷啟動 F1–F6、全部二十九選取、邊界與取消通過，收據在 `workspace/runs/city-menus-native/` 及 `city-menus-native-extra/`；來源已 READY，產品未接入，原版退出另驗。
+- 城市功能完整來源：[city_menu_catalog.py](workspace/tools/city_menu_catalog.py)，重建完整交錯邊框、背景及 ROM56／57／58 原字模；只接受正常完整矩形，原文與衍生 layout 留在本機，不由未知字形猜補。
+- 城市功能原版控制核對：[city_menu_source_check.py](workspace/tools/city_menu_source_check.py)，固定完整來源 SHA-256，驗二十九種選取、上下循環、左右跨選單及循環邊界、六入口 Escape 復原與八十二次讀鍵／release。
+- 城市功能離線組合沿用 [tool-panel-prototype](workspace/app/cmd/tool-panel-prototype/main.go)，`-family city -state-count <已審查數量>` 指定城市來源；既有預設仍為五工具十八狀態。僅生成本機比較原型，來源與實際墨跡審查前不接入產品。
+- 城市六功能選單契約：[022-city-function-menus.md](docs/spec/022-city-function-menus.md)，READY；137 份來源、246 個來源破壞、599 項實際墨跡、三十一檔重生及原版控制核對通過。原文及固定素材在本機 `workspace/prototypes/hd-style/city-menus-v1/`，來源、控制、原型與工具雜湊在 `workspace/runs/city-menu-source/`，收尾檢查為該目錄 `final-hygiene.json`。尚未接入或驗證正式 HD。
 
 - 呈現狀態稽核抽樣：[#36](https://github.com/wicanr2/taipei/issues/36)，[presentation-audit](workspace/app/cmd/presentation-audit/main.go) 的 `-render-interval-steps` 預設仍為 400,000；本批預登記 24,000,000，完整執行兩側原版步數並要求十八工具狀態，輸出抽樣數與階段時間。來源保存在 `workspace/runs/tool-panels-state-provenance.json`，先前逾時來源另存 `tool-panels-state-provenance-before-sampling.json`。
 - 五工具同狀態結果：`workspace/runs/tool-panels-state-audit.json`，兩側各 4,080,000,000 步、170 次抽樣，十八工具狀態共 99 次及既有呈現層全部涵蓋，原版狀態相同；SHA-256 `53700f59970623a9e83a648b7b4b1eeb080126c6d8b45eccff7e0df4cf9394a1`。執行命令、輸入、來源與工具雜湊見 provenance。原始檔、RAR、四平台產品雜湊與架構核對見 `workspace/runs/tool-panels-input-hygiene.json`；入口、連結、格式、擁有權與容器內檔案檢查見 `tool-panels-final-hygiene.json`。
