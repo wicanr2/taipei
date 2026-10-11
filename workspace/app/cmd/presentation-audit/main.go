@@ -33,6 +33,7 @@ func main() {
 	out := flag.String("out", "", "狀態對照輸出")
 	requireBudget := flag.Bool("require-budget", false, "要求重播實際經過年度視窗回退")
 	requireBudgetHD := flag.Bool("require-budget-hd", false, "要求完整預算 HD，並逐抽樣點比對原版狀態")
+	requireInfrastructure := flag.Bool("require-infrastructure", false, "要求道路與電線 HD，逐抽樣點比對原版狀態")
 	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	requireIcons := flag.Bool("require-icons", false, "要求重播實際經過十四個工具圖示覆繪")
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
@@ -44,6 +45,7 @@ func main() {
 	requireFiles := flag.Bool("require-file-dialogs", false, "要求實際經過檔案視窗與離開提示兩家族")
 	renderInterval := flag.Uint64("render-interval-steps", 400000, "HD 抽樣間距，400000 的正整數倍，最多 24000000")
 	flag.Parse()
+	sampleStates := *requireBudgetHD || *requireInfrastructure
 	if *renderInterval == 0 || *renderInterval%400000 != 0 || *renderInterval > 24000000 {
 		panic("HD 抽樣間距須為 400000 的正整數倍，最多 24000000")
 	}
@@ -94,6 +96,8 @@ func main() {
 	cityStates := map[string]uint64{}
 	fileFamilies := map[string]uint64{}
 	budgetRows := map[int]uint64{}
+	infrastructureImages := map[int]uint64{}
+	var infrastructureFrames uint64
 	var checkpoints []string
 	durations := map[string]float64{}
 	var observedFrames uint64
@@ -172,6 +176,12 @@ func main() {
 					observedFrames++
 					_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
 					reasons[stats.Reason]++
+					if stats.Infrastructure.Painted > 0 {
+						infrastructureFrames++
+						for index, count := range stats.Infrastructure.Images {
+							infrastructureImages[index] += uint64(count)
+						}
+					}
 					if stats.Budget {
 						budgetRows[stats.BudgetSelection]++
 					}
@@ -206,7 +216,7 @@ func main() {
 						painted++
 					}
 				}
-				if *requireBudgetHD {
+				if sampleStates {
 					stateSHA := hash(snapshot())
 					if !present {
 						checkpoints = append(checkpoints, stateSHA)
@@ -221,7 +231,7 @@ func main() {
 		if present {
 			draws = camera.Draws
 		}
-		if *requireFiles || *requireBudgetHD {
+		if *requireFiles || sampleStates {
 			normalize := func(v any) string {
 				raw, err := json.Marshal(v)
 				must(err)
@@ -235,7 +245,7 @@ func main() {
 				panic("檔案視窗重播未到達正常 GUI 收據的原版狀態")
 			}
 		}
-		if *requireBudgetHD && point != len(checkpoints) {
+		if sampleStates && point != len(checkpoints) {
 			panic("兩側原版狀態抽樣點數不符")
 		}
 		state := snapshot()
@@ -256,6 +266,16 @@ func main() {
 	}
 	if *requireBudgetHD && (reasons["matched-budget"] == 0 || len(checkpoints) == 0 || len(budgetRows) != 5) {
 		panic("重播缺少完整預算 HD 五列或原版狀態抽樣")
+	}
+	if *requireInfrastructure {
+		road, power := false, false
+		for index := range infrastructureImages {
+			road = road || (index >= 15 && index <= 29)
+			power = power || (index >= 45 && index <= 55)
+		}
+		if !road || !power || infrastructureFrames == 0 || len(checkpoints) == 0 {
+			panic("重播缺少正常道路／電線 HD 或逐點原版狀態抽樣")
+		}
 	}
 	if *requireFont && fontFrames == 0 {
 		panic("重播未實際經過 Noto 標題覆繪")
@@ -297,9 +317,11 @@ func main() {
 		"city_panel_states":                          cityStates,
 		"file_dialog_families":                       fileFamilies,
 		"budget_hd_rows":                             budgetRows,
+		"infrastructure_images":                      infrastructureImages,
+		"infrastructure_frames":                      infrastructureFrames,
 		"sampled_original_state_sha256":              checkpoints,
-		"sampled_original_states_equal":              *requireBudgetHD,
-		"normal_gui_frame_palette_reads_files_equal": *requireFiles || *requireBudgetHD,
+		"sampled_original_states_equal":              sampleStates,
+		"normal_gui_frame_palette_reads_files_equal": *requireFiles || sampleStates,
 		"render_interval_steps":                      *renderInterval,
 		"observed_render_frames":                     observedFrames,
 		"phase_elapsed_seconds":                      durations,

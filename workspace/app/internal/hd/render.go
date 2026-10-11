@@ -24,24 +24,25 @@ var materials = map[string]string{
 }
 
 type Stats struct {
-	Budget                     bool       `json:"budget"`
-	BudgetText                 [11]string `json:"budget_text"`
-	BudgetColors               [11]byte   `json:"budget_colors"`
-	BudgetSelection            int        `json:"budget_selection"`
-	BudgetReason               string     `json:"budget_reason"`
-	FileDialog                 string     `json:"file_dialog"`
-	FileText                   [8]string  `json:"file_text"`
-	FileColors                 [8]byte    `json:"file_colors"`
-	FileReason                 string     `json:"file_reason"`
-	FooterMask                 uint8      `json:"footer_mask"`
-	FooterText                 [4]string  `json:"footer_text"`
-	FooterReason               string     `json:"footer_reason"`
-	ChromeParts                int        `json:"chrome_parts"`
-	ChromeMask                 uint8      `json:"chrome_mask"`
-	ChromeRings                int        `json:"chrome_rings"`
-	ChromeRingMask             uint16     `json:"chrome_ring_mask"`
-	ChromeReason               string     `json:"chrome_reason"`
-	Reason                     string     `json:"reason"`
+	Infrastructure             infrastructureStats `json:"infrastructure"`
+	Budget                     bool                `json:"budget"`
+	BudgetText                 [11]string          `json:"budget_text"`
+	BudgetColors               [11]byte            `json:"budget_colors"`
+	BudgetSelection            int                 `json:"budget_selection"`
+	BudgetReason               string              `json:"budget_reason"`
+	FileDialog                 string              `json:"file_dialog"`
+	FileText                   [8]string           `json:"file_text"`
+	FileColors                 [8]byte             `json:"file_colors"`
+	FileReason                 string              `json:"file_reason"`
+	FooterMask                 uint8               `json:"footer_mask"`
+	FooterText                 [4]string           `json:"footer_text"`
+	FooterReason               string              `json:"footer_reason"`
+	ChromeParts                int                 `json:"chrome_parts"`
+	ChromeMask                 uint8               `json:"chrome_mask"`
+	ChromeRings                int                 `json:"chrome_rings"`
+	ChromeRingMask             uint16              `json:"chrome_ring_mask"`
+	ChromeReason               string              `json:"chrome_reason"`
+	Reason                     string              `json:"reason"`
 	Matched, Painted, Fallback int
 	FontLabels                 int    `json:"font_labels"`
 	FontReason                 string `json:"font_reason"`
@@ -64,20 +65,21 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
-	budget     *budgetPanel
-	files      *fileDialogs
-	footer     *cityFooter
-	chrome     *cityChrome
-	frame      *image.RGBA
-	sources    map[string]bool
-	shades     map[byte][]byte
-	reason     string
-	menu       *menuFont
-	icons      *toolIcons
-	dialog     *newGameDialog
-	panels     *panelSet
-	toolPanels *panelSet
-	cityPanels *panelSet
+	infrastructure *infrastructureSet
+	budget         *budgetPanel
+	files          *fileDialogs
+	footer         *cityFooter
+	chrome         *cityChrome
+	frame          *image.RGBA
+	sources        map[string]bool
+	shades         map[byte][]byte
+	reason         string
+	menu           *menuFont
+	icons          *toolIcons
+	dialog         *newGameDialog
+	panels         *panelSet
+	toolPanels     *panelSet
+	cityPanels     *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -123,6 +125,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.footer = loadCityFooter(rom, dir)
 	r.files = loadFileDialogs(rom, dir)
 	r.budget = loadBudgetPanel(rom, dir)
+	r.infrastructure = loadInfrastructure(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -287,6 +290,27 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 			var tile [81]byte
 			for row := 0; row < 9; row++ {
 				copy(tile[row*9:(row+1)*9], px[(y+row)*320+x:(y+row)*320+x+9])
+			}
+			if candidate := r.infrastructure.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.Infrastructure.Matched++
+				reason := r.infrastructure.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9, origin)
+				if stats.Infrastructure.Reasons == nil {
+					stats.Infrastructure.Reasons = map[string]int{}
+				}
+				stats.Infrastructure.Reasons[reason]++
+				if reason == "matched-infrastructure" {
+					stats.Painted++
+					stats.Fallback--
+					stats.Infrastructure.Painted++
+					if stats.Infrastructure.Images == nil {
+						stats.Infrastructure.Images = map[int]int{}
+					}
+					stats.Infrastructure.Images[candidate.image]++
+				} else {
+					stats.Infrastructure.Fallback++
+				}
+				continue
 			}
 			if !r.sources[string(tile[:])] {
 				continue

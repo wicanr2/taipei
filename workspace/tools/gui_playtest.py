@@ -54,8 +54,9 @@ def capture(label):
             (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
-    if label in ('pause','reload-pause') and os.environ.get('TAIPEI_TEST_BUDGET')=='1':
-        from budget_gui import base
+    if label in ('pause','reload-pause') and (os.environ.get('TAIPEI_TEST_BUDGET')=='1' or os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1'):
+        os.environ.setdefault('TAIPEI_CITY_MENU_RUN',os.environ['TAIPEI_GUI_RUN'])
+        import city_menu_playtest as base
         base.out=out
         base.action(label,'0',acknowledge=True)
         capture(label)
@@ -174,6 +175,13 @@ assert built_tile!=base_tile, '原版施工未改變目標圖塊'
 assert len(set(built_tile))>1, '施工結果只有空白色塊'
 built_money=footer_decode((out/'uncover-power-frame-index.bin').read_bytes(),footer_refs,1)[2]
 assert built_money.strip()=='79980','原版施工資金不符已驗證成本'
+construction_origin=status()['map_origin']
+construction_world=(construction_origin['X']+25,construction_origin['Y']+1)
+if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1':
+    from infrastructure_gui import exercise as infrastructure_exercise
+    infrastructure_exercise(out)
+    capture('infrastructure-before-save')
+    built_money=footer_decode((out/'infrastructure-before-save-frame-index.bin').read_bytes(),footer_refs,1)[2]
 for label,key in [('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
                   ('backspace','BackSpace'),('rename','type:4'),('save-accept','space')]:
     action(label,key)
@@ -209,17 +217,27 @@ with (out/'app.log').open('w') as log:
             if label=='load-dialog':file_f12_roundtrip('load-file','file-browser')
         assert any(f.get('Op')=='read' and f.get('Name','').upper()=='ROUND4.SAV' for f in status().get('file_ops',[])), '未見原版讀取存檔'
         assert hashlib.sha256(save.read_bytes()).hexdigest()==saved_sha, '讀檔改寫了來源存檔'
-        loaded_tile=tile(out/'load-accept-frame-index.bin',cell)
+        loaded_cell=cell
+        if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1':
+            loaded_origin=status()['map_origin']
+            assert loaded_origin['Valid']
+            col,row=construction_world[0]-loaded_origin['X'],construction_world[1]-loaded_origin['Y']
+            assert 0<=col<29 and 0<=row<15,'原施工世界格不在冷讀視窗'
+            loaded_cell=(5+col*9,34+row*9)
+        loaded_tile=tile(out/'load-accept-frame-index.bin',loaded_cell)
         assert loaded_tile==built_tile, '冷啟動讀檔未恢復施工圖塊'
         loaded_money=footer_decode((out/'load-accept-frame-index.bin').read_bytes(),footer_refs,1)[2]
         assert loaded_money==built_money,'冷啟動讀檔未恢復原版資金'
+        if os.environ.get('TAIPEI_TEST_INFRASTRUCTURE')=='1':
+            action('reload-pause','0')
+            assert status()['hd']['infrastructure']['painted']>=5,'冷讀後道路電線未恢復高清'
         if os.environ.get('TAIPEI_TEST_BUDGET') == '1':
             # 冷讀城市仍會推進；先經原版 0 與讀鍵同步固定正常驗收條件。
             action('reload-pause','0')
             exercise(out,adjust=False)
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
-        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))
+        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'loaded_native_xy':loaded_cell,'world_xy':construction_world,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))
         print('GUI cold construction / save / native exit / cold reload passed',flush=True)
     finally:
         if p.poll() is None:

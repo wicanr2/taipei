@@ -14,6 +14,7 @@ from hd_chrome_check import audit_chrome
 from hd_footer_check import audit_footer
 from hd_file_dialogs_check import audit_file
 from hd_budget_check import audit_budget
+from hd_infrastructure_check import audit_infrastructure
 
 ORDER=['map-focus','right-10','right-20','right-30','right-40',
        'down-6','down-12','down-18','left-10','left-20','left-30','left-40',
@@ -60,11 +61,12 @@ def audit_bundle(path,sources):
     audit_footer(s,frame,rgba)
     origin=s.get('map_origin')
     active=scene(s,frame) and s['hd_enabled'] and (origin is None or origin['Valid'])
+    infrastructure=audit_infrastructure(s,frame,rgba)
     eligible=0;fallback=[];grid=[]
     for y in range(34,169,9):
         for x in range(5,266,9):
             tile=cell(frame,x,y);grid.append(tile)
-            if active and tile in sources and all(i in MATERIAL for i in tile):eligible+=1
+            if (x,y) in infrastructure or (active and tile in sources and all(i in MATERIAL for i in tile)):eligible+=1
             else:
                 fallback.append([x,y])
                 for row in range(9):

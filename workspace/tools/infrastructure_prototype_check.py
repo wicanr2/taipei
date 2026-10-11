@@ -11,7 +11,6 @@ from fractions import Fraction
 from pathlib import Path
 
 from hd_file_dialogs_check import rgba
-from hd_chrome_negative import png
 
 ROM_SHA = '0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29'
 EXPECTED = list(range(15,30))+list(range(43,56))+list(range(60,75))
@@ -216,6 +215,7 @@ def check(args):
 
 
 def negatives(args):
+    from hd_chrome_negative import png
     # 更新自報雜湊後仍須被拒絕，避免只測檔案完整性。
     original = args.prototype
     results = []
