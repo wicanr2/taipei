@@ -32,6 +32,7 @@ func main() {
 	receipt := flag.String("receipt", "", "正常 GUI 的原子收據")
 	out := flag.String("out", "", "狀態對照輸出")
 	requireBudget := flag.Bool("require-budget", false, "要求重播實際經過年度視窗回退")
+	requireBudgetHD := flag.Bool("require-budget-hd", false, "要求完整預算 HD，並逐抽樣點比對原版狀態")
 	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	requireIcons := flag.Bool("require-icons", false, "要求重播實際經過十四個工具圖示覆繪")
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
@@ -92,6 +93,8 @@ func main() {
 	toolStates := map[string]uint64{}
 	cityStates := map[string]uint64{}
 	fileFamilies := map[string]uint64{}
+	budgetRows := map[int]uint64{}
+	var checkpoints []string
 	durations := map[string]float64{}
 	var observedFrames uint64
 	run := func(present bool) []byte {
@@ -124,6 +127,28 @@ func main() {
 			renderer = hd.New(rom, *materials)
 		}
 		next := 0
+		point := 0
+		snapshot := func() []byte {
+			saveHashes := map[string]string{}
+			entries, err := os.ReadDir(scratch)
+			must(err)
+			for _, entry := range entries {
+				if !entry.IsDir() && strings.EqualFold(filepath.Ext(entry.Name()), ".sav") {
+					data, err := os.ReadFile(filepath.Join(scratch, entry.Name()))
+					must(err)
+					saveHashes[entry.Name()] = hash(data)
+				}
+			}
+			state, err := json.Marshal(map[string]any{
+				"memory_sha256": hash(m.Mem), "frame_sha256": hash(m.Indexed()), "palette": m.Palette(),
+				"registers": m.CPU.R, "segments": m.CPU.Seg, "ip": m.CPU.IP, "flags": m.CPU.Flags,
+				"steps": m.Steps, "ticks": m.Ticks, "ports": m.Ports, "opl_regs": m.OPLRegs(0),
+				"key_reads": d.KeyReads, "dos_blocked": d.Blocked, "dos_exited": d.Exited,
+				"file_ops": d.FileOps, "writes": d.Wrote, "save_sha256": saveHashes,
+			})
+			must(err)
+			return state
+		}
 		refresh := *renderInterval
 		progress := uint64(1000000000)
 		for m.Steps < capture.Steps {
@@ -142,39 +167,53 @@ func main() {
 				fmt.Fprintf(os.Stderr, "%s progress: steps=%d/%d elapsed_seconds=%.1f\n", phase, m.Steps, capture.Steps, time.Since(started).Seconds())
 				progress += 1000000000
 			}
-			if present && m.Steps >= refresh {
-				observedFrames++
-				_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
-				reasons[stats.Reason]++
-				if stats.FileDialog != "" {
-					fileFamilies[stats.FileDialog]++
-				}
-				if stats.Panel != "" {
-					states := panelStates
-					if strings.HasPrefix(stats.Panel, "tool-") {
-						states = toolStates
-					} else if strings.HasPrefix(stats.Panel, "city-f") {
-						states = cityStates
+			if m.Steps >= refresh {
+				if present {
+					observedFrames++
+					_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
+					reasons[stats.Reason]++
+					if stats.Budget {
+						budgetRows[stats.BudgetSelection]++
 					}
-					states[fmt.Sprintf("%s/%d", stats.Panel, stats.PanelSelection)]++
+					if stats.FileDialog != "" {
+						fileFamilies[stats.FileDialog]++
+					}
+					if stats.Panel != "" {
+						states := panelStates
+						if strings.HasPrefix(stats.Panel, "tool-") {
+							states = toolStates
+						} else if strings.HasPrefix(stats.Panel, "city-f") {
+							states = cityStates
+						}
+						states[fmt.Sprintf("%s/%d", stats.Panel, stats.PanelSelection)]++
+					}
+					if stats.Dialog == "new-game" {
+						dialogFrames++
+					}
+					if stats.FontLabels > 0 {
+						fontFrames++
+					}
+					if stats.FooterMask == 3 {
+						footerFrames++
+					}
+					if stats.UIIcons == 14 {
+						iconFrames++
+					}
+					if stats.ChromeParts == 6 && stats.ChromeRings == 14 {
+						chromeFrames++
+					}
+					if stats.Painted > 0 {
+						painted++
+					}
 				}
-				if stats.Dialog == "new-game" {
-					dialogFrames++
-				}
-				if stats.FontLabels > 0 {
-					fontFrames++
-				}
-				if stats.FooterMask == 3 {
-					footerFrames++
-				}
-				if stats.UIIcons == 14 {
-					iconFrames++
-				}
-				if stats.ChromeParts == 6 && stats.ChromeRings == 14 {
-					chromeFrames++
-				}
-				if stats.Painted > 0 {
-					painted++
+				if *requireBudgetHD {
+					stateSHA := hash(snapshot())
+					if !present {
+						checkpoints = append(checkpoints, stateSHA)
+					} else if point >= len(checkpoints) || checkpoints[point] != stateSHA {
+						panic(fmt.Sprintf("HD 抽樣點 %d、步數 %d 的原版狀態不符", point, m.Steps))
+					}
+					point++
 				}
 				refresh += *renderInterval
 			}
@@ -182,7 +221,7 @@ func main() {
 		if present {
 			draws = camera.Draws
 		}
-		if *requireFiles {
+		if *requireFiles || *requireBudgetHD {
 			normalize := func(v any) string {
 				raw, err := json.Marshal(v)
 				must(err)
@@ -196,25 +235,10 @@ func main() {
 				panic("檔案視窗重播未到達正常 GUI 收據的原版狀態")
 			}
 		}
-		saveHashes := map[string]string{}
-		entries, err := os.ReadDir(scratch)
-		must(err)
-		for _, entry := range entries {
-			if !entry.IsDir() && strings.EqualFold(filepath.Ext(entry.Name()), ".sav") {
-				raw, err := os.ReadFile(filepath.Join(scratch, entry.Name()))
-				must(err)
-				saveHashes[entry.Name()] = hash(raw)
-			}
+		if *requireBudgetHD && point != len(checkpoints) {
+			panic("兩側原版狀態抽樣點數不符")
 		}
-		state, err := json.Marshal(map[string]any{
-			"memory_sha256": hash(m.Mem), "frame_sha256": hash(m.Indexed()), "palette": m.Palette(),
-			"registers": m.CPU.R, "segments": m.CPU.Seg, "ip": m.CPU.IP, "flags": m.CPU.Flags,
-			"steps": m.Steps, "ticks": m.Ticks, "ports": m.Ports, "opl_regs": m.OPLRegs(0),
-			"key_reads": d.KeyReads, "dos_blocked": d.Blocked, "dos_exited": d.Exited,
-			"file_ops": d.FileOps,
-			"writes":   d.Wrote, "save_sha256": saveHashes,
-		})
-		must(err)
+		state := snapshot()
 		durations[phase] = time.Since(started).Seconds()
 		fmt.Fprintf(os.Stderr, "%s done: steps=%d elapsed_seconds=%.1f\n", phase, m.Steps, durations[phase])
 		return state
@@ -229,6 +253,9 @@ func main() {
 	}
 	if *requireBudget && reasons["budget-window"] == 0 {
 		panic("重播未實際經過年度視窗回退")
+	}
+	if *requireBudgetHD && (reasons["matched-budget"] == 0 || len(checkpoints) == 0 || len(budgetRows) != 5) {
+		panic("重播缺少完整預算 HD 五列或原版狀態抽樣")
 	}
 	if *requireFont && fontFrames == 0 {
 		panic("重播未實際經過 Noto 標題覆繪")
@@ -261,15 +288,18 @@ func main() {
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
 		"hd_reasons": reasons, "font_frames": fontFrames,
-		"icon_frames":          iconFrames,
-		"chrome_frames":        chromeFrames,
-		"footer_frames":        footerFrames,
-		"dialog_frames":        dialogFrames,
-		"panel_states":         panelStates,
-		"tool_panel_states":    toolStates,
-		"city_panel_states":    cityStates,
-		"file_dialog_families": fileFamilies,
-		"normal_gui_frame_palette_reads_files_equal": *requireFiles,
+		"icon_frames":                                iconFrames,
+		"chrome_frames":                              chromeFrames,
+		"footer_frames":                              footerFrames,
+		"dialog_frames":                              dialogFrames,
+		"panel_states":                               panelStates,
+		"tool_panel_states":                          toolStates,
+		"city_panel_states":                          cityStates,
+		"file_dialog_families":                       fileFamilies,
+		"budget_hd_rows":                             budgetRows,
+		"sampled_original_state_sha256":              checkpoints,
+		"sampled_original_states_equal":              *requireBudgetHD,
+		"normal_gui_frame_palette_reads_files_equal": *requireFiles || *requireBudgetHD,
 		"render_interval_steps":                      *renderInterval,
 		"observed_render_frames":                     observedFrames,
 		"phase_elapsed_seconds":                      durations,

@@ -20,7 +20,8 @@
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
 | 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；正常 F12、取消、存退讀與狀態對照 | 022 限六面板二十九選取 CONFORMED；確認後視窗另驗 |
 | 存讀檔與離開提示 | [#38](https://github.com/wicanr2/taipei/issues/38) | 完整來源、正常輸入邊界與選取、F12、施工存退讀、有效負對照及原版狀態 | 023 限兩家族 CONFORMED；外部檔案錯誤與模態外另驗 |
-| 預算與稅率視窗 | [#39](https://github.com/wicanr2/taipei/issues/39) | 完整 ROM2、十一動態欄位、五列選取、原位 Noto 墨跡、正常調整／返回及 HD 狀態對照 | 025 READY；43 份來源、172 單點、十八選取負對照、非零費用及六原型通過；尚未接 HD |
+| 預算與稅率視窗 | [#39](https://github.com/wicanr2/taipei/issues/39) | 完整 ROM2、十一動態欄位、五列選取、Noto 墨跡、正常調整／返回、全新 EXE 設定重讀及 HD 狀態對照 | 025 限完整面板 CONFORMED；116 正常收據、十三有效呈現破壞與 169 點原版狀態通過；極值規則及其他介面另驗 |
+| 預算完整 GUI 工具 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43) | 有界雙冷啟動、冷讀後正常暫停、實際鍵及 release、施工與兩次原版退出 | 同產品及 image 的 `gui-budget-cold-r4/` 通過；部分前件保留，不改原版速度或年度流程 |
 | 普通按鍵驗證同步 | [#41](https://github.com/wicanr2/taipei/issues/41) | 正常入口、原版 Key／word 與 release，片頭特殊入口保留，整批有界 | 九鍵及六個普通讀取已正常通過；只驗工具，不代表新的產品 HD |
 | DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |

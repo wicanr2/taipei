@@ -1,6 +1,6 @@
 # 模擬台北：目前現況
 
-核對日期：2026-10-11。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
+核對日期：2026-10-12。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
 使用者已指示恢復工作，繼續整合與驗收。
 
@@ -32,10 +32,11 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金，以及存讀檔視窗與離開提示。023 的 109 份正常收據、十八項有效負對照、施工存退讀與兩次退出通過；兩側各 26.88 億步、112 次明示 HD 抽樣原版狀態及實際存檔相同 | [檔案視窗契約](docs/spec/023-file-dialogs.md)、[城市選單](docs/spec/022-city-function-menus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
+| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金、存讀檔與離開提示，以及完整預算面板。025 的 116 份正常收據、十三項有效呈現破壞、施工存退讀與兩次退出通過；兩側各 40.56 億步、169 次明示抽樣原版狀態及實際存檔相同 | [預算契約](docs/spec/025-budget-panel.md)、[檔案視窗](docs/spec/023-file-dialogs.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
-| 預算與稅率視窗 | 025 經證據審查達 READY。43 份完整來源、172 項單像素、十八項選取負對照及 74 項實際 Noto 墨跡通過；Escape 保留調整，正常 F2 存讀恢復。災難台北正常取得四欄非零費用，六張原位原型完整核對，十檔乾淨重生逐 byte 相同 | [025](docs/spec/025-budget-panel.md)；尚未接入產品 HD，未達 CONFORMED；負淨額／規則極值未作正常玩家驗收 |
+| 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
+| 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
 | 跨平台編譯 | 本批 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
@@ -43,21 +44,31 @@
 
 ## 文件入口
 
-- 預算完整面板契約：[025](docs/spec/025-budget-panel.md)，已審查完整來源、動態數值、轉錄、非零費用及正常控制，達 READY；正式呈現尚未接入。
-- 預算離線原型：[budget-prototype](workspace/app/cmd/budget-prototype/main.go)，只讀本機來源與轉錄，沿用固定 B／Noto 產生完整底板、數字字形及原位比較；輸出 `workspace/prototypes/hd-style/budget-v1/`。正式呈現仍未接入。
+- 預算完整面板契約：[025](docs/spec/025-budget-panel.md)，限完整預算呈現達 CONFORMED；已驗完整來源、動態文字、選取、F12、施工存退讀、有效負對照與原版狀態。
+- 預算正式呈現：[budget.go](workspace/app/internal/hd/budget.go)，依 025 重建完整來源、辨識十一欄與單一選取，載入固定 B／Noto 面板及數字。只讀原畫面，不修改遊戲狀態。
+- 預算實際素材測試：[budget_test.go](workspace/app/internal/hd/budget_test.go)，以固定 43 份來源及六張審查原型核對完整呈現、全部區外、失配回退與家族隔離；正常玩家驗收另驗。
+- 預算 Go 獨立收據核對：[receipt-check/budget.go](workspace/app/cmd/receipt-check/budget.go)，`receipt-check -budget-reference <素材根> -original <原版目錄>` 另讀 ROM、固定參考、十一欄及選取；不引用產品呈現器。
+- 預算有效負對照：[hd_budget_negative.py](workspace/tools/hd_budget_negative.py)，從正常收據破壞來源、色盤、底板、實際墨跡、區外及中繼資料；重算原版 PNG、呈現 PNG 與受影響雜湊後，要求兩個獨立核對器拒絕。
+- 預算正式證據彙整：[budget_hd_provenance.py](workspace/tools/budget_hd_provenance.py)，已核對 116 份正常收據、五列 F12、非零費用、全新 EXE 預算設定讀回、逐點原版狀態、實際存檔、有效負對照、四架構及原始輸入，結果為 `workspace/runs/budget-source/hd-provenance-r4.json`。
+- 預算整批獨立核對：[budget_hd_verify.sh](workspace/tools/budget_hd_verify.sh)，依序以 `scenario`、`cold`、`provenance` 核對已保存的修正版來源；每階段拒絕覆寫完成結果。狀態重播在正常第一段產生後另預登記並執行。
+- 預算修正版：現行 Linux SHA-256 `66e8e18ec202cf3cf22a3fe4893947adfb368425c47ba127177b6b8696dcc9c1`；`budget-hd-scenario-r2/` 十三份與 `gui-budget-cold-r4/` 103 份正常收據均通過。正式唯一狀態輸入為後者 `quit-file-theme-hd-capture.zip`，SHA-256 `ad564fb6800171d15dd060cfb8137cdf5c599fbf34dbd712704eb2c154db4170`；兩側各 4,056,000,000 步，每 24,000,000 步共 169 點，五列預算實際呈現及原版狀態相同。結果 `budget-source/state-audit-r4.json`，狀態 SHA-256 `57371f3caa873699e591ce397076453a9ff6ceb111a1a0257825cd8d2510c681`。r3 僅作前件，其正常淨額 -1 另核對。
+- 預算收尾：`workspace/runs/budget-source/hd-final-hygiene.json` 保存文件入口、相對連結、語法、Go 格式、擁有權、指定 find 與 Linux 乾淨重建比較。正式本機預算畫面在 `budget-source/normal-budget-hd.png`；素材與擷取不入 Git。存檔在 `gui-cold-saves.U5Gg8y/ROUND4.SAV`，SHA-256 `7b4470803b77aa311dfb83014db3e14c73981dccfe0b57fdc4aeb6993364efbd`。
+- 預算負淨額抽樣：`workspace/runs/budget-source/negative-net-source.json`，r3 正常冷讀後的淨額 -1 已由獨立 Go／Python 核對完整來源、高清呈現及全部區外；原子收據 SHA-256 `f88c3831a3e787b620d956e39848750c68ec1a7868dacaf07ea8fc3ef488f85a`。僅驗該呈現，不宣稱稅率或規則極值已驗。
+- 預算 Python 獨立核對：[hd_budget_check.py](workspace/tools/hd_budget_check.py)，重建完整來源、固定合成及全部區外，由既有逐幀核對共用。正常冷啟動的預算段落為 [budget_gui.py](workspace/tools/budget_gui.py)，本批以 `TAIPEI_TEST_BUDGET=1 TAIPEI_GUI_RUN=gui-budget-cold-r4 TAIPEI_THEME=hd-b` 交由既有 `gui_playtest.sh` 執行，五列 F12、調整、存退讀與新 EXE 設定重開已通過；拒絕覆寫原件。
+- 預算離線原型：[budget-prototype](workspace/app/cmd/budget-prototype/main.go)，只讀本機來源與轉錄，沿用固定 B／Noto 產生完整底板、數字字形及原位比較；輸出 `workspace/prototypes/hd-style/budget-v1/`。固定輸出已由正式呈現載入，原型程式不進產品路徑。
 - 預算原型獨立核對：[budget_prototype_check.py](workspace/tools/budget_prototype_check.py)，重讀 ROM、轉錄原框與 PNG alpha，核對靜態／數字墨跡、安全矩形、完整原位組合及全部區外；輸出 `workspace/runs/budget-source/prototype-check.json`。不當作正式 HD 收據。
 - 預算讀鍵同步：[city_menu_playtest.py](workspace/tools/city_menu_playtest.py) 的 `action(..., acknowledge=True)` 只對已查證普通鍵等待實際 Key 與 release；預設片頭流程不強加 DOS 讀鍵。有限步數啟動使用 `wait_for(..., progress=True)`，仍由各 shell 的外層逾時擁有。#41 的正常入口與逐鍵收據已通過。
-- 預算 READY 證據：`workspace/runs/budget-source/ready-model/catalog.json`、`ready-provenance.json`、`prototype-check.json`；43 份來源、172 項單點、十八項選取負對照、74 墨跡、六張原位圖及十檔重生通過。正式 manifest SHA-256 `f6a3052430ad3cc1cda5c737fb21ce6c73c13237e191e29cf0c92684553b9933`。研究收尾記錄 `final-hygiene.json`，完整正式 HD 另驗。
+- 預算 READY 證據：`workspace/runs/budget-source/ready-model/catalog.json`、`ready-provenance.json`、`prototype-check.json`；43 份來源、172 項單點、十八項選取負對照、74 墨跡、六張原位圖及十檔重生通過。正式 manifest SHA-256 `f6a3052430ad3cc1cda5c737fb21ce6c73c13237e191e29cf0c92684553b9933`。研究收尾記錄 `final-hygiene.json`；正式 HD 驗證另見本批 r4 彙整。
 - 預算研究審查來源：`workspace/runs/budget-source/review-model/catalog.json` 含 42 份完整來源、168 項單像素，初批 33 份原件不覆寫。`budget-native-ranges/result.json` 是未還原調整及實際 F2 存讀研究，名稱不代表完成規則極值測試。存檔 `budget-saves.rnp1jg5l/BUDGET39.SAV` SHA-256 `442981026373f69080668ad176335949636635c407ba5b14cbf4f2ce7265b430`。
 - DOS 時間收尾：`workspace/runs/dos-clock-source/final-hygiene.json` 保存本批文件入口、相對連結、語法、格式、擁有權、容器內指定 find 與 Linux 重建比較；Docker 生命週期另由主機回讀。本批不建立正式交付目錄。
-- DOS 時間證據彙整：[dos_clock_provenance.py](workspace/tools/dos_clock_provenance.py)，已核對本批原始輸入、固定七補丁、四架構、86 份正常收據、施工存退讀、兩次退出及獨立畫面檢查；輸出 `workspace/runs/dos-clock-source/provenance.json`。現行 Linux SHA-256 `52b65f10bd009c0f94741eaaa1aa36d0349342dbea646453bb9eff7ce9c40b8f`；舊四架構與來源收據保留 `before-build/`。
+- DOS 時間證據彙整：[dos_clock_provenance.py](workspace/tools/dos_clock_provenance.py)，已核對該批原始輸入、固定七補丁、四架構、86 份正常收據、施工存退讀、兩次退出及獨立畫面檢查；輸出 `workspace/runs/dos-clock-source/provenance.json`。該時鐘批 Linux SHA-256 `52b65f10bd009c0f94741eaaa1aa36d0349342dbea646453bb9eff7ce9c40b8f`；舊四架構與來源收據保留 `before-build/`。
 - DOS 時間測試：[dos_clock_verify.sh](workspace/tools/dos_clock_verify.sh)，先由現行建置入口重生七補丁，再執行 DOS、狀態、oracle、probe 與實際 HD 素材測試；輸出 `workspace/runs/dos-clock-source/`，正式正常 GUI 與封包不由此代替。
 - DOS 時間修正補丁：[dosgolem-system-clock.patch](workspace/tools/dosgolem-system-clock.patch)，固定基底及原六補丁後套用的第七份補丁；沿用既有 Go image 與 [build_preview.sh](workspace/tools/build_preview.sh)。正常 GUI 由 `TAIPEI_THEME=hd-b TAIPEI_GUI_RUN=gui-dos-clock-cold bash workspace/tools/gui_playtest.sh` 驗證，拒絕覆寫既有收據。
 - DOS 時間契約：[024](docs/spec/024-dos-system-clock.md)，#40 的公開平台前提、時間來源及驗證閘門。研究輸出 `workspace/runs/dos-clock-source/`，保留未修版本四組紅測試及固定 commit 的平台全文；新產品正常操作及存退讀已通過。
 - 預算字形來源候選：`workspace/runs/budget-source/static-glyph-candidates.json`、`rom2-x4.png`，保留 ROM2 背景與原字模的精確匹配及別名；沒有 ROM57 精確對應的烘製文字已固定原框目視轉錄，不宣稱取得原版字碼。
 - 預算輸入定位：[ida_budget_probe.py](workspace/tools/ida_budget_probe.py)，以 IDA Pro 9.4 及唯讀既有資料庫的複本匯出窄範圍函式；輸出 `workspace/runs/ida-39/`，保留原始名稱、bytes、IDA 線性位址與 EXE 檔案偏移。
 - 預算正常入口研究：[budget_playtest.sh](workspace/tools/budget_playtest.sh)、[budget_playtest.py](workspace/tools/budget_playtest.py)，從正常冷啟動經 F3 預算選項探索數值、選取及返回；有界停止不取代原版退出。
-- 預算完整來源研究：[budget_catalog.py](workspace/tools/budget_catalog.py)，ROM2 在 `(18,37)` 的 235×132 背景及十一個 ASCII 動態欄位。來源及轉錄經 025 READY 審查，正式呈現尚未接入產品。
+- 預算完整來源研究：[budget_catalog.py](workspace/tools/budget_catalog.py)，ROM2 在 `(18,37)` 的 235×132 背景及十一個 ASCII 動態欄位。來源及轉錄經 025 READY 審查，正式完整面板與正常驗證均已完成。
 - 預算與稅率來源：[#39](https://github.com/wicanr2/taipei/issues/39)，本機 `workspace/runs/budget-source/full-model/catalog.json` 保存 33 份完整來源與 132 項單像素負對照；ROM2 檔案偏移 12662，解碼 SHA-256 `db92d35996a6c8fc112d129ab0a92d1018384495cd38b31d637df468b52c7967`，原位 `(18,37,235,132)`，標題位於局部 y=1。正常操作 `budget-native-fixed/result.json` 含五列選取與原版 Right 減一／Left 還原；兩個未修時鐘前件保留。初始線索仍在 `initial-sources.json` 與 `initial-candidates.json`。原版素材不入 Git，來源符合不等於 HD 已接入。
 - 檔案視窗正式呈現：[file_dialogs.go](workspace/app/internal/hd/file_dialogs.go)，依 023 完整來源與使用中色盤辨識，接入固定 B／Noto；限本批達 CONFORMED。
 - 檔案視窗實際素材測試：[file_dialogs_test.go](workspace/app/internal/hd/file_dialogs_test.go)，核對 243 筆完整來源、整框與區外、色盤及真實素材故障。

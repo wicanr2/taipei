@@ -22,13 +22,17 @@ def status():
     except (OSError,json.JSONDecodeError,zipfile.BadZipFile):
         return {}
 
-def wait_for(predicate, label, seconds=120):
+def wait_for(predicate, label, seconds=120, progress=False):
     end=time.monotonic()+seconds
+    last_steps=status().get('steps',0)
     while time.monotonic()<end:
         s=status()
         if predicate(s):
             print(label,s.get('steps'),s.get('frame_index_sha256'),flush=True)
             return s
+        if progress and s.get('steps',0)>last_steps:
+            last_steps=s['steps']
+            end=time.monotonic()+seconds
         time.sleep(.2)
     s=status()
     raise RuntimeError(f'GUI 等待逾時：{label}; steps={s.get("steps")}; last_keys={(s.get("key_reads") or [])[-3:]}')
@@ -50,6 +54,12 @@ def capture(label):
             (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
+    if label in ('pause','reload-pause') and os.environ.get('TAIPEI_TEST_BUDGET')=='1':
+        from budget_gui import base
+        base.out=out
+        base.action(label,'0',acknowledge=True)
+        capture(label)
+        return
     before=status().get('steps',0)
     if key.startswith('type:'):
         subprocess.run(['xdotool','type','--delay','150',key[5:]],check=True)
@@ -88,7 +98,7 @@ def file_f12_roundtrip(label,family):
         assert current['hd']['file_dialog']==(family if enabled else '')
     file_toggles.append({'label':label,'family':family,'original_frame_unchanged':True,'no_dos_keyboard':True})
 
-wait_for(lambda s:s.get('steps',0)>=700_000_000,'intro')
+wait_for(lambda s:s.get('steps',0)>=700_000_000,'intro',progress=True)
 subprocess.run(['xdotool','search','--name','模擬台北','windowfocus'],check=True)
 space()
 wait_for(lambda s:s.get('steps',0)>=800_000_000,'intro-wait')
@@ -119,6 +129,9 @@ for stage in ['new-game','difficulty','city-map']:
 # 新城市初始焦點是工具列。第 2 項是每單位 20 萬的電線。
 # 方向鍵、空白鍵與施工均由原版處理，不注入游標或城市資料。
 action('pause','type:0')
+if os.environ.get('TAIPEI_TEST_BUDGET') == '1':
+    from budget_gui import exercise
+    exercise(out,adjust=True)
 if os.environ.get('TAIPEI_THEME')=='hd-b':
     assert status()['hd']['Painted']>400, 'HD 城市未覆繪'
     key_reads=len(status().get('key_reads',[]))
@@ -184,7 +197,7 @@ with (out/'app.log').open('w') as log:
                         '-materials','/workspace/prototypes/hd-style','-theme',os.environ.get('TAIPEI_THEME','original'),
                         '-receipts',str(out),'-stop-file',str(out/'stop')],stdout=log,stderr=subprocess.STDOUT)
     try:
-        wait_for(lambda s:s.get('steps',0)>=700_000_000,'reload-intro')
+        wait_for(lambda s:s.get('steps',0)>=700_000_000,'reload-intro',progress=True)
         subprocess.run(['xdotool','search','--name','模擬台北','windowfocus'],check=True)
         space()
         wait_for(lambda s:s.get('steps',0)>=800_000_000,'reload-intro-wait')
@@ -200,6 +213,10 @@ with (out/'app.log').open('w') as log:
         assert loaded_tile==built_tile, '冷啟動讀檔未恢復施工圖塊'
         loaded_money=footer_decode((out/'load-accept-frame-index.bin').read_bytes(),footer_refs,1)[2]
         assert loaded_money==built_money,'冷啟動讀檔未恢復原版資金'
+        if os.environ.get('TAIPEI_TEST_BUDGET') == '1':
+            # 冷讀城市仍會推進；先經原版 0 與讀鍵同步固定正常驗收條件。
+            action('reload-pause','0')
+            exercise(out,adjust=False)
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
         (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))

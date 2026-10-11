@@ -170,7 +170,7 @@ func TestMirrorMaterialEdges(t *testing.T) {
 	}
 }
 
-func TestActualAnnualBudgetIsEntirelyNative(t *testing.T) {
+func TestActualAnnualBudgetPresentationAndFallback(t *testing.T) {
 	dir := os.Getenv("TAIPEI_RUNTIME_RECEIPTS")
 	if dir == "" {
 		t.Skip("需要正常年度預算視窗收據")
@@ -187,9 +187,16 @@ func TestActualAnnualBudgetIsEntirelyNative(t *testing.T) {
 		native, _ := r.Render(px, s.Palette, s.Mode, s.Blocked, false, Origin{X: 12, Y: 12, Valid: true})
 		want := append([]byte(nil), native.Pix...)
 		got, stats := r.Render(px, s.Palette, s.Mode, s.Blocked, true, Origin{X: 12, Y: 12, Valid: true})
-		if stats.Painted != 0 || stats.Reason != "budget-window" || !bytes.Equal(want, got.Pix) {
-			t.Fatal("年度視窗未整幀回退", name, stats)
+		if stats.Painted != 0 || !stats.Budget || stats.Reason != "matched-budget" || bytes.Equal(want, got.Pix) {
+			t.Fatal("年度視窗未接入完整預算呈現", name, stats)
 		}
+		budget := r.budget
+		r.budget = loadBudgetPanel(rom, t.TempDir())
+		got, stats = r.Render(px, s.Palette, s.Mode, s.Blocked, true, Origin{X: 12, Y: 12, Valid: true})
+		if stats.Budget || stats.Reason != "budget-manifest-mismatch" || !bytes.Equal(want, got.Pix) {
+			t.Fatal("年度視窗素材缺失未整幀回退", name, stats)
+		}
+		r.budget = budget
 		if !bytes.Equal(before, px) {
 			t.Fatal("年度視窗原版色號被改寫")
 		}

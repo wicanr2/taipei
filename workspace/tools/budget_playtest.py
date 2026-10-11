@@ -61,7 +61,7 @@ def main():
     with (root/'app.log').open('w') as log:
         game = subprocess.Popen(['/workspace/runs/taipei-preview', '-original', '/orig', '-saves', saves,
             '-receipts', str(root), '-mute', '-steps-per-update', '400000', '-materials',
-            '/workspace/prototypes/hd-style', '-theme', 'original', '-stop-file', str(root/'stop')],
+            '/workspace/prototypes/hd-style', '-theme', os.environ.get('TAIPEI_THEME','original'), '-stop-file', str(root/'stop')],
             stdout=log, stderr=subprocess.STDOUT)
         try:
             if mode == 'scenario':
@@ -80,6 +80,14 @@ def main():
                     key(f'scenario-step-{index:02d}', value)
                 model = state()[2]
                 assert model is not None, '災難城市預算完整來源未重建'
+                if os.environ.get('TAIPEI_THEME') == 'hd-b':
+                    before,frame,_ = state()
+                    assert before['hd']['budget']
+                    for suffix,enabled in [('original',False),('hd',True)]:
+                        base.action('scenario-theme-'+suffix,'F12')
+                        current,native,_ = state()
+                        assert native == frame and current['key_reads'] == before['key_reads']
+                        assert current['hd_enabled'] is enabled and current['hd']['budget'] is enabled
                 key('scenario-escape', 'Escape')
                 (root/'result.json').write_text(json.dumps({'normal_gui': True, 'checkpoint': False,
                     'mode': mode, 'records': records, 'final_budget': model,

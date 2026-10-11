@@ -24,19 +24,24 @@ var materials = map[string]string{
 }
 
 type Stats struct {
-	FileDialog                 string    `json:"file_dialog"`
-	FileText                   [8]string `json:"file_text"`
-	FileColors                 [8]byte   `json:"file_colors"`
-	FileReason                 string    `json:"file_reason"`
-	FooterMask                 uint8     `json:"footer_mask"`
-	FooterText                 [4]string `json:"footer_text"`
-	FooterReason               string    `json:"footer_reason"`
-	ChromeParts                int       `json:"chrome_parts"`
-	ChromeMask                 uint8     `json:"chrome_mask"`
-	ChromeRings                int       `json:"chrome_rings"`
-	ChromeRingMask             uint16    `json:"chrome_ring_mask"`
-	ChromeReason               string    `json:"chrome_reason"`
-	Reason                     string    `json:"reason"`
+	Budget                     bool       `json:"budget"`
+	BudgetText                 [11]string `json:"budget_text"`
+	BudgetColors               [11]byte   `json:"budget_colors"`
+	BudgetSelection            int        `json:"budget_selection"`
+	BudgetReason               string     `json:"budget_reason"`
+	FileDialog                 string     `json:"file_dialog"`
+	FileText                   [8]string  `json:"file_text"`
+	FileColors                 [8]byte    `json:"file_colors"`
+	FileReason                 string     `json:"file_reason"`
+	FooterMask                 uint8      `json:"footer_mask"`
+	FooterText                 [4]string  `json:"footer_text"`
+	FooterReason               string     `json:"footer_reason"`
+	ChromeParts                int        `json:"chrome_parts"`
+	ChromeMask                 uint8      `json:"chrome_mask"`
+	ChromeRings                int        `json:"chrome_rings"`
+	ChromeRingMask             uint16     `json:"chrome_ring_mask"`
+	ChromeReason               string     `json:"chrome_reason"`
+	Reason                     string     `json:"reason"`
 	Matched, Painted, Fallback int
 	FontLabels                 int    `json:"font_labels"`
 	FontReason                 string `json:"font_reason"`
@@ -59,6 +64,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	budget     *budgetPanel
 	files      *fileDialogs
 	footer     *cityFooter
 	chrome     *cityChrome
@@ -116,6 +122,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.chrome = loadCityChrome(rom, dir)
 	r.footer = loadCityFooter(rom, dir)
 	r.files = loadFileDialogs(rom, dir)
+	r.budget = loadBudgetPanel(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -157,6 +164,7 @@ func New(rom []byte, dir string) *Renderer {
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
 	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
+	stats.BudgetSelection, stats.BudgetReason = -1, "scene-fallback"
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -175,6 +183,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	if !enabled {
+		stats.BudgetReason = "original"
 		stats.FileReason = "original"
 		stats.FontReason = "original"
 		stats.UIReason = "original"
@@ -227,6 +236,12 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	}
 	if file, text, colors, why, known := r.files.paint(r.frame, px, pal); known {
 		stats.FileDialog, stats.FileText, stats.FileColors, stats.FileReason = file, text, colors, why
+		stats.Reason = why
+		return r.frame, stats
+	}
+	if painted, text, colors, selection, why, known := r.budget.paint(r.frame, px, pal); known {
+		stats.Budget, stats.BudgetText, stats.BudgetColors = painted, text, colors
+		stats.BudgetSelection, stats.BudgetReason = selection, why
 		stats.Reason = why
 		return r.frame, stats
 	}
