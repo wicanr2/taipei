@@ -35,11 +35,13 @@
 | HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金，以及存讀檔視窗與離開提示。023 的 109 份正常收據、十八項有效負對照、施工存退讀與兩次退出通過；兩側各 26.88 億步、112 次明示 HD 抽樣原版狀態及實際存檔相同 | [檔案視窗契約](docs/spec/023-file-dialogs.md)、[城市選單](docs/spec/022-city-function-menus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
+| 預算與稅率視窗 | 已先建立 #39，保留兩份正常年度原版線索與直接圖片候選清單；完整視窗／動態欄位模型未知，未達 READY，沒有新增產品呈現 | [#39](https://github.com/wicanr2/taipei/issues/39)；下一個閘門是正常選單入口與完整來源重建 |
 | 跨平台編譯 | 本批 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
+- 預算與稅率來源：[#39](https://github.com/wicanr2/taipei/issues/39)，本機 `workspace/runs/budget-source/initial-sources.json` 保存兩份歷史正常年度收據雜湊、步數與原版四倍圖；`initial-candidates.json` 保存原版 ROM 直接圖片候選、偏移與雜湊。標題區 `(18,38,99,22)` 依既有 `hd_source_audit.budget_window`，只識別線索，完整視窗、動態欄位及正常選單入口尚待研究。原版素材不入 Git。
 - 檔案視窗正式呈現：[file_dialogs.go](workspace/app/internal/hd/file_dialogs.go)，依 023 完整來源與使用中色盤辨識，接入固定 B／Noto；限本批達 CONFORMED。
 - 檔案視窗實際素材測試：[file_dialogs_test.go](workspace/app/internal/hd/file_dialogs_test.go)，核對 243 筆完整來源、整框與區外、色盤及真實素材故障。
 - 檔案視窗獨立 Go 收據核對：[files.go](workspace/app/cmd/receipt-check/files.go)，`receipt-check -file-reference <素材根> -original <原版目錄>`；重建完整來源與動態文字，不引用產品呈現器。

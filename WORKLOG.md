@@ -395,3 +395,13 @@ Linux 產品從現行來源再次建至獨立暫存檔，與實際 GUI 使用的
 Linux、Windows amd64、macOS amd64／arm64 編譯與架構核對通過；Windows 仍只有既有 YMFM 編譯警告。本輪 Linux 再從現行來源建到容器暫存檔，與實際 GUI 使用程式逐 byte 相同，副本刪除。35 原始檔與 RAR 不變，364 個相對連結、八個新入口及既有入口正對照、Python／shell 語法、Go 格式、1000:1000 及指定 find 通過，結果在 `file-dialogs-final-hygiene.json`。本批容器均退出並刪除，沒有新建 image、修改 dosgolem 上游或清理其他專案資源。
 
 023 限完整檔案視窗與離開提示達 CONFORMED。模態外、外部刪檔／損壞或儲存故障提示、其他視窗／圖表／圖片／場景／動畫、平台真機與正式封包仍未完成。自有程式、腳本與文件以明確清單提交推送，素材、原版、擷取、字型及原文衍生資料留本機；完成證據回寫 #38，母項保持開啟。
+
+## 2026-10-11：#39 預算與稅率來源開工
+
+主機 gh 即時核對遠端沒有重複項後，先建立 [#39](https://github.com/wicanr2/taipei/issues/39)。來源研究命中原版 GUI 還原路由，載入 `local/retro-gui-restoration.md` 的來源重建與生命週期準則；本作仍依專案權威順序，以 dosgolem 收據為準，沒有改用 DOSBox 收據冒充。
+
+`workspace/runs/budget-source/initial-sources.json` 保留 `hd-runtime/running-03-capture.zip` 與 `running-32-capture.zip` 的雜湊、步數、原版索引及四倍圖線索。兩者都是歷史正常年度視窗，`dos_blocked=false`，目前產品整幀回退；不是本批 HD 收據。標題核對矩形 `(18,38,99,22)` 沿既有 `hd_source_audit.budget_window`，SHA-256 `a93af2ea621191dc51663f84eee9ebc40672d149d585a1458b9edf3c60e872bb`。
+
+最初候選腳本誤用標題 y=37，核對失敗後回查既有來源契約，訂正為 y=38；再依 `full_asset_catalog.image` 的 None 返回契約略過不支援形態。修正只涉及研究腳本，沒有改動產品或對未支援資料強解。`initial-candidates.json` 保存原版 ROM 直接圖片候選的完整偏移、形狀與解碼雜湊；候選左上 99×22 均未直接匹配標題，不能由此宣稱 ROM 沒有該來源。
+
+下一個精確閘門是從正常功能選單抵達預算／稅率視窗，確認與年度入口的關係，再重建完整背景、固定文字、動態數值、選取與返回。完整來源模型仍未知，沒有新 READY 規格或正式接入。產物留在 workspace/，原版唯讀、UID／GID 1000，研究容器已退出刪除；#39 與 HD 母項繼續開啟。
