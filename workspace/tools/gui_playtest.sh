@@ -4,7 +4,8 @@ project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 orig_dir="${TAIPEI_ORIG:-$project_dir/rs201 模擬台北/模擬台北/RS201}"
 test -d "$orig_dir"
 test -f "$project_dir/workspace/runs/taipei-preview"
-timeout 480s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
+# #35：包含逐次讀鍵及兩次正常退出的完整流程，保留有界執行。
+timeout 600s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" --name taipei-gui-cold \
   --mount "type=bind,src=$project_dir/workspace,dst=/workspace" \
   --mount "type=bind,src=$orig_dir,dst=/orig,readonly" \

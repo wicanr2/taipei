@@ -12,6 +12,7 @@ import (
 
 // spec/018：完整正常來源及固定 Noto 面板。原文與衍生素材僅留本機。
 const panelManifestSHA = "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d"
+const toolPanelManifestSHA = "288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e"
 
 type panelState struct {
 	ID             string `json:"id"`
@@ -33,10 +34,19 @@ type panelSet struct {
 }
 
 func loadPanels(dir string) *panelSet {
+	return loadPanelSet(dir, "startup-menus-v1", panelManifestSHA, 13)
+}
+
+// spec/021：十八個已審查的正常工具子選單，與啟動選單分開載入。
+func loadToolPanels(dir string) *panelSet {
+	return loadPanelSet(dir, "tool-menus-v1", toolPanelManifestSHA, 18)
+}
+
+func loadPanelSet(dir, folder, manifestSHA string, count int) *panelSet {
 	p := &panelSet{reason: "panel-manifest-mismatch", states: map[string]*panelState{}}
-	base := filepath.Join(dir, "startup-menus-v1")
+	base := filepath.Join(dir, folder)
 	raw, err := os.ReadFile(filepath.Join(base, "manifest.json"))
-	if err != nil || digest(raw) != panelManifestSHA {
+	if err != nil || digest(raw) != manifestSHA {
 		return p
 	}
 	var data struct {
@@ -45,7 +55,7 @@ func loadPanels(dir string) *panelSet {
 		LicenseSHA string `json:"license_sha256"`
 		States     []panelState
 	}
-	if json.Unmarshal(raw, &data) != nil || data.Schema != 1 || len(data.States) != 13 || data.FontSHA != menuFontSHA || data.LicenseSHA != menuLicenseSHA {
+	if json.Unmarshal(raw, &data) != nil || data.Schema != 1 || len(data.States) != count || data.FontSHA != menuFontSHA || data.LicenseSHA != menuLicenseSHA {
 		return p
 	}
 	for _, item := range []struct{ name, sha, reason string }{

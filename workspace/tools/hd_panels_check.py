@@ -10,13 +10,16 @@ from hd_source_audit import sha
 
 MANIFEST_SHA = 'daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d'
 DEFAULT_MANIFEST = Path('/workspace/prototypes/hd-style/startup-menus-v1/manifest.json')
+TOOL_MANIFEST = Path('/workspace/prototypes/hd-style/tool-menus-v1/manifest.json')
+TOOL_MANIFEST_SHA = '288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e'
 
 
 @functools.lru_cache(maxsize=2)
 def references(path=DEFAULT_MANIFEST):
-    assert sha(path.read_bytes()) == MANIFEST_SHA, '啟動面板 manifest 失配'
+    expected, count = (TOOL_MANIFEST_SHA, 18) if path == TOOL_MANIFEST else (MANIFEST_SHA, 13)
+    assert sha(path.read_bytes()) == expected, '完整面板 manifest 失配'
     data = json.loads(path.read_bytes())
-    assert data['schema'] == 1 and len(data['states']) == 13
+    assert data['schema'] == 1 and len(data['states']) == count
     result = []
     for state in data['states']:
         image = path.parent/state['image']
@@ -30,7 +33,10 @@ def references(path=DEFAULT_MANIFEST):
 def matching_state(s, frame, manifest=DEFAULT_MANIFEST):
     if not s['hd_enabled'] or s['mode'] != 19:
         return None
-    for state, pixels in references(manifest):
+    candidates = references(manifest)
+    if manifest == DEFAULT_MANIFEST and TOOL_MANIFEST.exists():
+        candidates = candidates+references(TOOL_MANIFEST)
+    for state, pixels in candidates:
         x, y, w, h = state['native']
         box = b''.join(frame[row*320+x:row*320+x+w] for row in range(y, y+h))
         colors = bytes(c for i in state['palette_indices'] for c in s['palette'][i])
@@ -49,6 +55,7 @@ def audit_panel(s, frame, rgba, manifest=DEFAULT_MANIFEST):
     assert s['hd']['panel_selection'] == state['selection'], '選取值不符完整來源'
     assert s['hd']['panel_reason'] == 'matched-panel'
     assert s['hd']['Painted'] == s['hd']['font_labels'] == s['hd']['ui_icons'] == 0
+    assert s['hd'].get('chrome_mask', 0) == s['hd'].get('chrome_ring_mask', 0) == s['hd'].get('footer_mask', 0) == 0
     assert not s['hd'].get('dialog')
     x, y, w, h = [i*4 for i in state['native']]
     for yy in range(800):

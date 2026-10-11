@@ -55,16 +55,17 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
-	footer  *cityFooter
-	chrome  *cityChrome
-	frame   *image.RGBA
-	sources map[string]bool
-	shades  map[byte][]byte
-	reason  string
-	menu    *menuFont
-	icons   *toolIcons
-	dialog  *newGameDialog
-	panels  *panelSet
+	footer     *cityFooter
+	chrome     *cityChrome
+	frame      *image.RGBA
+	sources    map[string]bool
+	shades     map[byte][]byte
+	reason     string
+	menu       *menuFont
+	icons      *toolIcons
+	dialog     *newGameDialog
+	panels     *panelSet
+	toolPanels *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -104,6 +105,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.icons = loadToolIcons(rom, dir)
 	r.dialog = loadNewGameDialog(dir)
 	r.panels = loadPanels(dir)
+	r.toolPanels = loadToolPanels(dir)
 	r.chrome = loadCityChrome(rom, dir)
 	r.footer = loadCityFooter(rom, dir)
 	for name, want := range materials {
@@ -196,6 +198,15 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 			stats.Dialog = "new-game"
 		}
 		return r.frame, stats
+	}
+	// 工具子選單等待 BIOS 輸入，完整來源須先於阻塞回退判斷。
+	id, selection, reason := r.toolPanels.paint(r.frame, px, pal)
+	if reason != "scene-fallback" {
+		stats.Panel, stats.PanelSelection, stats.PanelReason = id, selection, reason
+		stats.Reason = reason
+		if reason == "matched-panel" || reason == "panel-art-mismatch" || reason == "panel-art-shape" || reason == "panel-palette-mismatch" {
+			return r.frame, stats
+		}
 	}
 	if blocked {
 		stats.Reason = "blocking-input"

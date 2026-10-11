@@ -29,6 +29,7 @@ func TestActualChromeAllToolStatesAndFallbacks(t *testing.T) {
 	}
 	states := map[[2]int]bool{}
 	modals := 0
+	toolModals := map[string]bool{}
 	for _, path := range paths {
 		name := strings.TrimSuffix(filepath.Base(path), "-capture.zip")
 		s, px := load(t, name)
@@ -72,18 +73,24 @@ func TestActualChromeAllToolStatesAndFallbacks(t *testing.T) {
 					}
 				}
 			}
+		} else if s.Blocked && strings.HasPrefix(st.Panel, "tool-") {
+			// 021 已接入五種完整面板；其像素及區外由工具面板測試驗證。
+			toolModals[st.Panel] = true
+			if st.ChromeParts != 0 || st.ChromeRings != 0 {
+				t.Fatal("工具面板仍疊加城市框架", name, st)
+			}
 		} else if s.Blocked && st.Panel == "" && st.Dialog == "" {
 			modals++
 			if st.ChromeParts != 0 || st.ChromeRings != 0 || !bytes.Equal(base, got.Pix) {
-				t.Fatal("工具子選單未整幀回退", name, st)
+				t.Fatal("未知視窗未整幀回退", name, st)
 			}
 		}
 		if !bytes.Equal(px, before) {
 			t.Fatal("色號遭改寫", name)
 		}
 	}
-	if len(states) != 42 || modals < 5 {
-		t.Fatal("缺完整正常來源", len(states), modals)
+	if len(states) != 42 || modals < 1 || len(toolModals) != 5 {
+		t.Fatal("缺完整正常來源", len(states), modals, len(toolModals))
 	}
 	s, px := load(t, "city-map")
 	bad := append([]byte(nil), px...)
