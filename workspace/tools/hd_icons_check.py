@@ -37,6 +37,13 @@ def main():
     samples = []
     for path in sorted(args.receipts.rglob('*-capture.zip')):
         s, frame, grid, rgba, sample = audit_bundle(path, sources)
+        # 完整選單已由 audit_bundle 依獨立來源及固定參考驗全幀。
+        if s['hd'].get('panel'):
+            assert s['hd']['ui_icons'] == s['hd']['ui_icon_mask'] == 0
+            sample.update(receipt=str(path.relative_to(args.receipts)), icons=0, icon_mask=0)
+            samples.append(sample)
+            counts[0] += 1
+            continue
         origin = s.get('map_origin', {})
         active = (s['hd_enabled'] and scene(s, frame) and origin.get('Valid')
                   and 0 <= origin['X'] <= 76 and 0 <= origin['Y'] <= 74

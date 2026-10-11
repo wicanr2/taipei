@@ -127,7 +127,7 @@ func TestActualNewGameDialog(t *testing.T) {
 	a, _ = r.Render(frame, closed.Palette, closed.Mode, closed.Blocked, false, Origin{})
 	want = append([]byte(nil), a.Pix...)
 	a, st = r.Render(frame, closed.Palette, closed.Mode, closed.Blocked, true, Origin{})
-	if st.Dialog != "" || !bytes.Equal(want, a.Pix) {
+	if st.Dialog != "" || st.Panel != "difficulty" || bytes.Equal(want, a.Pix) {
 		t.Fatal("關閉視窗殘留", st)
 	}
 	if !bytes.Equal(input, px) {

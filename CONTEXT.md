@@ -32,12 +32,20 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | B 地景原型、六個 Noto 標題、十四個工具圖示內部與完整新遊戲說明視窗已接入研究前端；最新 37 份冷啟動施工存退讀收據通過，存檔雜湊相同 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)、[工具圖示](docs/spec/016-city-tool-icons.md)、[說明視窗](docs/spec/017-new-game-dialog.md)；其他圖像、框架、文字與場景仍未完成，正式封包另驗 |
+| HD 接入 | B 地景原型、六個 Noto 標題、十四個工具圖示、新遊戲說明及三種啟動選單已接入研究前端；十三種選取與三場景 F12 通過。40 份選單與 37 份存退讀收據均通過，存檔雜湊相同 | [動態原型](docs/spec/010-hd-live-prototype.md)、[Noto 原型](docs/spec/013-noto-menu-prototype.md)、[工具圖示](docs/spec/016-city-tool-icons.md)、[說明視窗](docs/spec/017-new-game-dialog.md)、[啟動選單](docs/spec/018-startup-menus.md)；其他圖像、框架、文字與場景仍未完成，正式封包另驗 |
 | 跨平台編譯 | Linux amd64、Windows amd64、macOS amd64／arm64 完整研究前端編譯通過；Windows binary 經 Wine 冷啟動至城市，原版畫面與 Linux 相同 | macOS 未真機執行；Wine 及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
+- 啟動選單完整面板載入：[panels.go](workspace/app/internal/hd/panels.go)，契約見 [018](docs/spec/018-startup-menus.md)。本機生成提示為 `workspace/prototypes/hd-style/startup-menu-generation.json`。
+- 啟動面板獨立核對：[hd_panels_check.py](workspace/tools/hd_panels_check.py)，驗完整來源、固定參考及區外，不免驗面板區域；負對照見 [hd_panels_negative.py](workspace/tools/hd_panels_negative.py)。
+- 啟動面板實際資源測試：[panels_test.go](workspace/app/internal/hd/panels_test.go)，使用正常 GUI 的十三種來源及失配條件。
+- 啟動面板同狀態結果：`workspace/runs/panels-state-audit.json`，相同正常輸入兩側各 1,776,000,000 步，十三種選單及完整原版狀態相同；來源與執行檔雜湊見 `panels-state-provenance.txt`。本批未驗其他分支或正式封包。
+- 啟動選單正常 GUI：[startup_menu_playtest.sh](workspace/tools/startup_menu_playtest.sh)、[startup_menu_playtest.py](workspace/tools/startup_menu_playtest.py)，對應 #31，驗十三種選取、三場景 F12、無效鍵與原版取消語意。
+- 啟動選單契約：[docs/spec/018-startup-menus.md](docs/spec/018-startup-menus.md)，對應 #31，完整三選單與十三個選取狀態。
+- 啟動選單來源審查：[startup_menu_catalog.py](workspace/tools/startup_menu_catalog.py)，從固定底圖逐點核對正常選取畫面與原文字模。
+- 啟動選單離線工具：[startup-panel-prototype](workspace/app/cmd/startup-panel-prototype/main.go)，依固定 Noto、來源及素材輸出完整面板，掃描 240 個實際墨跡；執行時只接受 018 審查的固定面板。
 - 新遊戲說明視窗：[docs/spec/017-new-game-dialog.md](docs/spec/017-new-game-dialog.md)，對應 #31，完整來源辨識、B 底板、Noto 原文與回退契約。
 - 說明視窗呈現與失配測試：[dialog.go](workspace/app/internal/hd/dialog.go)、[dialog_test.go](workspace/app/internal/hd/dialog_test.go)。
 - 說明視窗獨立核對：[hd_dialog_check.py](workspace/tools/hd_dialog_check.py)，重算完整來源並核對固定面板與區外像素。

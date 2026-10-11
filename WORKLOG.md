@@ -261,3 +261,19 @@ F12 決策已回寫 [#6 留言](https://github.com/wicanr2/taipei/issues/6#issue
 - 重播覆繪前保存的正常 GUI 輸入，兩側各 1,224,000,000 步的完整 RAM、CPU、原版畫面、色盤、埠值、OPL 與讀鍵相同，包含 55 幀說明覆繪。狀態 SHA-256 `670f2fea2db251b7d694cf1e12d4254110669e09f80179d82865ec786937062e`。結果與輸入收據雜湊保存於 `dialog-state-audit.json`、`dialog-state-provenance.json`。施工格冷讀相同，存檔 SHA-256 仍為 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。
 
 本批 017 限該視窗達 CONFORMED。完整 HD 的其餘圖片、介面與三平台正式封包尚未完成，#31 與母項保持開啟。新文件與程式同次掛入 CONTEXT，README 只改穩定現況摘要。35 個原始檔與 RAR 雜湊不變，修改文件連結及索引正對照通過。新程式、素材與四個平台 binary 均為 1000:1000；容器內指定 `find` 無輸出，所有本批容器已退出並刪除，沒有新建 image 或清理其他專案資源。程式與文件明確列檔提交，提交與推送結果回鏈 #31、#33。
+
+## 2026-10-11：三種啟動選單與十三種選取狀態
+
+接續 [#31 的預登記](https://github.com/wicanr2/taipei/issues/31#issuecomment-6106322752)，主機 gh 回讀 OPEN。路由命中復古重製、規格閘門、文件職責及 README 現況，載入對應入口。原版控制、B、Noto、1280×800 與 F12 均沿已確認決策，沒有新增產品取捨。
+
+- 從正常冷啟動走主選單三項、城市七項、難度三項，取得 ROM20／21／17 的完整來源與色盤。43 個操作字的完整 15×14 原版墨跡相符，30 個單點來源負對照被拒絕。城市左右鍵不改選取、上下鍵依左欄後右欄移動；難度 Escape 不改畫面，沒有猜補返回功能。來源收據保留於 `workspace/runs/startup-menus-native/`。
+- 內建 imagegen 生成空白木板及兩種按鈕，沿用 017 銀框藍底。初版木紋過於粗糙，改用細緻連續紋理 v2；按鈕空白外緣依記錄裁切正規化。原圖、四份來源參考、提示、原文、幾何、雜湊與十三張面板均只留本機 `workspace/prototypes/hd-style/`。生成紀錄為 `startup-menu-generation.json`。
+- 先寫 018 DRAFT，審查十三種正常來源與三張完整離線面板後升 READY，再接入 `panels.go`。固定 manifest、完整原版矩形、使用中色盤、Noto、授權與每張 PNG 全部通過才覆繪。失配完整回退，單張素材缺失不影響其他已驗面板；每幀原版重建後只改該矩形。
+- 離線工具逐字掃描 240 個實際墨跡，全部落在安全矩形，與字型邊界共同驗證，沒有依靠裁切掩蓋越界。重生的十三張 PNG 與 manifest 雜湊不變。原版標題四字依原墨跡矩形縮放，操作字為 56 px，原位及反白顏色不變。
+- 真實資源 Go 測試驗十三種完整面板、區外、來源／色盤／模式失配、F12、manifest／素材／字型／授權撤除及損壞，全部通過。第一次 Docker mount 參數未引用含空白路徑，在啟動容器前被拒絕；補引用後以同 image 乾淨重跑通過，分類為命令問題。
+- `TAIPEI_THEME=hd-b bash workspace/tools/startup_menu_playtest.sh` 正常走完選項、三種選單 F12、無效鍵、難度 Escape 與進入城市。40 份收據由 Python 與獨立 Go 核對器重算來源、選取、固定面板及全部區外。六種字形、邊框、區外、來源、色盤與選取竄改，在更新受影響雜湊後仍被拒絕。探索工具最後採有界停止，不代替退出驗收。
+- `TAIPEI_THEME=hd-b bash workspace/tools/gui_playtest.sh` 再走完整施工、存退讀與兩次原版退出。37 份收據包含五份本批選單、兩份說明、十一份城市與十九份原版回退；完整面板、六標題、十四圖示與區外獨立核對通過。施工格冷讀相同，存檔 SHA-256 保持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`。前一次證據保留於 `gui-cold-before-startup-panels/`。
+- `presentation-audit -require-panels -require-dialog -require-font -require-icons` 重播 `startup-menus/city-scroll-down-capture.zip`，兩側各 1,776,000,000 步的 RAM、CPU、原版色號、色盤、埠值、OPL 與讀鍵完全相同。實際包含十三種選單共 2,165 幀、55 幀說明、176 幀城市；狀態 SHA-256 `2aaad1136e232faa521d778894871e5ae3c31199c582ed12455cb550ade0bacb`。結果、固定輸入及工具來源雜湊見 `panels-state-audit.json`、`panels-state-provenance.txt`。
+- `build_preview.sh` 及 `build_preview_cross.sh windows|macos` 完成 Linux amd64、Windows amd64、macOS amd64／arm64 編譯；Windows 保留既有 YMFM 編譯警告。沒有新增平台真機、音訊或正式封包驗收聲明。
+
+018 限上述範圍達 CONFORMED。#31、#7 與完整 HD 母項保持開啟；七座城市各自開局、災難分支、其他圖片及介面仍需後續批次。35 個原始檔與 RAR 雜湊不變，新檔入口、相對連結與 1000:1000 擁有權通過。容器內指定 `find` 無輸出，所有本批容器已退出並刪除，沒有新建 image 或清理其他專案資源。程式與文件依明確清單提交、推送，實際提交回鏈 #31 及 #7。

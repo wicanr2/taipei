@@ -22,12 +22,60 @@ func check(e error) {
 		panic(e)
 	}
 }
+
+type panelReference struct {
+	ID             string `json:"id"`
+	Selection      int    `json:"selection"`
+	Native         [4]int `json:"native"`
+	SourceSHA      string `json:"source_sha256"`
+	PaletteIndices []int  `json:"palette_indices"`
+	PaletteSHA     string `json:"palette_sha256"`
+	Image          string `json:"image"`
+	ImageSHA       string `json:"image_sha256"`
+	decoded        image.Image
+}
+
+func readPanels(path string) []panelReference {
+	if path == "" {
+		return nil
+	}
+	raw, err := os.ReadFile(path)
+	check(err)
+	if fmt.Sprintf("%x", sha256.Sum256(raw)) != "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d" {
+		panic("啟動面板 manifest 失配")
+	}
+	var data struct {
+		Schema int
+		States []panelReference
+	}
+	check(json.Unmarshal(raw, &data))
+	if data.Schema != 1 || len(data.States) != 13 {
+		panic("啟動面板數量失配")
+	}
+	for i := range data.States {
+		s := &data.States[i]
+		raw, err = os.ReadFile(filepath.Join(filepath.Dir(path), s.Image))
+		check(err)
+		if fmt.Sprintf("%x", sha256.Sum256(raw)) != s.ImageSHA {
+			panic("啟動面板參考失配")
+		}
+		s.decoded, err = png.Decode(bytes.NewReader(raw))
+		check(err)
+		if s.decoded.Bounds() != image.Rect(0, 0, s.Native[2]*4, s.Native[3]*4) {
+			panic("啟動面板參考尺寸失配")
+		}
+	}
+	return data.States
+}
+
 func main() {
 	dir := flag.String("dir", "", "GUI 收據目錄")
 	fontReference := flag.String("font-reference", "", "含 Noto 標題時須提供已展示的固定參考圖")
 	uiReference := flag.String("ui-reference", "", "含工具圖示時須提供固定 HD atlas")
 	dialogReference := flag.String("dialog-reference", "", "含說明視窗時須提供固定 Noto 面板參考")
+	panelManifest := flag.String("panel-manifest", "", "啟動選單固定面板與完整來源 manifest")
 	flag.Parse()
+	panels := readPanels(*panelManifest)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -103,14 +151,17 @@ func main() {
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
-				Painted      int
-				FontLabels   int    `json:"font_labels"`
-				FontReason   string `json:"font_reason"`
-				UIIcons      int    `json:"ui_icons"`
-				UIIconMask   uint16 `json:"ui_icon_mask"`
-				UIReason     string `json:"ui_reason"`
-				Dialog       string `json:"dialog"`
-				DialogReason string `json:"dialog_reason"`
+				Painted        int
+				FontLabels     int    `json:"font_labels"`
+				FontReason     string `json:"font_reason"`
+				UIIcons        int    `json:"ui_icons"`
+				UIIconMask     uint16 `json:"ui_icon_mask"`
+				UIReason       string `json:"ui_reason"`
+				Dialog         string `json:"dialog"`
+				DialogReason   string `json:"dialog_reason"`
+				Panel          string `json:"panel"`
+				PanelSelection int    `json:"panel_selection"`
+				PanelReason    string `json:"panel_reason"`
 			}
 		}
 		if e = json.Unmarshal(files["status.json"], &s); e != nil {
@@ -126,6 +177,29 @@ func main() {
 		px := files["frame-index.bin"]
 		if len(px) != 64000 || fmt.Sprintf("%x", sha256.Sum256(px)) != s.SHA {
 			return fmt.Errorf("%s: index digest mismatch", path)
+		}
+		var panel *panelReference
+		if s.Enabled && s.Mode == 19 {
+			for i := range panels {
+				p := &panels[i]
+				x, y, w, h := p.Native[0], p.Native[1], p.Native[2], p.Native[3]
+				var box, colors []byte
+				for row := y; row < y+h; row++ {
+					box = append(box, px[row*320+x:row*320+x+w]...)
+				}
+				for _, index := range p.PaletteIndices {
+					colors = append(colors, s.Palette[index][:]...)
+				}
+				if fmt.Sprintf("%x", sha256.Sum256(box)) == p.SourceSHA && fmt.Sprintf("%x", sha256.Sum256(colors)) == p.PaletteSHA {
+					panel = p
+					break
+				}
+			}
+		}
+		if s.HD.Panel != "" || panel != nil {
+			if panel == nil || s.HD.Panel != panel.ID || s.HD.PanelSelection != panel.Selection || s.HD.PanelReason != "matched-panel" || s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 || s.HD.Dialog != "" {
+				return fmt.Errorf("%s: panel source, palette or metadata mismatch", path)
+			}
 		}
 		if s.HD.Dialog != "" {
 			if s.HD.Dialog != "new-game" || s.HD.DialogReason != "matched-dialog" || dialog == nil || !s.Enabled || s.Mode != 19 || s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 {
@@ -188,7 +262,12 @@ func main() {
 							}
 						}
 					}
-					if s.HD.Dialog == "new-game" && x >= 72 && x < 1016 && y >= 148 && y < 676 {
+					if panel != nil && x >= panel.Native[0]*4 && x < (panel.Native[0]+panel.Native[2])*4 && y >= panel.Native[1]*4 && y < (panel.Native[1]+panel.Native[3])*4 {
+						rr, gg, bb, aa := panel.decoded.At(x-panel.Native[0]*4, y-panel.Native[1]*4).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: panel pixels differ at %d,%d", path, x, y)
+						}
+					} else if s.HD.Dialog == "new-game" && x >= 72 && x < 1016 && y >= 148 && y < 676 {
 						rr, gg, bb, aa := dialog.At(x-72, y-148).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: dialog pixels differ at %d,%d", path, x, y)

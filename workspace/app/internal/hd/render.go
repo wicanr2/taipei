@@ -33,6 +33,9 @@ type Stats struct {
 	UIReason                   string `json:"ui_reason"`
 	Dialog                     string `json:"dialog"`
 	DialogReason               string `json:"dialog_reason"`
+	Panel                      string `json:"panel"`
+	PanelSelection             int    `json:"panel_selection"`
+	PanelReason                string `json:"panel_reason"`
 }
 
 // Origin is the verified tile origin of a completed original map draw.
@@ -51,6 +54,7 @@ type Renderer struct {
 	menu    *menuFont
 	icons   *toolIcons
 	dialog  *newGameDialog
+	panels  *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -89,6 +93,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.menu = loadMenuFont(filepath.Join(dir, "fonts"))
 	r.icons = loadToolIcons(rom, dir)
 	r.dialog = loadNewGameDialog(dir)
+	r.panels = loadPanels(dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -129,7 +134,7 @@ func New(rom []byte, dir string) *Renderer {
 }
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback"}
+	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -151,6 +156,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		stats.FontReason = "original"
 		stats.UIReason = "original"
 		stats.DialogReason = "original"
+		stats.PanelReason = "original"
 		return r.frame, stats
 	}
 	if r.reason != "" {
@@ -160,6 +166,14 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	if mode != 19 {
 		stats.Reason = "video-mode"
 		return r.frame, stats
+	}
+	stats.Panel, stats.PanelSelection, stats.PanelReason = r.panels.paint(r.frame, px, pal)
+	if stats.PanelReason != "scene-fallback" {
+		// 匹配選單或已知素材失配時，均不再疊加城市覆繪。
+		stats.Reason = stats.PanelReason
+		if stats.PanelReason == "matched-panel" || stats.PanelReason == "panel-art-mismatch" || stats.PanelReason == "panel-art-shape" || stats.PanelReason == "panel-palette-mismatch" {
+			return r.frame, stats
+		}
 	}
 	// 此完整來源是等待原版輸入的說明面板，與城市地景條件獨立。
 	if dialogSource(px) {

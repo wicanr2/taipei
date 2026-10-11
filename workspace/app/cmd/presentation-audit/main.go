@@ -33,6 +33,7 @@ func main() {
 	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	requireIcons := flag.Bool("require-icons", false, "要求重播實際經過十四個工具圖示覆繪")
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
+	requirePanels := flag.Bool("require-panels", false, "要求重播實際經過十三種啟動選單狀態")
 	flag.Parse()
 	z, err := zip.OpenReader(*receipt)
 	must(err)
@@ -70,6 +71,7 @@ func main() {
 	must(err)
 	var draws, painted, fontFrames, iconFrames, dialogFrames uint64
 	reasons := map[string]uint64{}
+	panelStates := map[string]uint64{}
 	run := func(present bool) []byte {
 		m := dg.New()
 		must(m.LoadEXE(raw))
@@ -105,6 +107,9 @@ func main() {
 			if present && m.Steps >= refresh {
 				_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
 				reasons[stats.Reason]++
+				if stats.Panel != "" {
+					panelStates[fmt.Sprintf("%s/%d", stats.Panel, stats.PanelSelection)]++
+				}
 				if stats.Dialog == "new-game" {
 					dialogFrames++
 				}
@@ -152,12 +157,16 @@ func main() {
 	if *requireDialog && dialogFrames == 0 {
 		panic("重播未實際經過完整說明視窗覆繪")
 	}
+	if *requirePanels && len(panelStates) != 13 {
+		panic("重播未實際經過十三種啟動選單狀態")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
 		"hd_reasons": reasons, "font_frames": fontFrames,
 		"icon_frames":   iconFrames,
 		"dialog_frames": dialogFrames,
+		"panel_states":  panelStates,
 		"scope":         "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；只驗呈現層不改原版狀態，非正式 HD 驗收",
 	}, "", "  ")
 	must(err)
