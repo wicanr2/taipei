@@ -38,7 +38,7 @@ def main():
     for path in sorted(args.receipts.rglob('*-capture.zip')):
         s, frame, grid, rgba, sample = audit_bundle(path, sources)
         # 完整選單已由 audit_bundle 依獨立來源及固定參考驗全幀。
-        if s['hd'].get('panel'):
+        if s['hd'].get('panel') or s['hd'].get('file_dialog'):
             assert s['hd']['ui_icons'] == s['hd']['ui_icon_mask'] == 0
             sample.update(receipt=str(path.relative_to(args.receipts)), icons=0, icon_mask=0)
             samples.append(sample)

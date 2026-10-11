@@ -24,6 +24,10 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	FileDialog                 string    `json:"file_dialog"`
+	FileText                   [8]string `json:"file_text"`
+	FileColors                 [8]byte   `json:"file_colors"`
+	FileReason                 string    `json:"file_reason"`
 	FooterMask                 uint8     `json:"footer_mask"`
 	FooterText                 [4]string `json:"footer_text"`
 	FooterReason               string    `json:"footer_reason"`
@@ -55,6 +59,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	files      *fileDialogs
 	footer     *cityFooter
 	chrome     *cityChrome
 	frame      *image.RGBA
@@ -110,6 +115,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.cityPanels = loadCityPanels(dir)
 	r.chrome = loadCityChrome(rom, dir)
 	r.footer = loadCityFooter(rom, dir)
+	r.files = loadFileDialogs(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -150,7 +156,7 @@ func New(rom []byte, dir string) *Renderer {
 }
 
 func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback"}
+	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -169,6 +175,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	if !enabled {
+		stats.FileReason = "original"
 		stats.FontReason = "original"
 		stats.UIReason = "original"
 		stats.DialogReason = "original"
@@ -217,6 +224,11 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		if reason == "matched-panel" || reason == "panel-art-mismatch" || reason == "panel-art-shape" || reason == "panel-palette-mismatch" {
 			return r.frame, stats
 		}
+	}
+	if file, text, colors, why, known := r.files.paint(r.frame, px, pal); known {
+		stats.FileDialog, stats.FileText, stats.FileColors, stats.FileReason = file, text, colors, why
+		stats.Reason = why
+		return r.frame, stats
 	}
 	if blocked {
 		stats.Reason = "blocking-input"

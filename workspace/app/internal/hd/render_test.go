@@ -102,7 +102,7 @@ func TestActualCityAndFallbacks(t *testing.T) {
 			}
 		}
 	}
-	// F2 已由 022 接入；未辨識的存檔及退出確認仍須整幀回退。
+	// F2 與 023 的完整檔案／離開視窗；其餘模態由年度視窗另驗回退。
 	for _, name := range []string{"file-menu", "save-dialog", "quit-confirm"} {
 		state, frame := load(t, name)
 		im, _ := r.Render(frame, state.Palette, state.Mode, state.Blocked, false, origin)
@@ -114,8 +114,12 @@ func TestActualCityAndFallbacks(t *testing.T) {
 			}
 			continue
 		}
-		if st.Painted != 0 || !bytes.Equal(want, got.Pix) {
-			t.Fatal("modal overwritten", name, st)
+		expected := "file-browser"
+		if name == "quit-confirm" {
+			expected = name
+		}
+		if st.FileDialog != expected || st.FileReason != "matched-file-dialog" || st.Painted != 0 || bytes.Equal(want, got.Pix) {
+			t.Fatal("023 完整來源未接入", name, st)
 		}
 	}
 	wrong := s.Palette

@@ -78,12 +78,15 @@ func main() {
 	cityManifest := flag.String("city-panel-manifest", "", "六功能選單固定面板與完整來源 manifest")
 	chromeDir := flag.String("chrome-reference", "", "城市框架及外框固定參考目錄")
 	footerDir := flag.String("footer-reference", "", "底部固定字形與背景的素材根")
+	fileDir := flag.String("file-reference", "", "檔案視窗固定參考的素材根")
+	originalDir := flag.String("original", "", "核對檔案視窗來源的唯讀原版目錄")
 	flag.Parse()
 	panels := readPanels(*panelManifest, "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d", 13)
 	panels = append(panels, readPanels(*toolManifest, "288687aa21460d01aa87dd24060c5bbd3ff50035bf26bab5c821d23688f2543e", 18)...)
 	panels = append(panels, readPanels(*cityManifest, "699c3ed0baed752327667f3d50cc9b0ee45b0124407338eb4f41be94d6239fc5", 29)...)
 	chrome := readChrome(*chromeDir)
 	footer := readFooter(*footerDir)
+	fileRef := readFileReference(*fileDir, *originalDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -161,6 +164,7 @@ func main() {
 			HD              struct {
 				chromeFields
 				footerFields
+				fileFields
 				Painted        int
 				FontLabels     int    `json:"font_labels"`
 				FontReason     string `json:"font_reason"`
@@ -194,6 +198,13 @@ func main() {
 		px := files["frame-index.bin"]
 		if len(px) != 64000 || fmt.Sprintf("%x", sha256.Sum256(px)) != s.SHA {
 			return fmt.Errorf("%s: index digest mismatch", path)
+		}
+		fileImage, fileBox, fileErr := fileRef.compose(px, s.Palette, s.Mode, s.Enabled, s.HD.fileFields)
+		if fileErr != nil {
+			return fmt.Errorf("%s: %w", path, fileErr)
+		}
+		if fileImage != nil && (s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 || s.HD.Dialog != "" || s.HD.Panel != "" || s.HD.ChromeMask != 0 || s.HD.FooterMask != 0) {
+			return fmt.Errorf("%s: 檔案視窗疊加其他呈現家族", path)
 		}
 		var panel *panelReference
 		if s.Enabled && s.Mode == 19 {
@@ -280,7 +291,12 @@ func main() {
 						}
 					}
 					chromeImage, cx, cy := chrome.pixel(s.HD.chromeFields, px, x, y)
-					if panel != nil && x >= panel.Native[0]*4 && x < (panel.Native[0]+panel.Native[2])*4 && y >= panel.Native[1]*4 && y < (panel.Native[1]+panel.Native[3])*4 {
+					if fileImage != nil && image.Pt(x, y).In(fileBox) {
+						rr, gg, bb, aa := fileImage.At(x-fileBox.Min.X, y-fileBox.Min.Y).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 檔案視窗像素不符 %d,%d", path, x, y)
+						}
+					} else if panel != nil && x >= panel.Native[0]*4 && x < (panel.Native[0]+panel.Native[2])*4 && y >= panel.Native[1]*4 && y < (panel.Native[1]+panel.Native[3])*4 {
 						rr, gg, bb, aa := panel.decoded.At(x-panel.Native[0]*4, y-panel.Native[1]*4).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: panel pixels differ at %d,%d", path, x, y)

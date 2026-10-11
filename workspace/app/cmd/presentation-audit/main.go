@@ -40,6 +40,7 @@ func main() {
 	requireFooter := flag.Bool("require-footer", false, "要求實際經過完整底部動態欄位")
 	requireTools := flag.Bool("require-tool-panels", false, "要求實際經過十八種工具子選單狀態")
 	requireCity := flag.Bool("require-city-panels", false, "要求實際經過二十九種城市功能選單狀態")
+	requireFiles := flag.Bool("require-file-dialogs", false, "要求實際經過檔案視窗與離開提示兩家族")
 	renderInterval := flag.Uint64("render-interval-steps", 400000, "HD 抽樣間距，400000 的正整數倍，最多 24000000")
 	flag.Parse()
 	if *renderInterval == 0 || *renderInterval%400000 != 0 || *renderInterval > 24000000 {
@@ -49,8 +50,12 @@ func main() {
 	must(err)
 	defer z.Close()
 	var capture struct {
-		Steps  uint64
-		Inputs []struct {
+		Steps    uint64
+		FrameSHA string          `json:"frame_index_sha256"`
+		Palette  [256][3]byte    `json:"palette"`
+		KeyReads json.RawMessage `json:"key_reads"`
+		FileOps  json.RawMessage `json:"file_ops"`
+		Inputs   []struct {
 			Step uint64
 			Kind string
 			Scan byte
@@ -86,6 +91,7 @@ func main() {
 	panelStates := map[string]uint64{}
 	toolStates := map[string]uint64{}
 	cityStates := map[string]uint64{}
+	fileFamilies := map[string]uint64{}
 	durations := map[string]float64{}
 	var observedFrames uint64
 	run := func(present bool) []byte {
@@ -106,6 +112,11 @@ func main() {
 		d := dg.NewDOS(m, *root)
 		d.Install()
 		defer d.Close()
+		// 真實獨立暫存層，讓兩側實際存檔，不使用沒有 Scratch 的模擬寫入。
+		scratch, err := os.MkdirTemp("", "taipei-presentation-audit-")
+		must(err)
+		defer os.RemoveAll(scratch)
+		d.Scratch = scratch
 		d.BlockingBIOSKeys = true
 		var camera original.Camera
 		var renderer *hd.Renderer
@@ -135,6 +146,9 @@ func main() {
 				observedFrames++
 				_, stats := renderer.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
 				reasons[stats.Reason]++
+				if stats.FileDialog != "" {
+					fileFamilies[stats.FileDialog]++
+				}
 				if stats.Panel != "" {
 					states := panelStates
 					if strings.HasPrefix(stats.Panel, "tool-") {
@@ -168,12 +182,37 @@ func main() {
 		if present {
 			draws = camera.Draws
 		}
+		if *requireFiles {
+			normalize := func(v any) string {
+				raw, err := json.Marshal(v)
+				must(err)
+				var decoded any
+				must(json.Unmarshal(raw, &decoded))
+				raw, err = json.Marshal(decoded)
+				must(err)
+				return string(raw)
+			}
+			if hash(m.Indexed()) != capture.FrameSHA || m.Palette() != capture.Palette || normalize(d.KeyReads) != normalize(capture.KeyReads) || normalize(d.FileOps) != normalize(capture.FileOps) {
+				panic("檔案視窗重播未到達正常 GUI 收據的原版狀態")
+			}
+		}
+		saveHashes := map[string]string{}
+		entries, err := os.ReadDir(scratch)
+		must(err)
+		for _, entry := range entries {
+			if !entry.IsDir() && strings.EqualFold(filepath.Ext(entry.Name()), ".sav") {
+				raw, err := os.ReadFile(filepath.Join(scratch, entry.Name()))
+				must(err)
+				saveHashes[entry.Name()] = hash(raw)
+			}
+		}
 		state, err := json.Marshal(map[string]any{
 			"memory_sha256": hash(m.Mem), "frame_sha256": hash(m.Indexed()), "palette": m.Palette(),
 			"registers": m.CPU.R, "segments": m.CPU.Seg, "ip": m.CPU.IP, "flags": m.CPU.Flags,
 			"steps": m.Steps, "ticks": m.Ticks, "ports": m.Ports, "opl_regs": m.OPLRegs(0),
 			"key_reads": d.KeyReads, "dos_blocked": d.Blocked, "dos_exited": d.Exited,
 			"file_ops": d.FileOps,
+			"writes":   d.Wrote, "save_sha256": saveHashes,
 		})
 		must(err)
 		durations[phase] = time.Since(started).Seconds()
@@ -215,21 +254,26 @@ func main() {
 	if *requireCity && len(cityStates) != 29 {
 		panic("重播未經過二十九種城市功能選單狀態")
 	}
+	if *requireFiles && (fileFamilies["file-browser"] == 0 || fileFamilies["quit-confirm"] == 0) {
+		panic("重播未實際經過檔案與離開提示兩家族")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
 		"hd_reasons": reasons, "font_frames": fontFrames,
-		"icon_frames":            iconFrames,
-		"chrome_frames":          chromeFrames,
-		"footer_frames":          footerFrames,
-		"dialog_frames":          dialogFrames,
-		"panel_states":           panelStates,
-		"tool_panel_states":      toolStates,
-		"city_panel_states":      cityStates,
-		"render_interval_steps":  *renderInterval,
-		"observed_render_frames": observedFrames,
-		"phase_elapsed_seconds":  durations,
-		"scope":                  "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；完整執行兩側原版步數，HD 按明示間距抽樣，只驗該重播的呈現層不改原版狀態，非逐幀或全部 HD 驗收",
+		"icon_frames":          iconFrames,
+		"chrome_frames":        chromeFrames,
+		"footer_frames":        footerFrames,
+		"dialog_frames":        dialogFrames,
+		"panel_states":         panelStates,
+		"tool_panel_states":    toolStates,
+		"city_panel_states":    cityStates,
+		"file_dialog_families": fileFamilies,
+		"normal_gui_frame_palette_reads_files_equal": *requireFiles,
+		"render_interval_steps":                      *renderInterval,
+		"observed_render_frames":                     observedFrames,
+		"phase_elapsed_seconds":                      durations,
+		"scope":                                      "同一正常 GUI 冷啟動鍵盤收據，固定 dosgolem 初始狀態與虛擬時間；完整執行兩側原版步數，HD 按明示間距抽樣，只驗該重播的呈現層不改原版狀態，非逐幀或全部 HD 驗收",
 	}, "", "  ")
 	must(err)
 	must(os.WriteFile(*out, append(result, '\n'), 0600))

@@ -66,7 +66,7 @@ def audit_chrome(s, frame, rgba):
     if 'chrome_mask' not in s['hd']:
         return None  # 保留舊版歷史收據，不能用來證明新框架完成。
     # 呼叫端 audit_bundle 已以完整來源、選取與固定參考驗證整個面板及區外。
-    if s['hd'].get('panel') or s['hd'].get('dialog'):
+    if s['hd'].get('panel') or s['hd'].get('dialog') or s['hd'].get('file_dialog'):
         assert s['hd']['chrome_mask'] == s['hd']['chrome_ring_mask'] == 0
         assert s['hd']['chrome_parts'] == s['hd']['chrome_rings'] == 0
         return {'parts': 0, 'rings': 0, 'states': []}

@@ -8,8 +8,11 @@ import subprocess
 import time
 import zipfile
 from pathlib import Path
+from footer_catalog import source as footer_source, decode as footer_decode
 
-out=Path('/workspace/runs/gui-cold')
+out=Path('/workspace/runs')/os.environ.get('TAIPEI_GUI_RUN','gui-cold')
+footer_refs=footer_source(Path('/orig/RS201.ROM').read_bytes())
+file_toggles=[]
 def status():
     try:
         with zipfile.ZipFile(out/'capture.zip') as z:
@@ -59,6 +62,7 @@ def native_exit(label):
     action(label+'-menu','F1')
     action(label+'-select','Down')
     action(label+'-confirm','space')
+    file_f12_roundtrip(label+'-file','quit-confirm')
     subprocess.run(['xdotool','type','--delay','150','Y'],check=True)
     # 原版先播離開動畫，再於政績畫面透過 AH=07h 等最後一個鍵。
     # 只等原版控制流，不跳過動畫，也不以固定睡眠猜測完成時間。
@@ -69,6 +73,20 @@ def native_exit(label):
     space()
     wait_for(lambda s:s.get('dos_exited') is True,label+'-native-exit')
     capture(label+'-native-exit')
+
+def file_f12_roundtrip(label,family):
+    if os.environ.get('TAIPEI_THEME')!='hd-b':return
+    before=status()
+    assert before['hd']['file_dialog']==family
+    for suffix,enabled in [('original',False),('hd',True)]:
+        action(label+'-theme-'+suffix,'F12')
+        current=status()
+        assert current['hd_enabled'] is enabled
+        assert current['frame_index_sha256']==before['frame_index_sha256']
+        assert current['key_reads']==before['key_reads']
+        assert [i for i in current['inputs'] if i['kind']=='keyboard']==[i for i in before['inputs'] if i['kind']=='keyboard']
+        assert current['hd']['file_dialog']==(family if enabled else '')
+    file_toggles.append({'label':label,'family':family,'original_frame_unchanged':True,'no_dos_keyboard':True})
 
 wait_for(lambda s:s.get('steps',0)>=700_000_000,'intro')
 subprocess.run(['xdotool','search','--name','模擬台北','windowfocus'],check=True)
@@ -141,9 +159,12 @@ base_tile=tile(out/'city-map-frame-index.bin',cell)
 built_tile=tile(out/'uncover-power-frame-index.bin',cell)
 assert built_tile!=base_tile, '原版施工未改變目標圖塊'
 assert len(set(built_tile))>1, '施工結果只有空白色塊'
+built_money=footer_decode((out/'uncover-power-frame-index.bin').read_bytes(),footer_refs,1)[2]
+assert built_money.strip()=='79980','原版施工資金不符已驗證成本'
 for label,key in [('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
                   ('backspace','BackSpace'),('rename','type:4'),('save-accept','space')]:
     action(label,key)
+    if label=='save-dialog':file_f12_roundtrip('save-file','file-browser')
 save_dir=Path(os.environ['TAIPEI_TEST_SAVES'])
 save=save_dir/'ROUND4.SAV'
 assert save.is_file() and save.stat().st_size==93567, '原版存檔尚未產生'
@@ -172,13 +193,16 @@ with (out/'app.log').open('w') as log:
         for label,key in [('load-choice-1','Right'),('load-choice-2','Right'),('load-dialog','space'),
                           ('load-name','type:round4'),('load-accept','space')]:
             action(label,key)
+            if label=='load-dialog':file_f12_roundtrip('load-file','file-browser')
         assert any(f.get('Op')=='read' and f.get('Name','').upper()=='ROUND4.SAV' for f in status().get('file_ops',[])), '未見原版讀取存檔'
         assert hashlib.sha256(save.read_bytes()).hexdigest()==saved_sha, '讀檔改寫了來源存檔'
         loaded_tile=tile(out/'load-accept-frame-index.bin',cell)
         assert loaded_tile==built_tile, '冷啟動讀檔未恢復施工圖塊'
+        loaded_money=footer_decode((out/'load-accept-frame-index.bin').read_bytes(),footer_refs,1)[2]
+        assert loaded_money==built_money,'冷啟動讀檔未恢復原版資金'
         native_exit('reload-quit')
         assert p.wait(timeout=10)==0
-        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True}},indent=2))
+        (first_out/'result.json').write_text(json.dumps({'cold_start':True,'checkpoint':False,'native_exit':True,'reload_read':True,'new_game_dialog_f12_roundtrip':os.environ.get('TAIPEI_THEME')=='hd-b','file_f12_roundtrips':file_toggles,'save_sha256':saved_sha,'save_dir':str(save_dir), 'construction':{'native_xy':cell,'before_sha256':hashlib.sha256(base_tile).hexdigest(),'after_sha256':hashlib.sha256(built_tile).hexdigest(),'cold_loaded_same':True,'money_before_exit':built_money,'money_after_reload':loaded_money}},indent=2))
         print('GUI cold construction / save / native exit / cold reload passed',flush=True)
     finally:
         if p.poll() is None:

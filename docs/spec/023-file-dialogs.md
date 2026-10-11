@@ -1,6 +1,6 @@
 # 023：檔案視窗與離開確認
 
-狀態：READY。核對日期：2026-10-11。Issue：[#38](https://github.com/wicanr2/taipei/issues/38)。尚未接入產品。
+狀態：CONFORMED。核對日期：2026-10-11。Issue：[#38](https://github.com/wicanr2/taipei/issues/38)。限本規格的完整檔案視窗與離開提示。
 
 ## 範圍
 
@@ -65,14 +65,14 @@ ROM 成員使用檔案偏移與零起算索引。畫面座標是原版 320×200�
 - 空白檔案面板 268×428；離開提示 896×72。每個輸出都有 SHA-256。
 - B 面板紋理縮放後 RGB 除五，提升白字與紅色選取的辨讀；原版位置與文字不變。
 - [hd_file_dialogs_check.py](../../workspace/tools/hd_file_dialogs_check.py) 由 PNG 獨立重算 198 個 alpha 墨跡及完整離開提示，結果 `workspace/runs/file-dialog-ink-dim.json` 通過。實際八 W 清單的原位比較為 `workspace/runs/file-dialog-wide-proof.png`，SHA-256 `0fc4db6e204da3f654a401d33517a765148372be6e7bcf4890d3608fe6a3d0f6`，已目視確認沒有裁切。
-- 初版亮底原型與來源保留在 `workspace/runs/file-dialog-prototype-first/`。現行原型尚未接入產品，READY 只准許按下列契約實作。
+- 初版亮底原型與來源保留在 `workspace/runs/file-dialog-prototype-first/`。調暗原型經 READY 審查後按下列契約接入產品，正式結果見末節。
 
 ## 正式呈現契約
 
 輸入為唯讀 `Indexed[64000]`、`Palette[256][3]`、顯示模式與 HD 開關。輸出為 1280×800 RGBA 與呈現統計。不得存取 DOS 執行器、讀鍵佇列、檔名緩衝、亂數或 SAV，也不寫入原版資料。
 
 - ROM 雜湊、顯示模式 19 及 HD 開關先由既有入口檢查。先重建原版四倍畫面，再嘗試本批來源。
-- 檔案視窗完整重建 7169 個索引像素。八列、每列八字元的 5×7 點陣逐格反查 ROM56，包含空白；重建後全矩形逐 byte 相同才接受。輸入列可見墨色只接受 15，清單非空墨色只接受 31／32，最多一列紅字。空白列統計以墨色 0 表示沒有可見墨跡。不得從原版邏輯長度清除畫面殘留。
+- 檔案視窗完整重建 7169 個索引像素。八列、每列八字元的 5×7 點陣逐格反查 ROM56，包含空白；重建後全矩形逐 byte 相同才接受。輸入列可見墨色只接受 15，清單非空墨色只接受 31／32，最多一列紅字。空白清單列統計以墨色 0 表示沒有可見墨跡，空白輸入列固定記 15，與來源核對器一致。不得從原版邏輯長度清除畫面殘留。
 - 離開提示以 ROM1 裁切、上述 ROM57 中文及 ROM56 ASCII 完整重建 4032 像素，來源 SHA-256 `84b33e447ebeea82ba9517eda9c987bf8a9bf5cec759892974cb66401caaf701`。不把同位置其他字串當成離開提示。
 - 每次只驗來源矩形實際使用的色盤索引，逐色與固定 `palette.json` 比較。未使用的索引變動不影響匹配。
 - 檔案視窗畫固定 B 底板，再按八列可見字元放 Noto atlas；31／15 顯示白字，32 顯示紅字。離開提示畫固定完整 PNG。每次重畫底板，縮短、切換及關閉不保留前幀像素。
@@ -100,3 +100,19 @@ ROM 成員使用檔案偏移與零起算索引。畫面座標是原版 320×200�
 5. 真實資源的必要 Go 測試無跳過；Linux、Windows amd64、macOS amd64／arm64 編譯與架構檢查。35 原始檔及 RAR 不變，擁有權與 Docker 清理通過。真機及正式封包另驗。
 
 上述完成前不升 CONFORMED 或關閉 #38。原版圖庫、原文資料、字型、圖片、存檔及收據只留本機；Git 只收原創工具與文件。
+
+## 正式驗證結果
+
+實作入口為 [file_dialogs.go](../../workspace/app/internal/hd/file_dialogs.go)。本批只有呈現層，不引用 DOS 執行器；按當幀完整來源及實際使用色盤畫固定參考。原版處理全部操作與存檔。
+
+- [實際資源測試](../../workspace/app/internal/hd/file_dialogs_test.go) 驗 243 份來源、729 個單像素破壞、雙紅色選取、使用／未使用色盤、十四種必要資源缺失／竄改及兄弟家族隔離。完整 HD、鍵盤、原點測試 67.554 秒通過且無跳過，新增雙選取後本批再驗 13.57 秒通過。
+- [正常 HD 操作](../../workspace/tools/file_dialog_hd_playtest.sh) 在 `workspace/runs/file-dialogs-hd/` 取得 64 份收據。空清單、空白存檔、八／九字元、退格、取消、十檔七列捲動與邊界、讀檔輸入忽略、覆寫、其他九檔不變、離開選否及兩家族 F12 均通過。
+- `workspace/runs/gui-file-dialogs-cold/` 另有 45 份正常施工存退讀收據，兩次原版退出、全新 EXE 讀回原施工格及資金 79980 通過。存／讀／兩次離開視窗的四次 F12 往返保持原版畫面與鍵盤不變。022 的 `gui-cold/` 原件及 catalog 路徑保留。
+- 合計 109 份正常收據的來源及像素由獨立 Python／Go 核對。53 份檔案／提示收據包含原版主題往返，獨立重建字串、墨色、使用中色盤、完整固定面板與全部區外；198 字形墨跡及原位八字、離開提示目視通過。冷讀後標題、十四工具與底部文字另驗恢復。
+- [有效負對照](../../workspace/tools/hd_file_dialogs_negative.py) 重算色號、原版 PNG 與呈現雜湊後，十八項來源、字形、背景、區外、色盤及中繼資料破壞均被 Python／Go 拒絕。四個正對照含未使用色盤變動，均通過；證據在 `workspace/runs/file-dialogs-negative/`。
+
+整批命令為 `bash workspace/tools/file_dialogs_verify.sh`。從正常冷啟動至 `quit-file-theme-hd-capture.zip` 的唯一原版硬體輸入，兩側各完整執行 **2,688,000,000 步**，按預登記每 24,000,000 步抽樣，共 112 次。實際包含檔案視窗六次、離開提示三次、說明三次及城市各層六十次。原版側 175.408 秒、HD 側 138.719 秒。
+
+兩側 RAM、CPU、原版色號、色盤、埠、OPL、讀鍵、DOS 狀態、檔案操作、原版寫入紀錄與落地 SAV 雜湊相同，狀態 SHA-256 `f55713cac7d97ff24ed9b8e4b21590a65cd254890efd7d926a23129f0a07bf0e`。稽核各用獨立空白可寫 scratch，並回對正常 GUI 的原版畫面、色盤、讀鍵與檔案操作。`ROUND4.SAV` 維持 `8c708ef41c56ca6b705de821d69b553f9fbb76c85f391cc599105ea439d6a4ad`，與正常 GUI 實際存檔一致。這是明示呈現抽樣與正常路徑驗證，不宣稱逐幀或跨亂數實作精確對拍。
+
+狀態收據為 `workspace/runs/file-dialogs-state-audit.json`，命令、來源、程式／工具、固定素材、全部正常收據及四架構雜湊在 `file-dialogs-state-provenance.json`。Linux amd64、Windows amd64、macOS amd64／arm64 編譯與結構核對、35 原始檔與 RAR 不變均通過。平台真機與正式封包、模態外高清化、其他視窗／圖表／圖片／場景／動畫仍未完成。

@@ -32,17 +32,24 @@
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6，以及底部費用、年月與資金。最新 144 份正常收據、二十九城市選取、六場景 F12、十四項有效負對照、施工存退讀及兩次退出通過；兩側各 51.84 億步、216 次明示 HD 抽樣原版狀態相同 | [城市選單契約](docs/spec/022-city-function-menus.md)、[工具子選單](docs/spec/021-tool-submenus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
+| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金，以及存讀檔視窗與離開提示。023 的 109 份正常收據、十八項有效負對照、施工存退讀與兩次退出通過；兩側各 26.88 億步、112 次明示 HD 抽樣原版狀態及實際存檔相同 | [檔案視窗契約](docs/spec/023-file-dialogs.md)、[城市選單](docs/spec/022-city-function-menus.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
-| 存讀檔與離開提示 HD | 243 份完整來源、729 項單像素負對照、94 字元及清單／邊界／覆寫探索、198 字形獨立墨跡與八 W 原位原型通過，023 達 READY | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；尚未接入產品，正式 F12、正常存退讀、原版狀態、負對照、四平台另驗 |
+| 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
 | 跨平台編譯 | 本批 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
-- 檔案視窗離線原型：[file-dialog-prototype](workspace/app/cmd/file-dialog-prototype/main.go)，固定 Noto、既有 B 面板與來源字碼，產生 95 ASCII 雙色及八個中文墨跡、原位空白面板與離開提示。僅研究原型，未接入產品。
-- 檔案視窗契約：[023](docs/spec/023-file-dialogs.md)，READY；固定本作完整來源、正常操作、素材、失配隔離與正式驗證閘門，尚未接入產品。
-- 檔案視窗獨立原型檢查：[hd_file_dialogs_check.py](workspace/tools/hd_file_dialogs_check.py)，從 PNG 重算 198 個字形的 alpha 墨跡、安全矩形與完整離開提示組合；尚未包含正式接入驗收。
+- 檔案視窗正式呈現：[file_dialogs.go](workspace/app/internal/hd/file_dialogs.go)，依 023 完整來源與使用中色盤辨識，接入固定 B／Noto；限本批達 CONFORMED。
+- 檔案視窗實際素材測試：[file_dialogs_test.go](workspace/app/internal/hd/file_dialogs_test.go)，核對 243 筆完整來源、整框與區外、色盤及真實素材故障。
+- 檔案視窗獨立 Go 收據核對：[files.go](workspace/app/cmd/receipt-check/files.go)，`receipt-check -file-reference <素材根> -original <原版目錄>`；重建完整來源與動態文字，不引用產品呈現器。
+- 檔案視窗 HD 正常操作：[file_dialog_hd_playtest.sh](workspace/tools/file_dialog_hd_playtest.sh)、[file_dialog_hd_playtest.py](workspace/tools/file_dialog_hd_playtest.py)，固定 Docker 冷啟動、編輯、清單捲動、空白、覆寫、取消與兩家族 F12；有界停止，原版退出另驗。
+- 檔案視窗有效負對照：[hd_file_dialogs_negative.py](workspace/tools/hd_file_dialogs_negative.py)，重算 PNG 與雜湊後測試來源、色盤、墨跡、背景、區外及中繼資料；包含未使用色盤正對照。
+- 檔案視窗整批驗證：[file_dialogs_verify.sh](workspace/tools/file_dialogs_verify.sh)、[file_dialogs_provenance.py](workspace/tools/file_dialogs_provenance.py) 通過 109 份正常收據、施工存退讀、兩次退出、四架構與原始輸入核對。`presentation-audit -require-file-dialogs` 使用真實獨立 scratch，另回對正常 GUI 畫面、色盤、讀鍵、檔案操作及落地存檔；兩側各 2,688,000,000 步、112 次預登記抽樣，含檔案六次、離開三次，狀態相同，SHA-256 `f55713cac7d97ff24ed9b8e4b21590a65cd254890efd7d926a23129f0a07bf0e`。證據為 `workspace/runs/file-dialogs-state-audit.json`、`file-dialogs-state-provenance.json` 及 `file-dialogs-verification.log`。
+- 檔案視窗離線原型：[file-dialog-prototype](workspace/app/cmd/file-dialog-prototype/main.go)，固定 Noto、既有 B 面板與來源字碼，產生 95 ASCII 雙色及八個中文墨跡、原位空白面板與離開提示。用於本機素材重生；正式呈現由 `file_dialogs.go` 載入固定結果。
+- 檔案視窗契約：[023](docs/spec/023-file-dialogs.md)，限本批達 CONFORMED；完整來源、正常操作、素材、失配隔離及正式驗證通過。
+- 檔案視窗獨立檢查：[hd_file_dialogs_check.py](workspace/tools/hd_file_dialogs_check.py)，從 ROM 重建完整來源與使用中色盤，核對固定 PNG、動態字形、整框、全部區外及 198 個字形墨跡。由 `hd_scroll_check.py` 共用，53 份檔案／提示收據含原版主題往返均通過。
+- 檔案視窗收尾證據：`workspace/runs/file-dialogs-final-hygiene.json`，364 個相對連結、八個新入口與既有入口正對照、語法、格式、1000:1000 及指定 find 通過。Linux 從現行來源重建逐 byte 相同；本批容器均退出刪除，無新 image。正式 GUI 存檔在 `gui-cold-saves.EVJvVc/`，原始 35 檔與 RAR 保持基準。
 - 檔名正常輸入核對：[file_dialog_inputs_check.py](workspace/tools/file_dialog_inputs_check.py)，回讀九十四字元、原版讀鍵、退格、八／九字元、取消與空清單確認；完整收據和色盤參考留本機。
 - 存讀檔與離開確認來源：[#38](https://github.com/wicanr2/taipei/issues/38)，[file_dialog_catalog.py](workspace/tools/file_dialog_catalog.py) 重建 ROM3 完整檔案視窗、八列 ASCII 字模及 ROM1 底部離開提示，審查結果 `workspace/runs/file-dialog-source-ready/catalog.json`。首批八份原型輸入另留 `file-dialog-source/catalog.json`，未覆寫前批正常 GUI。
 - 檔案視窗正常探索：[file_dialog_playtest.sh](workspace/tools/file_dialog_playtest.sh)、[file_dialog_playtest.py](workspace/tools/file_dialog_playtest.py)，從正常冷啟動查實際檔名字集、長度、退格、空清單、分頁、取消與離開選否；輸出 `workspace/runs/file-dialogs-native/`。只作來源探索，有界停止不代替原版退出驗收。

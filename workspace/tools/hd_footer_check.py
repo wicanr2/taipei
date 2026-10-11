@@ -72,7 +72,7 @@ def covered_native(s):
 
 def audit_footer(s, frame, rgba):
     if 'footer_mask' not in s['hd']: return None  # 歷史收據不能證明本批。
-    if s['hd'].get('panel') or s['hd'].get('dialog'):
+    if s['hd'].get('panel') or s['hd'].get('dialog') or s['hd'].get('file_dialog'):
         # 主選單覆蓋底部座標，由呼叫端完整面板來源與區外核對負責。
         assert s['hd']['footer_mask'] == 0 and s['hd']['footer_text'] == ['', '', '', '']
         return {'mask': 0, 'text': ['', '', '', '']}
