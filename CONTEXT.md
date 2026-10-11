@@ -99,3 +99,5 @@
 - 完整素材盤點證據：[docs/re/008-full-asset-inventory.md](docs/re/008-full-asset-inventory.md)，記錄 118 成員、1317 圖片來源與 25 待分類成員，數量不當成全部重繪完成。
 - 全中文字模盤點：[font_catalog.py](workspace/tools/font_catalog.py)，對應 #31，匯出固定 ROM 的字模、原始字碼與正常畫面候選；未審查字形語意不直接覆字。
 - 中文字模證據：[docs/re/009-chinese-font-sources.md](docs/re/009-chinese-font-sources.md)，記錄字模定位、十二字正常畫面正對照、CP950 候選與尚未確認的語意。
+- 原版文字呼叫端：[ida_text_probe.py](workspace/tools/ida_text_probe.py)，依 #31 在既有唯讀 IDA 9.4 資料庫的副本查原始字串、交叉參照與窄範圍函式，輸出留在 `workspace/runs/ida-31/`。
+- 正常文字重播：[text-source-audit](workspace/app/cmd/text-source-audit/main.go)，依 #31 唯讀觀察正常輸入中的原版字串與字模呼叫，逐點核對原版繪製緩衝；不接入產品路徑。
