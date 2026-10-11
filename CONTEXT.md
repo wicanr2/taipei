@@ -36,6 +36,7 @@
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
 | 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
+| 道路與電線 | 026 維持 DRAFT。完整來源 75 張、390 份正常城市收據見 27 張；43 張候選中 25 張有正常來源。七種施工情境已核對；擴大原位比較七張、140 格與全部區外及五項破壞通過。v5 固定輸入 157 檔重建相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；另 18 張正常相位、正式回退／資源、HD 接入、狀態與存退讀未完成。#45 僅修 PNG 編碼 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
@@ -44,6 +45,18 @@
 
 ## 文件入口
 
+- 道路與電線批次：[#44](https://github.com/wicanr2/taipei/issues/44)，依 #30 研究完整來源、連接及 B 原型；尚未 READY。來源工具 [infrastructure_catalog.py](workspace/tools/infrastructure_catalog.py) 嚴格解析九組 9×9 圖庫與所有別名，回對既有正常 GUI 原子收據，輸出限本機 `workspace/runs/infrastructure-source/`。先查成員 39，不把來源圖庫索引當成建築語意。
+- 道路／電線正常來源探針：[infrastructure_playtest.py](workspace/tools/infrastructure_playtest.py)、[infrastructure_playtest.sh](workspace/tools/infrastructure_playtest.sh)，以正常工具、方向鍵及 Space 建十字連接並移開游標；不注入城市／座標，有界研究停止不代替原版退出驗收。初批輸出 `workspace/runs/infrastructure-native/`，97 次原版讀鍵與兩個九格十字已通過。追加轉角、岸邊及電線道路重疊模式輸出 `workspace/runs/infrastructure-variants-native/`，另驗結果。
+- 正常建造逐段核對：[infrastructure_source_check.py](workspace/tools/infrastructure_source_check.py)，直接重讀 ROM、原子畫面與原版讀鍵，分開已知來源變化及游標等未知格。預設 `--require-complete` 要求全部七段；`--case shore` 只核對獨立電線岸邊補查，結果分列本次要求及全部七段狀態。前綴報告明列缺段，不能代替整批完成。
+- 電線岸邊缺段補查：[infrastructure_shore_playtest.py](workspace/tools/infrastructure_shore_playtest.py)、[infrastructure_shore_playtest.sh](workspace/tools/infrastructure_shore_playtest.sh)。第二輪 2400 秒上限保留六段完整收據，最後岸邊另由獨立補查通過：46 次原版讀鍵，陸地 (23,10) 向左至 (19,10) 五格均為成員 39／圖像 46。沿用同一 binary、image 及遊戲速度，輸出 `workspace/runs/infrastructure-shore-native/`；有界研究停止不代替原版退出。
+- 追加來源盤點 `workspace/runs/infrastructure-source-r2/` 收入既有來源、第一輪十字、第二輪六段及獨立岸邊補查，沿用來源工具；不覆寫 v5 所固定的初盤。擴大正常來源的 v5 原位比較另存 `workspace/prototypes/hd-style/infrastructure-v5-expanded/`，不改 v5 素材或既有 SHA-256。
+- 道路與電線呈現草案：[026](docs/spec/026-infrastructure-tiles.md)，DRAFT；只允許離線原型，正式產品尚未接入。候選四權重幾何及材質組合由 [infrastructure_prototype.py](workspace/tools/infrastructure_prototype.py) 產生，輸出 `workspace/prototypes/hd-style/infrastructure-v1/`，必須另驗完整來源、接縫及正常呈現。
+- 道路電線原型獨立核對：[infrastructure_prototype_check.py](workspace/tools/infrastructure_prototype_check.py)，直接解析固定 ROM 全部別名，以整數面積與 Fraction 色彩核對每張來源、四向邊緣、完整 1280×800 及全部區外。`infrastructure-v2/` 的 43 張候選、二十四張世界座標圖及五項有效破壞已通過；三次過渡修訂另存 `workspace/prototypes/hd-style/infrastructure-v3/`，v1／v2 保留作前件。原型均在 `workspace/prototypes/hd-style/`，正式 GUI 另驗。
+- 瀝青材質原型：內建 imagegen 生成，檔案 `workspace/prototypes/hd-style/asphalt-b-v1-generated.png` 與 `asphalt-b-v1.png`，完整提示詞為同目錄 `asphalt-b-v1.prompt.txt`。1254×1254 版本 SHA-256 `61057d15840d65801652de6af95b1b27b56706d67774a66f41bec3fb852cd384`；原生成圖、提示詞及後處理均留本機，不把材質存在當作道路 HD 完成。
+- 原位材質尺度修訂：v3 的實際 36×36 道路對比顯示瀝青顆粒過大。`workspace/prototypes/hd-style/infrastructure-v4/` 改以四倍世界頻率取樣同一固定瀝青，只調新材質尺度，保留原來源幾何及其他地景相位；正式接入前另核對此版本。
+- 道路電線來源選取：[infrastructure_ida.sh](workspace/tools/infrastructure_ida.sh) 沿用既有固定 IDA 9.4 image 與唯讀 `ida-19/event-keys.i64`，在 `workspace/runs/ida-44/` 的一次性副本匯出 `sub_1619A` 原始定位與 bytes。參數 `bitmap-drawing` 另查原圖繪製 `sub_16129`，不覆寫前件；只追本批來源與相位，不改原始資料庫或覆蓋函式名稱。
+- 道路電線 PNG 可重現修正：[#45](https://github.com/wicanr2/taipei/issues/45)，v4 乾淨重建發現像素相同但時間戳不同，前件保留 `workspace/runs/infrastructure-repro-v4/`。本批產生器改用固定標準庫 RGBA PNG，v5 輸出在 `workspace/prototypes/hd-style/infrastructure-v5/`，幾何與像素契約不變；另驗全部 157 檔乾淨重建，026 及 #44 維持 DRAFT。
+- v5 驗證結果：兩次乾淨輸出全部 157 檔相同，70 PNG 均與 v4 解碼像素相同且只含 IHDR／IDAT／IEND。證據 `workspace/runs/infrastructure-source/v5-reproducibility.json`、`png-provenance.json`；Python 3.11.2／zlib 1.2.13，固定 GUI image。原位技術比較為 `workspace/prototypes/hd-style/infrastructure-v5/power-comparison.png`，左原版、右離線候選，非正式 GUI HD 收據。
 - 預算完整面板契約：[025](docs/spec/025-budget-panel.md)，限完整預算呈現達 CONFORMED；已驗完整來源、動態文字、選取、F12、施工存退讀、有效負對照與原版狀態。
 - 預算正式呈現：[budget.go](workspace/app/internal/hd/budget.go)，依 025 重建完整來源、辨識十一欄與單一選取，載入固定 B／Noto 面板及數字。只讀原畫面，不修改遊戲狀態。
 - 預算實際素材測試：[budget_test.go](workspace/app/internal/hd/budget_test.go)，以固定 43 份來源及六張審查原型核對完整呈現、全部區外、失配回退與家族隔離；正常玩家驗收另驗。

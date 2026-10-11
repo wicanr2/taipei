@@ -468,3 +468,31 @@ r4 完整正常流程通過：103 份收據、五列調整／還原與 F12、9�
 完成前再回查規格閘門與 README 路由，025 限完整預算呈現升 CONFORMED。CONTEXT、README 及驗收矩陣同步現況；極值規則、模態外、其他圖片／視窗／圖表／場景／動畫、真機與正式封包仍未完成，完整 HD 母項維持開啟。只提交明列的原創程式、腳本與文件，不加入原版、轉錄、字型、美術或擷取，不改 dosgolem 上游。收尾檢查及提交回鏈另追加結果。
 
 收尾 393 個相對連結、九個本批入口與既有入口正對照、全部工具 Python／shell 語法、41 份 Go 格式、變更檔 1000:1000、指定 find 及 Linux 乾淨重建比較通過，記錄 `budget-source/hd-final-hygiene.json`。本批 Docker 容器均退出刪除，主機回讀沒有殘留專案容器，沒有建立新 image 或清理其他專案資源。提交以「完成預算面板高清呈現與正常存退讀驗證 #39 #42 #43」回鏈遠端，提交 SHA、推送及 Issue 結案結果以 #39 的最終回覆為準。
+
+## 2026-10-12：#44 道路電線來源與離線原型
+
+主機 gh 核對 #39／#42／#43 CLOSED 及現行提交 `6b92297e87e53e2e84208b61a7fb2b646395b28d` 後，先建立 [#44](https://github.com/wicanr2/taipei/issues/44)。命中復古重製、GUI 還原、規格閘門與文件職責入口，載入對應技能及必要 reference；新材質使用 imagegen 技能，窄範圍來源查證使用 IDA 9.4 技能。B、1280×800、Noto、F12、完整重繪與四個平台／架構沿既有定案。
+
+- `infrastructure_catalog.py` 嚴格重讀固定 ROM 九組圖庫，1134 筆來源／1049 個不同 81-byte 圖像及所有別名相符。成員 39 全部 75 張有原始偏移、色號及 SHA-256；二十份既有正常城市收據看見其中十四張，75 個首像素破壞全拒絕。技術圖庫最初遇到 image 缺少 rsvg-convert，指定 MSVG 仍無 coder；回查 GUI 還原路由後，改用既有純 PNG 編碼及 ROM56 ASCII 技術標籤，不另建 image。兩前件保留於 `infrastructure-source-before-svg/`、`infrastructure-source-before-msvg/`，正式盤點在 `infrastructure-source/catalog.json`。
+- 第一輪 `infrastructure-native/` 完成 97 次正常原版讀鍵，各建九格道路與電線十字並移開游標；中心圖像 25／55、水平 16／46、垂直 15／45，過程另見 21／51。原點取實際 `map_origin=(12,12)`，沒有城市／座標注入或快照。最後 5,112,000,000 步採有界研究停止，未當作原版退出或存退讀。後續探索加入轉角、岸邊及道路電線重疊，另存 `infrastructure-variants-native/`。
+- 內建 imagegen 新繪瀝青材質，預設輸出複製至 `workspace/prototypes/hd-style/`，不覆寫原圖。原圖 1586×992，SHA-256 `7b172889bb71eb4a8bb65393e8caaae790afd1eed69529a71a612cffd20b85ae`；固定 ImageMagick 轉 1254×1254 後為 `61057d15840d65801652de6af95b1b27b56706d67774a66f41bec3fb852cd384`。完整提示詞為 `asphalt-b-v1.prompt.txt`，SHA-256 `6a56bd89866d51a10bc56cda39874517f890067c530d7a4d1d8c1827c89b3cfe`。原圖、提示詞及後處理留本機。
+- 026 維持 DRAFT。候選成員 39 的 15–29／43–55／60–74 共 43 張，來源各自核對，不以圖庫位置猜用途。v2 將色彩量化改為整數；v3 用三次過渡縮窄薄線混色帶；原位比較發現瀝青顆粒過大，v4 改為四倍世界頻率。各前件保留，沒有改產品呈現器。獨立核對直接解析 ROM，以整數面積及 Fraction 色彩確認 55728 個高清像素、13932 個原像素中心、四向原邊、24 張世界座標測圖、兩張完整 1280×800 及全部區外。五項破壞同步更新自報雜湊後仍拒絕。
+- IDA 的 `source-selection.json` 與 `bitmap-drawing.json` 由原始唯讀 `.i64` 的新副本匯出，固定 IDA 9.4 image，沒有改名或回寫原資料庫。`sub_1619A` 的十三指令證實圖偏移索引；`sub_16129` 的三十二指令證實逐列完整 `rep movsb`，色號 0 不能當透明底圖。60–74 與 15–29 的差異包含 240／241 及部分背景像素，不能用換車色或固定 `+45` 推導。240／241 確有原版色盤變動，正常交通來源相位尚未驗收。
+
+第二輪來源另以 `infrastructure_source_check.py` 逐段重讀原子收據、ROM 別名、原版讀鍵與原點；預設部分報告明列缺段，`--require-complete` 才要求全部七段。初步三段 `normal-variants-prefix.json` 有道路十字九格、轉角／鄰格八格及岸邊六格已知變化。岸邊實際來源以原版為準，不另猜橋梁規則。完整版、正式資源／回退契約、正常交通相位、HD 接入、捲動及存退讀仍由 #44 繼續；全部地圖、介面、場景與封包母項未結案。
+
+## 2026-10-12：#45 修正原型 PNG 可重現性
+
+v4 從固定輸入乾淨重建時，`39-015.png` byte 比較失敗。兩圖解碼 RGBA 相同，PNG chunk 證實差異為 `tIME` 及 date:create／date:modify。原型沿用了負對照用的 `hd_chrome_negative.png`，其 ImageMagick 編碼會寫時間戳。先建立 [#45](https://github.com/wicanr2/taipei/issues/45)，才改本批產生器；沒有改其他批次的共用負對照工具。失敗前件保留於 `workspace/runs/infrastructure-repro-v4/`。
+
+v5 採固定 Python 標準庫的 RGBA8 PNG，只有 IHDR／IDAT／IEND、filter 0、zlib level 9；保留 v4 幾何、尺度及像素。獨立完整來源、中心、四邊、24 張世界座標、兩張正常原位及五項有效破壞通過。v5 manifest SHA-256 `c9ea6457c10fc9dec5c755177e940eb0461e26282a74f5a58977456a2c90794c`。乾淨重建、擁有權及 Docker 收尾結果另追加；本缺陷修正不把 026 升 READY，也不將 #44 或完整 HD 結案。
+
+v5 兩次乾淨輸出的 157 份產物及 manifest 逐 byte 相同，70 PNG 全部與 v4 解碼像素相同，且只含 IHDR／IDAT／IEND。Python 3.11.2，zlib 編譯及執行均為 1.2.13；證據在 `infrastructure-source/v5-reproducibility.json`、`png-provenance.json`。成功的重建暫存目錄刪除，v4 失敗前件保留。原版 RAR、EXE／ROM 與 Linux binary 雜湊相符；沒有改產品程式，不重跑無關的跨平台編譯。
+
+第二輪來源在 2400 秒上限回 124，保留完整六段 `normal-variants-final-prefix.json`，只有電線岸邊缺段。另寫窄範圍補查，不延長原整批或重跑已完成內容；同一 binary、image、400000 steps/update 及正常鍵盤，46 次原版讀取及 release 形成五格成員 39／圖像 46。`infrastructure-shore-native/` 在 3,024,000,000 步研究停止，退出 0，獨立 `--case shore --require-complete` 通過。
+
+最終七種情境的已知變更數為 9／8／6／9／8／2／5，游標等未知格另列。道路重疊的五次操作只有兩格畫面改變，其餘來源不變，未依按鍵推論施工成功。`infrastructure-source-r2/catalog.json` 收入 390 份正常城市收據、125 個不同已見圖塊；成員 39 已見 27 張，其中 25 張屬候選，剩餘 18 張正常相位仍未驗。
+
+擴大 `infrastructure-v5-expanded/` 由七份正常原件產生七張離線比較，完整 1280×800、140 個候選格及全部區外通過；五項有效破壞仍拒絕。43 張幾何、13932 個中心、85 種原邊及 24 張世界座標通過，manifest SHA-256 `b59376311fafe2265bc7a2208c4426b20d33c35cafa4dcf989261794354ee32b`。沒有把離線比較當成正式 GUI。技術比較 `infrastructure-v5/power-comparison.png` 左原版、右候選，裁圖及來源雜湊在同目錄 JSON。
+
+最初文件檢查的正對照誤指不存在的工具名稱，改用確定已有入口的 025 後通過。後續新增岸邊補查及最終記錄一併重新核對；最終檔案、連結、語法、入口、1000:1000 及指定 find 結果保存 `infrastructure-source/final-hygiene-r2.json`。本批容器全部退出刪除，沒有新建 image，未清理其他專案資源。只提交明列原創工具與文件，美術、原版、圖庫、字型、擷取及證據產物留本機。提交／推送後回鏈 #44／#45；#45 僅 PNG 修正結案，#44、完整 HD 及跨平台交付母項維持開啟。
