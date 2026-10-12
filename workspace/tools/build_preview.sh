@@ -36,5 +36,7 @@ timeout 180s docker run --rm --network "$network" --memory 3g --cpus 2 --pids-li
     go mod verify
     go test -mod=readonly -p 1 ./internal/keyboard
     go build -mod=readonly -p 1 -trimpath -o /out/taipei-preview ./cmd/taipei-preview
-    { go version; sha256sum go.mod go.sum /tools/*.patch /out/taipei-preview; } > /out/preview-provenance.txt
+    mkdir -p /out/locales
+    cp locales/ui.tsv /out/locales/ui.tsv
+    { go version; sha256sum go.mod go.sum locales/ui.tsv /tools/*.patch /out/taipei-preview; } > /out/preview-provenance.txt
   '

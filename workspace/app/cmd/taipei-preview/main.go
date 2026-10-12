@@ -22,7 +22,9 @@ import (
 	dg "github.com/wicanr2/dosgolem"
 	a "github.com/wicanr2/dosgolem/audio"
 	"github.com/wicanr2/taipei/preview/internal/hd"
+	"github.com/wicanr2/taipei/preview/internal/i18n"
 	"github.com/wicanr2/taipei/preview/internal/keyboard"
+	"github.com/wicanr2/taipei/preview/internal/localui"
 	"github.com/wicanr2/taipei/preview/internal/original"
 	"github.com/wicanr2/taipei/preview/internal/sound"
 )
@@ -61,25 +63,35 @@ var bindings = []binding{
 }
 
 type game struct {
-	m            *dg.Machine
-	d            *dg.DOS
-	frame        *ebiten.Image
-	rgba         *image.RGBA
-	out          string
-	stopFile     string
-	perUpdate    uint64
-	frames       uint64
-	mouseButtons uint16
-	inputs       []inputEvent
-	textMods     keyboard.Modifiers
-	keyStacks    []map[string]any
-	presentation *image.RGBA
-	hdRenderer   *hd.Renderer
-	hdStats      hd.Stats
-	hdEnabled    bool
-	sound        *sound.Session
-	audioWaits   uint64
-	camera       original.Camera
+	catalog         *i18n.Catalog
+	localUI         *localui.UI
+	language        string
+	settingsPath    string
+	localeOpen      bool
+	localeSelection int
+	localeFence     bool
+	localeOverlay   *image.RGBA
+	localeWarning   string
+	heldScans       map[byte]bool
+	m               *dg.Machine
+	d               *dg.DOS
+	frame           *ebiten.Image
+	rgba            *image.RGBA
+	out             string
+	stopFile        string
+	perUpdate       uint64
+	frames          uint64
+	mouseButtons    uint16
+	inputs          []inputEvent
+	textMods        keyboard.Modifiers
+	keyStacks       []map[string]any
+	presentation    *image.RGBA
+	hdRenderer      *hd.Renderer
+	hdStats         hd.Stats
+	hdEnabled       bool
+	sound           *sound.Session
+	audioWaits      uint64
+	camera          original.Camera
 }
 
 type inputEvent struct {
@@ -101,6 +113,14 @@ func (g *game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyF12) {
 		g.hdEnabled = !g.hdEnabled
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "theme", Text: fmt.Sprint(g.hdEnabled)})
+	}
+	if g.languageInput() {
+		g.refresh()
+		g.frames++
+		if g.frames%60 == 0 {
+			return g.receipt()
+		}
+		return nil
 	}
 	shortcut := ebiten.IsKeyPressed(ebiten.KeyControlLeft) || ebiten.IsKeyPressed(ebiten.KeyAltLeft)
 	// 修飾鍵先送，讓有序文字能按相同的 BIOS 修飾狀態轉換。
@@ -191,8 +211,12 @@ func (g *game) Update() error {
 }
 
 func (g *game) queue(codes ...byte) {
+	if g.heldScans == nil {
+		g.heldScans = map[byte]bool{}
+	}
 	g.m.QueueScanCodes(codes...)
 	for _, scan := range codes {
+		g.heldScans[scan&0x7f] = scan&0x80 == 0
 		g.textMods.Feed(scan)
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "keyboard", Scan: scan})
 	}
@@ -212,6 +236,7 @@ func (g *game) refresh() {
 		g.rgba.Pix[j+3] = 255
 	}
 	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled, g.camera.Origin(g.m))
+	g.paintLanguage()
 	g.frame.WritePixels(g.presentation.Pix)
 }
 func (g *game) Draw(screen *ebiten.Image)  { screen.DrawImage(g.frame, nil) }
@@ -233,6 +258,8 @@ func (g *game) receipt() error {
 		audioStats = g.sound.Stats()
 	}
 	b, err := json.MarshalIndent(map[string]any{
+		"language": g.language, "catalog_source": g.catalog.Source, "catalog_sha256": g.catalog.SHA,
+		"language_panel": g.localeOpen, "language_selection": g.localeSelection, "language_warning": g.localeWarning,
 		"inputs":             g.inputs,
 		"frame_index_sha256": fmt.Sprintf("%x", sha256.Sum256(g.m.Indexed())),
 		"palette":            g.m.Palette(),
@@ -338,6 +365,8 @@ func main() {
 	traceKeyStack := flag.Bool("trace-key-stack", false, "診斷 INT16 讀鍵前的原始堆疊，不改原版狀態")
 	theme := flag.String("theme", "original", "比較原型主題 original 或 hd-b，F12 切換")
 	materials := flag.String("materials", "", "比較原型的本機 B 材質目錄")
+	language := flag.String("language", "", "本次語言 zh-Hant、zh-Hans、ja、ko、en；空值讀前端設定")
+	catalogPath := flag.String("catalog", "", "外部 UTF-8 TSV；預設執行檔旁 locales/ui.tsv")
 	flag.Parse()
 	if *orig == "" || *saves == "" || *out == "" {
 		log.Fatal("請指定 -original、-saves、-receipts")
@@ -362,6 +391,24 @@ func main() {
 		if err = os.MkdirAll(p, 0700); err != nil {
 			log.Fatal(err)
 		}
+	}
+	catalog, catalogErr := i18n.Load(*catalogPath)
+	settingsPath := filepath.Join(*saves, "frontend-settings.json")
+	selected, settingsErr := i18n.ReadSettings(settingsPath)
+	if *language != "" {
+		if i18n.Index(*language) < 0 {
+			log.Fatal("未知語言值")
+		}
+		selected = *language
+	}
+	localUI, uiErr := localui.New(filepath.Join(*materials, "fonts"), catalog)
+	if uiErr != nil && catalog.Source == "external-tsv" {
+		catalogErr = uiErr
+		catalog = i18n.Bundled()
+		localUI, uiErr = localui.New(filepath.Join(*materials, "fonts"), catalog)
+	}
+	if uiErr != nil {
+		log.Printf("語言面板無法載入：%v", uiErr)
 	}
 	m := dg.New()
 	if err = m.LoadEXE(raw); err != nil {
@@ -390,6 +437,16 @@ func main() {
 		log.Fatal(err)
 	}
 	g := &game{m: m, d: d, frame: ebiten.NewImage(1280, 800), rgba: image.NewRGBA(image.Rect(0, 0, 320, 200)), out: *out, stopFile: *stopFile, perUpdate: *steps, hdRenderer: hd.New(rom, *materials), hdEnabled: *theme == "hd-b"}
+	g.catalog, g.localUI, g.language, g.settingsPath = catalog, localUI, selected, settingsPath
+	g.hdRenderer.SetLanguage(catalog, selected)
+	if catalogErr != nil {
+		log.Print(catalogErr)
+		g.localeWarning = "locale.error.catalog"
+	}
+	if settingsErr != nil {
+		log.Print(settingsErr)
+		g.localeWarning = "locale.error.settings"
+	}
 	if *checkpoint == "" {
 		g.sound, err = sound.New(*mute)
 		if err != nil {
@@ -420,7 +477,7 @@ func main() {
 			return previous(c, n)
 		}
 	}
-	ebiten.SetWindowTitle("模擬台北：原版與 HD 比較原型 · F12 切換")
+	ebiten.SetWindowTitle(catalog.Get(selected, "window.title"))
 	ebiten.SetWindowSize(1280, 800)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	runErr := ebiten.RunGame(g)

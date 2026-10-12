@@ -248,6 +248,13 @@ func main() {
 	p.text(picker, "locale.hint", "zh-Hant", image.Rect(340, 614, 940, 656), 26, 16, color.White)
 	p.text(picker, "locale.dismiss", "zh-Hant", image.Rect(340, 660, 940, 702), 24, 16, color.White)
 	files["language-picker-draft.png"] = save(filepath.Join(*out, "language-picker-draft.png"), picker)
+	for _, lang := range languages {
+		for _, variant := range []string{"shift-f1", "f1"} {
+			for name, hash := range p.help(src, lang, variant, *out) {
+				files[name] = hash
+			}
+		}
+	}
 	receipt := map[string]any{"issue": 49, "status": "DRAFT", "product_connected": false, "input_sha256": digest(srcData), "font_sha256": digest(fontData), "catalog_sha256": digest(catalogData), "locales": languages, "keys": len(catalog), "glyphs_checked": len(unique), "missing_glyphs": []string{}, "placements": p.placements, "files": files, "out_of_region_equal": true}
 	b, err := json.MarshalIndent(receipt, "", "  ")
 	check(err)

@@ -91,3 +91,26 @@ locale.name.ko	한국어	한국어	한국어	한국어	한국어
 locale.name.en	English	English	English	English	English
 locale.hint	F11 語言 · F12 原版／HD	F11 语言 · F12 原版／HD	F11 言語 · F12 オリジナル／HD	F11 언어 · F12 원본／HD	F11 Language · F12 Original／HD
 locale.dismiss	Esc 返回遊戲	Esc 返回游戏	Esc ゲームに戻る	Esc 게임으로 돌아가기	Esc Return to game
+help.title	操作說明	操作说明	操作ガイド	조작 안내	Help
+help.key.focus	Tab / Enter	Tab / Enter	Tab / Enter	Tab / Enter	Tab / Enter
+help.action.focus	城市中切換地圖與工具列焦點。	在城市中切换地图与工具栏焦点。	都市画面で地図とツールバーのフォーカスを切り替えます。	도시 화면에서 지도와 도구 모음 사이의 초점을 전환합니다.	In the city, switch focus between the map and toolbar.
+help.key.arrows	↑ ↓ ← →	↑ ↓ ← →	↑ ↓ ← →	↑ ↓ ← →	↑ ↓ ← →
+help.action.arrows	依目前焦點移動地圖游標或工具選擇。	根据当前焦点移动地图光标或工具选择。	現在のフォーカスに応じて地図カーソルやツール選択を移動します。	현재 초점에 따라 지도 커서나 도구 선택을 이동합니다.	Move the map cursor or tool selection, according to focus.
+help.key.space	Space	Space	Space	Space	Space
+help.action.space	工具列確認工具；地圖上進行施工。	在工具栏确认工具；在地图上进行建设。	ツールバーではツールを決定し、地図では建設します。	도구 모음에서는 도구를 선택하고, 지도에서는 건설합니다.	Confirm a tool on the toolbar; build when focused on the map.
+help.key.menus.original	F1–F6	F1–F6	F1–F6	F1–F6	F1–F6
+help.key.menus.remapped	Shift+F1 / F2–F6	Shift+F1 / F2–F6	Shift+F1 / F2–F6	Shift+F1 / F2–F6	Shift+F1 / F2–F6
+help.action.menus	城市選單：離開、檔案、市長、圖表、災難、環境。	城市菜单：离开、文件、市长、图表、灾难、环境。	都市メニュー：終了、ファイル、市長、グラフ、災害、環境。	도시 메뉴: 종료, 파일, 시장, 그래프, 재난, 환경.	City menus: Exit, File, Mayor, Charts, Disasters, Environment.
+help.key.select	↑ ↓ / Enter / Esc	↑ ↓ / Enter / Esc	↑ ↓ / Enter / Esc	↑ ↓ / Enter / Esc	↑ ↓ / Enter / Esc
+help.action.select	選單中選擇、確認或取消。	在菜单中选择、确认或取消。	メニュー内で選択、決定、キャンセルします。	메뉴에서 선택, 확인 또는 취소합니다.	In menus: select, confirm or cancel.
+help.key.language	F11	F11	F11	F11	F11
+help.action.language	開啟語言選單，遊戲中即可切換。	打开语言菜单，可在游戏中切换。	言語メニューを開き、ゲーム中に切り替えます。	언어 메뉴를 열어 게임 중에 언어를 바꿉니다.	Open the language menu and switch languages during play.
+help.key.theme	F12	F12	F12	F12	F12
+help.action.theme	切換原版繁中與 HD 五語系呈現。	切换原版繁中与 HD 五语言显示。	繁体字中国語のオリジナル表示と多言語HD表示を切り替えます。	번체 중국어 원본 화면과 다국어 HD 화면을 전환합니다.	Switch between the original Traditional Chinese view and multilingual HD.
+help.key.open.shift	Shift+F1	Shift+F1	Shift+F1	Shift+F1	Shift+F1
+help.key.open.f1	F1	F1	F1	F1	F1
+help.action.open	開啟操作說明。Esc 關閉並返回遊戲。	打开操作说明。Esc 关闭并返回游戏。	操作ガイドを開きます。Escで閉じてゲームに戻ります。	조작 안내를 엽니다. Esc를 누르면 닫고 게임으로 돌아갑니다.	Open Help. Press Esc to close it and return to the game.
+locale.confirm	↑ ↓ 選擇 · Enter 確認 · Esc 取消	↑ ↓ 选择 · Enter 确认 · Esc 取消	↑ ↓ 選択 · Enter 決定 · Esc キャンセル	↑ ↓ 선택 · Enter 확인 · Esc 취소	↑ ↓ Select · Enter Confirm · Esc Cancel
+locale.error.settings	語言設定無法讀寫，將使用本次選擇。	语言设置无法读写，将使用本次选择。	言語設定を保存・読込できません。今回の選択を使用します。	언어 설정을 읽거나 저장할 수 없어 현재 선택을 사용합니다.	Language settings unavailable; using this session's selection.
+locale.error.catalog	語言檔無法讀取，已使用隨附文字。	语言文件无法读取，已使用随附文本。	言語ファイルを読めないため、同梱のテキストを使用します。	언어 파일을 읽을 수 없어 기본 제공 텍스트를 사용합니다.	Catalog unavailable; using the bundled text.
+window.title	模擬台北 · F11 語言 · F12 原版／HD	模拟台北 · F11 语言 · F12 原版／HD	台北シミュレーション · F11 言語 · F12 オリジナル／HD	타이베이 시뮬레이션 · F11 언어 · F12 원본／HD	Taipei Simulation · F11 Language · F12 Original／HD

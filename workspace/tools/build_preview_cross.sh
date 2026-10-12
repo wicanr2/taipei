@@ -24,6 +24,8 @@ timeout 300s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
     flock -s 9
     test -O /out
     go mod verify
+    mkdir -p /out/locales
+    cp locales/ui.tsv /out/locales/ui.tsv
     if test "$TARGET" = windows; then
       export GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
       go build -mod=readonly -p 1 -trimpath -o /out/taipei-preview-windows-amd64.exe ./cmd/taipei-preview
@@ -38,7 +40,7 @@ timeout 300s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 12
         x86_64-apple-darwin24.5-otool -hv -l "/out/taipei-preview-macos-$arch" > "/out/preview-macos-$arch-load-commands.txt"
       done
     fi
-    { go version; go env GOOS GOARCH CC CXX; sha256sum go.mod go.sum;
+    { go version; go env GOOS GOARCH CC CXX; sha256sum go.mod go.sum locales/ui.tsv;
       if test "$TARGET" = windows; then sha256sum /out/taipei-preview-windows-amd64.exe;
       else sha256sum /out/taipei-preview-macos-amd64 /out/taipei-preview-macos-arm64; fi;
     } > "/out/preview-cross-$TARGET.txt"

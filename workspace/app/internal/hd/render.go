@@ -71,6 +71,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	fontDir        string
 	charts         *chartWindows
 	ending         *endingScreen
 	powerFacility  *powerFacilitySet
@@ -93,7 +94,7 @@ type Renderer struct {
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
 func New(rom []byte, dir string) *Renderer {
-	r := &Renderer{frame: image.NewRGBA(image.Rect(0, 0, 1280, 800)), sources: map[string]bool{}, shades: map[byte][]byte{}}
+	r := &Renderer{fontDir: filepath.Join(dir, "fonts"), frame: image.NewRGBA(image.Rect(0, 0, 1280, 800)), sources: map[string]bool{}, shades: map[byte][]byte{}}
 	if digest(rom) != romSHA {
 		r.reason = "rom-mismatch"
 		return r
