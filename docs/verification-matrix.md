@@ -47,7 +47,9 @@ Windows 研究 binary 已在 Wine 從真實冷啟動到城市畫面，正常鍵�
 
 使用者已確認遊戲中切換。[F12 操作契約](spec/014-live-theme-switch.md) 為 READY；既有正常 GUI 的 HD → 原版 → HD 三份收據，其原版色號雜湊與 DOS 讀鍵紀錄相同。此為研究前端操作證據；#7、#8 仍須驗正式接入及實際封包，不能以本次文件定案結案。
 
-使用者追加 HD 五語系、原版模式繁中，並確認 F11 遊戲中切換，見 [030](spec/030-hd-localization.md) 與 [#49](https://github.com/wicanr2/taipei/issues/49)。第一批控制／設定／六標題已接入，115 鍵 TSV、761 字元及必要故障測試通過。`locale-ui-cold-r1/verification.json` 的兩次正常冷啟動驗五語系六標題固定像素、面板內 CPU／步數／原畫面／讀鍵與檔案操作不變、F12、原版 F1、滑鼠、設定重讀及 Esc 取消。沒有 checkpoint、SAV 存退讀、原版正常退出或長時間原版狀態抽樣；持鍵／IME、真實視窗故障及跨平台尚未驗，維持 READY。其他介面、長段落與全遊戲來源覆蓋仍 DRAFT，不能宣稱全部五語系完成。新增 [Help 031](spec/031-help.md)／[#50](https://github.com/wicanr2/taipei/issues/50) 尚為兩個按鍵方案的離線原型，等待原版 F1 衝突決策。
+使用者追加 HD 五語系、原版模式繁中，並確認 F11 遊戲中切換，見 [030](spec/030-hd-localization.md) 與 [#49](https://github.com/wicanr2/taipei/issues/49)。第一批控制／設定／六標題已接入，115 鍵 TSV、761 字元及必要故障測試通過。`locale-ui-cold-r1/verification.json` 的兩次正常冷啟動驗五語系六標題固定像素、面板內 CPU／步數／原畫面／讀鍵與檔案操作不變、F12、原版 F1、滑鼠、設定重讀及 Esc 取消。沒有 checkpoint、SAV 存退讀、原版正常退出或長時間原版狀態抽樣；完整持鍵／IME、真實視窗故障及跨平台執行尚未驗，030 第一批維持 READY。其他介面、長段落與全遊戲來源覆蓋仍 DRAFT，不能宣稱全部五語系完成。
+
+[Help 031](spec/031-help.md)／[#50](https://github.com/wicanr2/taipei/issues/50) 已確認 Shift+F1 開啟、保留原版 F1，限八列操作與前端輸入達 CONFORMED。五語系完整面板與確認前固定原型逐像素相同，區外透明，缺鍵／缺字／超長及固定字型／授權故障通過。`help-ui-cold-r1/verification.json` 的正常冷啟動驗左右 Shift、已轉送持鍵配平、Esc／同鍵關閉、關閉持鍵隔離、鍵盤／文字／滑鼠不穿透、F11 五語系與取消返回 Help、F12 原版區外同幀像素、原版 F1 選單及返回後原版輸入。Help 期間 CPU／步數／原畫面／palette／BIOS ticks 與修飾旗標／讀鍵／檔案操作不變。Linux amd64、Windows amd64、macOS amd64／arm64 編譯與架構通過；未重跑 Wine、真機、SAV 存退讀、原版退出或長時間狀態抽樣，不外推完整 HD／翻譯或正式交付。
 
 [#29](https://github.com/wicanr2/taipei/issues/29) 首批十四個工具圖示內部已接入。[016](spec/016-city-tool-icons.md) 限本批範圍達 CONFORMED：35 份正常 GUI 收據中，11 份完整覆繪十四個圖示、24 份回退；固定 atlas、獨立重算來源遮罩、選取外框及冷讀恢復皆通過。破壞文字、矩形間隙、圖示及選取外框後同步更新呈現雜湊，四個負對照均被拒絕。兩側各 1,200,000,000 步的原版狀態相同，實際包含 716 幀圖示覆繪；存檔雜湊保持相同。#29 仍須其餘框架、狀態與操作提示，母項保持開啟。
 

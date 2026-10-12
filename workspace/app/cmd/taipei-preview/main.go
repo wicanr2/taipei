@@ -72,6 +72,8 @@ type game struct {
 	localeFence     bool
 	localeOverlay   *image.RGBA
 	localeWarning   string
+	helpOpen        bool
+	helpOverlay     *image.RGBA
 	heldScans       map[byte]bool
 	m               *dg.Machine
 	d               *dg.DOS
@@ -114,7 +116,7 @@ func (g *game) Update() error {
 		g.hdEnabled = !g.hdEnabled
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "theme", Text: fmt.Sprint(g.hdEnabled)})
 	}
-	if g.languageInput() {
+	if g.frontendInput() {
 		g.refresh()
 		g.frames++
 		if g.frames%60 == 0 {
@@ -236,7 +238,7 @@ func (g *game) refresh() {
 		g.rgba.Pix[j+3] = 255
 	}
 	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled, g.camera.Origin(g.m))
-	g.paintLanguage()
+	g.paintFrontend()
 	g.frame.WritePixels(g.presentation.Pix)
 }
 func (g *game) Draw(screen *ebiten.Image)  { screen.DrawImage(g.frame, nil) }
@@ -260,6 +262,8 @@ func (g *game) receipt() error {
 	b, err := json.MarshalIndent(map[string]any{
 		"language": g.language, "catalog_source": g.catalog.Source, "catalog_sha256": g.catalog.SHA,
 		"language_panel": g.localeOpen, "language_selection": g.localeSelection, "language_warning": g.localeWarning,
+		"help_panel": g.helpOpen, "frontend_input_fence": g.localeFence,
+		"bios_modifiers":     g.m.Read8(0x417),
 		"inputs":             g.inputs,
 		"frame_index_sha256": fmt.Sprintf("%x", sha256.Sum256(g.m.Indexed())),
 		"palette":            g.m.Palette(),

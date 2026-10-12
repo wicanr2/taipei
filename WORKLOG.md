@@ -668,3 +668,21 @@ r2 六次開圖／返回與 60 份原子收據完整像素通過，Docker die ev
 驗證 binary `taipei-preview-locale-r1` SHA-256 `73820b7ae8d23318e2773cb7387c0c4b71592b4b22f2ac6f54f541a0a8858938`。本次用 stop-file 有界收尾，沒有 SAV 存退讀、原版正常退出、舊圖表 GUI 或長時間原版狀態抽樣。持鍵／IME、真實視窗錯誤與跨平台未驗，030 第一批保持 READY，其他文字家族仍 DRAFT。#49／#50 維持 OPEN；沒有宣稱全遊戲翻譯或 Help 完成。現行 Linux 入口另以正式建置腳本重建；Docker 清理與提交推送結果回鏈遠端。
 
 現行 `workspace/runs/taipei-preview` 由建置腳本重建後，與已驗 binary 逐 byte 相同，外部 `locales/ui.tsv` 也與正式來源相同。文件索引以既有 029 為正對照，所有新增檔案入口與路徑存在通過。指定 find 為空，新增程式、文件及輸出抽查 UID/GID 1000，所有本批容器均退出刪除。提交僅明確列出的原創程式、TSV、測試、建置工具與文件；原版／字型／圖片／收據／binary 不入 Git。
+
+## 2026-10-12：Shift+F1 Help 確認與接入
+
+前一批 `8dcfcaca76132d7bf9265b87d82cb196f94f2313` 已提交並推送。使用者對已展示兩方案回覆「同意」，採建議方案 Shift+F1 開 Help、原版 F1 保留。主機 gh auth 成功，回讀 #50 後先留言 `issuecomment-6118213230`，將 031 審查為 READY，再開始產品實作；同步遠端 Issue 主文，沒有重問已確認決定。
+
+本輪命中並載入本地化顯示隔離、規格閘門及文件職責，完成結論前回查規格閘門。Help 全部文字沿既有唯一 115 鍵 TSV，沒有新增另一份譯文；Noto、OFL、版面與八列操作沿已展示固定原型。新增 localui.Help，與語言面板共用排版及啟動驗證；左右 Shift+F1、Esc、F11 回 Help、F12、前端收據及輸入放開隔離接入。關閉隔離改為檢查所有實體鍵，包含未轉送的鍵與滑鼠中鍵；不改原版模擬。
+
+必要測試通過：五語系 Help 面板逐像素及區外透明、缺鍵／缺字／超長按指定原因拒絕；實際 Noto／OFL、語言面板、catalog／設定、鍵盤及六標題回歸通過。命令為固定 Docker image 內 `go test -mod=readonly -p 1 ./internal/localui ./internal/i18n ./internal/keyboard`，以及 HD 套件限定 `TestFiveLocaleLabelsAgainstDiscardableReference`。最後 Help 測試結果另存 `workspace/runs/help-unit-final.log`。沒有重啟舊完整 HD 回歸或 #48。
+
+`help_ui_playtest.sh` 在預登記後使用同一工具 image、全新 EXE 與正常視窗輸入，沒有 checkpoint。片頭／主選單／城市正常路徑後，先轉送左右 Shift，再開 Help，收據確認配平 AAh／B6h；Help 開啟及關閉沒有穿透 F1。Esc 關閉仍持住 Shift+F1 時 VM 不動，全部放開後 BIOS Shift flags 歸零。Help 內 Tab、方向、Enter、Space、F1、abc 文字及滑鼠不穿透，F11 五語系各回 Help 並保存設定，取消保留原語言。五個面板固定像素、F12 往返及原版模式全部區外同幀原畫面四倍像素通過；同鍵關閉後原版 F1 開離開選單、Esc 返回及原版控制通過。Help 中 CPU、步數、原畫面、palette、BIOS ticks／修飾旗標、原版讀鍵及檔案操作不變。`help-ui-cold-r1/verification.json` 通過，已檢視實際英文 Help。
+
+Linux 已驗 binary SHA-256 `6604e3d0c611f8744c56d0f0f679986680d5cb3a5a6d3e3968550bb22f487ad8`，保留為 `taipei-preview-help-r1`；現行入口及外部 TSV 相同。Windows amd64、macOS amd64／arm64 建置及 PE／Mach-O 架構通過，雜湊見 031 與 `preview-cross-*.txt`。Windows 建置出現未修改 YMFM C++ 的邊界警告，退出 0，未擴張為音訊修正。沒有 Wine、Windows／macOS 真機、SAV 存退讀、原版正常退出、長時間狀態抽樣或正式包；031 只限已驗八列 Help 與前端輸入達 CONFORMED，#49 完整翻譯仍 OPEN。
+
+本批所有新增檔案同次掛入 CONTEXT，README 增加四個穩定按鍵入口。Docker 清理、擁有權、提交及 push 結果在本批收尾後回鏈 Issue。
+
+收尾直接回讀同次原子收據，確認原版已消費 Tab 的 BIOS word `0F09h` 與右方向 `4D00h`，均在 F1 返回之後；驗證工具同步改為等待實際讀鍵，不只檢查轉送紀錄。沒有重跑已通過的 GUI。文件索引以 029 為正對照，所有新檔入口及文件相對連結存在；Linux 現行 binary 與已驗副本、外部 TSV 與正式來源逐 byte 相同。必要 Help 最後專項 0.590 秒通過。
+
+原始 EXE／RS201.ROM／RS201A.ROM 雜湊與基線一致。首次收尾命令誤寫 `RS201.ROMA` 而中止，核對實際檔名後完成，屬檢查命令問題，產品與原始資料未變。新增程式、工具及輸出抽查 UID/GID 1000，指定 find 為空，所有專案容器均已退出刪除。明確提交清單只含原創程式、測試、工具與文件，沒有原版、字型、圖片、收據、binary 或 SAV。

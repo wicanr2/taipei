@@ -40,7 +40,7 @@
   原版資料保留使用者提供的位置並唯讀掛載；探針、工具副本、快取與中間產物都在 `workspace/`。
 - 使用者追加 HD 五語系：繁體中文、簡體中文、日文、韓文、英文。F12 原版模式保留繁中。
   已確認 F11 遊戲中切換並保存選擇，依 [030](docs/spec/030-hd-localization.md) 與 [#49](https://github.com/wicanr2/taipei/issues/49) 執行，不改 DOS 語意或存檔。
-  另授權五語系 Help；原版 F1 衝突依 [031](docs/spec/031-help.md) 與 [#50](https://github.com/wicanr2/taipei/issues/50) 確認。
+  另確認 Shift+F1 開五語系 Help，保留原版 F1 離開，依 [031](docs/spec/031-help.md) 與 [#50](https://github.com/wicanr2/taipei/issues/50) 執行。
 - 不因其他遊戲能在 dosgolem 執行，就宣稱本作已受支援。先跑本作的正常啟動探針。
 
 ## 3. 入口與按需載入
@@ -67,7 +67,7 @@
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |
 | HD 多語系 | [030](docs/spec/030-hd-localization.md) | 已確認 HD 五語系、原版繁中與 F11；控制／設定／六標題 READY，其他家族 DRAFT |
-| 五語系 Help | [031](docs/spec/031-help.md) | 原版 F1 衝突已查證，兩操作原型已展示；候選按鍵尚待確認 |
+| 五語系 Help | [031](docs/spec/031-help.md) | Shift+F1 開 Help、原版 F1 不變；限八列操作、五語系與輸入隔離 CONFORMED |
 | 翻譯與顯示隔離 | `/home/anr2/.codex/knowledge-base/local/localization-display-semantic-isolation.md` | 翻譯、語系切換、文字來源及字型檢查時載入；TSV 只供顯示，不改識別值與 SAV |
 | 文件與新目錄 | `/home/anr2/.codex/knowledge-base/local/project-document-responsibilities.md` | 建立文件或目錄前讀取 |
 | 交付目錄 | `/home/anr2/.codex/knowledge-base/local/retro-remake-dist-all-output.md` | `dist-all/` 子目錄的唯一契約；不照抄舊專案 |

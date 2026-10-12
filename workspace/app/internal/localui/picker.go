@@ -58,8 +58,14 @@ func New(dir string, c *i18n.Catalog) (*UI, error) {
 		}
 	}
 	u := &UI{Catalog: c, font: f}
+	if err := c.Require(helpKeys()...); err != nil {
+		return nil, err
+	}
 	// Validate every language and selection before handling player input.
 	for _, lang := range i18n.Languages {
+		if _, err := u.Help(lang); err != nil {
+			return nil, err
+		}
 		for i := range i18n.Languages {
 			if _, err := u.Picker(lang, i, ""); err != nil {
 				return nil, err
@@ -72,6 +78,10 @@ func New(dir string, c *i18n.Catalog) (*UI, error) {
 func ChoiceRect(i int) image.Rectangle { return image.Rect(372, 184+i*82, 908, 254+i*82) }
 
 func (u *UI) text(dst *image.RGBA, lang, key string, rect image.Rectangle, max, min int) error {
+	return u.textColor(dst, lang, key, rect, max, min, color.White)
+}
+
+func (u *UI) textColor(dst *image.RGBA, lang, key string, rect image.Rectangle, max, min int, ink color.Color) error {
 	text := u.Catalog.Get(lang, key)
 	for size := max; size >= min; size-- {
 		face, err := opentype.NewFace(u.font, &opentype.FaceOptions{Size: float64(size), DPI: 72, Hinting: font.HintingNone})
@@ -84,7 +94,7 @@ func (u *UI) text(dst *image.RGBA, lang, key string, rect image.Rectangle, max, 
 			face.Close()
 			continue
 		}
-		d := font.Drawer{Dst: dst, Src: image.White, Face: face, Dot: fixed.P(rect.Min.X+(rect.Dx()-w)/2-bounds.Min.X.Floor(), rect.Min.Y+(rect.Dy()-h)/2-bounds.Min.Y.Floor())}
+		d := font.Drawer{Dst: dst, Src: image.NewUniform(ink), Face: face, Dot: fixed.P(rect.Min.X+(rect.Dx()-w)/2-bounds.Min.X.Floor(), rect.Min.Y+(rect.Dy()-h)/2-bounds.Min.Y.Floor())}
 		d.DrawString(text)
 		return face.Close()
 	}

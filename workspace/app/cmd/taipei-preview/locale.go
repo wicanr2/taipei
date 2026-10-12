@@ -11,7 +11,7 @@ import (
 	"github.com/wicanr2/taipei/preview/internal/localui"
 )
 
-func (g *game) openLanguage() {
+func (g *game) releaseForwardedInputs() {
 	// Balance all keys already forwarded before isolating modal input.
 	for _, b := range bindings {
 		if g.heldScans[b.scan] {
@@ -23,6 +23,10 @@ func (g *game) openLanguage() {
 		g.mouseButtons = 0
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "mouse-button"})
 	}
+}
+
+func (g *game) openLanguage() {
+	g.releaseForwardedInputs()
 	g.localeOpen = true
 	g.localeSelection = i18n.Index(g.language)
 	g.rebuildPicker()
@@ -48,6 +52,9 @@ func (g *game) rebuildPicker() {
 func (g *game) chooseLanguage() {
 	g.language = i18n.Languages[g.localeSelection]
 	g.hdRenderer.SetLanguage(g.catalog, g.language)
+	if g.helpOpen {
+		g.rebuildHelp()
+	}
 	ebiten.SetWindowTitle(g.catalog.Get(g.language, "window.title"))
 	g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "language", Text: g.language})
 	if err := i18n.SaveSettings(g.settingsPath, g.language); err != nil {
@@ -61,17 +68,12 @@ func (g *game) chooseLanguage() {
 
 // The caller still services stop requests and frame receipts while a frontend
 // panel is open. No VM steps, DOS keyboard, text or mouse input occur here.
-func (g *game) languageInput() bool {
+func (g *game) frontendInput() bool {
 	if g.localUI == nil {
 		return false
 	}
 	if g.localeFence {
-		for _, b := range bindings {
-			if ebiten.IsKeyPressed(b.key) {
-				return true
-			}
-		}
-		if ebiten.IsKeyPressed(ebiten.KeyF11) || ebiten.IsKeyPressed(ebiten.KeyF12) || ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) || ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+		if len(inpututil.AppendPressedKeys(nil)) != 0 || ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) || ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) || ebiten.IsMouseButtonPressed(ebiten.MouseButtonMiddle) {
 			return true
 		}
 		g.localeFence = false
@@ -83,7 +85,18 @@ func (g *game) languageInput() bool {
 			g.openLanguage()
 			return true
 		}
-		return false
+		if helpChord() {
+			if g.helpOpen {
+				g.closeHelp()
+			} else {
+				g.openHelp()
+			}
+			return true
+		}
+		if g.helpOpen && inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+			g.closeHelp()
+		}
+		return g.helpOpen || g.localeFence
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyF11) || inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		g.closeLanguage()
@@ -118,7 +131,37 @@ func (g *game) languageInput() bool {
 	return true
 }
 
-func (g *game) paintLanguage() {
+func helpChord() bool {
+	return inpututil.IsKeyJustPressed(ebiten.KeyF1) && (ebiten.IsKeyPressed(ebiten.KeyShiftLeft) || ebiten.IsKeyPressed(ebiten.KeyShiftRight))
+}
+
+func (g *game) openHelp() {
+	g.releaseForwardedInputs()
+	g.helpOpen = true
+	g.rebuildHelp()
+	g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "frontend-panel", Text: "help-open"})
+}
+
+func (g *game) closeHelp() {
+	g.helpOpen = false
+	g.localeFence = true
+	g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "frontend-panel", Text: "help-close"})
+}
+
+func (g *game) rebuildHelp() {
+	var err error
+	g.helpOverlay, err = g.localUI.Help(g.language)
+	if err != nil {
+		log.Print(err)
+		g.helpOverlay = nil
+		g.closeHelp()
+	}
+}
+
+func (g *game) paintFrontend() {
+	if g.helpOpen && g.helpOverlay != nil {
+		draw.Draw(g.presentation, g.presentation.Bounds(), g.helpOverlay, image.Point{}, draw.Over)
+	}
 	if g.localeOpen && g.localeOverlay != nil {
 		draw.Draw(g.presentation, g.presentation.Bounds(), g.localeOverlay, image.Point{}, draw.Over)
 	}
