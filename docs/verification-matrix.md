@@ -47,6 +47,8 @@ Windows 研究 binary 已在 Wine 從真實冷啟動到城市畫面，正常鍵�
 
 使用者已確認遊戲中切換。[F12 操作契約](spec/014-live-theme-switch.md) 為 READY；既有正常 GUI 的 HD → 原版 → HD 三份收據，其原版色號雜湊與 DOS 讀鍵紀錄相同。此為研究前端操作證據；#7、#8 仍須驗正式接入及實際封包，不能以本次文件定案結案。
 
+使用者追加 HD 五語系、原版模式繁中，見 [030 DRAFT](spec/030-hd-localization.md) 與 [#49](https://github.com/wicanr2/taipei/issues/49)。目前只驗 92 鍵 TSV 的 UTF-8／完整欄位／鍵唯一／佔位符、固定 Noto 的 641 種字元、43 處實際墨跡與五張六標題區外相同。F11 語言面板僅操作原型；完整翻譯、長段落、檔名與原數值隔離、正常語言切換、設定及全遊戲來源覆蓋尚未驗，不能宣稱五語系已可玩。
+
 [#29](https://github.com/wicanr2/taipei/issues/29) 首批十四個工具圖示內部已接入。[016](spec/016-city-tool-icons.md) 限本批範圍達 CONFORMED：35 份正常 GUI 收據中，11 份完整覆繪十四個圖示、24 份回退；固定 atlas、獨立重算來源遮罩、選取外框及冷讀恢復皆通過。破壞文字、矩形間隙、圖示及選取外框後同步更新呈現雜湊，四個負對照均被拒絕。兩側各 1,200,000,000 步的原版狀態相同，實際包含 716 幀圖示覆繪；存檔雜湊保持相同。#29 仍須其餘框架、狀態與操作提示，母項保持開啟。
 
 [#28](https://github.com/wicanr2/taipei/issues/28) 的[完整初盤](re/008-full-asset-inventory.md)保留 118 個成員、1317 筆圖片來源、1220 個不同圖像及未知項。依 [#31](https://github.com/wicanr2/taipei/issues/31) 另取得 402 個字模與原始字碼，十二字正常畫面正對照及十二個單點破壞負對照通過，詳見[字模研究](re/009-chinese-font-sources.md)。候選搜尋尚未接入正式覆字，不能據此宣稱其餘文字已完成。

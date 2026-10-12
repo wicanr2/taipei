@@ -38,6 +38,8 @@
   一般素材批次沿已確認的 B 風格與原版版面自主執行；實質變更構圖、內容、操作或忠實度時依第 8 節確認。
 - 使用者已指定所有工作區使用本專案的 `workspace/`，覆蓋共用方法的 `workplace/` 預設。
   原版資料保留使用者提供的位置並唯讀掛載；探針、工具副本、快取與中間產物都在 `workspace/`。
+- 使用者追加 HD 五語系：繁體中文、簡體中文、日文、韓文、英文。F12 原版模式保留繁中。
+  語言切換操作尚待確認，依 [030](docs/spec/030-hd-localization.md) 與 [#49](https://github.com/wicanr2/taipei/issues/49) 執行，不改 DOS 語意或存檔。
 - 不因其他遊戲能在 dosgolem 執行，就宣稱本作已受支援。先跑本作的正常啟動探針。
 
 ## 3. 入口與按需載入
@@ -63,6 +65,8 @@
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |
+| HD 多語系 | [030](docs/spec/030-hd-localization.md) | 已確認 HD 五語系、原版繁中；初稿及可撤回原型尚未接入產品 |
+| 翻譯與顯示隔離 | `/home/anr2/.codex/knowledge-base/local/localization-display-semantic-isolation.md` | 翻譯、語系切換、文字來源及字型檢查時載入；TSV 只供顯示，不改識別值與 SAV |
 | 文件與新目錄 | `/home/anr2/.codex/knowledge-base/local/project-document-responsibilities.md` | 建立文件或目錄前讀取 |
 | 交付目錄 | `/home/anr2/.codex/knowledge-base/local/retro-remake-dist-all-output.md` | `dist-all/` 子目錄的唯一契約；不照抄舊專案 |
 | 正式版號 | `/home/anr2/.codex/knowledge-base/local/retro-remake-release-versioning.md` | 定版、打 tag 或重發前讀取 |

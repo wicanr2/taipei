@@ -1,0 +1,93 @@
+key	zh-Hant	zh-Hans	ja	ko	en
+menu.exit	離開	离开	終了	종료	Exit
+menu.file	檔案	文件	ファイル	파일	File
+menu.mayor	市長	市长	市長	시장	Mayor
+menu.charts	圖表	图表	グラフ	그래프	Charts
+menu.disasters	災難	灾难	災害	재난	Disasters
+menu.environment	環境	环境	環境	환경	Environment
+startup.new_game	開始新遊戲	开始新游戏	新しく始める	새 게임	New game
+startup.disaster_city	災難城市	灾难城市	被災都市	재난 도시	Disaster city
+startup.load	載入舊檔	载入存档	ロード	불러오기	Load game
+startup.title	模擬台北	模拟台北	台北シミュレーション	타이베이 시뮬레이션	Taipei Simulation
+city.greater_taipei	大台北	大台北	台北都市圏	타이베이 도시권	Greater Taipei
+city.taipei	台北市	台北市	台北市	타이베이시	Taipei
+city.taichung	台中市	台中市	台中市	타이중시	Taichung
+city.chiayi	嘉義市	嘉义市	嘉義市	자이시	Chiayi
+city.tainan	台南市	台南市	台南市	타이난시	Tainan
+city.kaohsiung	高雄市	高雄市	高雄市	가오슝시	Kaohsiung
+city.hualien	花蓮市	花莲市	花蓮市	화롄시	Hualien
+difficulty.title	遊戲困難度	游戏难度	難易度	난이도	Difficulty
+difficulty.casual	休閒級	休闲级	カジュアル	편안함	Casual
+difficulty.expert	專家級	专家级	エキスパート	전문가	Expert
+difficulty.challenge	挑戰級	挑战级	チャレンジ	도전	Challenge
+file.return_dos	返回 DOS	返回 DOS	DOS に戻る	DOS로 돌아가기	Return to DOS
+file.save	存入磁碟	保存游戏	セーブ	저장하기	Save game
+file.load	載入舊檔	载入存档	ロード	불러오기	Load game
+file.disaster_city	災難城市	灾难城市	被災都市	재난 도시	Disaster city
+file.restart	重新開始	重新开始	最初から	다시 시작	Restart
+mayor.budget	預算分配	预算分配	予算配分	예산 배분	Budget
+mayor.population	人口總數	人口总数	総人口	총인구	Population
+mayor.opinion	民意調查	民意调查	世論調査	여론 조사	Opinion poll
+chart.power	電力供應	电力供应	電力供給	전력 공급	Power supply
+chart.traffic	交通密度	交通密度	交通密度	교통 밀도	Traffic density
+chart.population	人口密度	人口密度	人口密度	인구 밀도	Population density
+chart.crime	犯罪率	犯罪率	犯罪率	범죄율	Crime rate
+chart.land_value	房價	房价	不動産価格	부동산 가격	Property prices
+chart.pollution	污染	污染	汚染	오염	Pollution
+disaster.earthquake	地震	地震	地震	지진	Earthquake
+disaster.fire	火災	火灾	火災	화재	Fire
+disaster.power_plant	電廠災變	电厂灾变	発電所事故	발전소 사고	Power plant accident
+disaster.typhoon	颱風	台风	台風	태풍	Typhoon
+disaster.air_crash	空難	空难	航空事故	항공 사고	Air crash
+disaster.shipwreck	船難	船难	海難事故	해상 사고	Shipwreck
+disaster.protest	群眾運動	群众运动	市民運動	시민 운동	Public demonstration
+disaster.blackout	停電	停电	停電	정전	Blackout
+disaster.enable_all	全部打開	全部开启	すべて有効	모두 켜기	Enable all
+disaster.disable_all	全部關閉	全部关闭	すべて無効	모두 끄기	Disable all
+environment.message_speed	訊息速度	消息速度	メッセージ速度	메시지 속도	Message speed
+environment.game_speed	遊戲速度	游戏速度	ゲーム速度	게임 속도	Game speed
+environment.difficulty	遊戲等級	游戏等级	難易度	난이도	Difficulty
+environment.speaker	喇叭開關	音效开关	効果音	효과음	Sound effects
+environment.music	音樂開關	音乐开关	音楽	음악	Music
+tool.road	公路	公路	道路	도로	Road
+tool.metro	捷運	地铁	地下鉄	도시철도	Metro
+tool.police	警察局	警察局	警察署	경찰서	Police station
+tool.fire_station	消防隊	消防队	消防署	소방서	Fire station
+tool.waste	垃圾處理	垃圾处理	ごみ処理	쓰레기 처리	Waste disposal
+tool.sewage	污水處理	污水处理	下水処理	하수 처리	Sewage treatment
+tool.sun_yat_sen	國父紀念館	国父纪念馆	国父紀念館	국부기념관	Sun Yat-sen Memorial Hall
+tool.chiang_kai_shek	中正紀念堂	中正纪念堂	中正紀念堂	중정기념당	Chiang Kai-shek Memorial Hall
+tool.palace_museum	故宮博物院	故宫博物院	故宮博物院	고궁박물원	Palace Museum
+tool.february_28	二二八紀念碑	二二八纪念碑	二二八紀念碑	2·28 기념비	February 28 Memorial
+tool.art_museum	美術館	美术馆	美術館	미술관	Art museum
+tool.amusement_park	兒童樂園	儿童乐园	児童遊園地	어린이 놀이공원	Children's amusement park
+tool.stadium	體育場	体育场	競技場	경기장	Stadium
+tool.confucius_temple	孔廟	孔庙	孔子廟	공자묘	Confucius Temple
+tool.zoo	動物園	动物园	動物園	동물원	Zoo
+tool.baseball_dome	巨蛋棒球場	巨蛋棒球场	ドーム球場	돔 야구장	Baseball dome
+tool.thermal_plant	火力電廠	火力电厂	火力発電所	화력발전소	Thermal power plant
+tool.nuclear_plant	核能電廠	核电厂	原子力発電所	원자력발전소	Nuclear power plant
+help.goal	說明：您的目標就是將一座新城市或災難城市，建設成或恢復成人口超過五十萬的都會區。	说明：您的目标是将一座新城市或灾难城市，建设成或恢复成人口超过五十万的都市区。	説明：新しい都市や被災した都市を、人口50万人を超える都市圏へと発展・復興させることが目標です。	설명: 새로운 도시나 재난을 겪은 도시를 개발하거나 복구하여 인구 50만 명이 넘는 도시권으로 만드는 것이 목표입니다.	Your goal is to develop a new city or rebuild a disaster-stricken city into a metropolitan area with more than 500,000 residents.
+help.medal	如果您進行的是挑戰級，在過關時遊戲中將頒贈您一枚獎章。	如果您选择挑战级，过关时游戏将授予您一枚奖章。	チャレンジでは、目標を達成するとメダルが授与されます。	도전 난이도에서 목표를 달성하면 메달을 받습니다.	On Challenge difficulty, you receive a medal when you complete the goal.
+help.performance	Ps. 當城市規模非常大時，電腦的判斷速度將會略慢。	Ps. 当城市规模非常大时，电脑的处理速度会略慢。	追記：都市の規模が非常に大きくなると、処理速度がやや低下します。	추신: 도시 규모가 매우 커지면 처리 속도가 다소 느려집니다.	P.S. Processing may slow down slightly when the city becomes very large.
+budget.title	預算配置	预算配置	予算配分	예산 배분	Budget allocation
+budget.back	返回	返回	戻る	돌아가기	Back
+budget.select	選項	选项	項目	항목	Select
+budget.adjust	調整	调整	調整	조정	Adjust
+budget.tax	稅率	税率	税率	세율	Tax rate
+budget.public_safety	公共安全	公共安全	公共安全	공공 안전	Public safety
+budget.traffic	交通維護	交通维护	交通維持	교통 유지	Transport upkeep
+budget.facilities	公共設施	公共设施	公共施設	공공시설	Public facilities
+budget.power	電廠維護	电厂维护	発電所維持	발전소 유지	Power plant upkeep
+budget.net_tax	稅收淨額	税收净额	税収純額	순세수	Net tax revenue
+footer.per_unit	每單位	每单位	1単位あたり	단위당	Per unit
+unit.ten_thousand	萬	万	万	만	×10,000
+ending.achievement	您的政績	您的政绩	市長の実績	시장의 업적	Your achievements
+locale.title	語言	语言	言語	언어	Language
+locale.name.zh-Hant	繁體中文	繁體中文	繁體中文	繁體中文	繁體中文
+locale.name.zh-Hans	简体中文	简体中文	简体中文	简体中文	简体中文
+locale.name.ja	日本語	日本語	日本語	日本語	日本語
+locale.name.ko	한국어	한국어	한국어	한국어	한국어
+locale.name.en	English	English	English	English	English
+locale.hint	F11 語言 · F12 原版／HD	F11 语言 · F12 原版／HD	F11 言語 · F12 オリジナル／HD	F11 언어 · F12 원본／HD	F11 Language · F12 Original／HD
+locale.dismiss	Esc 返回遊戲	Esc 返回游戏	Esc ゲームに戻る	Esc 게임으로 돌아가기	Esc Return to game
