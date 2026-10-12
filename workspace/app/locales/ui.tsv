@@ -149,6 +149,50 @@ notice.power_budget	電廠預算嚴重不足！	电厂预算严重不足！	発�
 notice.power_supply	電源供應不足，請建電廠！	电力供应不足，请建电厂！	電力が不足しています。発電所を建ててください！	전력이 부족합니다. 발전소를 지으세요!	Power is insufficient. Please build a power plant!
 unit.ten_thousand	萬	万	万	만	×10,000
 ending.achievement	您的政績	您的政绩	市長の実績	시장의 업적	Your achievements
+intro.date	民國七十八年十月，一群無殼蝸牛	民国七十八年十月，一群无壳蜗牛	民国78年10月、家を持たないカタツムリたちが	민국 78년 10월, 집 없는 달팽이들이	In October, year 78 of the Republic, a group of homeless snails
+intro.sogo	正進佔忠孝東路旁的ＳＯＧＯ廣場	正进占忠孝东路旁的ＳＯＧＯ广场	忠孝東路沿いのSOGO広場を占拠していた	중샤오둥루 옆 SOGO 광장을 점거하고 있었다	were occupying SOGO Plaza beside Zhongxiao East Road.
+intro.housing	住宅問題	住宅问题	住宅問題	주택 문제	Housing
+intro.thief	得手了！ＹＡ－－	得手了！ＹＡ－－	いただき！やったー！	성공이다! 야호!	Got it! Yeah!
+intro.wait	等等我！一．二．一．二	等等我！一．二．一．二	待ってくれ！いち、に、いち、に	기다려! 하나, 둘, 하나, 둘	Wait for me! One, two, one, two!
+intro.stop	嘎我擋咧，好膽賣走！！	给我站住，有胆别跑！	止まれ！逃げるんじゃない！	거기 서! 도망가지 마!	Stop right there! Don't you dare run!
+intro.crime	治安問題	治安问题	治安問題	치안 문제	Crime
+intro.metro	台北市交通惡化，是因為捷運開挖嗎？	台北市交通恶化，是因为捷运施工吗？	台北の交通悪化は地下鉄工事のせい？	타이베이의 교통 악화는 지하철 공사 때문일까?	Is Taipei's worsening traffic caused by metro construction?
+intro.proof	有圖為證！！	有图为证！	この絵が証拠だ！	그림이 증거다!	Here's the proof!
+intro.traffic	交通問題	交通问题	交通問題	교통 문제	Traffic
+intro.pollution	在烏煙瘴氣的大都市中	在乌烟瘴气的大都市中	煙と騒音に包まれた大都市で	매연과 소음으로 가득한 대도시에서	In this smoke-filled metropolis,
+intro.waiting	全體市民正等待一位	全体市民正等待一位	市民全員が待ち望んでいるのは	모든 시민이 기다리는 것은	all the citizens are waiting for
+intro.savior	民族救星．．．	民族救星……	国を救う英雄……	나라를 구할 영웅…	a savior of the nation...
+intro.you	就是你，不要懷疑！！	就是你，不要怀疑！	あなたのことだ！間違いない！	바로 당신이다! 의심하지 마!	That's you! Have no doubt!
+intro.success	如果您不孚台北市民所望．．．	如果您不负台北市民所望……	台北市民の期待に応えれば……	타이베이 시민의 기대에 부응한다면…	If you live up to the expectations of Taipei's citizens...
+intro.key	您將獲頒象徵最高榮譽－－台北市鑰	您将获颁象征最高荣誉的台北市钥	最高の栄誉、台北市の鍵が贈られる	최고의 영예인 타이베이시의 열쇠를 받게 된다	You will receive the highest honor: the Key to Taipei.
+intro.medals	及十枚不同的城市獎章	以及十枚不同的城市奖章	さらに10種類の都市勲章も授与される	그리고 서로 다른 도시 훈장 열 개도 받게 된다	And ten different city medals.
+intro.failure	但是．．．如果您辜負了市民的期望	但是……如果您辜负了市民的期望	だが……市民の期待を裏切れば	하지만… 시민의 기대를 저버린다면	But... if you disappoint the citizens,
+intro.underpass	您將被丟到火車站前地下道	您将被丢到火车站前的地下道	駅前の地下道に放り出される	기차역 앞 지하도에 내던져질 것이다	you will be thrown into the underpass in front of the station.
+intro.worse	甚至情況可能比這個更悲慘！！	甚至可能比这更悲惨！	いや、それ以上に悲惨かもしれない！	상황이 이보다 더 비참해질 수도 있다!	Things could even turn out worse!
+letter.mayor	市長大人：	市长大人：	市長閣下へ：	시장님께:	Dear Mayor,
+letter.office	請您立刻上任吧！	请您立刻上任吧！	すぐに就任してください！	즉시 취임해 주세요!	Please take office immediately!
+letter.simple	您要解決的問題，其實很簡單	您要解决的问题，其实很简单	解決すべき問題は、実に簡単です	해결하실 문제는 사실 아주 간단합니다	The problems you must solve are really quite simple.
+letter.traffic_housing	只是〞交通問題〞＋〞房價問題〞	只是“交通问题”＋“房价问题”	「交通問題」＋「住宅価格問題」	그저 “교통 문제” + “집값 문제”	Just “traffic” + “housing prices”
+letter.prices_crime	＋〞物價問題〞＋〞治安問題〞	＋“物价问题”＋“治安问题”	＋「物価問題」＋「治安問題」	+ “물가 문제” + “치안 문제”	+ “living costs” + “crime”
+letter.environment_fun	＋〞環保問題〞＋〞娛樂問題〞	＋“环保问题”＋“娱乐问题”	＋「環境問題」＋「娯楽問題」	+ “환경 문제” + “오락 문제”	+ “the environment” + “recreation”
+letter.fire_tax	＋〞火警問題〞＋〞稅率問題〞	＋“火灾问题”＋“税率问题”	＋「火災問題」＋「税率問題」	+ “화재 문제” + “세율 문제”	+ “fire safety” + “tax rates”
+letter.work_school	＋〞失業問題〞＋〞升學問題〞	＋“失业问题”＋“升学问题”	＋「失業問題」＋「進学問題」	+ “실업 문제” + “진학 문제”	+ “unemployment” + “education”
+letter.easy	，而已矣！Ｅａｓｙ吧	，仅此而已！很简单吧	これだけです！簡単でしょう？	이것뿐입니다! 쉽지요?	That's all! Easy, isn't it?
+letter.citizens	全體市民敬上	全体市民敬上	市民一同より	모든 시민 올림	Sincerely, all the citizens
+ending.congrats	恭喜您！！總算不負所託	恭喜您！总算不负所托	おめでとう！期待に応えてくれましたね	축하합니다! 기대에 부응하셨군요	Congratulations! You have lived up to our trust.
+ending.respect	全體市民向您致最崇高的敬意．．．	全体市民向您致以最崇高的敬意……	市民一同、心から敬意を表します……	모든 시민이 깊은 존경을 표합니다…	All the citizens pay you their highest respects...
+ending.unfinished	很抱歉！！您的任務尚未完成．．．	很抱歉！您的任务尚未完成……	残念です！任務はまだ終わっていません……	유감입니다! 임무가 아직 끝나지 않았습니다…	Sorry! Your task is not yet complete...
+art.protest	抗議	抗议	抗議	항의	Protest
+art.department_store	太平洋崇光百貨	太平洋崇光百货	太平洋そごう	태평양 소고 백화점	Pacific SOGO
+art.pacific	太平洋	太平洋	太平洋	태평양	Pacific
+art.bank	貝東銀行	贝东银行	貝東銀行	베이둥 은행	Beidong Bank
+legacy.confused	啊...你是什麼意思﹖﹖﹖	啊……你是什么意思？	えっ…どういう意味ですか？	어… 무슨 뜻인가요?	Huh... what do you mean?
+legacy.password_prompt	請輸入數字密碼！	请输入数字密码！	数字のパスワードを入力してください！	숫자 암호를 입력하세요!	Enter the numeric password!
+legacy.copyright	版權所有，盜版必究！	版权所有，盗版必究！	無断複製を禁じます！	무단 복제를 금합니다!	All rights reserved. Unauthorized copying is prohibited!
+legacy.password_table1	請參考第５頁，密碼表一．	请参考第５页，密码表一。	5ページの暗号表1をご覧ください。	5쪽의 암호표 1을 참고하세요.	See password table 1 on page 5.
+legacy.password_table2	請參考第５頁，密碼表二．	请参考第５页，密码表二。	5ページの暗号表2をご覧ください。	5쪽의 암호표 2를 참고하세요.	See password table 2 on page 5.
+legacy.password_table3	請參考第６頁，密碼表三．	请参考第６页，密码表三。	6ページの暗号表3をご覧ください。	6쪽의 암호표 3을 참고하세요.	See password table 3 on page 6.
+legacy.password_table4	請參考第６頁，密碼表四．	请参考第６页，密码表四。	6ページの暗号表4をご覧ください。	6쪽의 암호표 4를 참고하세요.	See password table 4 on page 6.
 locale.title	語言	语言	言語	언어	Language
 locale.name.zh-Hant	繁體中文	繁體中文	繁體中文	繁體中文	繁體中文
 locale.name.zh-Hans	简体中文	简体中文	简体中文	简体中文	简体中文

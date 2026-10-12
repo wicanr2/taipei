@@ -66,7 +66,8 @@ func interfaceKeys() []string {
 	for _, options := range interfaceOptions {
 		keys = append(keys, options...)
 	}
-	return append(keys, extraKeys()...)
+	keys = append(keys, extraKeys()...)
+	return append(keys, remainingKeys()...)
 }
 
 func ValidateInterfaceCatalog(c *i18n.Catalog) error { return c.Require(interfaceKeys()...) }

@@ -45,6 +45,8 @@
 
 ## 3. 入口與按需載入
 
+剩餘五語系的開場、圖片文字與逐字相位入口為 [033](docs/spec/033-localization-source-coverage.md) 與 [#52](https://github.com/wicanr2/taipei/issues/52)。研究工具使用 `text-source-audit -remaining-steps`，只觀察正常原版呼叫，不改寫 DOS。
+
 每個工作階段先讀本檔，再讀已建立的 `CONTEXT.md`、本次遠端 Issue 與直接相關規格。
 新增文件時，同次更新本節或專案索引。表中的「規劃」路徑須由對應 Issue 建立，
 尚未存在時不得當成已完成證據。

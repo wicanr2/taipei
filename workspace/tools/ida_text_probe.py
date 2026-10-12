@@ -1,6 +1,7 @@
 """#31：文字呼叫端的唯讀 IDA 查詢；保留名稱、bytes 與位址基準。"""
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import ida_auto
@@ -15,7 +16,7 @@ import idautils
 import idc
 
 ida_auto.auto_wait()
-source = Path(ida_nalt.get_input_file_path())
+source = Path(os.environ.get('TAIPEI_IDA_EXE', ida_nalt.get_input_file_path()))
 raw = source.read_bytes()
 assert hashlib.sha256(raw).hexdigest() == '798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3'
 
@@ -30,7 +31,14 @@ strings = []
 targets = set(int(value, 0) for value in idc.ARGV[2:])
 dseg = ida_segment.get_segm_by_name('dseg')
 data_base = ida_segment.get_segm_base(dseg)
-for text in ['離開', '檔案', '市長', '您的任務', '災難城市', '大台北']:
+query_texts = ['離開', '檔案', '市長', '您的任務', '災難城市', '大台北']
+if idc.ARGV[1] == 'endings':
+    query_texts += ['\u3000\u3000\u3000恭喜您', '\u3000\u3000全體市民向您', '很抱歉！！您的任務']
+if idc.ARGV[1] == 'remaining':
+    query_texts += ['民國七十八年', '住宅問題', '得手了', '有圖為證', '民族救星',
+                    '如果您不孚', '市長大人', '請輸入數字密碼', '本選項須', '確定離開',
+                    'Text0.IS2', '模擬台北', '啊...你是什麼意思']
+for text in query_texts:
     data = text.encode('cp950')
     start = 0
     while True:
@@ -45,6 +53,12 @@ for text in ['離開', '檔案', '市長', '您的任務', '災難城市', '大�
             func = ida_funcs.get_func(ref.frm)
             if func:
                 targets.add(func.start_ea)
+            elif idc.ARGV[1] == 'remaining':
+                for indirect in idautils.XrefsTo(ref.frm):
+                    refs.append({'via_data_ea': ref.frm, **instruction(indirect.frm)})
+                    parent = ida_funcs.get_func(indirect.frm)
+                    if parent:
+                        targets.add(parent.start_ea)
         strings.append({'text': text, 'code_hex': data.hex(), 'file_offset': off,
                         'ida_ea': ea, 'original_name': idc.get_name(ea), 'xrefs': refs,
                         'evidence': 'confirmed encoded bytes; calls require data-flow review'})
@@ -64,9 +78,13 @@ for start in idautils.Functions():
                                'evidence': 'hypothesis; immediate equals DS-relative string offset'})
 
 functions = []
+unbounded_ranges = []
 for target in sorted(targets):
     func = ida_funcs.get_func(target)
     if not func:
+        unbounded_ranges.append({'start': target, 'end': target+0xc0,
+                                 'evidence': 'unknown function boundary; navigation only',
+                                 'instructions': [instruction(ea) for ea in idautils.Heads(target, target+0xc0)]})
         continue
     functions.append({'start': func.start_ea, 'end': func.end_ea,
                       'original_name': idc.get_func_name(func.start_ea),
@@ -80,7 +98,7 @@ Path(label+'.json').write_text(json.dumps({
     'input_sha256': hashlib.sha256(raw).hexdigest(),
     'address_space': 'IDA loader linear; raw EXE file offsets labeled separately',
     'data_segment_base': data_base, 'strings': strings, 'candidate_sites': candidates,
-    'functions': functions,
+    'functions': functions, 'unbounded_ranges': unbounded_ranges,
     'scope': 'text source and call-site evidence; no production text hook or speculative renaming'},
     ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 idaapi.qexit(0)

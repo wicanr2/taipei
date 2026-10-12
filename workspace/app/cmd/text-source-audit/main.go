@@ -55,7 +55,12 @@ func main() {
 	receipt := flag.String("receipt", "", "正常 GUI 輸入收據")
 	out := flag.String("out", "", "本機研究 JSON")
 	expected := flag.String("expected-state", "", "既有同輸入原版狀態 SHA-256")
+	remainingSteps := flag.Uint64("remaining-steps", 0, "#52：唯讀觀察開場與逐字來源的正常步數上限")
 	flag.Parse()
+	if *remainingSteps != 0 {
+		remainingAudit(*root, *receipt, *out, *remainingSteps)
+		return
+	}
 	z, err := zip.OpenReader(*receipt)
 	must(err)
 	defer z.Close()

@@ -20,15 +20,24 @@ catalog = Path('/workspace/app/locales/ui.tsv')
 checks = []
 roundtrips = []
 acknowledged = []
+message_phases = []
 phase = os.environ.get('TAIPEI_INTERFACE_PHASE', 'all')
 assert phase in ['all', 'settings', 'files'], phase
 tail_only, file_only = phase != 'all', phase == 'files'
 
 def status():
     try:
-        with zipfile.ZipFile(out / 'capture.zip') as z:
+        bundle=(out/'capture.zip').read_bytes()
+        with zipfile.ZipFile(io.BytesIO(bundle)) as z:
             s = json.loads(z.read('status.json'))
             assert hashlib.sha256(z.read('frame-index.bin')).hexdigest() == s['frame_index_sha256']
+            if s.get('hd',{}).get('source_text_fields',0)>0:
+                active=[d for d in (s.get('source_text') or []) if d['original_ea']==0x14d74 and
+                        0<d['visible_bytes']<len(d['source_hex'])//2]
+                if active and not message_phases:
+                    (out/'message-partial-capture.zip').write_bytes(bundle)
+                    message_phases.append({'step':s['steps'],'draw':active[-1],
+                                           'keys':s['hd'].get('source_text_keys')})
             return s
     except (FileNotFoundError, zipfile.BadZipFile):
         return {}
@@ -136,12 +145,16 @@ p = subprocess.Popen([str(binary), '-original','/orig','-saves',str(saves),'-rec
                       '-materials','/workspace/prototypes/hd-style','-catalog',str(catalog),
                       '-stop-file',str(out / 'stop')], stdout=log, stderr=subprocess.STDOUT)
 try:
-    wait(lambda s:s.get('steps',0)>=700_000_000,'intro',seconds=180)
-    subprocess.run(['xdotool','search','--name','模擬台北','windowfocus'],check=True)
-    key('space')
-    wait(lambda s:s.get('steps',0)>=800_000_000,'intro-wait')
-    key('space')
-    wait(lambda s:s.get('hd',{}).get('panel')=='main','main')
+    if os.environ.get('TAIPEI_INTERFACE_OPENING') == '1':
+        from localization_opening_playtest import verify
+        verify(status, wait, key, capture, out, root)
+    else:
+        wait(lambda s:s.get('steps',0)>=700_000_000,'intro',seconds=180)
+        subprocess.run(['xdotool','search','--name','模擬台北','windowfocus'],check=True)
+        key('space')
+        wait(lambda s:s.get('steps',0)>=800_000_000,'intro-wait')
+        key('space')
+        wait(lambda s:s.get('hd',{}).get('panel')=='main','main')
     if os.environ.get('TAIPEI_INTERFACE_SOURCE_ONLY')=='disaster':
         native('Right','disaster-main-select')
         assert status()['hd']['panel_selection']==1
@@ -156,7 +169,7 @@ try:
     for scene in ['main','city','new-game','difficulty']:
         if scene!='main': native('space',scene)
         if os.environ.get('TAIPEI_INTERFACE_QUICK')=='1':
-            capture(scene+'-zh-Hant')
+            capture(scene+'-'+status()['language'])
             continue
         for lang in ['zh-Hans','ja','ko','en','zh-Hant']:
             language(lang)
@@ -279,7 +292,7 @@ try:
     subprocess.run(['xdotool','type','--delay','150','Y'],check=True)
     ending=wait(lambda s:s.get('dos_blocked') is True and s.get('hd',{}).get('ending_screen')=='achievement-base',
                 'ending-en',seconds=180)
-    assert ending['hd']['localized_fields']==1
+    assert ending['hd']['localized_fields']>=1
     capture('ending-en')
     key('space')
     wait(lambda s:s.get('dos_exited') is True,'native-exit')
@@ -293,10 +306,10 @@ finally:
         if p.poll() is None: p.kill();p.wait()
         log.close()
 
-(root/'verification.json').write_text(json.dumps({'issue':51,'normal_gui':True,'checkpoint':False,
+(root/'verification.json').write_text(json.dumps({'issue':52 if os.environ.get('TAIPEI_INTERFACE_OPENING')=='1' else 51,'normal_gui':True,'checkpoint':False,
     'checks':checks,'phase':phase,'f12_roundtrips':roundtrips,'acknowledged':acknowledged,
     'original_save_written':True,'save_sha256':saved_sha,
     'original_save_read':True,'save_unchanged_after_read':True,'player_filename_preserved':'LOCALE',
-    'native_exit_tested':True,'long_state_sampling':False,'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),
+    'native_exit_tested':True,'message_phases':message_phases,'long_state_sampling':False,'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),
     'catalog_sha256':hashlib.sha256(catalog.read_bytes()).hexdigest()},ensure_ascii=False,indent=2)+'\n')
 print('PASS: localized interfaces, F11/F12, original save/load and DOS exit',flush=True)

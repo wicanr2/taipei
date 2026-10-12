@@ -2,7 +2,7 @@
 
 核對日期：2026-10-12。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-使用者先指示停止抽樣、提交並推送，已完成。現在追加 HD 五語系工作；只開此分支，尚未恢復先前圖表 GUI 與長時間狀態抽樣。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。先前圖表 GUI 與長時間狀態抽樣沒有恢復；全部圖片重繪與正式封包另案處理。
 
 ## 有效決策
 
@@ -14,7 +14,7 @@
 - 使用者選定 Windows、Linux、macOS 三平台封包，字型採 Noto 高清黑體。固定使用已展示的 Noto Sans CJK TC Regular Sans2.004；平台實機驗收另記限制。原版確有 F1–F6 標示，按鍵語意依原版驗證。
 - 使用者確認「允許在遊戲中切換」，採已提出的 F12 即時切換原版／HD。切換只改呈現，保留目前遊戲狀態，不將 F12 送入 DOS。操作契約見 [014](docs/spec/014-live-theme-switch.md)。
 - 使用者明確指定「重繪範圍 所有的圖片 與操作界面」。完整範圍涵蓋地圖／建物／設施、工具列／按鈕／框架、全部選單與視窗文字、圖表、開場／插畫／事件及動畫相位，沿用已定案風格與原版版面。
-- 使用者追加繁體中文、簡體中文、日文、韓文、英文，並選定「HD 模式提供五語系，原版模式保留繁中」。已看過 F11 面板並確認「遊戲中切換」，採 F11 與保存語言選擇。[030](docs/spec/030-hd-localization.md) 為第一批控制契約；[032](docs/spec/032-interface-localization.md) 限已辨識介面文字達 CONFORMED，不修改原版程式、規則與存檔。開場／插畫、逐字訊息動畫與未知事件仍待完成。
+- 使用者追加繁體中文、簡體中文、日文、韓文、英文，並選定「HD 模式提供五語系，原版模式保留繁中」。F11 遊戲中切換並保存語言；[030](docs/spec/030-hd-localization.md) 為控制契約，[032](docs/spec/032-interface-localization.md) 與 [033](docs/spec/033-localization-source-coverage.md) 完成已盤點介面、開場、圖片文字與逐字訊息，不修改原版程式、規則與存檔。未知用途與未走過分支明列於 033。
 - 使用者看過兩方案後回覆「同意」，採 Shift+F1 開 Help、保留原版 F1 離開。[031](docs/spec/031-help.md)、[#50](https://github.com/wicanr2/taipei/issues/50) 限已展示八列操作與前端輸入達 CONFORMED；不恢復長時間抽樣。
 
 使用者已回覆「Noto 高清黑體」，[#18](https://github.com/wicanr2/taipei/issues/18) 的字型方向已定。已展示比較圖保存在本機 `workspace/prototypes/hd-style/font-comparison/comparison-fonts.png`，SHA-256 `2ec3eea917c9dc173b31e30b5dbd9042f4ff4fca3f0f62a978281a3db5708c28`；含原版畫面，依素材邊界不入 Git。固定字型 SHA-256 `dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4`，授權為 SIL OFL 1.1。後續全部文字依已確認方向接入，不以六個標題原型宣稱全遊戲文字已 HD 化。
@@ -43,17 +43,29 @@
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
 | F4 圖表視窗 | 029 READY；六個實際原版入口與 56 份來源收據通過。B 石材外框／Noto 原型完整像素獨立核對、42 檔重生及正式三檔重生相同。已接入呈現層，六完整原型、資料格、色盤／相位／F12、十一種載入故障及家族隔離專項測試通過 | [029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)；完整回歸因預算 fixture 路徑缺失未通過，兩個既有面板測試因未設來源而略過；正常 HD GUI、負對照與狀態未驗；現行四架構編譯見 032，未達 CONFORMED |
 | 先前停止點 | 使用者指示「不用抽樣囉，先 commit + push」，已提交並推送 `c4e6e967a9cc7243c39e3cc4642596e9f9001bee`。後續僅追加五語系分支，沒有恢復先前抽樣或正常 HD 驗收 | 新工具保留，#48 維持 OPEN；全部 HD 與正式交付仍未完成 |
-| HD 五語系 | 032 限已辨識文字達 CONFORMED；181 鍵 TSV、Noto 927 種字元、五語系各 77 種來源狀態、原數字與失配回退通過。已接啟動／功能／工具／災難城市選單、三段說明、預算、人口、民意、速度、完整固定提示、離開確認、底部單位及已知圖表／政績文字。正常 GUI 驗工具與 Help、人口／民意五語系、環境五項、預算五語系、F12、英文存讀檔與原版退出 | [032](docs/spec/032-interface-localization.md)、[#51](https://github.com/wicanr2/taipei/issues/51)；`interface-locale-cold-r11/verification.json`。分段正面證據與未通過前件分開記錄；開場／插畫、逐字訊息動畫、未知事件、IME／視窗故障與完整來源覆蓋仍未完成，#49 OPEN；無長時間抽樣或正式包 |
-| Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。無 SAV 存退讀、原版退出、長時間狀態抽樣與平台真機，#49 完整翻譯仍 OPEN |
+| HD 五語系 | 030–033 限已盤點來源與必要短流程 CONFORMED。225 鍵 TSV、1213 種 Noto 字元、146 筆可讀中文全有譯文；五語系各 77 種介面狀態、156 個開場階段、36 個城市訊息階段、三個結局合成測例及九筆圖片來源通過。正常 r15 取得三十個開場／上任信鍵與五類圖片文字，驗途中韓文 F11、原版 F12、環境、預算五語系、英文存讀檔及 DOS 退出；r17 驗缺譯警示與隨附 TSV 回退 | [033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49)。成功結局未走完整玩家流程，密碼分支未啟用，`245C4h` 用途未知但有譯文。IME、平台真機、完整 HD 圖片與正式包另驗；無長時間抽樣 |
+| Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。存讀檔與原版退出由 032／033 補驗；無長時間狀態抽樣與平台真機 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 跨平台編譯 | 032 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Linux 乾淨重建與已驗 binary 相同。Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
+| 跨平台編譯 | 033 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯通過；Linux 同來源重建與已驗 binary 相同。Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
-- 其餘介面五語系：[032](docs/spec/032-interface-localization.md)、[#51](https://github.com/wicanr2/taipei/issues/51)，限已辨識文字與已驗路徑 CONFORMED，沿原版按鈕與動態欄位接入；完整來源覆蓋與逐字動畫仍由 #49 維護。
+- 逐字字墨與排版：[reveal_test.go](workspace/app/internal/localui/reveal_test.go)，五語系實際字墨驗安全矩形、固定整句位置、前綴進度及超長外部譯文完整回退。
+
+- 真實缺譯回退：[localization_fallback_playtest.py](workspace/tools/localization_fallback_playtest.py)，由 `TAIPEI_INTERFACE_FALLBACK=1` 搭配介面驗證入口啟動。外部 TSV 缺開場鍵時核對隨附 TSV 回退、可見警示及原版輸入隔離。
+
+- 正常開場五語系：[localization_opening_playtest.py](workspace/tools/localization_opening_playtest.py)，由 `TAIPEI_INTERFACE_OPENING=1` 搭配既有介面驗證入口啟動。檢查真實圖片／逐字來源、F11 中途切換與 F12 原版，接著沿正常存讀檔流程。
+
+- 完整可讀中文字串對照：[localization_source_inventory.py](workspace/tools/localization_source_inventory.py)，參數 `--original <唯讀原版> --catalog <ui.tsv> --out <本機 JSON>`。來源覆蓋與實際分支執行分開記錄。
+- 開場、圖片與逐字呈現：[text_sources.go](workspace/app/internal/hd/text_sources.go)、[text_images.go](workspace/app/internal/hd/text_images.go)，依 033 READY；[original/text.go](workspace/app/internal/original/text.go) 只觀察原始來源與已完成字數。[text_sources_test.go](workspace/app/internal/hd/text_sources_test.go) 驗原版實際階段、圖片來源與五語系字墨；[text_test.go](workspace/app/internal/original/text_test.go) 驗觀察器不寫 VM。
+
+- 剩餘五語系來源：[033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)，限已核對來源 CONFORMED；唯讀觀察入口為 [remaining.go](workspace/app/cmd/text-source-audit/remaining.go)。
+- 剩餘原版字墨核對：[localization_source_check.py](workspace/tools/localization_source_check.py)，參數 `--original <唯讀原版> --audit <原版觀察目錄>`，直接重讀原版 ROM 字模，不匯入呈現器。
+
+- 其餘介面五語系：[032](docs/spec/032-interface-localization.md)、[#51](https://github.com/wicanr2/taipei/issues/51)，限已辨識文字與已驗路徑 CONFORMED，沿原版按鈕與動態欄位接入；後續來源覆蓋與逐字動畫見 033。
 - 五語系介面呈現：[interface_locale.go](workspace/app/internal/hd/interface_locale.go)，既有來源閘門通過後才交換整套語言；[localui/text.go](workspace/app/internal/localui/text.go) 提供 TSV 單行及三段說明的有界排版。正式文字只來自 [ui.tsv](workspace/app/locales/ui.tsv)。
 - 人口、民意、速度與固定訊息：[interface_extra.go](workspace/app/internal/hd/interface_extra.go) 沿 [032](docs/spec/032-interface-localization.md) 完整重建來源，數字不翻譯。[interface_source_catalog.py](workspace/tools/interface_source_catalog.py) 獨立重生來源證據；[interface_locale_test.go](workspace/app/internal/hd/interface_locale_test.go) 驗五語系、原數字與失配回退；[interface_locale_playtest.sh](workspace/tools/interface_locale_playtest.sh)／[interface_locale_playtest.py](workspace/tools/interface_locale_playtest.py) 走正常冷啟動與功能視窗。
 
@@ -66,7 +78,7 @@
 - 五語系操作說明：[031](docs/spec/031-help.md)、[#50](https://github.com/wicanr2/taipei/issues/50)，正式呈現 [localui/help.go](workspace/app/internal/localui/help.go)，輸入由 [locale.go](workspace/app/cmd/taipei-preview/locale.go) 隔離；[help_test.go](workspace/app/internal/localui/help_test.go) 比對確認前固定原型及故障。歷史兩方案原型由 [help.go](workspace/app/cmd/locale-prototype/help.go) 產生。
 - Help 正常 GUI 短流程：[help_ui_playtest.sh](workspace/tools/help_ui_playtest.sh)／[help_ui_playtest.py](workspace/tools/help_ui_playtest.py)，冷啟動進城市後驗五語系、左右 Shift、F11／F12、持鍵放開隔離與原版 F1，限 031 的已確認操作契約。
 
-- HD 五語系：[030](docs/spec/030-hd-localization.md)、[#49](https://github.com/wicanr2/taipei/issues/49)，僅 HD 提供五語系，F12 原版保留繁中。文字唯一來源 [ui.tsv](workspace/app/locales/ui.tsv)；離線 [locale-prototype](workspace/app/cmd/locale-prototype/main.go) 產生固定字型原型。F11、設定與六標題已接入並通過正常短流程，其餘家族仍 DRAFT，第一批 READY 不代表全遊戲翻譯完成。
+- HD 五語系：[030](docs/spec/030-hd-localization.md)、[#49](https://github.com/wicanr2/taipei/issues/49)，僅 HD 提供五語系，F12 原版保留繁中。文字唯一來源 [ui.tsv](workspace/app/locales/ui.tsv)；離線 [locale-prototype](workspace/app/cmd/locale-prototype/main.go) 產生第一批固定字型原型。後續介面與剩餘來源已由 032／033 完成，未驗分支與交付限制見 033。
 
 - F4 圖表視窗：[029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)，固定框架與原版資料像素呈現已 READY，正式 HD 玩家驗收未完成。正常來源探索入口 [chart_window_playtest.sh](workspace/tools/chart_window_playtest.sh)／[chart_window_playtest.py](workspace/tools/chart_window_playtest.py)，已從 DISA1 核對六個實際入口、兩次無輸入及 Escape 返回；有界停止不代替正常退出或 HD 完成。
 - 圖表來源核對：[chart_window_source_check.py](workspace/tools/chart_window_source_check.py)，參數 `--original <唯讀原版> --receipts <正常收據目錄...> --out <新 JSON>`，直接重讀 ROM4–10，核對完整固定框架並另存資料區像素及色盤。不推定統計語意，不呼叫產品呈現器。

@@ -1,6 +1,6 @@
 # 030：HD 五語系
 
-狀態：F11 語言面板、設定與六標題 READY；其他文字家族 DRAFT。Issue：[#49](https://github.com/wicanr2/taipei/issues/49)。
+狀態：已核對來源的五語系呈現與必要短流程 CONFORMED。控制契約沿本檔，Help、介面及剩餘來源分別見 031–033；未驗分支與交付限制見 [033](033-localization-source-coverage.md)。Issue：[#49](https://github.com/wicanr2/taipei/issues/49)。
 
 ## 已確認範圍
 
@@ -94,6 +94,8 @@ go run -p 1 ./cmd/locale-prototype \
 本次 binary `taipei-preview-locale-r1` SHA-256 `73820b7ae8d23318e2773cb7387c0c4b71592b4b22f2ac6f54f541a0a8858938`。短流程以 stop-file 收尾，沒有原版正常退出、SAV 存退讀或長時間原版狀態抽樣。長時間持鍵／IME、錯誤提示的真實視窗流程與跨平台實機尚未驗，第一批保持 READY，不外推 CONFORMED 或完整五語系。
 
 ## 剩餘範圍
+
+現況更新：本節以下為第一批完成時的限制。後續 [032](032-interface-localization.md) 與 [033](033-localization-source-coverage.md) 已完成已盤點來源，包含開場、圖片文字與逐字訊息。225 鍵五語系、實際字墨、原版來源失配、正常 F11／F12、設定冷讀、缺譯警示、英文存讀檔與原版退出均有證據。成功結局未走完整玩家流程，密碼分支未啟用，未知用途字串保留標記；正式封包、平台真機及全部圖片重繪另案處理。
 
 其餘已辨識功能介面改由 [032](032-interface-localization.md)／[#51](https://github.com/wicanr2/taipei/issues/51) 接續，涵蓋既有選單、說明、動態欄位，以及追加的人口、民意、速度、災難城市和固定訊息。032 的 READY 與驗證範圍優先於以下第一批歷史限制；開場敘事、插畫內文字及未知事件仍須個別來源契約。
 

@@ -16,6 +16,8 @@ timeout 900s docker run --rm --network none --user "$(id -u):$(id -g)" \
   -e "TAIPEI_INTERFACE_QUICK=${TAIPEI_INTERFACE_QUICK:-0}" \
   -e "TAIPEI_INTERFACE_PHASE=${TAIPEI_INTERFACE_PHASE:-all}" \
   -e "TAIPEI_INTERFACE_SOURCE_ONLY=${TAIPEI_INTERFACE_SOURCE_ONLY:-}" \
+  -e "TAIPEI_INTERFACE_OPENING=${TAIPEI_INTERFACE_OPENING:-0}" \
+  -e "TAIPEI_INTERFACE_FALLBACK=${TAIPEI_INTERFACE_FALLBACK:-0}" \
   sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3 bash -c '
     set -euo pipefail
     test ! -e "/workspace/runs/$TAIPEI_INTERFACE_RUN"
@@ -24,6 +26,10 @@ timeout 900s docker run --rm --network none --user "$(id -u):$(id -g)" \
     xvfb_pid=$!
     trap '\''kill "$xvfb_pid" 2>/dev/null || true; wait 2>/dev/null || true'\'' EXIT
     for i in {1..50}; do test -S /tmp/.X11-unix/X99 && break; sleep .1; done
-    python3 /workspace/tools/interface_locale_playtest.py
+    if test "$TAIPEI_INTERFACE_FALLBACK" = 1; then
+      python3 /workspace/tools/localization_fallback_playtest.py
+    else
+      python3 /workspace/tools/interface_locale_playtest.py
+    fi
     find /workspace -user root -o -type d -name "*.md"
   '

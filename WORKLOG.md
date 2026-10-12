@@ -710,3 +710,25 @@ r10 五項環境完整英文提示、預算五語系、實際存檔與原版讀�
 Linux 依固定 dosgolem 與七份既有補丁乾淨重建，SHA-256 `c99f17bd03354972ce77346613ba2e1887e361690ac27c5979cf2473a8ab084a`，與已驗副本逐 byte 相同；外部 TSV 與正式來源相同。Windows amd64 雜湊 `3e2a558c994a6ea08091e3785fb15fd12aad852699155cfa2a2bd6b46c143295`，macOS amd64 `e3906562dfc509182c0a3a41d9972d3b384606dd919e6b2e5993dc107b5fc9b5`，arm64 `61338c3fa6d5b877a821b44c036d68cc1c1dc9990a9936c10ffdae262b2bcc37`。PE／Mach-O header 與 Linux Go build metadata 的四架構通過；Windows 仍有未修改 YMFM C++ 邊界警告，建置退出 0。未做 Wine、Windows／macOS 真機或正式封包，不提升 #48 完整 HD 驗收。
 
 收尾回查 README 現況與文件職責路由，更新唯一現況表、032 CONFORMED 的範圍、README 與驗收矩陣。原始 EXE、RS201.ROM、RS201A.ROM 與基線雜湊一致。主工具 image 沒有 `file`，改核對既有 PE／Mach-O 匯出與 Go metadata，屬檢查工具問題。新檔同次掛入 CONTEXT，029 為路由正對照，文件相對連結通過。指定 find 為空，所有專案容器已退出刪除；未建立 image，無需清理其他映像檔。提交只含原創程式、TSV、測試、工具與文件，原版、字型、素材、收據、binary 與 SAV 不入 Git。實際提交／push 與 Issue 狀態以 #51 收尾留言回鏈。
+
+## 2026-10-12：完成 #49 的剩餘五語系來源
+
+使用者明確要求繼續完成 #49。主機 gh auth 成功，回讀遠端後先建立 #52。命中本地化顯示與語意隔離、復古遊戲規格閘門、正常玩家路徑與文件職責路由，載入必要契約。文字來源追查另使用既有 IDA Pro 9.4 image，唯讀資料庫複製至 workspace/runs/ida-52，不修改 dosgolem 上游或原始資料。沒有恢復 #48 或長時間 RAM／RNG 抽樣。
+
+IDA 靜態指令確認清列、逐字進度及發布時機；原版 dosgolem 冷啟動取得開場／上任信 156 個文字階段、城市訊息 36 個階段，獨立 Python 重讀 ROM 字模逐項相同。完整 EXE 字串區的 146 筆可讀中文都已對應譯文，另查出 ROMA 38 的 IV2 小標題。九筆圖片文字涵蓋大小標題、抗議四筆動畫來源、百貨兩筆及銀行。商標與無法辨讀的證書裝飾保留，不猜造原文。
+
+033 先完成來源、原型及字墨審查，升 READY 後才接正式前端。原版觀察器只讀完整來源、原始參數及已完成位元組數；翻譯以整句固定排版再顯示前綴，原版動畫及等待不變。圖片文字逐框比對原始來源與呼叫前後緩衝，失配或裁切保留原版。修正透明小標題重複繪製時背景已含原字形的問題：僅在整個前次合成完全相同時保留乾淨背景。抗議牌另追至 sub_12BDA／sub_16210 的實際裁切契約，完整文字框落在裁切區才覆字。
+
+初步將 EXE 245C4h 視作啟動錯誤的說法撤回。現有資料只證實原始 bytes 與指標表，沒有足夠呼叫端證據，改記未知用途。密碼與版權來源仍保存譯文；正式 /A /D /x 不啟用密碼流程。成功結局兩列及未完成提示已核對 sub_12128／sub_12420 的清列與呼叫參數，五語系合成測例通過。未完成提示有正常退出呼叫，成功結局未走完整玩家流程。
+
+唯一 TSV 為 225 鍵，五語系欄完整；SHA-256 4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9，實際 Noto／OFL 檢查 1213 種字元。既有各語系 77 種來源狀態、數字及檔名隔離回歸通過。新增測試驗 156 個開場階段、36 個城市階段、九筆圖片、三個結局合成測例、單像素／裁切破壞、未知來源、ROMA 故障、完整上任信與正式 Render／F12。逐字實際字墨另驗零／半／完整進度、安全矩形、固定位置及超長譯文完整回退；觀察器驗記憶體、暫存器與步數不變。結果在 localization-production-unit-r2.log、localization-source-unit-final.log、localization-reveal-unit-final.log 及 localization-core-unit-r2.log。
+
+GUI 前件保留。r12 的空來源陣列被 JSON 編成 null，驗證程式未處理；r13 只記最後一個已繪文字框，誤判其他招牌未出現。改為記錄全部文字鍵。r14 正常開場、F11 韓文、環境、五語系預算、英文存讀檔與原版退出通過。追加抗議裁切入口後，r15 使用現行 binary 從全新 EXE 完整重跑通過：取得全部三十個開場／上任信鍵及五類圖片文字，途中 F11 改韓文，面板內 CPU、步數、原畫面、色盤、讀鍵與來源進度不變；F12 面板外兩側原版像素相同，檔案與離開視窗另驗完整四倍原版畫面。
+
+r15 亦取得英文城市提示的實際中間相位，驗環境五項、預算五語系、LOCALE 檔名保留、93567 bytes 原版 SAV、同次讀回及正常返回 DOS，共 33 次原版讀鍵／release。SAV SHA-256 d338d3a1418fedb41e13f38efb34ac462d34317430861669a1abafabc7536de8，讀回後不變。主收據 SHA-256 c7f23b6d0c00b58b64cb4d261e91f309cb73abfc1bbbdeaf3cf76369e2d43478，開場收據 573e2073b7b309a8eed7418eca32eafa5168431a44e521ba56ec1cf251324c7d。沒有 checkpoint 或全新 EXE 冷讀。
+
+r16 的缺譯測試以英文啟動，驗證程式仍搜尋中文視窗標題而失敗。改用實際 PID 聚焦，r17 乾淨重跑通過：有效外部 TSV 缺 intro.date 時回退隨附 TSV、開場正常翻譯、F11 顯示英文資源警示，原版輸入不穿透。收據 SHA-256 d41c06c73ae6d4efeda77bc12a73d9f51effe87bbe23850bfaa3df8a9e4481d7。這是驗證工具修正，不改產品。
+
+Linux 已驗 binary SHA-256 1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472895f088ec2c8，同來源重建逐 byte 相同。Windows amd64 1506be424369c922a3f7c39a7337252f0388c65eed6b61773a879fbfe775e589；macOS amd64 32fea91049a2911d9e91210393af3dcd7ecd59e1c6dc8930782135cadbcc9b5f；macOS arm64 97d3857bdc3bd152ecda24f54a76c42b76c0785fb54c2e681d8f89dc2f54d344。四架構編譯與 ELF／PE／Mach-O header 通過。Windows 仍出現既有 YMFM C++ 警告，建置退出 0；未修改該第三方元件。未做 Wine、Windows／macOS 真機、IME、母語人工審校或正式封包，不外推全部圖片 HD 完成。
+
+收尾重新核對本地化、正常玩家路徑與文件入口。033 限已核對來源及正式啟動範圍升 CONFORMED，更新 030、唯一現況表、README 與驗收矩陣。029 作文件路由正對照，新文件及新工具皆有入口，相對連結通過。35 個原始檔與 RAR 雜湊保持基線；來源與平台完整雜湊保存於 localization-final-provenance.json。指定 find 為空，專案容器均退出刪除，沒有新 image 或遺留背景程序。明確提交清單只含原創程式、TSV、測試、工具及文件；原版、字型、圖片、收據、SAV 與 binary 不入 Git。提交、push 及 Issue 最終狀態於遠端回鏈。

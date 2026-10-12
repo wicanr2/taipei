@@ -24,6 +24,12 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	SourceText                 int                 `json:"source_text_fields"`
+	SourceImages               int                 `json:"source_image_fields"`
+	SourceTextKey              string              `json:"source_text_key"`
+	SourceImageKey             string              `json:"source_image_key"`
+	SourceTextKeys             []string            `json:"source_text_keys"`
+	SourceImageKeys            []string            `json:"source_image_keys"`
 	InterfacePanel             string              `json:"interface_panel"`
 	LocalizedFields            int                 `json:"localized_fields"`
 	LocaleReason               string              `json:"locale_reason"`
@@ -74,6 +80,12 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	lastTextKeys   []string
+	lastImageKeys  []string
+	textSources    *textSources
+	textDraws      []TextDraw
+	textImageDraws []TextImageDraw
+	textROM        []byte
 	extra          *interfaceSources
 	locale         *interfaceLocale
 	fontDir        string
@@ -200,6 +212,13 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 				stats.FooterMask, stats.FooterText, stats.FooterReason = r.footer.paint(result, px, pal)
 				stats.LocalizedFields += r.locale.paintFooter(r, result, px, pal, stats)
 				if stats.LocalizedFields > 0 {
+					stats.LocaleReason = "matched-interface"
+				}
+				stats.SourceText, stats.SourceTextKey = r.paintTextSources(result, px, pal)
+				stats.SourceImages, stats.SourceImageKey = r.paintTextImages(result, px, pal)
+				stats.SourceTextKeys, stats.SourceImageKeys = r.lastTextKeys, r.lastImageKeys
+				stats.LocalizedFields += stats.SourceText + stats.SourceImages
+				if stats.SourceText+stats.SourceImages > 0 {
 					stats.LocaleReason = "matched-interface"
 				}
 			}

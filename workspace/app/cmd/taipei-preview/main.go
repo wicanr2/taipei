@@ -94,6 +94,7 @@ type game struct {
 	sound           *sound.Session
 	audioWaits      uint64
 	camera          original.Camera
+	text            original.Text
 }
 
 type inputEvent struct {
@@ -190,6 +191,7 @@ func (g *game) Update() error {
 	end := g.m.Steps + g.perUpdate
 	for g.m.Steps < end && !g.d.Exited && !g.m.CPU.Halted {
 		g.camera.Observe(g.m)
+		g.text.Observe(g.m)
 		if err := g.m.Step(); err != nil {
 			return err
 		}
@@ -237,6 +239,7 @@ func (g *game) refresh() {
 		g.rgba.Pix[j+2] = pal[p][2]
 		g.rgba.Pix[j+3] = 255
 	}
+	g.hdRenderer.SetTextDraws(g.text.Draws, g.text.Images)
 	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled, g.camera.Origin(g.m))
 	g.paintFrontend()
 	g.frame.WritePixels(g.presentation.Pix)
@@ -282,7 +285,8 @@ func (g *game) receipt() error {
 		"original_sha256": originalSHA, "prototype": true,
 		"audio":       audioStats,
 		"audio_waits": g.audioWaits,
-		"map_origin":  g.camera.Origin(g.m), "map_draws": g.camera.Draws,
+		"source_text": g.text.Draws, "source_images": g.text.ImageMetadata(),
+		"map_origin": g.camera.Origin(g.m), "map_draws": g.camera.Draws,
 	}, "", "  ")
 	if err != nil {
 		return err
@@ -447,6 +451,10 @@ func main() {
 	g := &game{m: m, d: d, frame: ebiten.NewImage(1280, 800), rgba: image.NewRGBA(image.Rect(0, 0, 320, 200)), out: *out, stopFile: *stopFile, perUpdate: *steps, hdRenderer: hd.New(rom, *materials), hdEnabled: *theme == "hd-b"}
 	g.catalog, g.localUI, g.language, g.settingsPath = catalog, localUI, selected, settingsPath
 	g.hdRenderer.SetLanguage(catalog, selected)
+	romA, romAErr := os.ReadFile(filepath.Join(*orig, "RS201A.ROM"))
+	if romAErr == nil {
+		g.text.Sources = g.hdRenderer.InitTextSources(raw, rom, romA)
+	}
 	if catalogErr != nil {
 		log.Print(catalogErr)
 		g.localeWarning = "locale.error.catalog"

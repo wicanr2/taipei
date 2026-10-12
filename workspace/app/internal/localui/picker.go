@@ -18,8 +18,9 @@ import (
 )
 
 type UI struct {
-	Catalog *i18n.Catalog
-	font    *sfnt.Font
+	Catalog     *i18n.Catalog
+	font        *sfnt.Font
+	revealSizes map[string]int
 }
 
 func New(dir string, c *i18n.Catalog) (*UI, error) {
