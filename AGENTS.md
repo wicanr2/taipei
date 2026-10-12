@@ -68,6 +68,7 @@
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |
 | HD 多語系 | [030](docs/spec/030-hd-localization.md) | 已確認 HD 五語系、原版繁中與 F11；控制／設定／六標題 READY，其他家族 DRAFT |
 | 五語系 Help | [031](docs/spec/031-help.md) | Shift+F1 開 Help、原版 F1 不變；限八列操作、五語系與輸入隔離 CONFORMED |
+| 其餘介面翻譯 | [032](docs/spec/032-interface-localization.md) | #51；既有來源家族五語系 READY，未辨識視窗另查證 |
 | 翻譯與顯示隔離 | `/home/anr2/.codex/knowledge-base/local/localization-display-semantic-isolation.md` | 翻譯、語系切換、文字來源及字型檢查時載入；TSV 只供顯示，不改識別值與 SAV |
 | 文件與新目錄 | `/home/anr2/.codex/knowledge-base/local/project-document-responsibilities.md` | 建立文件或目錄前讀取 |
 | 交付目錄 | `/home/anr2/.codex/knowledge-base/local/retro-remake-dist-all-output.md` | `dist-all/` 子目錄的唯一契約；不照抄舊專案 |

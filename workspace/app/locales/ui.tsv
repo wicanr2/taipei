@@ -7,6 +7,12 @@ menu.disasters	災難	灾难	災害	재난	Disasters
 menu.environment	環境	环境	環境	환경	Environment
 startup.new_game	開始新遊戲	开始新游戏	新しく始める	새 게임	New game
 startup.disaster_city	災難城市	灾难城市	被災都市	재난 도시	Disaster city
+disaster_city.taipei	災難（台北）	灾难（台北）	被災（台北）	재난 (타이베이)	Disaster (Taipei)
+disaster_city.taichung	災難（台中）	灾难（台中）	被災（台中）	재난 (타이중)	Disaster (Taichung)
+disaster_city.chiayi	災難（嘉義）	灾难（嘉义）	被災（嘉義）	재난 (자이)	Disaster (Chiayi)
+disaster_city.tainan	災難（台南）	灾难（台南）	被災（台南）	재난 (타이난)	Disaster (Tainan)
+disaster_city.kaohsiung	災難（高雄）	灾难（高雄）	被災（高雄）	재난 (가오슝)	Disaster (Kaohsiung)
+disaster_city.hualien	災難（花蓮）	灾难（花莲）	被災（花蓮）	재난 (화롄)	Disaster (Hualien)
 startup.load	載入舊檔	载入存档	ロード	불러오기	Load game
 startup.title	模擬台北	模拟台北	台北シミュレーション	타이베이 시뮬레이션	Taipei Simulation
 city.greater_taipei	大台北	大台北	台北都市圏	타이베이 도시권	Greater Taipei
@@ -81,6 +87,66 @@ budget.facilities	公共設施	公共设施	公共施設	공공시설	Public fac
 budget.power	電廠維護	电厂维护	発電所維持	발전소 유지	Power plant upkeep
 budget.net_tax	稅收淨額	税收净额	税収純額	순세수	Net tax revenue
 footer.per_unit	每單位	每单位	1単位あたり	단위당	Per unit
+footer.year	年	年	年	년	y
+footer.month	月	月	月	월	m
+unit.ten_thousand.compact	萬	万	万	만	10k
+file.confirm_exit	您確定離開遊戲嗎?(Y/N)	确定离开游戏吗?(Y/N)	ゲームを終了しますか?(Y/N)	게임을 종료하시겠습니까?(Y/N)	Exit the game? (Y/N)
+budget.tax_revenue	稅收	税收	税収	세수	Tax revenue
+budget.net_amount	淨額	净额	純額	순액	Net amount
+chart.minimum	最小	最小	最小	최소	MIN
+chart.maximum	最大	最大	最大	최대	MAX
+control.escape	Esc	Esc	Esc	Esc	Esc
+control.up_down	↑↓	↑↓	↑↓	↑↓	↑↓
+control.left_right	←→	←→	←→	←→	←→
+unit.percent	%	%	%	%	%
+population.annual	年度人口	年度人口	年間人口	연도별 인구	Annual population
+population.change	增加人口	增加人口	人口増加	인구 증가	Population increase
+population.growth	增加比率	增加比率	増加率	증가율	Growth rate
+population.level	城市等級	城市等级	都市の規模	도시 등급	City level
+population.people	人	人	人	명	people
+population.village	鄉村	乡村	村	마을	Village
+population.town	小鎮	小镇	町	소도시	Town
+population.city	城市	城市	都市	도시	City
+population.metropolis	都會	都会	大都市	대도시	Metropolis
+population.megalopolis	大都會	大都会	巨大都市	거대도시	Megalopolis
+opinion.title	民意調查（滿意程度）	民意调查（满意程度）	世論調査（満足度）	여론 조사 (만족도)	Opinion poll (satisfaction)
+opinion.traffic	交通	交通	交通	교통	Transport
+opinion.housing	房價	房价	住宅価格	주택 가격	Housing prices
+opinion.prices	物價	物价	物価	물가	Consumer prices
+opinion.crime	犯罪率	犯罪率	犯罪率	범죄율	Crime rate
+opinion.education	升學率	升学率	進学率	진학률	School advancement
+opinion.environment	環保	环保	環境保護	환경 보호	Environment
+opinion.recreation	休閒娛樂	休闲娱乐	娯楽	여가 활동	Recreation
+opinion.fire	火警	火警	火災	화재	Fire safety
+opinion.tax	稅率	税率	税率	세율	Tax rate
+opinion.unemployment	失業率	失业率	失業率	실업률	Unemployment
+opinion.total	總成績	总成绩	総合評価	종합 점수	Overall score
+speed.sleep	睡覺	睡觉	睡眠	수면	Sleep
+speed.walk	散步	散步	散歩	걷기	Walk
+speed.jog	慢跑	慢跑	ジョギング	조깅	Jog
+speed.run	快跑	快跑	疾走	달리기	Run
+settings.message_speed	訊息速度調整(0-9)	消息速度调整(0-9)	メッセージ速度 (0-9)	메시지 속도 (0-9)	Message speed (0-9)
+settings.speaker_on	喇叭開啟	喇叭开启	スピーカー：オン	스피커 켜짐	Speaker on
+settings.speaker_off	喇叭關閉	喇叭关闭	スピーカー：オフ	스피커 꺼짐	Speaker off
+settings.sound_off	音效關閉	音效关闭	サウンド：オフ	사운드 꺼짐	Sound off
+settings.sound_on	音效開啟	音效开启	サウンド：オン	사운드 켜짐	Sound on
+notice.no_funds	報告市長，經費不夠！	报告市长，经费不足！	市長、資金が足りません！	시장님, 자금이 부족합니다!	Mayor, there are insufficient funds!
+notice.challenge_disasters	挑戰級，災難無法關閉！	挑战级无法关闭灾难！	チャレンジでは災害を無効にできません！	도전 난이도에서는 재난을 끌 수 없습니다!	Disasters cannot be disabled on Challenge difficulty!
+notice.start_only	本選項須在遊戲開始時設定！	此选项须在游戏开始时设置！	この項目はゲーム開始時に設定してください！	이 항목은 게임을 시작할 때 설정해야 합니다!	This option must be set when starting the game!
+notice.population_goal	恭喜您人口已達五十萬人！！	恭喜，人口已达五十万人！	おめでとうございます！人口が50万人に達しました！	축하합니다! 인구가 50만 명에 도달했습니다!	Congratulations! The population has reached 500,000!
+notice.earthquake	地震！！地震！！！	地震！地震！	地震です！地震です！	지진입니다! 지진입니다!	Earthquake! Earthquake!
+notice.fire	小心！火災！！	小心！火灾！	注意！火災です！	조심하세요! 화재입니다!	Watch out! Fire!
+notice.nuclear	完了！核能電廠災變！	糟了！核电厂事故！	大変です！原子力発電所で事故！	큰일입니다! 원자력발전소 사고!	Disaster! An accident at the nuclear power plant!
+notice.thermal	大勢不妙，火力電廠爆炸！	大事不妙，火力电厂爆炸！	大変です！火力発電所が爆発！	큰일입니다! 화력발전소 폭발!	Trouble! The thermal power plant has exploded!
+notice.typhoon	颱風侵襲本市！	台风袭击本市！	台風が都市を襲っています！	태풍이 도시를 덮쳤습니다!	A typhoon is striking the city!
+notice.air_crash	本市上空發生空難事件！	本市发生航空事故！	都市上空で航空事故が発生！	도시 상공에서 항공 사고 발생!	An air crash has occurred over the city!
+notice.shipwreck	本市外海，發生船難！	本市近海发生船难！	都市沖で海難事故が発生！	도시 앞바다에서 해상 사고 발생!	A shipwreck has occurred off the coast!
+notice.shipwreck_cost	船難善後處理費一百萬！	船难善后处理费一百万！	海難事故の処理費用は100万です！	해상 사고 수습 비용은 100만입니다!	Shipwreck recovery costs 1,000,000!
+notice.protest	對市政不滿的群眾走上街頭！	不满市政的群众走上街头！	市政に不満を持つ市民が街頭に集結！	시정에 불만을 품은 시민들이 거리로 나왔습니다!	Citizens dissatisfied with the city government are demonstrating!
+notice.blackout	本市因供電不足，停電！	本市供电不足，发生停电！	電力不足により停電が発生！	전력 부족으로 정전이 발생했습니다!	Insufficient power has caused a city blackout!
+notice.fire_stations	消防隊過度缺乏！	消防队严重不足！	消防署が大幅に不足しています！	소방서가 매우 부족합니다!	There are far too few fire stations!
+notice.power_budget	電廠預算嚴重不足！	电厂预算严重不足！	発電所の予算が大幅に不足しています！	발전소 예산이 매우 부족합니다!	The power plant budget is severely insufficient!
+notice.power_supply	電源供應不足，請建電廠！	电力供应不足，请建电厂！	電力が不足しています。発電所を建ててください！	전력이 부족합니다. 발전소를 지으세요!	Power is insufficient. Please build a power plant!
 unit.ten_thousand	萬	万	万	만	×10,000
 ending.achievement	您的政績	您的政绩	市長の実績	시장의 업적	Your achievements
 locale.title	語言	语言	言語	언어	Language

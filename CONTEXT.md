@@ -14,7 +14,7 @@
 - 使用者選定 Windows、Linux、macOS 三平台封包，字型採 Noto 高清黑體。固定使用已展示的 Noto Sans CJK TC Regular Sans2.004；平台實機驗收另記限制。原版確有 F1–F6 標示，按鍵語意依原版驗證。
 - 使用者確認「允許在遊戲中切換」，採已提出的 F12 即時切換原版／HD。切換只改呈現，保留目前遊戲狀態，不將 F12 送入 DOS。操作契約見 [014](docs/spec/014-live-theme-switch.md)。
 - 使用者明確指定「重繪範圍 所有的圖片 與操作界面」。完整範圍涵蓋地圖／建物／設施、工具列／按鈕／框架、全部選單與視窗文字、圖表、開場／插畫／事件及動畫相位，沿用已定案風格與原版版面。
-- 使用者追加繁體中文、簡體中文、日文、韓文、英文，並選定「HD 模式提供五語系，原版模式保留繁中」。已看過 F11 面板並確認「遊戲中切換」，採 F11 與保存語言選擇；[030](docs/spec/030-hd-localization.md) 的控制與六標題達 READY，其餘家族仍 DRAFT，不修改原版程式、規則與存檔。
+- 使用者追加繁體中文、簡體中文、日文、韓文、英文，並選定「HD 模式提供五語系，原版模式保留繁中」。已看過 F11 面板並確認「遊戲中切換」，採 F11 與保存語言選擇。[030](docs/spec/030-hd-localization.md) 為第一批控制契約；[032](docs/spec/032-interface-localization.md) 限已辨識介面文字達 CONFORMED，不修改原版程式、規則與存檔。開場／插畫、逐字訊息動畫與未知事件仍待完成。
 - 使用者看過兩方案後回覆「同意」，採 Shift+F1 開 Help、保留原版 F1 離開。[031](docs/spec/031-help.md)、[#50](https://github.com/wicanr2/taipei/issues/50) 限已展示八列操作與前端輸入達 CONFORMED；不恢復長時間抽樣。
 
 使用者已回覆「Noto 高清黑體」，[#18](https://github.com/wicanr2/taipei/issues/18) 的字型方向已定。已展示比較圖保存在本機 `workspace/prototypes/hd-style/font-comparison/comparison-fonts.png`，SHA-256 `2ec3eea917c9dc173b31e30b5dbd9042f4ff4fca3f0f62a978281a3db5708c28`；含原版畫面，依素材邊界不入 Git。固定字型 SHA-256 `dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4`，授權為 SIL OFL 1.1。後續全部文字依已確認方向接入，不以六個標題原型宣稱全遊戲文字已 HD 化。
@@ -41,17 +41,21 @@
 | 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
 | 發電廠 | 027 限火力已見 36 格靜態來源達 CONFORMED；162 份正常收據、雙向捲動同世界來源、F12、存退讀及兩次退出通過。兩側各 80.644 億步、336 點原版狀態與實際 SAV 相同 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)；核能及其他相位仍 DRAFT，不宣稱完整發電廠、全部 HD 或封包完成 |
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
-| F4 圖表視窗 | 029 READY；六個實際原版入口與 56 份來源收據通過。B 石材外框／Noto 原型完整像素獨立核對、42 檔重生及正式三檔重生相同。已接入呈現層，六完整原型、資料格、色盤／相位／F12、十一種載入故障及家族隔離專項測試通過 | [029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)；完整回歸因預算 fixture 路徑缺失未通過，兩個既有面板測試因未設來源而略過；正常 HD GUI、負對照、狀態及四架構未驗，未達 CONFORMED |
+| F4 圖表視窗 | 029 READY；六個實際原版入口與 56 份來源收據通過。B 石材外框／Noto 原型完整像素獨立核對、42 檔重生及正式三檔重生相同。已接入呈現層，六完整原型、資料格、色盤／相位／F12、十一種載入故障及家族隔離專項測試通過 | [029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)；完整回歸因預算 fixture 路徑缺失未通過，兩個既有面板測試因未設來源而略過；正常 HD GUI、負對照與狀態未驗；現行四架構編譯見 032，未達 CONFORMED |
 | 先前停止點 | 使用者指示「不用抽樣囉，先 commit + push」，已提交並推送 `c4e6e967a9cc7243c39e3cc4642596e9f9001bee`。後續僅追加五語系分支，沒有恢復先前抽樣或正常 HD 驗收 | 新工具保留，#48 維持 OPEN；全部 HD 與正式交付仍未完成 |
-| HD 五語系 | 030 限 F11／設定／六標題 READY，已接入；115 鍵 TSV、實際 Noto 761 字元、五語系標題固定像素及必要故障測試通過。兩次正常冷啟動驗 F11 五語系、輸入／VM 隔離、F12、原版 F1、滑鼠、設定重讀及 Esc 取消 | [030](docs/spec/030-hd-localization.md)；`locale-ui-cold-r1/verification.json`。其他介面譯文未接入；持鍵／IME、真實視窗故障、SAV 存退讀、跨平台與正式包另驗，#49 OPEN |
+| HD 五語系 | 032 限已辨識文字達 CONFORMED；181 鍵 TSV、Noto 927 種字元、五語系各 77 種來源狀態、原數字與失配回退通過。已接啟動／功能／工具／災難城市選單、三段說明、預算、人口、民意、速度、完整固定提示、離開確認、底部單位及已知圖表／政績文字。正常 GUI 驗工具與 Help、人口／民意五語系、環境五項、預算五語系、F12、英文存讀檔與原版退出 | [032](docs/spec/032-interface-localization.md)、[#51](https://github.com/wicanr2/taipei/issues/51)；`interface-locale-cold-r11/verification.json`。分段正面證據與未通過前件分開記錄；開場／插畫、逐字訊息動畫、未知事件、IME／視窗故障與完整來源覆蓋仍未完成，#49 OPEN；無長時間抽樣或正式包 |
 | Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。無 SAV 存退讀、原版退出、長時間狀態抽樣與平台真機，#49 完整翻譯仍 OPEN |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 跨平台編譯 | F11／Help 031 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
+| 跨平台編譯 | 032 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯與架構通過；Linux 乾淨重建與已驗 binary 相同。Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- 其餘介面五語系：[032](docs/spec/032-interface-localization.md)、[#51](https://github.com/wicanr2/taipei/issues/51)，限已辨識文字與已驗路徑 CONFORMED，沿原版按鈕與動態欄位接入；完整來源覆蓋與逐字動畫仍由 #49 維護。
+- 五語系介面呈現：[interface_locale.go](workspace/app/internal/hd/interface_locale.go)，既有來源閘門通過後才交換整套語言；[localui/text.go](workspace/app/internal/localui/text.go) 提供 TSV 單行及三段說明的有界排版。正式文字只來自 [ui.tsv](workspace/app/locales/ui.tsv)。
+- 人口、民意、速度與固定訊息：[interface_extra.go](workspace/app/internal/hd/interface_extra.go) 沿 [032](docs/spec/032-interface-localization.md) 完整重建來源，數字不翻譯。[interface_source_catalog.py](workspace/tools/interface_source_catalog.py) 獨立重生來源證據；[interface_locale_test.go](workspace/app/internal/hd/interface_locale_test.go) 驗五語系、原數字與失配回退；[interface_locale_playtest.sh](workspace/tools/interface_locale_playtest.sh)／[interface_locale_playtest.py](workspace/tools/interface_locale_playtest.py) 走正常冷啟動與功能視窗。
 
 - F11 第一批呈現與控制：[locale.go](workspace/app/cmd/taipei-preview/locale.go)、[localui/picker.go](workspace/app/internal/localui/picker.go)，只處理前端面板與六標題，不匯入 DOS 規則；輸入及設定依 030 READY，正常短 GUI 已驗。
 - 語言來源及前端設定：[i18n/catalog.go](workspace/app/internal/i18n/catalog.go)、[settings.go](workspace/app/internal/i18n/settings.go)，外部 TSV 優先、隨附 TSV 回退，`frontend-settings.json` 獨立於 SAV；隨附 catalog 由 [locales/catalog.go](workspace/app/locales/catalog.go) 直接嵌入唯一 [ui.tsv](workspace/app/locales/ui.tsv)，不複製譯文。

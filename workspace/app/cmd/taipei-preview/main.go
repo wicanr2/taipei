@@ -397,6 +397,10 @@ func main() {
 		}
 	}
 	catalog, catalogErr := i18n.Load(*catalogPath)
+	if requiredErr := hd.ValidateInterfaceCatalog(catalog); requiredErr != nil {
+		catalogErr = requiredErr
+		catalog = i18n.Bundled()
+	}
 	settingsPath := filepath.Join(*saves, "frontend-settings.json")
 	selected, settingsErr := i18n.ReadSettings(settingsPath)
 	if *language != "" {

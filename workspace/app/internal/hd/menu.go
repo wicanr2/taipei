@@ -115,6 +115,10 @@ func loadMenuFontCatalog(dir string, catalog *i18n.Catalog, language string) *me
 // SetLanguage only replaces cached presentation labels, never DOS state.
 func (r *Renderer) SetLanguage(catalog *i18n.Catalog, language string) string {
 	r.menu = loadMenuFontCatalog(r.fontDir, catalog, language)
+	r.locale = loadInterfaceLocale(r, catalog, language)
+	if r.locale.reason != "" {
+		return r.locale.reason
+	}
 	return r.menu.reason
 }
 

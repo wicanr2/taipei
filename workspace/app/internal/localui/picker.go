@@ -83,6 +83,14 @@ func (u *UI) text(dst *image.RGBA, lang, key string, rect image.Rectangle, max, 
 
 func (u *UI) textColor(dst *image.RGBA, lang, key string, rect image.Rectangle, max, min int, ink color.Color) error {
 	text := u.Catalog.Get(lang, key)
+	return u.drawValue(dst, text, lang+"/"+key, rect, max, min, ink)
+}
+
+func (u *UI) drawValue(dst *image.RGBA, text, label string, rect image.Rectangle, max, min int, ink color.Color) error {
+	return u.drawValuePadding(dst, text, label, rect, max, min, ink, 4)
+}
+
+func (u *UI) drawValuePadding(dst *image.RGBA, text, label string, rect image.Rectangle, max, min int, ink color.Color, padding int) error {
 	for size := max; size >= min; size-- {
 		face, err := opentype.NewFace(u.font, &opentype.FaceOptions{Size: float64(size), DPI: 72, Hinting: font.HintingNone})
 		if err != nil {
@@ -90,7 +98,7 @@ func (u *UI) textColor(dst *image.RGBA, lang, key string, rect image.Rectangle, 
 		}
 		bounds, _ := font.BoundString(face, text)
 		w, h := bounds.Max.X.Ceil()-bounds.Min.X.Floor(), bounds.Max.Y.Ceil()-bounds.Min.Y.Floor()
-		if w > rect.Dx()-8 || h > rect.Dy()-8 {
+		if w > rect.Dx()-2*padding || h > rect.Dy()-2*padding {
 			face.Close()
 			continue
 		}
@@ -98,7 +106,7 @@ func (u *UI) textColor(dst *image.RGBA, lang, key string, rect image.Rectangle, 
 		d.DrawString(text)
 		return face.Close()
 	}
-	return fmt.Errorf("text-layout:%s/%s", lang, key)
+	return fmt.Errorf("text-layout:%s", label)
 }
 
 func (u *UI) Picker(lang string, selection int, warning string) (*image.RGBA, error) {

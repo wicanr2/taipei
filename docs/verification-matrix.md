@@ -20,6 +20,7 @@
 | 道路與電線 | [#44](https://github.com/wicanr2/taipei/issues/44) | 完整來源、別名、固定整格、資源故障、有效負對照；正常施工／F12／雙向捲動／存退讀及原版狀態 | [026](spec/026-infrastructure-tiles.md) 限第一批 25 張 CONFORMED；105 正常收據、九格同世界像素、五項有效呈現破壞及 206 點原版狀態通過。其餘 18 張 DRAFT，完整批次及交付仍未完成 |
 | 火力電廠 | [#46](https://github.com/wicanr2/taipei/issues/46) | 完整 36 格來源／重組、回退、實際素材故障、有效負對照；正常施工／F12／雙向捲動／存退讀及兩次退出 | [027](spec/027-power-facility.md) 限已見靜態來源 CONFORMED；162 正常收據、36 格同世界來源、五項有效破壞及 336 點原版狀態與實際 SAV 相同。核能及其他相位 DRAFT，全部 HD／封包未完成 |
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
+| 介面五語系 | [#51](https://github.com/wicanr2/taipei/issues/51)、[#49](https://github.com/wicanr2/taipei/issues/49) | 五語系完整文字鍵、實際字形與安全矩形、既有及追加來源、數值／檔名隔離、正常 F11／F12 與存退讀 | [032](spec/032-interface-localization.md) 限本批文字 CONFORMED；181 鍵、927 字元、五語系各 77 種來源狀態與有效回退通過。開場／插畫、逐字動畫、未知事件及全部覆蓋仍未完成，#49 保持 OPEN |
 | 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；正常 F12、取消、存退讀與狀態對照 | 022 限六面板二十九選取 CONFORMED；確認後視窗另驗 |
 | 存讀檔與離開提示 | [#38](https://github.com/wicanr2/taipei/issues/38) | 完整來源、正常輸入邊界與選取、F12、施工存退讀、有效負對照及原版狀態 | 023 限兩家族 CONFORMED；外部檔案錯誤與模態外另驗 |
 | 預算與稅率視窗 | [#39](https://github.com/wicanr2/taipei/issues/39) | 完整 ROM2、十一動態欄位、五列選取、Noto 墨跡、正常調整／返回、全新 EXE 設定重讀及 HD 狀態對照 | 025 限完整面板 CONFORMED；116 正常收據、十三有效呈現破壞與 169 點原版狀態通過；極值規則及其他介面另驗 |
@@ -28,7 +29,9 @@
 | DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 | 政績靜態底圖 | [#47](https://github.com/wicanr2/taipei/issues/47) | 兩個完整 ROM 來源、B／Noto 原型、F12／失配回退／真實資源故障；正常施工存退讀、兩次原版退出、獨立完整像素及固定輸入狀態 | [028](spec/028-ending-achievement-base.md) 限已見底圖 CONFORMED；50 正常收據、七項有效破壞及 125 點原版狀態與實際 SAV 相同。其他結果及動畫 DRAFT，全部 HD／封包未完成 |
-| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48) | 六個原版入口、完整框架／資料／色盤及返回；B／Noto 原型完整像素與乾淨重生；正式呈現專項測試 | [029](spec/029-chart-windows.md) READY，已接呈現層；圖表專項通過。完整回歸因預算 fixture 路徑缺失失敗，兩個既有面板來源未設而略過。使用者指示先 commit／push，本輪不執行後續抽樣；正常 HD GUI、負對照、狀態與四架構未驗 |
+| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48) | 六個原版入口、完整框架／資料／色盤及返回；B／Noto 原型完整像素與乾淨重生；正式呈現專項測試 | [029](spec/029-chart-windows.md) READY，已接呈現層；圖表專項通過。完整回歸因預算 fixture 路徑缺失失敗，兩個既有面板來源未設而略過。使用者指示先 commit／push，本輪不執行後續抽樣；正常 HD GUI、負對照與狀態未驗；現行四架構編譯見 032 |
+
+032 的現行文字驗證為 `interface-locale-unit-final.log` 與 `interface-source/catalog.json`。正常 GUI 分段來源為 r9 的工具／Help／人口／民意、r10 的五項環境完整提示與五語系預算，以及 r11 的完整冷啟動英文存讀檔、兩場景 F12、政績標題與原版退出；前兩輪後續驗證錯誤保留，不能稱整輪 PASS。`interface-locale-cold-r11/verification.json` 通過，LOCALE.SAV 93567 bytes，讀回後雜湊相同。Linux 重建與已驗 binary 相同，Windows amd64／macOS amd64／arm64 編譯與架構通過；不提升 029 完整 HD 或平台真機驗收，也未恢復長時間抽樣。下方 030 的 115 鍵為第一批歷史範圍，現行 181 鍵以 032 為準。
 
 目前已驗證正常 GUI 冷啟動、新遊戲、電線施工、檔名輸入及退格、原版實際存檔、
 原版離開、全新 EXE 啟動與實際讀檔，兩次均由原版返回 DOS。沒有使用機器快照。

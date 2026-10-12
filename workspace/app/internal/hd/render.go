@@ -24,6 +24,9 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	InterfacePanel             string              `json:"interface_panel"`
+	LocalizedFields            int                 `json:"localized_fields"`
+	LocaleReason               string              `json:"locale_reason"`
 	ChartWindow                bool                `json:"chart_window"`
 	ChartReason                string              `json:"chart_reason"`
 	ChartDataSHA               string              `json:"chart_data_sha256"`
@@ -71,6 +74,8 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	extra          *interfaceSources
+	locale         *interfaceLocale
 	fontDir        string
 	charts         *chartWindows
 	ending         *endingScreen
@@ -139,6 +144,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.powerFacility = loadPowerFacilities(rom, dir)
 	r.ending = loadEndingScreen(rom, dir)
 	r.charts = loadChartWindows(rom, dir)
+	r.extra = loadInterfaceSources(rom)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -178,8 +184,27 @@ func New(rom []byte, dir string) *Renderer {
 	return r
 }
 
-func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (*image.RGBA, Stats) {
-	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
+func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabled bool, origin Origin) (result *image.RGBA, stats Stats) {
+	stats = Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
+	defer func() {
+		if r.locale != nil && enabled && mode == 19 && len(px) == 64000 && result != nil {
+			stats.LocalizedFields, stats.LocaleReason = r.locale.paint(r, result, px, pal, stats)
+			if r.locale.reason == "" {
+				extra, id := r.locale.paintExtras(r, result, px, pal)
+				stats.LocalizedFields += extra
+				stats.InterfacePanel = id
+				top := footerCrop(px, image.Rect(0, 0, 270, 33))
+				if digest(top) == uiSHA {
+					stats.FontLabels, stats.FontReason = r.menu.paint(result, pal)
+				}
+				stats.FooterMask, stats.FooterText, stats.FooterReason = r.footer.paint(result, px, pal)
+				stats.LocalizedFields += r.locale.paintFooter(r, result, px, pal, stats)
+				if stats.LocalizedFields > 0 {
+					stats.LocaleReason = "matched-interface"
+				}
+			}
+		}
+	}()
 	stats.BudgetSelection, stats.BudgetReason = -1, "scene-fallback"
 	stats.EndingReason = "scene-fallback"
 	stats.ChartReason = "scene-fallback"
