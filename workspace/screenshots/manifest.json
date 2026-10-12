@@ -1,0 +1,549 @@
+{
+  "issue": "https://github.com/wicanr2/taipei/issues/53",
+  "use": "依使用者指示，僅於私人儲存庫展示文件截圖；不納入 RRSAL-1.0。",
+  "platform": "Linux amd64，Xvfb 中的實際 GUI",
+  "captured_at": "2026-10-12T18:42:07.069696+08:00",
+  "source_commit": "b6cca7e0cd54f0816c5a9d3b656790f0567350fb",
+  "binary_sha256": "1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472895f088ec2c8",
+  "catalog_sha256": "4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9",
+  "original_inputs_sha256": {
+    "RS201.EXE": "798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3",
+    "RS201.ROM": "0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29",
+    "RS201A.ROM": "5d66f238dce650b8a407986100392ee4b8ac2aa23a033e80a7ca18ed91b3d9b0"
+  },
+  "font_sha256": "dce08bd4fd91aa8aa76ed8fea4b694c2dfb8550f67871e326843212ddbeb88b4",
+  "docker_image": "sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3",
+  "dosgolem_base_commit": "a9714ebdab2ad6b529f81225472680f2b11f2842",
+  "dosgolem_patches": "由 workspace/tools/build_preview.sh 套用的七份專案補丁。",
+  "patches_sha256": {
+    "dosgolem-audio.patch": "089e143cf811636262ea902d868cd867c01f3ed83a85812443583f8cdaccd8ed",
+    "dosgolem-bios-blocking.patch": "80825cf9c15067302d82caee8d7b85f988315b67c8dcce92effc241905b8bf14",
+    "dosgolem-bios-caps-lock.patch": "7413a0938078afefb69284c2a538f1443e5b58049786d11e91260231270a2d76",
+    "dosgolem-bios-irq1.patch": "20b92b39ce74c6872408be6d7cc59e291327f055a73febee6b51ea2d66b11252",
+    "dosgolem-console-keyboard.patch": "545c82fe2f4da69a2cc3e3a4f6324fa1af89425d0f19d337f801fe763b3640e6",
+    "dosgolem-probe-trace.patch": "708ecef0ee1e9825328446561bd72059bd41973323280b6fb1575a3f767117a6",
+    "dosgolem-system-clock.patch": "2a2f84aaed238fa0a82dea8585e1ce2e1157643241b41666a18e8bbc93bccc42"
+  },
+  "reproduction_tools_sha256": {
+    "readme_screenshots.sh": "3b6fdd84d5d8f025928a49af900ec0be5afee3564348d373ca2854e3bd98e557",
+    "readme_screenshots.py": "518a6abcc96dfe133ca6ebc1c23432a5688d957b69120019460e67e1d873101b"
+  },
+  "scenario": "正常新遊戲、第一個城市、預設難度、原版 0 鍵暫停。",
+  "rng_seed": "未覆寫；在同一個原版執行個體內切換呈現，不比較亂數規則。",
+  "normal_gui": true,
+  "state_injection": false,
+  "native_exit_tested": true,
+  "comparison": "城市與預算各組的原版色號畫面及可見 RGB 一致；完整色盤的未使用項目可能變化。CPU 步數與時鐘仍前進，此為呈現比較，不能當成相同機器狀態對拍。",
+  "limits": [
+    "全部截圖來自 Linux，未做 Windows 或 macOS 真機驗收。",
+    "全部圖片 HD 重繪與正式封包尚未完成。",
+    "展示範圍限本次城市、預算及 Help 畫面。"
+  ],
+  "local_receipt": "workspace/runs/readme-screenshots-r4/verification.json",
+  "local_receipt_sha256": "13b3e7f76f7c3fb426c480c263fcea5fd893ebfdac75a9cb7eab6f41c334a35c",
+  "reproduce": "bash workspace/tools/readme_screenshots.sh 於 Docker 擷取，之後在相同 image 執行 export_readme_screenshots.py --run /workspace/runs/<新擷取目錄> --out <新的輸出目錄> --source-commit <目前產品提交>；執行與掛載範例見 WORKLOG.md 的 #53 記錄。",
+  "screenshots": [
+    {
+      "file": "city-original.png",
+      "scene": "city",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "6cd1619eaf88da94614aab4c34f734d91f3bdcfbdc73b07277e5b928a0cf7dd4",
+      "capture_sha256": "7401680425b92b5c86ffc408eebd456bfe0aee0c054205980b7450e509aa3fb4",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1032000000,
+      "ticks": 36492,
+      "bios_ticks": 1622,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 0,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "city-zh-Hant.png",
+      "scene": "city",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "bc2bf97db1f63d5c0afb441d364e27086395e739d56ff55def29d9e2bf6b5b17",
+      "capture_sha256": "26df2f7b6ce4e90299526c922aff77e7d4059dae8bcc1f3cb38d8b466db42338",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1056000000,
+      "ticks": 37321,
+      "bios_ticks": 1660,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "city-zh-Hans.png",
+      "scene": "city",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "7068279cc9866e0e28ba16c50a74ea584f69faba1e9b2561cb6f6fa11c443d90",
+      "capture_sha256": "cd49d8f8c7f80290a7f4d601b444658e16a2a754296e8289b982a12cdcd29510",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1079600000,
+      "ticks": 38136,
+      "bios_ticks": 1697,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "city-ja.png",
+      "scene": "city",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e379ebe5db5ab0e7f991c21ba8747486c43cb4009248c2115976692d91a2daca",
+      "capture_sha256": "55fc50a70de157e78f9b1e74f862c1b2e14d87600a3138eef0a5ea7c189f8d50",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1103600000,
+      "ticks": 38966,
+      "bios_ticks": 1735,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "city-ko.png",
+      "scene": "city",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ee838198b9b3bb015485d1caeca9464ce9fc57d9e67a9eed883e58dd096156db",
+      "capture_sha256": "72d7f066012f4cce4d7abc1b2b6e2cfb891e4ee7e6d661708760728a100fe386",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1128000000,
+      "ticks": 39809,
+      "bios_ticks": 1773,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "city-en.png",
+      "scene": "city",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "4964680608eca0c47f8c93d385ad9e3df29a58fc6fc6c0df26b175bba9c04a8e",
+      "capture_sha256": "2f4a6eb73f7f08ddd9d8a73302ab1406dc51f752764d742e128c3c4377e6f7aa",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1151600000,
+      "ticks": 40624,
+      "bios_ticks": 1810,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "help-zh-Hant.png",
+      "scene": "help",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "8743d2de7ba35f20dff862aa90ba8ef777a9a05db67879f0d02e97ca2238d254",
+      "capture_sha256": "0b3961c9e79c96a4732e29aa4136886d9696589603e1f963f61df8a311a219cb",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1175200000,
+      "ticks": 41439,
+      "bios_ticks": 1847,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": true,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "67006a2d3081ebf55e24ac9a22a50abd94409a8072ccb34423d7e0893d6e238d"
+    },
+    {
+      "file": "help-zh-Hans.png",
+      "scene": "help",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "2623ffe9bea5332aa665fbcea961cf6cf0367fe286e3d4d34967f8fa889c35ed",
+      "capture_sha256": "6a3f56b4cd70b38c0bc36161f799e6b50738d86026c30bb36bd276b2121d042f",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1217200000,
+      "ticks": 42891,
+      "bios_ticks": 1914,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": true,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "help-ja.png",
+      "scene": "help",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "1c64aa5923bb409b2c2c95ef6cc27c9646e75a110fe75867e5118cef4155c60d",
+      "capture_sha256": "3facbc146290d1ebe93e82d10f2d5cec0ef8011e4935ceb3b57e4841aa683571",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1262800000,
+      "ticks": 44466,
+      "bios_ticks": 1985,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": true,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "help-ko.png",
+      "scene": "help",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "5610577911daff54e067e9e926415919cd18a4feea30cb6080585f1cc27d529a",
+      "capture_sha256": "61ececa66ad077934d1f410a60e40b105667c1a1a18b0fa154b8ca4cd16479a1",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1306400000,
+      "ticks": 45973,
+      "bios_ticks": 2054,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": true,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "help-en.png",
+      "scene": "help",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c23dea01f9489d7cc2a05587d7e67efcd56512fb18d3d47e1aae7f695197cec0",
+      "capture_sha256": "23793f8e09e8f895de7742afd5368382a8a9359487d13c384e0590eb29f7b869",
+      "original_rgb_sha256": "db09abfdec03b897426486423a7acb67ca5627b2b5cce8cefdf09540b0920b3f",
+      "frame_index_sha256": "12933f498776d5cc3698dcea0f037a6650e739f0523d7991719c8e6c9fd4f8a3",
+      "steps": 1350800000,
+      "ticks": 47507,
+      "bios_ticks": 2124,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": true,
+      "localized_fields": 3,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-original.png",
+      "scene": "budget",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "4286832ec72d18d5b44ed6bcff840c4ab9e95f61067484cc707b9661a0972d3c",
+      "capture_sha256": "ac70559bfc29f0ff278ffc9060db7ffccd584f6a8fc60144280b2e01711232ce",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 1512000000,
+      "ticks": 53076,
+      "bios_ticks": 2377,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 0,
+      "budget_text": null,
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-zh-Hant.png",
+      "scene": "budget",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "baf30daab044bba999b92dcb1dba99d46340a2fcbbf182a7be16f9c5012bc0b5",
+      "capture_sha256": "02cefeba1cdac621d3f2a6a06e053376cc788680000eea1751e96dda16e71700",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 1536000000,
+      "ticks": 53905,
+      "bios_ticks": 2415,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 28,
+      "budget_text": [
+        " 10",
+        "100",
+        "100",
+        "100",
+        "100",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0"
+      ],
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-zh-Hans.png",
+      "scene": "budget",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e83387e2ca15533a04852d9943a0ffd7fa2063b1b641017cd1be1babc5924d2f",
+      "capture_sha256": "e5829e01bdebaacfecdd7fb036ce896161086c264af034d3f88443f655261475",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 1702400000,
+      "ticks": 59655,
+      "bios_ticks": 2676,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 28,
+      "budget_text": [
+        " 10",
+        "100",
+        "100",
+        "100",
+        "100",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0"
+      ],
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-ja.png",
+      "scene": "budget",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "044c6217d0f8664b51b13f1b3589e3f0ecf9310983042ce0f6afe67f54331ad9",
+      "capture_sha256": "532e477c7d3bc78f4155478066b4c20900e3c606c270f4903617a64d73a476f7",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 1867200000,
+      "ticks": 65349,
+      "bios_ticks": 2935,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 28,
+      "budget_text": [
+        " 10",
+        "100",
+        "100",
+        "100",
+        "100",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0"
+      ],
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-ko.png",
+      "scene": "budget",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ea1e8c3db22d5ef12cae6fd9d0e45844ad274b483f9e3b00b0442a572f74ae30",
+      "capture_sha256": "6420254365b930d2fb48bf9521fcb526b848fbe2853efc8755e291ae31f48742",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 2035200000,
+      "ticks": 71153,
+      "bios_ticks": 3199,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 28,
+      "budget_text": [
+        " 10",
+        "100",
+        "100",
+        "100",
+        "100",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0"
+      ],
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "budget-en.png",
+      "scene": "budget",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "b9c068977b245450716c14206d2ef28f40caf9498ca694d879f2af8f0af340a2",
+      "capture_sha256": "1e76f6e71beea6a678bcc42fb6268b5b813d367bb2cdbc015f44607c225bad2a",
+      "original_rgb_sha256": "40cace39de7fd55b5d571176424ccdbc0c0cc052086ebd5eb8cf50007babca8b",
+      "frame_index_sha256": "3027349c2b37f1de7c074cd261c5d6a0064971b56ece2d3e511c4875e1fc093a",
+      "steps": 2202000000,
+      "ticks": 76916,
+      "bios_ticks": 3462,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "help_panel": false,
+      "localized_fields": 28,
+      "budget_text": [
+        " 10",
+        "100",
+        "100",
+        "100",
+        "100",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0",
+        "       0"
+      ],
+      "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    }
+  ]
+}

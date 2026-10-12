@@ -16,6 +16,10 @@
 - 建立、更新、留言及關閉本專案範圍內的 Issue，記錄依賴、證據、驗證與完成結果。
 - 使用者已在本對話追加明確授權使用主機 `/home/anr2/.local/bin/gh`，並指示開始。
   此授權持續有效；工具環境限制與使用者授權分開記錄，不因工具拒絕而重複索取授權。
+- 使用者於 2026-10-12 要求 README 展示原版與 HD 五語系截圖。依 [#53](https://github.com/wicanr2/taipei/issues/53)，
+  選定的文件用 PNG 可加入目前私人儲存庫的 `workspace/screenshots/`，來源與雜湊保存於該處 `manifest.json`。
+  此例外限 README 展示，不授權原版執行檔、資料、素材包、存檔、原始收據或公開發布。
+  後續修改已展示的畫面或譯文時，同次沿第 3 節的擷取與匯出工具更新截圖及來源清單。
 
 上述管理操作不需要重複徵求授權。儲存庫改為公開、公開 Release、上傳原版素材、
 加入協作者、改動其他專案、推送 dosgolem 上游及破壞性操作，另行取得授權。
@@ -65,6 +69,7 @@
 | 自有程式授權 | [LICENSE](LICENSE) | RRSAL-1.0，不授權原版或第三方元件 |
 | 驗收範圍 | [docs/verification-matrix.md](docs/verification-matrix.md) | 串起 Issue、玩家路徑、證據與未驗限制 |
 | 執行與交付摘要 | [README.md](README.md) | 穩定入口；不寫逐輪流水帳 |
+| README 原版與五語系畫面 | [擷取工具](workspace/tools/readme_screenshots.sh)、[匯出工具](workspace/tools/export_readme_screenshots.py)、`workspace/screenshots/manifest.json` | #53；正常冷啟動擷取，選定 PNG 限目前私人儲存庫展示 |
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |
@@ -174,6 +179,7 @@
   此檢查也在容器內執行。檢查並移除本次不再需要的容器；不清理其他專案資源。
 - 原版 EXE、資料、壓縮檔、掃描、存檔、擷取資產及權利未明的 HD 素材不入 Git。
   private 不代表已取得素材散布權。先設定 `.gitignore`，再檢查 staged 內容與素材清單。
+  第 1 節已獲使用者指定的 README 截圖為有限例外；原始收據仍只留本機。
 - 自有程式與文件依指定 RRSAL-1.0 範本建立 `LICENSE`，保留第三方元件授權。
   未確認的原版權利人與素材來源不得猜填。
 - 正式交付根為 `dist-all/<版本>/`；子目錄依第 3 節唯一契約建立。

@@ -8,6 +8,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 - 私人儲存庫：[wicanr2/taipei](https://github.com/wicanr2/taipei)。Issues 已啟用。
 - 使用者已授權主機 gh、專案提交與推送，以及本範圍的 Issue 管理。
+- 使用者要求 README 放原版與 HD 五語系截圖。依 [#53](https://github.com/wicanr2/taipei/issues/53)，選定的 17 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
 - HD 美術採 B「細緻手繪材質」，以使用者最新改選取代先前的 A。HD 解析度為 1280×800，對應原版 320×200 的四倍。
@@ -45,6 +46,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 先前停止點 | 使用者指示「不用抽樣囉，先 commit + push」，已提交並推送 `c4e6e967a9cc7243c39e3cc4642596e9f9001bee`。後續僅追加五語系分支，沒有恢復先前抽樣或正常 HD 驗收 | 新工具保留，#48 維持 OPEN；全部 HD 與正式交付仍未完成 |
 | HD 五語系 | 030–033 限已盤點來源與必要短流程 CONFORMED。225 鍵 TSV、1213 種 Noto 字元、146 筆可讀中文全有譯文；五語系各 77 種介面狀態、156 個開場階段、36 個城市訊息階段、三個結局合成測例及九筆圖片來源通過。正常 r15 取得三十個開場／上任信鍵與五類圖片文字，驗途中韓文 F11、原版 F12、環境、預算五語系、英文存讀檔及 DOS 退出；r17 驗缺譯警示與隨附 TSV 回退 | [033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49)。成功結局未走完整玩家流程，密碼分支未啟用，`245C4h` 用途未知但有譯文。IME、平台真機、完整 HD 圖片與正式包另驗；無長時間抽樣 |
 | Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。存讀檔與原版退出由 032／033 補驗；無長時間狀態抽樣與平台真機 |
+| README 截圖 | 已收錄原版城市／預算、HD 五語系城市／預算及 Help 五語系，共 17 張 1280×800。現行 Linux 前端正常冷啟動、22 次原版讀鍵與退出通過；城市及預算各組原版色號與可見 RGB 一致，五語系預算數值相同 | [來源清單](workspace/screenshots/manifest.json)、[#53](https://github.com/wicanr2/taipei/issues/53)；`readme-screenshots-r4/verification.json`。CPU 步數、時鐘與未使用色盤仍可變化；此為呈現比較，不提升完整 HD、機器狀態對拍或封包驗收 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
@@ -52,6 +54,8 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
+
+- README 實際畫面：[截圖清單](workspace/screenshots/manifest.json)、[正常擷取工具](workspace/tools/readme_screenshots.sh)、[核對與匯出工具](workspace/tools/export_readme_screenshots.py)。城市／預算各含原版及五語系 HD，Help 含五語系；來源收據留在本機 `workspace/runs/`。
 
 - 逐字字墨與排版：[reveal_test.go](workspace/app/internal/localui/reveal_test.go)，五語系實際字墨驗安全矩形、固定整句位置、前綴進度及超長外部譯文完整回退。
 

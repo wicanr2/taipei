@@ -732,3 +732,26 @@ r16 的缺譯測試以英文啟動，驗證程式仍搜尋中文視窗標題而�
 Linux 已驗 binary SHA-256 1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472895f088ec2c8，同來源重建逐 byte 相同。Windows amd64 1506be424369c922a3f7c39a7337252f0388c65eed6b61773a879fbfe775e589；macOS amd64 32fea91049a2911d9e91210393af3dcd7ecd59e1c6dc8930782135cadbcc9b5f；macOS arm64 97d3857bdc3bd152ecda24f54a76c42b76c0785fb54c2e681d8f89dc2f54d344。四架構編譯與 ELF／PE／Mach-O header 通過。Windows 仍出現既有 YMFM C++ 警告，建置退出 0；未修改該第三方元件。未做 Wine、Windows／macOS 真機、IME、母語人工審校或正式封包，不外推全部圖片 HD 完成。
 
 收尾重新核對本地化、正常玩家路徑與文件入口。033 限已核對來源及正式啟動範圍升 CONFORMED，更新 030、唯一現況表、README 與驗收矩陣。029 作文件路由正對照，新文件及新工具皆有入口，相對連結通過。35 個原始檔與 RAR 雜湊保持基線；來源與平台完整雜湊保存於 localization-final-provenance.json。指定 find 為空，專案容器均退出刪除，沒有新 image 或遺留背景程序。明確提交清單只含原創程式、TSV、測試、工具及文件；原版、字型、圖片、收據、SAV 與 binary 不入 Git。提交、push 及 Issue 最終狀態於遠端回鏈。
+
+## 2026-10-12：README 原版與 HD 五語系截圖 #53
+
+使用者要求繼續，並指定 README 必須展示原版與 HD 多語系截圖。先核對主機 gh auth、PRIVATE／Issues 及遠端工作項目，再建立 #53。命中復古 README、正常玩家路徑及文件職責路由，載入 README 標準與復古重製技能的驗證參考。依本次明確指示，僅選定的文件 PNG 可進私人儲存庫；有限例外同步寫入 AGENTS、CONTEXT 與 .gitignore，沒有公開 Release 或上傳原版檔。
+
+沿現行 b6cca7e0cd54f0816c5a9d3b656790f0567350fb 的已驗 Linux 前端擷取，binary SHA-256 1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472895f088ec2c8。程式、唯一 TSV、字型與素材沒有修改。新增正常 GUI 擷取及選定 PNG 匯出工具，工作皆在 workspace，原版唯讀，Docker 固定既有 image、UID/GID 1000:1000、無網路與有界資源。
+
+前件保留，只有 r4 整批通過：
+
+| 輪次 | 已查證結果與修正 |
+|---|---|
+| r1 | 已取得 17 張及正常退出；末段工具誤把原版模式的空 HD 預算欄位與五語系數值比較。改為只核對 HD 數值，不稱整輪 PASS。 |
+| r2 | 城市來源與可見 RGB 相同；未使用的 232／233／240／241 色盤項目更新，與 032 既有契約一致。改核對完整色號畫面與解碼 RGB，仍保存完整色盤雜湊。 |
+| r3 | 英文預算擷取時已返回城市，沒有新增 DOS 讀鍵或轉送輸入；budget=false 正確擋下。沒有將城市圖誤登為預算，也不推測原版返回的完整原因。 |
+| r4 | 各語系從正常 F3 選單重新開預算，擷取後 Esc 返回；省去重選相同語言。17 張、22 次原版讀鍵、F11／F12 隔離與正常退出通過。城市及預算各組原版色號與可見 RGB 一致，預算十一個原始欄位相同。 |
+
+實際執行 `TAIPEI_SCREENSHOTS_RUN=readme-screenshots-r4 bash workspace/tools/readme_screenshots.sh`。原始收據為 `workspace/runs/readme-screenshots-r4/verification.json`，SHA-256 13b3e7f76f7c3fb426c480c263fcea5fd893ebfdac75a9cb7eab6f41c334a35c。沒有 checkpoint、狀態注入或長時間 RAM／RNG 抽樣；原版 0 鍵暫停模擬，CPU 與時鐘仍前進，不稱為相同機器狀態對拍。
+
+匯出在同一 image 的 Docker 內執行 `python3 /workspace/tools/export_readme_screenshots.py --run /workspace/runs/readme-screenshots-r4 --out /workspace/screenshots --source-commit b6cca7e0cd54f0816c5a9d3b656790f0567350fb`。掛載專案 workspace 可寫，runs、tools、app、prototypes/hd-style 與原版 /orig 各自再以唯讀掛載；設定 --rm、--network none、--user 1000:1000、--memory 1g、--cpus 1、--pids-limit 64 及外層 timeout 60s。輸出目錄須尚不存在；重生時使用新的擷取目錄與新輸出目錄，審查後才替換展示圖。
+
+匯出工具重新讀取每份原始 ZIP，核對色號、解碼 RGB、模式、語言、Help 狀態、尺寸、PNG 及原始收據 SHA-256；原版另驗最近鄰四倍像素完全相同。17 張總計 9,785,382 bytes，全部與已逐張目視檢查的 r1 PNG 相同。README 直接展示原版與 HD 五語系城市／預算，Help 五語系可展開。來源、程式、字型、七補丁、工具及完整 PNG 雜湊存入 workspace/screenshots/manifest.json；原始 ZIP、native PNG、binary、SAV、字型與素材包不入 Git。
+
+擷取容器末段 find 的兩筆是容器自建的掛載父目錄，不是主機產物。工具收尾範圍修正為實際掛載的 /workspace/runs，另以完整 workspace 唯讀掛載執行指定 find，結果為空。manifest 的工具欄記錄現行可重生工具雜湊。程式來源及 binary 與上一輪 provenance 一致，35 個原始檔及 RAR 不變；工具語法、README 圖片與連結、來源清單及 UID/GID 核對通過。沒有新增 image，專案容器與背景程序均已清理。只明列提交文件、工具及獲指定的 17 張 PNG／manifest，提交／push 與 #53 最終狀態於遠端回鏈。完整 HD、平台真機與正式封包仍未完成。

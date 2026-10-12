@@ -11,6 +11,27 @@
 /workspace/prototypes/
 /workspace/ops/
 
+# #53 使用者指定的私人 README 截圖；只開放選定檔案
+/workspace/screenshots/*
+!/workspace/screenshots/manifest.json
+!/workspace/screenshots/city-original.png
+!/workspace/screenshots/city-zh-Hant.png
+!/workspace/screenshots/city-zh-Hans.png
+!/workspace/screenshots/city-ja.png
+!/workspace/screenshots/city-ko.png
+!/workspace/screenshots/city-en.png
+!/workspace/screenshots/budget-original.png
+!/workspace/screenshots/budget-zh-Hant.png
+!/workspace/screenshots/budget-zh-Hans.png
+!/workspace/screenshots/budget-ja.png
+!/workspace/screenshots/budget-ko.png
+!/workspace/screenshots/budget-en.png
+!/workspace/screenshots/help-zh-Hant.png
+!/workspace/screenshots/help-zh-Hans.png
+!/workspace/screenshots/help-ja.png
+!/workspace/screenshots/help-ko.png
+!/workspace/screenshots/help-en.png
+
 # 正式封包只留本機
 /dist-all/
 .DS_Store
