@@ -1,6 +1,6 @@
 # F4 圖表視窗
 
-狀態：DRAFT。對應 [#48](https://github.com/wicanr2/taipei/issues/48)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。本批尚未接入正式呈現。
+狀態：READY，限本契約的固定框架與原版資料像素。對應 [#48](https://github.com/wicanr2/taipei/issues/48)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。正式呈現與正常玩家驗收尚未完成。
 
 使用者已確認全部圖片與操作介面、B 細緻手繪材質、1280×800、Noto 與遊戲中 F12。沿用原版圖表內容、位置、數值及操作，不重寫統計規則。
 
@@ -10,15 +10,23 @@
 
 - 已證實，限 [022](022-city-function-menus.md) 的下拉面板：F4 六列依序為「電力供應」「交通密度」「人口密度」「犯罪率」「房價」「污染」。確認後的畫面不屬於 022 完成範圍。
 - 已證實，限既有正常收據：`workspace/runs/infrastructure-density-native/traffic-density-open-capture.zip` 在 1,128,000,000 步，模式 0x13、等待輸入，完整色號 SHA-256 `c79af4a8d00a06c2e48783ed5707be8b65ee484c165d21df14c22c5021956ac2`。畫面實際包含縮小城市地圖、兩側色帶、MIN／MAX 與框架。原圖副本在 `workspace/runs/chart-windows-native/traffic-density-native.png`。
-- 未知：完整視窗矩形、各圖表資料與色盤契約、動態數值／文字、原始圖庫／字模對應、返回與刷新條件。不能因有一張交通畫面就將六圖表升 READY。
+- 尚待審查：正式資料區及色盤閘門、B 外框與 Noto 原型、完整像素獨立核對。統計公式及 EXE 繪字呼叫維持未知；此批只呈現原版已計算的像素，不重寫規則。完整矩形、嵌入文字及返回操作已由下節 r3 補證，不再列未知。
 
 首件補充證據：ROM4–10 的 145×127 圖像在中央局部 (20,20,105,89) 以外，9,070 個色號完全相同。既有交通密度九份原子收據均符合原位 (66,35,145,127) 的完整固定框架，中央資料區只有一種實見來源。工具 [chart_window_source_check.py](../../workspace/tools/chart_window_source_check.py) 保存成員原始偏移、雜湊、完整來源與已用色盤；中央區只列原始像素，不命名統計內部規則。
 
-正常 r1 首個電力入口的 Escape 已由 `int21-AH07` 讀到 ASCII 27、`Word=0`，並恢復原城市畫面。原工具錯等 BIOS 的 `Word=0x011b` 而逾時，收據保留 `workspace/runs/chart-windows-native-r1/`。r2 對圖表返回只核對已見 DOS 控制台讀取及 release，不改產品、操作、時間或六入口條件。六入口全部返回仍待 r2 完成。
+正常 r1 首個電力入口的 Escape 已由 `int21-AH07` 讀到 ASCII 27、`Word=0`，並恢復原城市畫面。原工具錯等 BIOS 的 `Word=0x011b` 而逾時，收據保留 `workspace/runs/chart-windows-native-r1/`。r2 對圖表返回只核對已見 DOS 控制台讀取及 release，不改產品、操作、時間或六入口條件。r2 選取勘誤及 r3 完整來源見下節，原失敗記錄保留。
 
 r2 勘誤：六次開圖及返回完成，但以 022 的完整選單來源核對，實際選取為 0、1、3、0、4、3，僅涵蓋四個入口。F4 重開保留上次選取，工具錯把每次入口當作 0。r2 原件與原本記錄的意圖名稱保留，不能作六選項來源證據。r3 先以固定完整選單 SHA 辨識當前選取，再正常 Down 至目標，每一步與確認前皆核對完整選取來源；產品與原版參數不變。
 
 嵌入框架的 MAX／MIN 為 5×5 字墨，四字串原位局部 (1,22,17,5)、(127,22,17,5)、(1,101,17,5)、(127,101,17,5)，色號 14，共 138 像素。直接重讀 ROM4–10 的完整嵌入墨跡相符，未據此宣稱來自 ROM56 或某個 EXE 繪字呼叫。
+
+## r3 正常來源閉合
+
+`workspace/runs/chart-windows-native-r3/` 完整退出 0。每次確認前以 022 的完整選單來源核對實際選取 0–5，每次送 Down 後也核對下一個完整狀態。六份圖表資料各不相同，12 次無輸入觀察來源相同，六次 Escape 均經原版 DOS AH07 並恢復完整初始城市，不只檢查原點。
+
+56 份原子收據的原版 PNG、色號、色盤及四倍原版呈現由獨立 Go 核對通過。含既有交通密度共 33 份完整框架來源，中央六種資料，已用色盤在樣本間相同。來源 JSON SHA-256 `e252c062e832405d3d4a0c65ffbb7a7e694c3c76982b2b366d54b5f12d578f92`，乾淨重生逐 byte 相同。完整控制與來源證據分別在 `workspace/runs/chart-windows-native/normal-controls-r3.json`、`source-all-r3.json`；r1／r2 及選取勘誤保留，不以意圖名稱作來源證據。
+
+r3 來源階段只閉合來源，當時維持 DRAFT。首版可撤回原型已將四組 MIN／MAX 改為固定 Noto 24 點，實際墨跡皆在原安全矩形內，但灰色外框仍太接近放大原圖，沒有接產品。內建 imagegen 已產生新的 B 灰石外框候選，原圖 SHA-256 `109e7da267bed6a0b9dcb9baa0872bb3b5f1b0e1fa0ab1e8b532a82d99f41738`、1341×1173，原件與提示詞保存 `workspace/prototypes/hd-style/chart-frame-b-candidate-v1-generated.png`／`.prompt.txt`。生成圖的地圖、色階及文字不供原版資料使用。替代原型只在原版灰框遮罩內接受中性灰像素，彩色越界改用已知筆觸；其後獨立核對及 READY 審查見下節。
 
 正常探索入口為 [chart_window_playtest.sh](../../workspace/tools/chart_window_playtest.sh) 與 [chart_window_playtest.py](../../workspace/tools/chart_window_playtest.py)。從真實冷啟動進入 DISA1，以原版 0 暫停，再逐一正常 F4／Down／Space 開啟六選項、兩次無輸入觀察與 Escape 返回；原版讀鍵、前端 release 及原點皆核對。原始資料唯讀，來源研究有界停止，不當作正常退出驗收。
 
@@ -30,3 +38,47 @@ r2 勘誤：六次開圖及返回完成，但以 022 的完整選單來源核對
 4. 實作後另外驗 F12、有效負對照、真正資源故障、正常存退讀與相同步數原版狀態、四架構及清理；靜態原型不代替玩家路徑。
 
 原版、字型、衍生圖像與收據只留本機，不能因 private 儲存庫而散布。文件入口由 [CONTEXT](../../CONTEXT.md) 索引。
+
+## READY 審查與正式契約
+
+2026-10-12 回查規格閘門。六個原型各 1,024,000 個 RGBA 像素由 [獨立核對工具](../../workspace/tools/chart_window_prototype_check.py) 完整核對，包含六個實際選取、原 ROM、灰框遮罩、原資料格、四組字墨、比較圖及全部區外。證據 `workspace/runs/chart-windows-native/prototype-check-v2.json`；42 個原型檔乾淨重生逐 byte 相同，見 `prototype-repro-v2.json`。原型保留 DRAFT 標記作 READY 前固定參考，不回改歷史輸出。
+
+原型核對器首次誤要求全部 256 色盤項相同。直接重讀六份正常收據證明只有 232、233、240、241 四個未用色盤項有兩種合法原版值，46 個實際圖表用色全部相同。更正核對器假設後，完整六圖通過。`palette-audit-r1.json` SHA-256 `392dc069f4c39632d14c3991c7f2b0e4f11e5dcf6084b397b744f39caad17473` 保存兩組完整原版色盤；此為驗證假設勘誤，沒有調整產品、遊戲色盤或收據。
+
+### 輸入與辨識
+
+| 項目 | 契約 |
+|---|---|
+| 輸入型別 | 唯讀 64,000 bytes 原色號、256×RGB 色盤、模式、DOS 阻塞、F12 主題；不讀寫模擬規則或存檔 |
+| 原始框架 | ROM4 的完整解碼 SHA 固定如上；ROM4–10 在資料區外 9,070 bytes 相同 |
+| 圖框位置 | 原版 (66,35,145,127)，呈現 (264,140,580,508)；完整固定框架逐 byte 相同才辨識 |
+| 可變資料 | 原版局部 (20,20,105,89)，9345 bytes；每個 byte 原位四倍呈現，不命名或重算統計 |
+| 資料值 | 可接受任何原色號，該色號目前 RGB 必須是兩份正常完整色盤中已見的原版值。此層只繪原始 RGB，不依數值推定地形或統計類別 |
+| 色盤 | 核對當前完整圖框實際使用的每個色號；未用項變動不拒絕，已用項出現未見 RGB 則完整回退 |
+| 正式相位 | 模式 0x13、DOS 等待輸入、HD 開啟；其餘相位不覆繪 |
+
+### 呈現與失敗模式
+
+1. `chart-windows-ready-v1/frame.png` 為固定 580×508 外框及 Noto 字墨。中央 420×356 資料區全透明，其餘像素不透明。固定插畫只接受原版灰框遮罩內的中性灰像素，共 121432 像素；2120 個生成彩色越界像素改用已知筆觸。生成圖的地圖、色帶或文字不接入。
+2. 固定筆觸由 `city-chrome-gray-v1.png` 局部採樣，對每個局部高解析座標 (x,y)，`grain = red(32+x%880,32+y%464)/8 - 18`，整數除法。以 `grain+128` 保存 294640 bytes `grain.bin`。資料 RGB 各分量加 grain，限制 0–255。原色號格位置、色帶級序及資料邊界不插值、不平滑、不推導新數值。
+3. 文字為固定 Noto 24 點、72 DPI、無 hinting。MAX 兩組各 434 字墨像素，MIN 各 427，總數 1722；實際安全矩形及字墨界限由原型 manifest 記錄。字色、底板色及位置沿用原版。字型與 OFL 1.1 雜湊沿用本專案已固定值。
+4. 先畫原版四倍完整畫面，只覆蓋已辨識圖框。圖框外每個 RGBA 像素仍等於本幀原版四倍，不疊其他城市家族。F12 切回原版或離開圖表時完整重畫，不保留圖框殘影。
+5. ROM、manifest、PNG、筆觸 bytes、字型、授權、尺寸、遮罩或已用色盤失配時不畫本批。已辨識圖框的未確認相位及故障完整保留原版；未知框架由原有安全回退處理。載入錯誤有原因，不能用空圖或推測圖補洞。
+
+正式匯出入口 [chart_window_ready.py](../../workspace/tools/chart_window_ready.py) 必須重讀原型核對、42 檔重生、色盤證據及固定來源，固定 manifest、框架 PNG 與 grain 雜湊。原型、字型及正式素材均只留本機。執行 image ID `sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3`，Go 1.24.13、Python 3.11.2、ImageMagick 6.9.11-60；原版及 dosgolem 固定值沿用 028，定位全為檔案偏移及原版像素。
+
+### 實作與驗收
+
+垂直鏈為原 ROM／正常圖表色號 → 固定框架及 raw data 型別 → 僅呈現規則 → 正常 F4 六入口 → F12／返回 → 正常施工存退讀。原版 EXE 保有統計計算、讀鍵、狀態轉移、亂數與 SAV；本層不持有遊戲狀態，故統計公式及 EXE 繪字呼叫未知不阻塞這個呈現契約，不稱統計公式 parity。
+
+- 內部測試六個完整原型、四組文字、資料單點替換、全部已用色盤、未用色盤正對照、完整框架失配、模式／相位／F12、區外與其他家族隔離；實際撤除／破壞素材、字型及授權必須完整回退。
+- 獨立 Go／Python 直接讀原版及 READY 前固定參考，核對正常 HD 整幀；有效負對照破壞字墨、框架、資料、區外、來源、已用色盤及家族標記，重算 PNG／雜湊後仍須拒絕。
+- 正常 GUI 冷啟動、逐完整選單來源選六個實際入口、每個 F12 往返、無輸入、Escape 完整返回；正常新城施工、存檔、兩次原版退出及全新 EXE 冷讀。全部按鍵由原版讀取與前端 release 核對。
+- 唯一正常輸入、固定原版、初始狀態及步數先登記，再以無呈現／HD 兩側完整執行，明示抽樣點的原版 RAM、CPU、畫面、色盤、讀鍵、檔案與落地 SAV 相同。不得用圖表畫面相同替代狀態證據。
+- Linux 乾淨重建、Windows amd64、macOS amd64／arm64 編譯及結構、原版 35 檔與 RAR 不變、UID/GID 及 Docker 清理。原生 Windows／macOS 試玩與正式封包另驗，全部遊戲 HD 未完成。
+
+## 本次實作與停止點
+
+正式三檔已匯出且乾淨重生相同。manifest SHA-256 `9a0cc44ee54ea2b2681c6e578a00ac532be32b9d88780cc9c90579fe4766226e`，frame PNG `7b70c2e5b3dcc83fbd063c5a6829b050b003d4caa1fcfc64ddd8344091775d9b`，frame RGBA `6e39dcf7dc0a8cbf58d1be91e46da10e7f2c7588fef8b44c502b3f6081b68d59`，grain `17c0fe2195ee6961533c16ae3b52d46c01045470b8874ddb5dbd46eb77fb142b`。呈現層與 Go／Python 獨立核對、正常 GUI／負對照工具均已接入；圖表專項 13.970 秒通過。
+
+2026-10-12 使用者指示「不用抽樣囉，先 commit + push」，目標已暫停。本輪不執行後續抽樣、正式 GUI、有效負對照、狀態或跨平台驗收。先前已開始的整體回歸完成後，圖表及鍵盤測試通過；預算測試因指定 catalog 路徑不存在而失敗，城市／工具面板因未設來源環境變數而略過，不能宣稱完整回歸通過。原 log `workspace/runs/chart-windows-native/full-render-test-r1.log` 保留，未為此重跑。規格維持 READY、#48 OPEN，不宣稱 CONFORMED。

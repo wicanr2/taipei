@@ -55,7 +55,7 @@ def capture(label):
             (out/(label+'-'+name)).write_bytes(z.read(name))
 
 def action(label,key):
-    if label in ('pause','reload-pause') and any(os.environ.get(k)=='1' for k in ['TAIPEI_TEST_BUDGET','TAIPEI_TEST_INFRASTRUCTURE','TAIPEI_TEST_POWER_FACILITY','TAIPEI_TEST_ENDING_SCENE']):
+    if label in ('pause','reload-pause') and any(os.environ.get(k)=='1' for k in ['TAIPEI_TEST_BUDGET','TAIPEI_TEST_INFRASTRUCTURE','TAIPEI_TEST_POWER_FACILITY','TAIPEI_TEST_ENDING_SCENE','TAIPEI_TEST_CHART_WINDOWS']):
         os.environ.setdefault('TAIPEI_CITY_MENU_RUN',os.environ['TAIPEI_GUI_RUN'])
         import city_menu_playtest as base
         base.out=out
@@ -207,6 +207,9 @@ if os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
     power_exercise(out)
     capture('power-before-save')
     built_money=footer_decode((out/'power-before-save-frame-index.bin').read_bytes(),footer_refs,1)[2]
+if os.environ.get('TAIPEI_TEST_CHART_WINDOWS')=='1':
+    from chart_window_gui import exercise as chart_exercise
+    chart_exercise(out)
 for label,key in [('file-menu','F2'),('save-dialog','space'),('save-name','type:round3'),
                   ('backspace','BackSpace'),('rename','type:4'),('save-accept','space')]:
     action(label,key)
@@ -262,6 +265,9 @@ with (out/'app.log').open('w') as log:
             exercise(out,adjust=False)
         if os.environ.get('TAIPEI_TEST_ENDING_SCENE')=='1':
             action('reload-pause','0')
+        if os.environ.get('TAIPEI_TEST_CHART_WINDOWS')=='1':
+            action('reload-pause','0')
+            chart_exercise(out)
         if os.environ.get('TAIPEI_TEST_POWER_FACILITY')=='1':
             action('reload-pause','0')
             power_check_reload(out,first_out)

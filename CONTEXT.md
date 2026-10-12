@@ -39,7 +39,8 @@
 | 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
 | 發電廠 | 027 限火力已見 36 格靜態來源達 CONFORMED；162 份正常收據、雙向捲動同世界來源、F12、存退讀及兩次退出通過。兩側各 80.644 億步、336 點原版狀態與實際 SAV 相同 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)；核能及其他相位仍 DRAFT，不宣稱完整發電廠、全部 HD 或封包完成 |
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
-| F4 圖表視窗 | 029 DRAFT；r2 六次開圖／返回及 60 原子收據核對通過，但完整選單來源證明實際選取為 0、1、3、0、4、3，只有四個入口。F4 重開保留前次選取，r3 改逐次辨識完整選單來源後選取。33 份固定框架及 138 像素 MIN／MAX 墨跡證據仍有效 | [029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)；六入口尚未全部取得，未接正式 HD |
+| F4 圖表視窗 | 029 READY；六個實際原版入口與 56 份來源收據通過。B 石材外框／Noto 原型完整像素獨立核對、42 檔重生及正式三檔重生相同。已接入呈現層，六完整原型、資料格、色盤／相位／F12、十一種載入故障及家族隔離專項測試通過 | [029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)；完整回歸因預算 fixture 路徑缺失未通過，兩個既有面板測試因未設來源而略過；正常 HD GUI、負對照、狀態及四架構未驗，未達 CONFORMED |
+| 本次停止點 | 使用者指示「不用抽樣囉，先 commit + push」，目標已暫停。本輪只整理、提交及推送目前程式與文件，沒有啟動後續抽樣或正常 HD 驗收 | 新工具保留，#48 維持 OPEN；全部 HD 與正式交付仍未完成 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
@@ -48,8 +49,17 @@
 
 ## 文件入口
 
-- F4 圖表視窗：[029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)，確認後的電力、交通、人口、犯罪、房價與污染六入口仍 DRAFT。正常來源探索入口 [chart_window_playtest.sh](workspace/tools/chart_window_playtest.sh)／[chart_window_playtest.py](workspace/tools/chart_window_playtest.py)，冷啟動 DISA1、原版暫停、各入口兩次無輸入觀察及 Escape 返回，逐鍵確認原版讀取與 release；有界停止不代替正常退出或 HD 完成。
+- F4 圖表視窗：[029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)，固定框架與原版資料像素呈現已 READY，正式 HD 玩家驗收未完成。正常來源探索入口 [chart_window_playtest.sh](workspace/tools/chart_window_playtest.sh)／[chart_window_playtest.py](workspace/tools/chart_window_playtest.py)，已從 DISA1 核對六個實際入口、兩次無輸入及 Escape 返回；有界停止不代替正常退出或 HD 完成。
 - 圖表來源核對：[chart_window_source_check.py](workspace/tools/chart_window_source_check.py)，參數 `--original <唯讀原版> --receipts <正常收據目錄...> --out <新 JSON>`，直接重讀 ROM4–10，核對完整固定框架並另存資料區像素及色盤。不推定統計語意，不呼叫產品呈現器。
+- 圖表原型獨立核對：[chart_window_prototype_check.py](workspace/tools/chart_window_prototype_check.py)，直接重讀 ROM、六個真實選取與圖表收據，逐像素核對 B 灰框遮罩、原資料格、色盤、Noto 墨跡及完整區外。只核對 DRAFT 原型，不代替正常 HD 驗收。
+- 圖表正式素材匯出：[chart_window_ready.py](workspace/tools/chart_window_ready.py)，依 029 READY 重讀來源、六原型完整像素核對、42 檔乾淨重生及兩組原版色盤。匯出資料區透明的固定框架、獨立資料筆觸及 manifest；僅留本機，正式 GUI 另驗。
+- 圖表正式呈現：[chart_panel.go](workspace/app/internal/hd/chart_panel.go)，依 029 READY 核對完整固定框架、原版相位、實際已用色盤、素材及 Noto／授權後，繪固定框架與原版資料格；圖框外保持原版，失配完整回退。正常 HD 驗收尚未完成。
+- 圖表呈現測試：[chart_panel_test.go](workspace/app/internal/hd/chart_panel_test.go)，驗六個完整原型、原資料單格更新、實際色盤、相位／F12、固定框架失配、十一種真正載入故障及其他家族隔離。以 `TAIPEI_CHART_RECEIPTS` 指向 r3 正常來源，不能把內部測試當正常 HD 驗收。
+- 圖表整幀獨立核對：[hd_chart_window_check.py](workspace/tools/hd_chart_window_check.py)，只讀原版與 READY 前固定參考，不使用正式框架／筆觸輸出，驗整幀、資料格、區外、家族及回退，已接 [hd_scroll_check.py](workspace/tools/hd_scroll_check.py)。
+- 圖表 Go 獨立核對：[receipt-check/chart_panel.go](workspace/app/cmd/receipt-check/chart_panel.go)，`-chart-reference <素材根> -original <唯讀原版>` 直接解 ROM、讀原型及原筆觸，核對整幀；原版狀態工具 [presentation-audit](workspace/app/cmd/presentation-audit/main.go) 的 `-require-chart-windows` 要求實際圖表覆繪並逐抽樣點比對原版狀態。
+- 圖表獨立驗收：[chart_windows_verify.sh](workspace/tools/chart_windows_verify.sh)，以 `normal` 核對正常 GUI 全部原子收據，`negative` 執行 [hd_chart_window_negative.py](workspace/tools/hd_chart_window_negative.py) 的十項有效破壞及兩個正對照，重新計算原版 PNG／呈現 PNG／雜湊，要求 Go／Python 同時判別。
+- 圖表正常存退讀：[chart_window_gui.py](workspace/tools/chart_window_gui.py)，由 `TAIPEI_TEST_CHART_WINDOWS=1 TAIPEI_THEME=hd-b TAIPEI_GUI_RUN=gui-chart-windows-cold-r1 bash workspace/tools/gui_playtest.sh` 啟動。新城市施工後及全新 EXE 冷讀後各走六個實際入口、F12、等待及完整返回；正常退出由既有 GUI 路徑執行，像素與狀態另驗。
+- 圖表可撤回原型：[chart-window-prototype](workspace/app/cmd/chart-window-prototype/main.go)，Docker 內以 `-original <唯讀原版> -receipt <正常圖表原子收據> -materials <素材根> -frame-art <固定 B 灰框插畫，可省略> -out <新目錄>` 執行。只依完整原框架與實際色盤，Noto 重畫 MIN／MAX。生成圖只供原版灰框遮罩使用，彩色越界像素改用既有筆觸；原資料格位置及圖框外保持原樣。DRAFT，不接產品，獨立核對另驗。
 
 - 正常離開靜態畫面：[來源核對工具](workspace/tools/ending_scene_source_check.py)，對應 [#47](https://github.com/wicanr2/taipei/issues/47)、母項 [#32](https://github.com/wicanr2/taipei/issues/32)。直接重讀 ROM23／ROMA1、完整 320×200 色號及正常兩次退出；已見底圖依 028 READY 接入，取得政績後的變化與動畫未知。
 - 政績底圖可撤回原型：[ending-scene-prototype](workspace/app/cmd/ending-scene-prototype/main.go)，參數 `-source <來源核對目錄> -art <B 插畫原件> -font <固定 Noto> -out <新原型目錄>`，輸出固定 1280×800、實際字墨、安全矩形與原版／B 比較。只在 Docker 內建置及執行，保留 READY 前固定原型供獨立核對；正式接入依 028。

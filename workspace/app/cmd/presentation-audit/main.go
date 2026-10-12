@@ -36,6 +36,7 @@ func main() {
 	requireInfrastructure := flag.Bool("require-infrastructure", false, "要求道路與電線 HD，逐抽樣點比對原版狀態")
 	requirePowerFacility := flag.Bool("require-power-facility", false, "要求火力 36 格 HD，逐抽樣點比對原版狀態")
 	requireEnding := flag.Bool("require-ending-screen", false, "要求正常政績底圖 HD，逐抽樣點比對原版狀態")
+	requireCharts := flag.Bool("require-chart-windows", false, "要求正常圖表 HD，逐抽樣點比對原版狀態")
 	requireFont := flag.Bool("require-font", false, "要求重播實際經過 Noto 標題覆繪")
 	requireIcons := flag.Bool("require-icons", false, "要求重播實際經過十四個工具圖示覆繪")
 	requireDialog := flag.Bool("require-dialog", false, "要求重播實際經過完整說明視窗覆繪")
@@ -47,7 +48,7 @@ func main() {
 	requireFiles := flag.Bool("require-file-dialogs", false, "要求實際經過檔案視窗與離開提示兩家族")
 	renderInterval := flag.Uint64("render-interval-steps", 400000, "HD 抽樣間距，400000 的正整數倍，最多 24000000")
 	flag.Parse()
-	sampleStates := *requireBudgetHD || *requireInfrastructure || *requirePowerFacility || *requireEnding
+	sampleStates := *requireBudgetHD || *requireInfrastructure || *requirePowerFacility || *requireEnding || *requireCharts
 	if *renderInterval == 0 || *renderInterval%400000 != 0 || *renderInterval > 24000000 {
 		panic("HD 抽樣間距須為 400000 的正整數倍，最多 24000000")
 	}
@@ -103,6 +104,8 @@ func main() {
 	powerFacilityImages := map[int]uint64{}
 	var powerFacilityFrames uint64
 	var endingFrames uint64
+	var chartFrames uint64
+	chartData := map[string]uint64{}
 	var checkpoints []string
 	durations := map[string]float64{}
 	var observedFrames uint64
@@ -227,6 +230,10 @@ func main() {
 					if stats.EndingScreen == "achievement-base" {
 						endingFrames++
 					}
+					if stats.ChartWindow {
+						chartFrames++
+						chartData[stats.ChartDataSHA]++
+					}
 					if stats.Painted > 0 {
 						painted++
 					}
@@ -325,6 +332,9 @@ func main() {
 	if *requireEnding && endingFrames == 0 {
 		panic("重播未實際經過正常政績底圖高清")
 	}
+	if *requireCharts && chartFrames == 0 {
+		panic("重播未實際經過正常圖表高清")
+	}
 	result, err := json.MarshalIndent(map[string]any{
 		"input_sha256": hash(raw), "steps": capture.Steps, "same_input": true, "state_equal": true,
 		"state_sha256": hash(baseline), "state": json.RawMessage(baseline), "map_draws": draws, "hd_frames": painted,
@@ -343,6 +353,8 @@ func main() {
 		"power_facility_images":                      powerFacilityImages,
 		"power_facility_frames":                      powerFacilityFrames,
 		"ending_screen_frames":                       endingFrames,
+		"chart_window_frames":                        chartFrames,
+		"chart_data_sources":                         chartData,
 		"sampled_original_state_sha256":              checkpoints,
 		"sampled_original_states_equal":              sampleStates,
 		"normal_gui_frame_palette_reads_files_equal": *requireFiles || sampleStates,

@@ -82,6 +82,7 @@ func main() {
 	budgetDir := flag.String("budget-reference", "", "預算固定參考的素材根")
 	powerDir := flag.String("power-reference", "", "火力 READY 前完整原型及固定來源的素材根")
 	endingDir := flag.String("ending-reference", "", "政績 READY 前完整原型及原版來源的素材根")
+	chartDir := flag.String("chart-reference", "", "圖表 READY 前原型、原版及筆觸來源的素材根")
 	originalDir := flag.String("original", "", "核對檔案視窗來源的唯讀原版目錄")
 	flag.Parse()
 	panels := readPanels(*panelManifest, "daeb0a0b440bce18b792cae3b89bcacc98b78e19ae05ab5a7e19f86c6cc3384d", 13)
@@ -93,6 +94,7 @@ func main() {
 	budgetRef := readBudgetReference(*budgetDir, *originalDir)
 	powerRef := readPowerReference(*powerDir, *originalDir)
 	endingRef := readEndingReference(*endingDir, *originalDir)
+	chartRef := readChartReference(*chartDir, *originalDir)
 	if *dir == "" {
 		panic("請指定 -dir")
 	}
@@ -173,6 +175,7 @@ func main() {
 			Palette         [256][3]byte `json:"palette"`
 			PresentationSHA string       `json:"presentation_sha256"`
 			HD              struct {
+				chartFields
 				endingFields
 				powerFields
 				chromeFields
@@ -216,6 +219,13 @@ func main() {
 		endingImage, endingErr := endingRef.audit(px, s.Palette, s.Mode, s.Enabled, s.Blocked, s.HD.endingFields)
 		if endingErr != nil {
 			return fmt.Errorf("%s: %w", path, endingErr)
+		}
+		chartImage, chartErr := chartRef.audit(px, s.Palette, s.Mode, s.Enabled, s.Blocked, s.HD.chartFields)
+		if chartErr != nil {
+			return fmt.Errorf("%s: %w", path, chartErr)
+		}
+		if chartImage != nil && (s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 || s.HD.Dialog != "" || s.HD.Panel != "" || s.HD.ChromeMask != 0 || s.HD.FooterMask != 0 || s.HD.FileDialog != "" || s.HD.Budget || s.HD.PowerFacility.Painted != 0 || s.HD.EndingScreen != "") {
+			return fmt.Errorf("%s: 圖表疊加其他家族", path)
 		}
 		if endingImage != nil && (s.HD.Painted != 0 || s.HD.FontLabels != 0 || s.HD.UIIcons != 0 || s.HD.Dialog != "" || s.HD.Panel != "" || s.HD.ChromeMask != 0 || s.HD.FooterMask != 0 || s.HD.FileDialog != "" || s.HD.Budget || s.HD.PowerFacility.Painted != 0) {
 			return fmt.Errorf("%s: 政績底圖疊加其他家族", path)
@@ -324,7 +334,12 @@ func main() {
 					}
 					chromeImage, cx, cy := chrome.pixel(s.HD.chromeFields, px, x, y)
 					powerTile, powerX, powerY := powerImage.pixel(x, y)
-					if endingImage != nil {
+					if chartImage != nil {
+						rr, gg, bb, aa := chartImage.At(x, y).RGBA()
+						if r != rr || g != gg || b != bb || a != aa {
+							return fmt.Errorf("%s: 圖表完整像素不符 %d,%d", path, x, y)
+						}
+					} else if endingImage != nil {
 						rr, gg, bb, aa := endingImage.At(x, y).RGBA()
 						if r != rr || g != gg || b != bb || a != aa {
 							return fmt.Errorf("%s: 政績完整原型像素不符 %d,%d", path, x, y)

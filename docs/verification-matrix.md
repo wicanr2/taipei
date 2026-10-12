@@ -28,7 +28,7 @@
 | DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 | 政績靜態底圖 | [#47](https://github.com/wicanr2/taipei/issues/47) | 兩個完整 ROM 來源、B／Noto 原型、F12／失配回退／真實資源故障；正常施工存退讀、兩次原版退出、獨立完整像素及固定輸入狀態 | [028](spec/028-ending-achievement-base.md) 限已見底圖 CONFORMED；50 正常收據、七項有效破壞及 125 點原版狀態與實際 SAV 相同。其他結果及動畫 DRAFT，全部 HD／封包未完成 |
-| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48) | 六入口、完整框架、資料區與色盤、MIN／MAX 墨跡、正常返回；原型審查後才接入 | [029](spec/029-chart-windows.md) DRAFT；r2 僅四個實際入口，r3 逐完整選單來源核對中，尚未正式 HD |
+| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48) | 六個原版入口、完整框架／資料／色盤及返回；B／Noto 原型完整像素與乾淨重生；正式呈現專項測試 | [029](spec/029-chart-windows.md) READY，已接呈現層；圖表專項通過。完整回歸因預算 fixture 路徑缺失失敗，兩個既有面板來源未設而略過。使用者指示先 commit／push，本輪不執行後續抽樣；正常 HD GUI、負對照、狀態與四架構未驗 |
 
 目前已驗證正常 GUI 冷啟動、新遊戲、電線施工、檔名輸入及退格、原版實際存檔、
 原版離開、全新 EXE 啟動與實際讀檔，兩次均由原版返回 DOS。沒有使用機器快照。

@@ -24,6 +24,9 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	ChartWindow                bool                `json:"chart_window"`
+	ChartReason                string              `json:"chart_reason"`
+	ChartDataSHA               string              `json:"chart_data_sha256"`
 	EndingScreen               string              `json:"ending_screen"`
 	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
@@ -68,6 +71,7 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	charts         *chartWindows
 	ending         *endingScreen
 	powerFacility  *powerFacilitySet
 	infrastructure *infrastructureSet
@@ -133,6 +137,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
 	r.ending = loadEndingScreen(rom, dir)
+	r.charts = loadChartWindows(rom, dir)
 	for name, want := range materials {
 		p, e := os.ReadFile(filepath.Join(dir, name+"-b-v1.png"))
 		if e != nil || digest(p) != want {
@@ -176,6 +181,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 	stats := Stats{Fallback: 435, Reason: "original", FontReason: "scene-fallback", UIReason: "scene-fallback", DialogReason: "scene-fallback", PanelSelection: -1, PanelReason: "scene-fallback", ChromeReason: "scene-fallback", FileReason: "scene-fallback"}
 	stats.BudgetSelection, stats.BudgetReason = -1, "scene-fallback"
 	stats.EndingReason = "scene-fallback"
+	stats.ChartReason = "scene-fallback"
 	if len(px) != 64000 {
 		clear(r.frame.Pix)
 		stats.Reason = "frame-shape"
@@ -194,6 +200,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		}
 	}
 	if !enabled {
+		stats.ChartReason = "original"
 		stats.EndingReason = "original"
 		stats.BudgetReason = "original"
 		stats.FileReason = "original"
@@ -218,6 +225,12 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		if stats.EndingReason == "matched-ending-screen" {
 			stats.EndingScreen = "achievement-base"
 		}
+		return r.frame, stats
+	}
+	if r.charts.source(px) {
+		stats.ChartReason, stats.ChartDataSHA = r.charts.paint(r.frame, px, pal, blocked)
+		stats.ChartWindow = stats.ChartReason == "matched-chart-window"
+		stats.Reason = stats.ChartReason
 		return r.frame, stats
 	}
 	stats.Panel, stats.PanelSelection, stats.PanelReason = r.panels.paint(r.frame, px, pal)
