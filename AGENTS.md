@@ -73,6 +73,7 @@
 | 六圖表五語系正常操作 | [GUI 入口](workspace/tools/chart_locale_gui.sh)、[完整呈現核對](workspace/tools/chart_locale_check.py)、[截圖匯出](workspace/tools/export_chart_screenshots.py) | #54 接續 #48；沿 029／032，長時間狀態抽樣不列結案門檻 |
 | 遊玩抽驗收尾與城市截圖 | [收據回核及匯出工具](workspace/tools/accept_chart_playtest.py)、[029](docs/spec/029-chart-windows.md) | #55；Docker 內核對現行產品與既有正常遊玩收據，匯出災難台北城市畫面 |
 | DISA1 首批建物 | [034](docs/spec/034-disaster-city-buildings.md)、[來源工具](workspace/tools/disaster_building_sources.py)、[素材匯出](workspace/tools/disaster_building_assets.py)、[獨立核對](workspace/tools/disaster_building_check.py)、[GUI](workspace/tools/disaster_building_gui.sh)、[截圖匯出](workspace/tools/export_building_screenshots.py) | #56；三種完整正常建物、48 格，沿正常遊玩抽驗 |
+| 警察局與消防局 | [035](docs/spec/035-civic-facilities.md)、[正常施工](workspace/tools/civic_facility_playtest.sh)、[來源](workspace/tools/civic_facility_sources.py)、[素材](workspace/tools/civic_facility_assets.py)、[像素核對](workspace/tools/civic_facility_check.py)、[截圖匯出](workspace/tools/export_civic_screenshots.py) | #57；兩種 4×4 施工圖、32 格，沿正常遊玩抽驗 |
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |

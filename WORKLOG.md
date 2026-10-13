@@ -827,3 +827,21 @@ Linux 新 binary 為 taipei-preview-buildings-r1，SHA-256 5933a1f2554ee51419eae
 正常 GUI 通過後才將已驗 Linux 研究產品複製到標準入口 taipei-preview。先核對四個前版保存副本與既有 provenance 相同；新四架構 ELF／PE／Mach-O、所有已記錄程式來源、正常及呈現報告雜湊另存 workspace/runs/buildings-final-provenance.json。35 個原始檔及 RAR 仍與原盤點一致。Windows／macOS 本次只有編譯與架構驗證，沒有真機或正式封包聲明。
 
 收尾回查 README 與文件職責路由，更新唯一現況表、驗收矩陣及 README 功能摘要。34 個唯一圖片參照與 manifest 集合、全部 PNG 雜湊／尺寸／擁有權、五份 Markdown 連結、工具語法與雜湊、034 索引及 029 正對照通過；git diff --check 通過。指定 find 為空，專案相關容器均已清理，沒有新 image、背景程序或全域清理。只明列提交文件、來源清單及指定六張 PNG；兩筆提交推送後回寫 #56 並核對結案，#30 保持 OPEN。其餘建物／動畫、未走過相位、全新 EXE 冷讀與三平台正式封包仍待接續。
+
+## 2026-10-13：警察局與消防局 32 格 B 高清 #57
+
+接續使用者「繼續囉」，主機 gh 核對登入及遠端 Issues，工作樹 main 與 origin/main 均為 576be4d。路由命中素材來源與規格閘門、正常玩家路徑及文件職責，沿用已載入技能與既有工具鏈。先建立 [#57](https://github.com/wicanr2/taipei/issues/57)，035 DRAFT 同次索引；不重開已完成 #56。
+
+兩次正常冷啟動分別從工具 5 警察局／消防局選項施工，再移開游標。完整選單 SHA 對照 021 的 tool-05。各取得 4×4 圖、16 張唯一來源，成員 37 的 `24*r+c` 與 `4+24*r+c`；零起算定位、ROM 檔案偏移、色盤與原子收據保存在 civic-facilities-v1/sources.json，SHA-256 212cb5c2c92fcfc36a254205586a38bb7e668dc8f3595a28e0ed0d770dbadc45。來源探針只有有界停止，未當成原版退出驗收。首次探針使用錯誤的未補零選單 ID，開啟遊戲前即停止；核對既有 manifest 後修正，重新乾淨執行，沒有產品改動。
+
+依原版完整圖使用內建 image_gen 生成兩張 B 素材。提示、來源與原件保存 `workspace/prototypes/hd-style/civic-facilities-v1/`，提示檔 prompts.json，原件 police-generated.png、fire-generated.png。預設生成原件保留，透過唯讀掛載由 UID/GID 1000 複製進 workspace。兩張完整圖各以 ImageMagick 6.9.11 Lanczos 1254→144，再合成 288×144 atlas；逐張檢視比較圖，保留原俯視布局、主色與識別圖。先審查 035 READY，再接入產品。兩個正式素材檔在 civic-facilities-ready-repro-v1 乾淨重生 byte 相同，固定 manifest SHA-256 4c2a707844a6cb00d295ff49afb826b7dddcd7f37f036d3d97ed9d1bb23f5c3c。
+
+新增 civic_facilities.go 與城市呈現統計，沿既有場景／原點／主題閘門。僅覆繪完整來源與已用色盤，必要清單或共用 atlas 失配時本批回退。原版 EXE、規則、七補丁、資料及存檔格式未改。12 項警消／DISA1 建物／道路／電廠測試全部通過，50.734 秒，無跳過。追加兩份正常原圖中的全部區外隔離檢查後，只重跑修改項通過，6.813 秒。記錄 civic-tests-r1.log、civic-scene-isolation-r1.log；包含 2592 個來源單點破壞、已用色盤、四項真正素材缺失／損壞與原版資料隔離。
+
+`bash workspace/tools/civic_facility_playtest.sh gui` 在固定 GUI image、1500 秒上限、network none、UID/GID 1000、3g／2 CPU／128 pids 與有 trap 的 Xvfb 中執行。正常新城市、原版 0 暫停、警察局 22,3 與消防局 22,7 施工、F12、F11 五語系、CIVIC.SAV 寫入／同次讀回及 DOS 退出通過；原點維持 12,12、32 格覆繪、資金由原版扣至 79400。SAV 93567 bytes，SHA-256 8bf5e72fa4282f1b069276722d19ac03b84d219634f2ba03e1ee345773346b47，讀回後不變。verification.json SHA-256 4eb94f6863916cabac7b2d4e4c8985a1f8a836b93e40523bfcdb3cec03eb5d30。
+
+Docker 內 civic_facility_check.py 從原 ROM 與生成原件獨立重算 32 格及 atlas，驗六張 GUI 的設施實際像素、五語系標籤與原版整張像素；一個正對照及四項同步更新雜湊的破壞通過。初次 glob 誤收冷啟動 city-choice 診斷圖，修正成明列六張輸出後，以同一 image、命令與未修改的原始收據重跑通過，沒有放寬像素斷言。報告 SHA-256 295b1fc95d9ba8a0f34f87b76309afee458d673aaeb689ecd4019a2a3c7576d3。六張圖均已人工檢視。
+
+Linux 已驗產品 bb8aa4271a403b0e1602c5a82faacda4554de48972b212bf00daef83fa589a5d 保留於 taipei-preview-civic-r1，抽驗完成後才提升為標準入口 taipei-preview。前版 Linux 及外平台保存副本均保留。沿原 Windows／macOS image 重編，ELF／PE／Mach-O 四架構核對通過，Windows 留有既有 YMFM 警告；僅編譯／結構，不宣稱真機或封包驗收。35 原始檔及 RAR 與盤點一致。來源、七補丁、image 與產物雜湊保存 civic-final-provenance.json，SHA-256 eaedd8f49cc91a2c72f0558e36f09bfe542f381c13654f4d65ce21788e6cbf6d。
+
+035 限本批呈現及已驗正常路徑 CONFORMED，README 六張截圖接續匯出。未走過動畫、長時間機器狀態對拍、全新 EXE 冷讀、真機與正式封包保留限制。指定 find 為空，本批容器均已自動刪除；未新增 image 或留下背景程序。

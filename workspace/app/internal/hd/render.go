@@ -39,6 +39,7 @@ type Stats struct {
 	EndingScreen               string              `json:"ending_screen"`
 	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
+	CivicFacilities            civicFacilityStats  `json:"civic_facilities"`
 	CityBuildings              cityBuildingStats   `json:"city_buildings"`
 	Infrastructure             infrastructureStats `json:"infrastructure"`
 	Budget                     bool                `json:"budget"`
@@ -81,34 +82,35 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
-	lastTextKeys   []string
-	lastImageKeys  []string
-	textSources    *textSources
-	textDraws      []TextDraw
-	textImageDraws []TextImageDraw
-	textROM        []byte
-	extra          *interfaceSources
-	locale         *interfaceLocale
-	fontDir        string
-	charts         *chartWindows
-	ending         *endingScreen
-	powerFacility  *powerFacilitySet
-	cityBuildings  *cityBuildingSet
-	infrastructure *infrastructureSet
-	budget         *budgetPanel
-	files          *fileDialogs
-	footer         *cityFooter
-	chrome         *cityChrome
-	frame          *image.RGBA
-	sources        map[string]bool
-	shades         map[byte][]byte
-	reason         string
-	menu           *menuFont
-	icons          *toolIcons
-	dialog         *newGameDialog
-	panels         *panelSet
-	toolPanels     *panelSet
-	cityPanels     *panelSet
+	lastTextKeys    []string
+	lastImageKeys   []string
+	textSources     *textSources
+	textDraws       []TextDraw
+	textImageDraws  []TextImageDraw
+	textROM         []byte
+	extra           *interfaceSources
+	locale          *interfaceLocale
+	fontDir         string
+	charts          *chartWindows
+	ending          *endingScreen
+	powerFacility   *powerFacilitySet
+	civicFacilities *civicFacilitySet
+	cityBuildings   *cityBuildingSet
+	infrastructure  *infrastructureSet
+	budget          *budgetPanel
+	files           *fileDialogs
+	footer          *cityFooter
+	chrome          *cityChrome
+	frame           *image.RGBA
+	sources         map[string]bool
+	shades          map[byte][]byte
+	reason          string
+	menu            *menuFont
+	icons           *toolIcons
+	dialog          *newGameDialog
+	panels          *panelSet
+	toolPanels      *panelSet
+	cityPanels      *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -156,6 +158,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.budget = loadBudgetPanel(rom, dir)
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
+	r.civicFacilities = loadCivicFacilities(rom, dir)
 	r.cityBuildings = loadCityBuildings(rom, dir)
 	r.ending = loadEndingScreen(rom, dir)
 	r.charts = loadChartWindows(rom, dir)
@@ -408,6 +411,27 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.PowerFacility.Images[candidate.image]++
 				} else {
 					stats.PowerFacility.Fallback++
+				}
+				continue
+			}
+			if candidate := r.civicFacilities.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.CivicFacilities.Matched++
+				reason := r.civicFacilities.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				if stats.CivicFacilities.Reasons == nil {
+					stats.CivicFacilities.Reasons = map[string]int{}
+				}
+				stats.CivicFacilities.Reasons[reason]++
+				if reason == "matched-civic-facility" {
+					stats.Painted++
+					stats.Fallback--
+					stats.CivicFacilities.Painted++
+					if stats.CivicFacilities.Images == nil {
+						stats.CivicFacilities.Images = map[string]int{}
+					}
+					stats.CivicFacilities.Images[fmt.Sprintf("%d/%d", candidate.member, candidate.image)]++
+				} else {
+					stats.CivicFacilities.Fallback++
 				}
 				continue
 			}
