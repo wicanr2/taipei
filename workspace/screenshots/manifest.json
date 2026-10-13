@@ -544,6 +544,299 @@
         "       0"
       ],
       "palette_sha256": "a4b7c0ddba0dcc9afde99e48a9fc5332390d5aede4039d8b97394b610ca8ec26"
+    },
+    {
+      "file": "chart-power-original.png",
+      "scene": "chart-power-original",
+      "language": "zh-Hant",
+      "selected_locale": "en",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "eda12a6e4701b7f2abdb93d62ea4ebfefd5aeb8a83f2edbbe11c2946efb6959e",
+      "capture_sha256": "7066e948c577232cb561f67856670714ae1e5577c6a8f4d605f46b1406307d3b",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1192800000,
+      "ticks": 40359,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-power-zh-Hant.png",
+      "scene": "chart-power-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "df0b2960255a89d6c3260f9a1504cda4b5cb1b7e650857aae18e95f835d60184",
+      "capture_sha256": "71c05d5796c0cc371c7c34defb87fe5794926a285d30d299fa1e8d91162f9462",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1080000000,
+      "ticks": 36462,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-power-zh-Hans.png",
+      "scene": "chart-power-zh-Hans",
+      "language": "zh-Hans",
+      "selected_locale": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "06d316921836d5cd08787b4d1f3e458d32b80c03f0cded265d1a72122f1cc98a",
+      "capture_sha256": "ef7190025d8fd82d8583627d9752617ce8290a0e149ac21ad42030b5d14223dd",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1099600000,
+      "ticks": 37139,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-power-ja.png",
+      "scene": "chart-power-ja",
+      "language": "ja",
+      "selected_locale": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c5ccb3b730af3f3f8a9d86be0039caf5aa1e16bc0b2233b4e354abc75fc70654",
+      "capture_sha256": "d9633875bb27f8c1eb655ebe4a6e820847ce7c8971dda56b97f6beb3ff376f60",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1122800000,
+      "ticks": 37940,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-power-ko.png",
+      "scene": "chart-power-ko",
+      "language": "ko",
+      "selected_locale": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "70d5ac993f0672e5917b1ae81886a077b34525ccc9f4e32a4df4c18f28083f6f",
+      "capture_sha256": "52dccbc9c04eb484c8562f473e6f34e881a55f265bd3c6910f377aa14196f5e6",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1146800000,
+      "ticks": 38769,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-power-en.png",
+      "scene": "chart-power-en",
+      "language": "en",
+      "selected_locale": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c402dd1feda411cc76a88fd22fdd95e2b5a845ac7141c57b20ccb7831334c3e3",
+      "capture_sha256": "7674e100d957c43484cdf1f3952b0804697efae9754eb5a89e0f8cbb98ddfac6",
+      "frame_index_sha256": "568f58e3558c1e78342e7a845e6eaee0faa0234a31b2e0cbf8235d0e171a9341",
+      "original_rgba_4x_sha256": "a80264f493003913442025e1e4ab4198649a5f0e47398cf632b8fae301ccbaa0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1168800000,
+      "ticks": 39530,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-traffic-zh-Hant.png",
+      "scene": "chart-traffic-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "4928fc54349935ddb82c99625fd14221fb09fb4947b6c505274cd3e245265215",
+      "capture_sha256": "bf1678ebf403d855a7a659c03291909a3aed931a49cbe8a5e18e9333cedf463e",
+      "frame_index_sha256": "c79af4a8d00a06c2e48783ed5707be8b65ee484c165d21df14c22c5021956ac2",
+      "original_rgba_4x_sha256": "1482c0c31610eb07e91dc04f6222d03f18d35dfae8b05a7f68e6b77432d864a0",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1457200000,
+      "ticks": 49494,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-population-zh-Hant.png",
+      "scene": "chart-population-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "62a9e94c7a3db1e117e1084da8faca3dbaf2c24c2849d09699b047e44e68fbc2",
+      "capture_sha256": "0d92d3c686d1f4eef7a4e0a70304cc7ee75f914fe2d43d128f736a2105d215a6",
+      "frame_index_sha256": "b9a86ba05990b0041e73caf4809114889e4a1b5e7c464b710973197da573bf8c",
+      "original_rgba_4x_sha256": "7ff2464be74b63e82eaa43dd583a303b431dd34025d95d87a5756f244fa36cd8",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1721200000,
+      "ticks": 58615,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-crime-zh-Hant.png",
+      "scene": "chart-crime-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "a7732662b434b1727a5e842a52b6d7d341c98cb15817735a763936d5852b67f2",
+      "capture_sha256": "5f1dd399b452a0d10b2163d5de0f9c8c62a24e21556b89202edda10769ec9ae7",
+      "frame_index_sha256": "8febaae345b524249dbf8dbdd1ced477491edce1fc0096b8f7125786c91ac511",
+      "original_rgba_4x_sha256": "b1e859ce06494d69a8ce4bd18dc385bda5c761de857cc04f1c008980479fcd60",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1985200000,
+      "ticks": 67737,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-land-value-zh-Hant.png",
+      "scene": "chart-land-value-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "da7b416f637ddbfef123dea619a722566240fd3fbe53ef2835a4d364308dccd4",
+      "capture_sha256": "6c88b3f69bb6d32cf0e688b7f829444bdbbf7a08e968c776faf48fb620de29b1",
+      "frame_index_sha256": "64be68d6fab7749c66bfe6f8136d34167c8914c8eb16fa4ae691f7c494428555",
+      "original_rgba_4x_sha256": "f11b5866e4cba2de73887f3e690d123311762282ed6cc22daa4390b8866bdf89",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 2249200000,
+      "ticks": 76858,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
+    },
+    {
+      "file": "chart-pollution-zh-Hant.png",
+      "scene": "chart-pollution-zh-Hant",
+      "language": "zh-Hant",
+      "selected_locale": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "1499c2d4b8bc6c8475ba17efc308412d4f6b2d3e5acdc8b01d1b701fec9d61ba",
+      "capture_sha256": "a721b70f038f219faeba3c6cf5e3f805a1d83d550cd9db42d48f6568f2fc2a64",
+      "frame_index_sha256": "d05445272f3e59c22229dcba6145890d4d1b761b8115fbe71417151b45fc31f6",
+      "original_rgba_4x_sha256": "2890c9dbece22084e8ceba31bc18efea576b1e909d285b1450a28143a2d9e1e7",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 2513200000,
+      "ticks": 85980,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "chart-locales"
     }
-  ]
+  ],
+  "chart_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/54",
+    "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+    "captured_at": "2026-10-13T11:31:32.280786+08:00",
+    "scenario": "DISA1.DSA；正常災難台北選單進入，原版 0 鍵暫停。",
+    "local_receipt": "workspace/runs/chart-locales-r2/verification.json",
+    "local_receipt_sha256": "5625017b4144ccaf186b809cb2a1916404328769807ecd513723c1c723cd7026",
+    "pixel_verification_sha256": "69db95c043b5da0f717d29e36622bde67d00a1a16aaecefdf432ff15186c1623",
+    "frozen_localization_png_sha256": {
+      "zh-Hant": "df0b2960255a89d6c3260f9a1504cda4b5cb1b7e650857aae18e95f835d60184",
+      "zh-Hans": "06d316921836d5cd08787b4d1f3e458d32b80c03f0cded265d1a72122f1cc98a",
+      "ja": "c5ccb3b730af3f3f8a9d86be0039caf5aa1e16bc0b2233b4e354abc75fc70654",
+      "ko": "70d5ac993f0672e5917b1ae81886a077b34525ccc9f4e32a4df4c18f28083f6f",
+      "en": "c402dd1feda411cc76a88fd22fdd95e2b5a845ac7141c57b20ccb7831334c3e3"
+    },
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "tools_sha256": {
+      "chart_locale_gui.sh": "a1ffd2b58681747b780fa5da8b8915b39405a09f015a6ec0ab8eafc7ce35cd80",
+      "chart_locale_gui.py": "039bbf6d09ff63f9e3e77f146701973c0f88c4a5076c996ad8618ee18a95e530",
+      "chart_locale_check.py": "e13ae52ae30f65f13b657204366ed38554d8bb93e53b16441897f3b96496a1eb",
+      "export_chart_screenshots.py": "3b53b52aac236a9ea26806d2ae3a26c71b99f8a78bb2e23370d205360b829ec4"
+    },
+    "limits": "六圖表及電力圖五語系的呈現比較；存檔於同次執行讀回。沒有完整 RAM／RNG 對拍、全新 EXE 冷讀或平台真機驗收。",
+    "reproduce": "TAIPEI_CHART_LOCALE_RUN=<新目錄> bash workspace/tools/chart_locale_gui.sh；在同一 Docker image 執行 chart_locale_check.py，再以 export_chart_screenshots.py 收錄選定圖。"
+  }
 }

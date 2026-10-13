@@ -1,6 +1,6 @@
 # F4 圖表視窗
 
-狀態：READY，限本契約的固定框架與原版資料像素。對應 [#48](https://github.com/wicanr2/taipei/issues/48)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。正式呈現與正常玩家驗收尚未完成。
+狀態：READY，限本契約的固定框架與原版資料像素。對應 [#48](https://github.com/wicanr2/taipei/issues/48)，母項 [#31](https://github.com/wicanr2/taipei/issues/31)。已接入呈現層，#54 補驗六入口及同次存讀檔；完整相同步數原版狀態及全新 EXE 冷讀路徑仍未完成。
 
 使用者已確認全部圖片與操作介面、B 細緻手繪材質、1280×800、Noto 與遊戲中 F12。沿用原版圖表內容、位置、數值及操作，不重寫統計規則。
 
@@ -82,3 +82,26 @@ r3 來源階段只閉合來源，當時維持 DRAFT。首版可撤回原型已�
 正式三檔已匯出且乾淨重生相同。manifest SHA-256 `9a0cc44ee54ea2b2681c6e578a00ac532be32b9d88780cc9c90579fe4766226e`，frame PNG `7b70c2e5b3dcc83fbd063c5a6829b050b003d4caa1fcfc64ddd8344091775d9b`，frame RGBA `6e39dcf7dc0a8cbf58d1be91e46da10e7f2c7588fef8b44c502b3f6081b68d59`，grain `17c0fe2195ee6961533c16ae3b52d46c01045470b8874ddb5dbd46eb77fb142b`。呈現層與 Go／Python 獨立核對、正常 GUI／負對照工具均已接入；圖表專項 13.970 秒通過。
 
 2026-10-12 使用者指示「不用抽樣囉，先 commit + push」，目標已暫停。本輪不執行後續抽樣、正式 GUI、有效負對照、狀態或跨平台驗收。先前已開始的整體回歸完成後，圖表及鍵盤測試通過；預算測試因指定 catalog 路徑不存在而失敗，城市／工具面板因未設來源環境變數而略過，不能宣稱完整回歸通過。原 log `workspace/runs/chart-windows-native/full-render-test-r1.log` 保留，未為此重跑。規格維持 READY、#48 OPEN，不宣稱 CONFORMED。
+
+## 2026-10-13：五語系正常操作補驗 #54
+
+使用者指示繼續，沿 [#54](https://github.com/wicanr2/taipei/issues/54) 接續必要 GUI／呈現檢查，長時間狀態抽樣仍停止。產品程式與 TSV 沒有修改，使用 033 的現行四架構來源；本次只新增工具、文件與指定截圖。
+
+032 的五語系契約已追加四組圖表文字、六個標題與可辨識的底部欄位。它們是 029 區外原版規則的明示後續例外；其餘區外像素仍維持原版。舊核對器沒有支援這些覆字，因此保留原工具核對未本地化的 029，新 [chart_locale_check.py](../../workspace/tools/chart_locale_check.py) 核對現行正常畫面，不跳過文字矩形或區外。
+
+新核對器直接讀原 ROM、READY 前固定灰框／筆觸與實際原版資料格，六標題、四組文字與底部單位取自本次開工前 `interface-locale-gallery-r2` 的五張固定 Noto 圖。五張完整 PNG SHA-256 固定在工具中，只取已確認的文字矩形；底部數字仍由原版字模獨立解碼並使用已固定 atlas。未匯入現行呈現器，也未從受測畫面建立期望值。
+
+| 補驗範圍 | 結果 |
+|---|---|
+| 正常來源 | `chart-locales-r2` 從災難台北正常進入 DISA1，以原版 0 暫停；確認六個完整選單來源與實際選取 0–5，六個中央資料雜湊互不相同 |
+| 操作 | 每圖 F12 往返、兩次無輸入觀察與 DOS AH07 Escape 返回；完整原城市及原點一致。電力圖另驗 F11 五語系、面板內狀態不變與不轉送按鍵 |
+| 呈現 | 34 張整幀各 1,024,000 像素核對通過，包含 Noto 字墨、資料、底部原數字及區外；14 項對照含兩個正對照與十二個有效破壞，受影響雜湊均重算後仍正確拒絕 |
+| 原版存讀檔 | 同次寫入並讀回 CHARTS.SAV，93567 bytes，讀回不改檔；SHA-256 `7fe77eae9edeeb1644e7ba156c651ffbc93427293daa666b3f101fa1fd7beab8`。最後正常退出 DOS |
+| 既有核心測試 | 六個完整原型、原資料更新、已用／未用色盤、相位與 F12、十一種真實資源故障通過。家族隔離首次因未設來源略過，補入固定來源後單獨重跑通過 |
+| README | 新增 11 張正常截圖：六圖表繁中 HD 與電力圖原版／其他四語系。原版與五語系電力圖的完整原始畫面及可見顏色一致，來源併入既有 manifest |
+
+正常入口：[chart_locale_gui.sh](../../workspace/tools/chart_locale_gui.sh) 與 [chart_locale_gui.py](../../workspace/tools/chart_locale_gui.py)。收據 `workspace/runs/chart-locales-r2/verification.json` SHA-256 `5625017b4144ccaf186b809cb2a1916404328769807ecd513723c1c723cd7026`；呈現核對 `pixel-verification.json` SHA-256 `69db95c043b5da0f717d29e36622bde67d00a1a16aaecefdf432ff15186c1623`。截圖匯出入口為 [export_chart_screenshots.py](../../workspace/tools/export_chart_screenshots.py)。
+
+r1 的六圖及呈現是有效前件，但後段工具在已預選 CHARTS 的讀檔視窗重複輸入六字母，隨後誤把正常讀鍵總數增加七次當成 Space 重複。原版已實際讀回 SAV；修正工具為沿用已預選檔名，r2 以相同 image／binary／原版乾淨重跑通過。沒有改寫前件或修改產品。
+
+本項不補做長時間 RAM／CPU／RNG 抽樣、正常施工至全新 EXE 冷讀、母語審校、平台真機或正式封包。029 維持 READY，#48 的剩餘完整驗收保持 OPEN。

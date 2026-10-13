@@ -30,7 +30,7 @@
 | DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 | 政績靜態底圖 | [#47](https://github.com/wicanr2/taipei/issues/47) | 兩個完整 ROM 來源、B／Noto 原型、F12／失配回退／真實資源故障；正常施工存退讀、兩次原版退出、獨立完整像素及固定輸入狀態 | [028](spec/028-ending-achievement-base.md) 限已見底圖 CONFORMED；50 正常收據、七項有效破壞及 125 點原版狀態與實際 SAV 相同。其他結果及動畫 DRAFT，全部 HD／封包未完成 |
-| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48) | 六個原版入口、完整框架／資料／色盤及返回；B／Noto 原型完整像素與乾淨重生；正式呈現專項測試 | [029](spec/029-chart-windows.md) READY，已接呈現層；圖表專項通過。完整回歸因預算 fixture 路徑缺失失敗，兩個既有面板來源未設而略過。使用者指示先 commit／push，本輪不執行後續抽樣；正常 HD GUI、負對照與狀態未驗；現行四架構編譯見 032 |
+| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48)、[#54](https://github.com/wicanr2/taipei/issues/54) | 六個真實入口、完整框架／資料／色盤及返回，B／Noto、F11／F12、呈現負對照、資源故障、存讀檔及原版狀態 | [029](spec/029-chart-windows.md) READY。#54 已補驗六入口及返回、電力圖五語系、34 張完整圖表、14 項正反對照、同次存讀檔與正常退出。既有四項核心測試含十一種資源故障與家族隔離通過。完整相同步數狀態、施工至全新 EXE 冷讀與平台真機仍未完成，不升 CONFORMED |
 
 032 的現行文字驗證為 `interface-locale-unit-final.log` 與 `interface-source/catalog.json`。正常 GUI 分段來源為 r9 的工具／Help／人口／民意、r10 的五項環境完整提示與五語系預算，以及 r11 的完整冷啟動英文存讀檔、兩場景 F12、政績標題與原版退出；前兩輪後續驗證錯誤保留，不能稱整輪 PASS。`interface-locale-cold-r11/verification.json` 通過，LOCALE.SAV 93567 bytes，讀回後雜湊相同。Linux 重建與已驗 binary 相同，Windows amd64／macOS amd64／arm64 編譯與架構通過；不提升 029 完整 HD 或平台真機驗收，也未恢復長時間抽樣。下方 030 的 115 鍵為第一批歷史範圍，現行 181 鍵以 032 為準。
 

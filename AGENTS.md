@@ -70,6 +70,7 @@
 | 驗收範圍 | [docs/verification-matrix.md](docs/verification-matrix.md) | 串起 Issue、玩家路徑、證據與未驗限制 |
 | 執行與交付摘要 | [README.md](README.md) | 穩定入口；不寫逐輪流水帳 |
 | README 原版與五語系畫面 | [擷取工具](workspace/tools/readme_screenshots.sh)、[匯出工具](workspace/tools/export_readme_screenshots.py)、`workspace/screenshots/manifest.json` | #53；正常冷啟動擷取，選定 PNG 限目前私人儲存庫展示 |
+| 六圖表五語系正常操作 | [GUI 入口](workspace/tools/chart_locale_gui.sh)、[完整呈現核對](workspace/tools/chart_locale_check.py)、[截圖匯出](workspace/tools/export_chart_screenshots.py) | #54 接續 #48；沿 029／032，長時間狀態抽樣仍停止 |
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |

@@ -50,8 +50,35 @@ HD 五語系已確定支援繁體中文、簡體中文、日文、韓文與英�
 
 </details>
 
+<details>
+<summary>F4 六圖表與五語系對照</summary>
+
+情境為 DISA1.DSA，由正常「災難台北」選單進入。六個選項分別確認後擷取，保留原版已計算的資料格，HD 更新外框與文字。電力圖另展示原版及五語系，切換前後的原始資料畫面相同。
+
+| 圖表 | HD 繁體中文 |
+|---|---|
+| 電力供應 | ![HD 電力供應圖](workspace/screenshots/chart-power-zh-Hant.png) |
+| 交通密度 | ![HD 交通密度圖](workspace/screenshots/chart-traffic-zh-Hant.png) |
+| 人口密度 | ![HD 人口密度圖](workspace/screenshots/chart-population-zh-Hant.png) |
+| 犯罪率 | ![HD 犯罪率圖](workspace/screenshots/chart-crime-zh-Hant.png) |
+| 房價 | ![HD 房價圖](workspace/screenshots/chart-land-value-zh-Hant.png) |
+| 污染 | ![HD 污染圖](workspace/screenshots/chart-pollution-zh-Hant.png) |
+
+| 電力圖模式／語言 | 畫面 |
+|---|---|
+| 原版繁體中文 | ![原版電力供應圖](workspace/screenshots/chart-power-original.png) |
+| HD 簡體中文 | ![HD 簡體中文電力圖](workspace/screenshots/chart-power-zh-Hans.png) |
+| HD 日文 | ![HD 日文電力圖](workspace/screenshots/chart-power-ja.png) |
+| HD 韓文 | ![HD 韓文電力圖](workspace/screenshots/chart-power-ko.png) |
+| HD 英文 | ![HD 英文電力圖](workspace/screenshots/chart-power-en.png) |
+
+正常六入口、F11／F12、返回城市及同次存讀檔已核對；完整機器狀態、全新 EXE 冷讀與平台真機仍依[圖表契約](docs/spec/029-chart-windows.md)另驗。
+
+</details>
+
 來源、程式與圖片雜湊見[截圖清單](workspace/screenshots/manifest.json)。
 重生入口為 [readme_screenshots.sh](workspace/tools/readme_screenshots.sh)，以[匯出工具](workspace/tools/export_readme_screenshots.py)核對後收錄，只在 Docker 內執行；
+圖表使用 [chart_locale_gui.sh](workspace/tools/chart_locale_gui.sh) 擷取，經[整張畫面核對](workspace/tools/chart_locale_check.py)後[匯出](workspace/tools/export_chart_screenshots.py)。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
 
 ## 開發與文件

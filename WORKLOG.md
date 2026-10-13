@@ -755,3 +755,31 @@ Linux 已驗 binary SHA-256 1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472
 匯出工具重新讀取每份原始 ZIP，核對色號、解碼 RGB、模式、語言、Help 狀態、尺寸、PNG 及原始收據 SHA-256；原版另驗最近鄰四倍像素完全相同。17 張總計 9,785,382 bytes，全部與已逐張目視檢查的 r1 PNG 相同。README 直接展示原版與 HD 五語系城市／預算，Help 五語系可展開。來源、程式、字型、七補丁、工具及完整 PNG 雜湊存入 workspace/screenshots/manifest.json；原始 ZIP、native PNG、binary、SAV、字型與素材包不入 Git。
 
 擷取容器末段 find 的兩筆是容器自建的掛載父目錄，不是主機產物。工具收尾範圍修正為實際掛載的 /workspace/runs，另以完整 workspace 唯讀掛載執行指定 find，結果為空。manifest 的工具欄記錄現行可重生工具雜湊。程式來源及 binary 與上一輪 provenance 一致，35 個原始檔及 RAR 不變；工具語法、README 圖片與連結、來源清單及 UID/GID 核對通過。沒有新增 image，專案容器與背景程序均已清理。只明列提交文件、工具及獲指定的 17 張 PNG／manifest，提交／push 與 #53 最終狀態於遠端回鏈。完整 HD、平台真機與正式封包仍未完成。
+
+## 2026-10-13：六圖表五語系正常操作與 README #54
+
+使用者指示繼續。先核對主機 gh auth、乾淨工作樹及遠端 Issues，再建立 #54 接續 #48 的必要短流程，長時間狀態抽樣仍停止。命中規格閘門、正常玩家路徑與 README 路由，使用既有重製技能、029／032 契約及文件職責。Docker inspect 的首個格式要求不存在的 Entrypoint 欄位而失敗；改讀完整 Config 確認既有 image 以 bash 為預設命令，沿用同一固定 image，沒有另建工具鏈。
+
+產品程式、TSV、dosgolem 與素材都沒有改動。新增正常 GUI 工具、五語系整幀核對器及選定截圖匯出工具，同次掛入 AGENTS／CONTEXT／029。工作及輸出皆在 workspace；固定 image c3d8835a9d39、UID/GID 1000:1000、network none、資源上限與外層逾時，原版唯讀。GUI 上限 1500 秒，使用既有真實讀鍵／release 輔助工具，不注入狀態或圖表選取。
+
+| 項目 | 已查證結果 |
+|---|---|
+| 正常來源 | 從原版選單進災難台北 DISA1，以原版 0 暫停。完整選單來源確認實際選取 0–5，六個圖表中央資料互不相同 |
+| 操作 | 每圖 F12 往返、兩次無輸入及 DOS AH07 Escape 返回，完整原城市與原點一致；電力圖 F11 五語系，選擇期間 VM／畫面／原版讀鍵不變 |
+| 整幀核對 | 從原 ROM、READY 前固定灰框／筆觸重算資料。六標題、四組文字與底部單位取本次開工前 032 的五張固定 Noto 圖，只取既定文字矩形；數字由原字模獨立解碼。34 張各 1,024,000 像素相同，沒有跳過字墨或區外 |
+| 正反對照 | 14 項中兩個正對照通過，十二個有效破壞被拒絕。涵蓋框架、字墨、資料、標題、底部、區外、原始來源／資料、家族／資料雜湊、錯語言與原版模式；受影響雜湊重算後仍拒絕 |
+| 原版存讀檔 | CHARTS.SAV 93567 bytes，正常寫入、同次讀回且雜湊不變，最後原版退出。SAV SHA-256 7fe77eae9edeeb1644e7ba156c651ffbc93427293daa666b3f101fa1fd7beab8 |
+| 核心測試 | 六完整原型、資料／色盤／相位／F12 與十一種實際資源故障通過；家族隔離補入固定來源後通過 |
+| README | 新增六圖表繁中 HD 與電力圖原版／其他四語系共 11 張，3,572,733 bytes，均與已逐張檢視的前件 PNG 相同。合計 28 張、13,358,115 bytes，來源併入原 manifest |
+
+第一輪 chart-locales-r1 的六圖、34 張呈現與原版存讀檔均有有效收據，但不稱整輪 PASS。原版讀檔視窗已預選 CHARTS，工具又輸入六個字母；畫面條件立即成立，舊收據尚未更新，接著把六字母與 Space 的七個正常讀取誤當作 Space 重複而停止。原始收據明列 CHARTS.SAV 真實讀取。改為沿用預選檔名，沒有修改產品或放寬讀鍵斷言。以相同 image／binary／原版，執行 `TAIPEI_CHART_LOCALE_RUN=chart-locales-r2 bash workspace/tools/chart_locale_gui.sh`，全新目錄完整通過。
+
+正式正常收據 `workspace/runs/chart-locales-r2/verification.json` SHA-256 5625017b4144ccaf186b809cb2a1916404328769807ecd513723c1c723cd7026，含 16 次普通鍵、16 次方向／功能鍵及六次 DOS Escape 同步。呈現核對命令在固定 Docker 內執行 `python3 /workspace/tools/chart_locale_check.py --run /workspace/runs/chart-locales-r2 --out /workspace/runs/chart-locales-r2/pixel-verification.json`，SHA-256 69db95c043b5da0f717d29e36622bde67d00a1a16aaecefdf432ff15186c1623。五個固定 Noto 參考雜湊寫在核對工具，未匯入目前呈現器或以受測畫面生成期望值。
+
+核心測試使用 `go test -mod=readonly -p 1 -v ./internal/hd -run '^TestChartWindows' -count=1`，設定 TAIPEI_HD_ORIGINAL=/orig、TAIPEI_HD_MATERIALS=/workspace/prototypes/hd-style、TAIPEI_CHART_RECEIPTS=/workspace/runs/chart-windows-native-r3。前三項通過，家族隔離因少設 TAIPEI_HD_RECEIPTS 略過。補設為 /workspace/runs/gui-ending-scene-cold-r1，只重跑 `^TestChartWindowsOtherFamilyIsolation$` 通過；日誌為 chart-unit.log 與 chart-isolation.log。這是測試來源設定修正，不是產品缺陷。未為工具與文件變更重建相同產品的四架構 binary。
+
+截圖匯出命令在同一 Docker 內執行 `python3 /workspace/tools/export_chart_screenshots.py --run /workspace/runs/chart-locales-r2 --catalog /workspace/screenshots/manifest.json --source-commit b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5`。workspace 可寫，runs／tools／app／prototypes 及原版各自再唯讀掛載；--rm、--network none、--user 1000:1000、--memory 1g、--cpus 1、--pids-limit 64、timeout 120s。新 PNG 必須不存在；匯出先重新核對原始 ZIP、整幀與原版／五語系電力圖相同來源，再追加原來源清單。17 張既有 PNG 不變，原始 ZIP、擷取資料與 SAV 不入 Git。
+
+收尾回查規格、正常玩家路徑與 README 路由，更新唯一現況表、029 追加證據與驗收矩陣。README 圖片／連結、28 張雜湊／尺寸與 1000:1000、工具語法、來源入口及 029 正對照通過。產品所有來源及 binary 與既有 provenance 相同，35 個原始檔與 RAR 不變；指定 find 為空，專案容器已清理，沒有新 image 或遺留背景程序。只明列提交文件、工具、來源清單及指定 11 張 PNG；提交／push 及 #54 收尾回鏈遠端 Issue。
+
+本項只完成必要 GUI／呈現分支。沒有恢復長時間 RAM／CPU／RNG 抽樣，沒有全新 EXE 冷讀、施工完整鏈、母語審校、平台真機或正式封包。029 保持 READY、#48 OPEN，不提升完整 HD 或規則 parity。
