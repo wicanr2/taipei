@@ -783,3 +783,19 @@ Linux 已驗 binary SHA-256 1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472
 收尾回查規格、正常玩家路徑與 README 路由，更新唯一現況表、029 追加證據與驗收矩陣。README 圖片／連結、28 張雜湊／尺寸與 1000:1000、工具語法、來源入口及 029 正對照通過。產品所有來源及 binary 與既有 provenance 相同，35 個原始檔與 RAR 不變；指定 find 為空，專案容器已清理，沒有新 image 或遺留背景程序。只明列提交文件、工具、來源清單及指定 11 張 PNG；提交／push 及 #54 收尾回鏈遠端 Issue。
 
 本項只完成必要 GUI／呈現分支。沒有恢復長時間 RAM／CPU／RNG 抽樣，沒有全新 EXE 冷讀、施工完整鏈、母語審校、平台真機或正式封包。029 保持 READY、#48 OPEN，不提升完整 HD 或規則 parity。
+
+## 2026-10-13：依遊玩抽驗驗收六圖表，補遊戲背景與截圖 #55
+
+使用者更新完成條件為「抽驗能由遊玩就算驗收通過」，並要求完成後更新 README 的遊戲截圖與背景。先回讀主機 gh auth、遠端 Issues 及目前產品，再建立 [#55](https://github.com/wicanr2/taipei/issues/55)，於 #48 留言登記新標準。命中正常玩家路徑與 README 路由，載入重製技能、驗收參考、README 契約及文件職責。此定案取代六圖表原先以長時間完整狀態對拍作結案門檻的要求，不把未驗項改成通過。
+
+新增 [accept_chart_playtest.py](workspace/tools/accept_chart_playtest.py)，回核 #54 的 `chart-locales-r2/verification.json`、呈現報告、35 份 ZIP／PNG、CHARTS.SAV、現行所有已記錄產品來源與四架構 binary。均符合原來源及雜湊，Linux 為 `1461ac4b4a2fe582f3c937a9f6d84edca34d09562a236a0f1472895f088ec2c8`。六個真實 F4 選項、每圖 F12／觀察／Escape 返回、電力圖 F11 五語系、原版同次存讀檔與 DOS 退出已通過；產品未改，沒有重跑相同遊玩流程。
+
+執行命令為 Docker 內 `python3 /workspace/tools/accept_chart_playtest.py --run /workspace/runs/chart-locales-r2 --manifest /workspace/screenshots/manifest.json --reviewed-commit fa683e208b62b1cac064d74549cefcf19f9f2b56`。沿用既有 image `sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3`，timeout 120s、--network none、--user 1000:1000、--memory 1g、--cpus 1、--pids-limit 64；專案與 workspace 唯讀，僅 `workspace/screenshots/` 可寫。回核通過並從已檢視的正常 `city-paused-capture.zip` 匯出 `city-disaster-zh-Hant.png`，沒有重繪或加工該畫面。新 PNG 1,080,439 bytes、SHA-256 `603fee2fb7ac13e1983a20a0143466cecf09275a5ca9c40a87d482151776bfd5`；全部 29 張合計 14,438,554 bytes，均為 1280×800。
+
+README 新增遊戲背景、城市治理玩法與原版五十萬人口目標，並將正常災難台北城市總覽放在介紹後。發行年代、聯邦開發與資策科技代理引用[奧米加典藏](https://www.omega.idv.tw/kdb120/viewthread.php?threadid=5296)及[中文模擬類遊戲目錄](https://chiuinan.github.io/game/game/cgame33.htm)；玩法及目標回查 017 的原版說明來源及已核對介面文字。公開目錄僅作作品背景出處，不據此宣稱目前原版檔的精確版本或現行權利歸屬。既有原版、HD 五語系、預算、Help 與六圖表截圖全部保留。
+
+029 限六圖表呈現及已驗玩家路徑升 CONFORMED。同步更新 AGENTS 的使用者定案、唯一現況表與文件入口、驗收矩陣及 manifest，舊的研究與停止點依時間保留。現況索引原有三處「正式 HD 未驗」同步改成目前已驗結果，避免舊入口重新開啟已完成工作。
+
+Docker 內完成 Python 語法、五份 Markdown 相對連結、29 個唯一 README 圖片參照與 manifest 集合、全部 PNG SHA-256／尺寸／1000:1000、工具雜湊及文件索引正對照核對。首輪檢查在已通過上述斷言後，列印新圖資訊時錯把舊 manifest 記錄也當作有 batch 欄位；僅修診斷為 `.get()`，同 image 乾淨重跑全部通過，不屬產品缺陷。35 個原始檔及 RAR 與盤點雜湊一致。指定 find 為空，專案容器已清理，沒有新 image 或背景程序；`git diff --check` 通過。
+
+只明列提交文件、回核工具、manifest 與一張指定 PNG，提交及推送後回寫 #48／#55 並核對結案狀態。完整 RAM／CPU／RNG 對拍、本圖表流程施工至全新 EXE 冷讀、未走過分支、平台真機與正式封包仍未執行；依使用者標準不再阻塞本批驗收。全部圖片重繪與三平台交付仍由原母項繼續。

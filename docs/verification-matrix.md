@@ -3,6 +3,8 @@
 本檔定義證據與完成條件。工作狀態只看 [GitHub Issues](https://github.com/wicanr2/taipei/issues)，
 目前真相由 [CONTEXT.md](../CONTEXT.md) 保存。
 
+依使用者 2026-10-13 的定案，已實作功能可由正常遊玩抽驗驗收。與現行產品一致的已通過收據可沿用，長時間相同步數 RAM／CPU／RNG 對拍不列必要結案門檻。結論限實際走過的功能與路徑，未製作圖片、未驗平台及正式封包仍各自處理；本次回核見 [#55](https://github.com/wicanr2/taipei/issues/55)。
+
 | 範圍 | Issue | 必要證據 | 完成限制 |
 |---|---|---|---|
 | 治理 | [#1](https://github.com/wicanr2/taipei/issues/1) | private／Issues 回讀、文件入口、排除規則、提交與推送 | 不證明遊戲可執行 |
@@ -11,7 +13,7 @@
 | 原版前端與存檔 | [#4](https://github.com/wicanr2/taipei/issues/4) | 正常 GUI、核心操作、存退讀與來源雜湊 | direct-entry 不替代 GUI |
 | HD 原型 | [#5](https://github.com/wicanr2/taipei/issues/5) | 已證實繪圖來源與同狀態比較原型 | 不自動進正式路徑 |
 | HD 契約 | [#6](https://github.com/wicanr2/taipei/issues/6) | 使用者批准樣式、平台與 READY 規格 | 重大取捨不得推定同意 |
-| HD 接入 | [#7](https://github.com/wicanr2/taipei/issues/7) | 來源／動畫／遮擋／清除／切換，機器狀態與存檔比較 | 圖片存在不代表正確播放 |
+| HD 接入 | [#7](https://github.com/wicanr2/taipei/issues/7) | 來源／動畫／遮擋／清除／切換，正常遊玩及存讀檔抽驗 | 圖片存在不代表正確播放；不以遊玩抽驗宣稱完整機器狀態對拍 |
 | 玩家抽樣 | [#8](https://github.com/wicanr2/taipei/issues/8) | 先登記情境，正常冷啟動至核心操作及存退讀；有效負對照 | 限實際驗證範圍，不宣稱全程試玩 |
 | 交付 | [#9](https://github.com/wicanr2/taipei/issues/9) | 實際封包啟動、權利、manifest、SHA-256 與平台結果 | Wine、結構及真機驗證分開記錄 |
 | 全部來源盤點 | [#28](https://github.com/wicanr2/taipei/issues/28) | 所有成員、圖像與別名、正常可見狀態、未知來源及覆蓋清單 | 可解碼不等於繪製語意已證實 |
@@ -22,6 +24,7 @@
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |
 | 介面五語系 | [#51](https://github.com/wicanr2/taipei/issues/51)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49) | 五語系完整文字鍵、實際字形與安全矩形、來源覆蓋、數值／檔名隔離、正常 F11／F12、缺譯警示與存讀檔／退出 | [032](spec/032-interface-localization.md)、[033](spec/033-localization-source-coverage.md) 限已盤點來源及必要短流程 CONFORMED；225 鍵、1213 字元、146 筆中文對應、各語系 77 種介面狀態及 192 個原版文字階段、九筆圖片通過。成功結局完整流程、密碼分支、未知用途、平台真機與正式包的限制見 033 |
 | README 原版與五語系截圖 | [#53](https://github.com/wicanr2/taipei/issues/53) | 現行前端正常冷啟動，原版城市／預算及 HD 五語系、Help 五語系；PNG／原始收據雜湊、尺寸、字形、連結、來源色號與可見 RGB、原始預算數值及正常退出 | [17 張截圖來源](../workspace/screenshots/manifest.json)與 `readme-screenshots-r4/verification.json` 通過。每語系從正常選單重開預算；各組完整原版畫面及可見顏色一致。CPU／時鐘及未使用色盤不要求相同，無長時間抽樣、完整 HD、平台真機或封包驗收聲明 |
+| 遊玩驗收與遊戲介紹 | [#55](https://github.com/wicanr2/taipei/issues/55) | 現行產品與正常收據一致；README 遊戲背景有來源、實際截圖有標示與 manifest | 六圖表依新標準通過，追加災難台北城市畫面後共 29 張截圖；不重跑相同產品的已通過流程 |
 | 城市六功能選單 | [#37](https://github.com/wicanr2/taipei/issues/37) | 六入口、二十九選取、完整來源、原文及墨跡；正常 F12、取消、存退讀與狀態對照 | 022 限六面板二十九選取 CONFORMED；確認後視窗另驗 |
 | 存讀檔與離開提示 | [#38](https://github.com/wicanr2/taipei/issues/38) | 完整來源、正常輸入邊界與選取、F12、施工存退讀、有效負對照及原版狀態 | 023 限兩家族 CONFORMED；外部檔案錯誤與模態外另驗 |
 | 預算與稅率視窗 | [#39](https://github.com/wicanr2/taipei/issues/39) | 完整 ROM2、十一動態欄位、五列選取、Noto 墨跡、正常調整／返回、全新 EXE 設定重讀及 HD 狀態對照 | 025 限完整面板 CONFORMED；116 正常收據、十三有效呈現破壞與 169 點原版狀態通過；極值規則及其他介面另驗 |
@@ -30,7 +33,7 @@
 | DOS 系統時間 | [#40](https://github.com/wicanr2/taipei/issues/40) | BIOS／raw IRQ 受控反例、INT1A 設定、快照、正常預算、施工存退讀與四架構 | 024 限時間來源 CONFORMED；保留既有整數近似，不宣稱精確硬體時序 |
 | 場景與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 開場、選城、難度、插畫、事件、評分與動畫相位 | 單張素材不證明完整播放 |
 | 政績靜態底圖 | [#47](https://github.com/wicanr2/taipei/issues/47) | 兩個完整 ROM 來源、B／Noto 原型、F12／失配回退／真實資源故障；正常施工存退讀、兩次原版退出、獨立完整像素及固定輸入狀態 | [028](spec/028-ending-achievement-base.md) 限已見底圖 CONFORMED；50 正常收據、七項有效破壞及 125 點原版狀態與實際 SAV 相同。其他結果及動畫 DRAFT，全部 HD／封包未完成 |
-| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48)、[#54](https://github.com/wicanr2/taipei/issues/54) | 六個真實入口、完整框架／資料／色盤及返回，B／Noto、F11／F12、呈現負對照、資源故障、存讀檔及原版狀態 | [029](spec/029-chart-windows.md) READY。#54 已補驗六入口及返回、電力圖五語系、34 張完整圖表、14 項正反對照、同次存讀檔與正常退出。既有四項核心測試含十一種資源故障與家族隔離通過。完整相同步數狀態、施工至全新 EXE 冷讀與平台真機仍未完成，不升 CONFORMED |
+| F4 圖表視窗 | [#48](https://github.com/wicanr2/taipei/issues/48)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55) | 六個真實入口及返回、B／Noto、F11／F12、正常遊玩與存讀檔抽驗 | [029](spec/029-chart-windows.md) 限六圖表呈現及已驗正常路徑 CONFORMED。六入口及返回、電力圖五語系、34 張完整圖表、14 項正反對照、同次存讀檔與正常退出通過；既有四項核心測試含十一種資源故障與家族隔離通過。#55 回核與現行產品一致，依使用者指定的遊玩標準驗收。完整相同步數狀態、本圖表流程施工至全新 EXE 冷讀及平台真機未驗，保留證據限制 |
 
 032 的現行文字驗證為 `interface-locale-unit-final.log` 與 `interface-source/catalog.json`。正常 GUI 分段來源為 r9 的工具／Help／人口／民意、r10 的五項環境完整提示與五語系預算，以及 r11 的完整冷啟動英文存讀檔、兩場景 F12、政績標題與原版退出；前兩輪後續驗證錯誤保留，不能稱整輪 PASS。`interface-locale-cold-r11/verification.json` 通過，LOCALE.SAV 93567 bytes，讀回後雜湊相同。Linux 重建與已驗 binary 相同，Windows amd64／macOS amd64／arm64 編譯與架構通過；不提升 029 完整 HD 或平台真機驗收，也未恢復長時間抽樣。下方 030 的 115 鍵為第一批歷史範圍，現行 181 鍵以 032 為準。
 

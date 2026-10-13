@@ -70,7 +70,8 @@
 | 驗收範圍 | [docs/verification-matrix.md](docs/verification-matrix.md) | 串起 Issue、玩家路徑、證據與未驗限制 |
 | 執行與交付摘要 | [README.md](README.md) | 穩定入口；不寫逐輪流水帳 |
 | README 原版與五語系畫面 | [擷取工具](workspace/tools/readme_screenshots.sh)、[匯出工具](workspace/tools/export_readme_screenshots.py)、`workspace/screenshots/manifest.json` | #53；正常冷啟動擷取，選定 PNG 限目前私人儲存庫展示 |
-| 六圖表五語系正常操作 | [GUI 入口](workspace/tools/chart_locale_gui.sh)、[完整呈現核對](workspace/tools/chart_locale_check.py)、[截圖匯出](workspace/tools/export_chart_screenshots.py) | #54 接續 #48；沿 029／032，長時間狀態抽樣仍停止 |
+| 六圖表五語系正常操作 | [GUI 入口](workspace/tools/chart_locale_gui.sh)、[完整呈現核對](workspace/tools/chart_locale_check.py)、[截圖匯出](workspace/tools/export_chart_screenshots.py) | #54 接續 #48；沿 029／032，長時間狀態抽樣不列結案門檻 |
+| 遊玩抽驗收尾與城市截圖 | [收據回核及匯出工具](workspace/tools/accept_chart_playtest.py)、[029](docs/spec/029-chart-windows.md) | #55；Docker 內核對現行產品與既有正常遊玩收據，匯出災難台北城市畫面 |
 | 外部知識路由 | `/home/anr2/.codex/knowledge-base/knowledge-router.md` | 只讀命中入口及必要 reference |
 | 復古遊戲證據與實作 | `/home/anr2/.codex/skills/reverse-engineer-retro-game-remake/SKILL.md` | 用於最小充分研究、規格與驗收 |
 | 共同決策 | `/home/anr2/.codex/skills/grilling/SKILL.md` | 重大取捨逐題確認；一般執行不重開訪談 |
@@ -149,6 +150,11 @@
 正式行為採：`原版證據 → DRAFT → 證據審查 → READY → 實作 → 同狀態驗證 → CONFORMED`。
 沒有 READY 的探針及原型不進產品路徑。實作發現未知時回到研究與規格，不猜補。
 
+- 使用者於 2026-10-13 指定「抽驗能由遊玩就算驗收通過」。已實作功能以正常玩家路徑抽驗判定，
+  長時間相同步數 RAM／CPU／RNG 對拍不列必要結案門檻。可沿用與現行產品一致的已通過收據，
+  不為結案重跑同一流程。六圖表的具體範圍見 [029](docs/spec/029-chart-windows.md)，
+  回核入口為 [accept_chart_playtest.py](workspace/tools/accept_chart_playtest.py)，只在固定 Docker image 執行。
+  此標準不將未製作的圖片、未走過的分支或未驗平台算成完成；未執行的狀態對拍仍列證據限制。
 - 基線與 HD 使用相同原始資料、dosgolem 版本、初始狀態、虛擬時間及等價輸入。
   涉及亂數時在執行前固定 seed 或明示受控亂數條件，不重擲挑結果。
 - 驗證 HD 不改變原版記憶體、暫存器、原版畫面緩衝、遊戲資料與存檔結果。

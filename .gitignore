@@ -42,6 +42,7 @@
 !/workspace/screenshots/chart-crime-zh-Hant.png
 !/workspace/screenshots/chart-land-value-zh-Hant.png
 !/workspace/screenshots/chart-pollution-zh-Hant.png
+!/workspace/screenshots/city-disaster-zh-Hant.png
 
 # 正式封包只留本機
 /dist-all/

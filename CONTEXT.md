@@ -2,13 +2,14 @@
 
 核對日期：2026-10-13。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表已補驗正常操作、呈現及同次存讀檔；長時間狀態抽樣仍停止。全部圖片重繪與正式封包另案處理。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表已依使用者指定的正常遊玩抽驗通過，029 限本批呈現及已驗路徑 CONFORMED。README 已補遊戲背景及實際畫面，共 29 張截圖。全部圖片重繪與正式封包另案處理。
 
 ## 有效決策
 
 - 私人儲存庫：[wicanr2/taipei](https://github.com/wicanr2/taipei)。Issues 已啟用。
 - 使用者已授權主機 gh、專案提交與推送，以及本範圍的 Issue 管理。
-- 使用者要求 README 放原版與 HD 五語系截圖。依 [#53](https://github.com/wicanr2/taipei/issues/53)、[#54](https://github.com/wicanr2/taipei/issues/54)，選定的 28 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
+- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#53](https://github.com/wicanr2/taipei/issues/53)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55)，選定的 29 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
+- 使用者於 2026-10-13 指定「抽驗能由遊玩就算驗收通過」。已實作功能以正常玩家路徑抽驗為完成條件；與現行產品一致的已通過收據可沿用，長時間相同步數 RAM／CPU／RNG 對拍不列結案門檻。未製作的圖片、未走過的分支、未驗平台及封包仍分開記錄，不改成完成。
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
 - HD 美術採 B「細緻手繪材質」，以使用者最新改選取代先前的 A。HD 解析度為 1280×800，對應原版 320×200 的四倍。
@@ -35,18 +36,18 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
 | 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
-| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金、存讀檔與離開提示，以及完整預算面板。025 的 116 份正常收據、十三項有效呈現破壞、施工存退讀與兩次退出通過；兩側各 40.56 億步、169 次明示抽樣原版狀態及實際存檔相同 | [預算契約](docs/spec/025-budget-panel.md)、[檔案視窗](docs/spec/023-file-dialogs.md)；模態外、右下原符號、其他圖片、文字／圖表／視窗、場景及正式封包未完成 |
+| HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金、存讀檔與離開提示、完整預算面板及六圖表。025 的 116 份正常收據、十三項有效呈現破壞、施工存退讀與兩次退出通過；兩側各 40.56 億步、169 次明示抽樣原版狀態及實際存檔相同 | [預算契約](docs/spec/025-budget-panel.md)、[檔案視窗](docs/spec/023-file-dialogs.md)、[圖表契約](docs/spec/029-chart-windows.md)；其他圖片、尚未重繪的視窗、場景／動畫及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
 | 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
 | 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
 | 發電廠 | 027 限火力已見 36 格靜態來源達 CONFORMED；162 份正常收據、雙向捲動同世界來源、F12、存退讀及兩次退出通過。兩側各 80.644 億步、336 點原版狀態與實際 SAV 相同 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)；核能及其他相位仍 DRAFT，不宣稱完整發電廠、全部 HD 或封包完成 |
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
-| F4 圖表視窗 | 029 READY。#54 已補驗現行前端六個真實入口、F12、電力圖 F11 五語系、十二次無輸入觀察與完整城市恢復；原版同次存讀檔及退出通過。34 張整幀由原始資料與固定 Noto 參考獨立核對，14 項正反對照通過；六原型、資料／色盤／相位、十一種載入故障及家族隔離測試通過 | [029](docs/spec/029-chart-windows.md)、[#54](https://github.com/wicanr2/taipei/issues/54)。#48 的完整相同步數 RAM／CPU／RNG、施工至全新 EXE 冷讀路徑仍未補驗，不升 CONFORMED；產品未改，沿用 033 四架構結果 |
-| 先前停止點 | 使用者先前指示「不用抽樣囉，先 commit + push」，已推送 c4e6e9。後續完成五語系與 README，#54 接續必要圖表 GUI／呈現檢查，沒有恢復長時間狀態抽樣 | #48 維持 OPEN；全部 HD 與正式交付仍未完成 |
+| F4 圖表視窗 | 029 限本批呈現及已驗路徑 CONFORMED。六個真實入口、F12、電力圖 F11 五語系、十二次無輸入觀察與完整城市恢復、原版同次存讀檔及退出通過。34 張整幀與 14 項正反對照通過；六原型、資料／色盤／相位、十一種載入故障及家族隔離測試通過。#55 回核全部產品來源、四架構 binary 與 35 份擷取符合既有來源，依新標準完成 #48 驗收 | [029](docs/spec/029-chart-windows.md)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55)。完整 RAM／CPU／RNG 對拍及本圖表流程施工至全新 EXE 冷讀未執行，保留為證據限制；未重跑平台真機或正式封包 |
+| 驗收方式 | 以正常遊玩抽驗驗收，沿用與現行產品一致的已通過收據。長時間狀態抽樣不再列必要完成條件 | 使用者 2026-10-13 定案及 #55；全部 HD 與正式交付仍未完成 |
 | HD 五語系 | 030–033 限已盤點來源與必要短流程 CONFORMED。225 鍵 TSV、1213 種 Noto 字元、146 筆可讀中文全有譯文；五語系各 77 種介面狀態、156 個開場階段、36 個城市訊息階段、三個結局合成測例及九筆圖片來源通過。正常 r15 取得三十個開場／上任信鍵與五類圖片文字，驗途中韓文 F11、原版 F12、環境、預算五語系、英文存讀檔及 DOS 退出；r17 驗缺譯警示與隨附 TSV 回退 | [033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49)。成功結局未走完整玩家流程，密碼分支未啟用，`245C4h` 用途未知但有譯文。IME、平台真機、完整 HD 圖片與正式包另驗；無長時間抽樣 |
 | Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。存讀檔與原版退出由 032／033 補驗；無長時間狀態抽樣與平台真機 |
-| README 截圖 | 共 28 張 1280×800：原版與 HD 五語系城市／預算、Help 五語系，以及新增六圖表／電力圖原版與五語系。#53 的 17 張與 #54 的 11 張均為正常 Linux GUI 擷取，原始資料及可見顏色核對通過 | [來源清單](workspace/screenshots/manifest.json)。新圖為 DISA1 情境；CPU／時鐘仍前進，只作呈現比較，不提升完整 HD、機器狀態對拍或封包驗收 |
+| README 背景與截圖 | 共 29 張 1280×800：原版與 HD 五語系城市／預算、Help 五語系、六圖表／電力圖原版與五語系，以及正常 DISA1 城市總覽。新增遊戲背景、城市治理玩法與原版五十萬人口目標；年代及廠商引用公開典藏，玩法回查已核對原版文字 | [來源清單](workspace/screenshots/manifest.json)、[#55](https://github.com/wicanr2/taipei/issues/55)。全部為正常 Linux GUI 擷取；原版／HD 圖組屬呈現比較，不宣稱完整機器狀態對拍或封包驗收 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
@@ -55,7 +56,9 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 ## 文件入口
 
-- 六圖表正常五語系：[GUI 擷取](workspace/tools/chart_locale_gui.sh)、[獨立整幀核對](workspace/tools/chart_locale_check.py)、[README 匯出](workspace/tools/export_chart_screenshots.py)。#54 的正常收據在本機 `workspace/runs/chart-locales-r2/`；029 的剩餘狀態驗收仍沿 #48。
+- 遊玩抽驗回核與城市總覽：[accept_chart_playtest.py](workspace/tools/accept_chart_playtest.py)。#55 在固定 Docker image 內核對既有正常收據及現行產品，追加 README 城市截圖與 manifest，不修改遊戲或原始收據。
+
+- 六圖表正常五語系：[GUI 擷取](workspace/tools/chart_locale_gui.sh)、[獨立整幀核對](workspace/tools/chart_locale_check.py)、[README 匯出](workspace/tools/export_chart_screenshots.py)。#54 的正常收據在本機 `workspace/runs/chart-locales-r2/`；#55 依使用者指定的正常遊玩抽驗完成 #48，029 限本批 CONFORMED。
 
 - README 實際畫面：[截圖清單](workspace/screenshots/manifest.json)、[正常擷取工具](workspace/tools/readme_screenshots.sh)、[核對與匯出工具](workspace/tools/export_readme_screenshots.py)。城市／預算各含原版及五語系 HD，Help 含五語系；來源收據留在本機 `workspace/runs/`。
 
@@ -86,11 +89,11 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 - HD 五語系：[030](docs/spec/030-hd-localization.md)、[#49](https://github.com/wicanr2/taipei/issues/49)，僅 HD 提供五語系，F12 原版保留繁中。文字唯一來源 [ui.tsv](workspace/app/locales/ui.tsv)；離線 [locale-prototype](workspace/app/cmd/locale-prototype/main.go) 產生第一批固定字型原型。後續介面與剩餘來源已由 032／033 完成，未驗分支與交付限制見 033。
 
-- F4 圖表視窗：[029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)，固定框架與原版資料像素呈現已 READY，正式 HD 玩家驗收未完成。正常來源探索入口 [chart_window_playtest.sh](workspace/tools/chart_window_playtest.sh)／[chart_window_playtest.py](workspace/tools/chart_window_playtest.py)，已從 DISA1 核對六個實際入口、兩次無輸入及 Escape 返回；有界停止不代替正常退出或 HD 完成。
+- F4 圖表視窗：[029](docs/spec/029-chart-windows.md)、[#48](https://github.com/wicanr2/taipei/issues/48)，固定框架、原版資料像素呈現及已驗正常路徑達 CONFORMED。早期來源探索入口 [chart_window_playtest.sh](workspace/tools/chart_window_playtest.sh)／[chart_window_playtest.py](workspace/tools/chart_window_playtest.py) 只負責 DISA1 六來源及返回；正式遊玩抽驗由 #54 完成、#55 回核。
 - 圖表來源核對：[chart_window_source_check.py](workspace/tools/chart_window_source_check.py)，參數 `--original <唯讀原版> --receipts <正常收據目錄...> --out <新 JSON>`，直接重讀 ROM4–10，核對完整固定框架並另存資料區像素及色盤。不推定統計語意，不呼叫產品呈現器。
 - 圖表原型獨立核對：[chart_window_prototype_check.py](workspace/tools/chart_window_prototype_check.py)，直接重讀 ROM、六個真實選取與圖表收據，逐像素核對 B 灰框遮罩、原資料格、色盤、Noto 墨跡及完整區外。只核對 DRAFT 原型，不代替正常 HD 驗收。
-- 圖表正式素材匯出：[chart_window_ready.py](workspace/tools/chart_window_ready.py)，依 029 READY 重讀來源、六原型完整像素核對、42 檔乾淨重生及兩組原版色盤。匯出資料區透明的固定框架、獨立資料筆觸及 manifest；僅留本機，正式 GUI 另驗。
-- 圖表正式呈現：[chart_panel.go](workspace/app/internal/hd/chart_panel.go)，依 029 READY 核對完整固定框架、原版相位、實際已用色盤、素材及 Noto／授權後，繪固定框架與原版資料格；圖框外保持原版，失配完整回退。正常 HD 驗收尚未完成。
+- 圖表正式素材匯出：[chart_window_ready.py](workspace/tools/chart_window_ready.py)，依 029 契約重讀來源、六原型完整像素核對、42 檔乾淨重生及兩組原版色盤。匯出資料區透明的固定框架、獨立資料筆觸及 manifest；僅留本機，正常 GUI 已由 #54／#55 驗收。
+- 圖表正式呈現：[chart_panel.go](workspace/app/internal/hd/chart_panel.go)，依 029 契約核對完整固定框架、原版相位、實際已用色盤、素材及 Noto／授權後，繪固定框架與原版資料格；原契約圖框外保持原版，032 明示文字矩形另作五語系呈現，其餘失配完整回退。六圖表已通過正常遊玩抽驗。
 - 圖表呈現測試：[chart_panel_test.go](workspace/app/internal/hd/chart_panel_test.go)，驗六個完整原型、原資料單格更新、實際色盤、相位／F12、固定框架失配、十一種真正載入故障及其他家族隔離。以 `TAIPEI_CHART_RECEIPTS` 指向 r3 正常來源，不能把內部測試當正常 HD 驗收。
 - 圖表整幀獨立核對：[hd_chart_window_check.py](workspace/tools/hd_chart_window_check.py)，只讀原版與 READY 前固定參考，不使用正式框架／筆觸輸出，驗整幀、資料格、區外、家族及回退，已接 [hd_scroll_check.py](workspace/tools/hd_scroll_check.py)。
 - 圖表 Go 獨立核對：[receipt-check/chart_panel.go](workspace/app/cmd/receipt-check/chart_panel.go)，`-chart-reference <素材根> -original <唯讀原版>` 直接解 ROM、讀原型及原筆觸，核對整幀；原版狀態工具 [presentation-audit](workspace/app/cmd/presentation-audit/main.go) 的 `-require-chart-windows` 要求實際圖表覆繪並逐抽樣點比對原版狀態。
