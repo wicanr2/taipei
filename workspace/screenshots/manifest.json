@@ -946,6 +946,144 @@
       },
       "batch": "disaster-buildings",
       "local_capture": "workspace/runs/gui-buildings-r1/gui/city-en-capture.zip"
+    },
+    {
+      "file": "city-civic-original.png",
+      "scene": "normal-civic-construction",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ef87ec746d0ad875dbe1e3d06a4fb3debd5c2047d3552dcefd84c7920ab9d0aa",
+      "capture_sha256": "03837532f5ce93ff5362520bdcb9b2214f5ebebe1b0086b9a461cd817c894e1c",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3672000000,
+      "ticks": 127692,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-original-capture.zip"
+    },
+    {
+      "file": "city-civic-zh-Hant.png",
+      "scene": "normal-civic-construction",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "66895fb79fbbdd7d49e7dae6cf0bc6b6a17849c3222b2c02354d86a964f31720",
+      "capture_sha256": "eb850ae0fe333b3d84c7ca7dd401576e3721edc8be371e1e9c5a78ba0c49881c",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3696000000,
+      "ticks": 128521,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-civic-zh-Hans.png",
+      "scene": "normal-civic-construction",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c740d49c141d3e16f19cdc032f5b37462b6f947654a6e84fbae504bdb3e37ae9",
+      "capture_sha256": "ae19b440c2ce10e644533bcb9bfd073cfebd71706b3a3c1a7af7cfbd1169776d",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3716800000,
+      "ticks": 129239,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-civic-ja.png",
+      "scene": "normal-civic-construction",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "2f5259fe2209ce47dba1d1d4650ecf20f17ddaee2eea6d7286cf59bd866078bf",
+      "capture_sha256": "2399800578a80af142cd9d288262ae10c766cceeb87bf0806f0c6b382295d59a",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3740400000,
+      "ticks": 130055,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-ja-capture.zip"
+    },
+    {
+      "file": "city-civic-ko.png",
+      "scene": "normal-civic-construction",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "0d908ea98321a50bdd1be1485f8fa3b833f52127d4e312902931a17cdcc528c9",
+      "capture_sha256": "1581a706c3dacb50b39604b3c0deaae283e16a355343b962c35947d0f7de55e6",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3765200000,
+      "ticks": 130912,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-ko-capture.zip"
+    },
+    {
+      "file": "city-civic-en.png",
+      "scene": "normal-civic-construction",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "fbbdce48ba43ab13804ce80176dcca936e041856dd770dffbe9a1257e2dbc035",
+      "capture_sha256": "e73a3a8165489575e9dfbc23b162d24b114a43dd250d959a3c0e0b05dbf219ba",
+      "frame_index_sha256": "8b2a71d3534b87f87c6603653b8c2d471aa9ee9fae2320a15af25cc237f34a1c",
+      "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+      "steps": 3786800000,
+      "ticks": 131658,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "civic-facilities",
+      "local_capture": "workspace/runs/gui-civic-r1/gui/city-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -1038,5 +1176,29 @@
       "disaster_building_check.py": "1a552b974c2b36f27dbb2ce882ca07fd159e709d3cc61650ed6f040dc5809dc6"
     },
     "limits": "三種已見靜態來源及正常遊玩抽驗；原版統計、其餘建物／相位、真機與正式封包另案。"
+  },
+  "civic_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/57",
+    "source_commit": "6c4a5efe28ec3911bc473cd533d51e83b7231832",
+    "captured_at": "2026-10-13T19:46:30.120582+08:00",
+    "binary_sha256": "bb8aa4271a403b0e1602c5a82faacda4554de48972b212bf00daef83fa589a5d",
+    "catalog_sha256": "4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9",
+    "local_receipt": "workspace/runs/gui-civic-r1/verification.json",
+    "local_receipt_sha256": "4eb94f6863916cabac7b2d4e4c8985a1f8a836b93e40523bfcdb3cec03eb5d30",
+    "pixel_verification_sha256": "295b1fc95d9ba8a0f34f87b76309afee458d673aaeb689ecd4019a2a3c7576d3",
+    "scenario": "normal new city, police/fire construction and original 0 pause",
+    "painted_cells": 32,
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "tools_sha256": {
+      "export_civic_screenshots.py": "53c1cbf44692762eece8490c5fbbd0173d359817f059edd963f918d911d60a24",
+      "civic_facility_gui.py": "025b5ae6541bfb4fdb8f9cb73e605a9ffe616015d74354561bd68e818e0aa2f6",
+      "civic_facility_playtest.sh": "4481ac4cd6140b9b3f2c6c4c3bc5a9115509cb1d2ef84d614db05958cda46290",
+      "civic_facility_check.py": "52e7521348cc2fe40eba0840829ee0c40a05b1e899f0a723e47dea06907832be"
+    },
+    "limits": "限兩種正常施工圖、F11/F12、同次存讀檔與退出；其餘相位、真機、正式封包另案。"
   }
 }

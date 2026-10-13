@@ -44,7 +44,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格、DISA1 三種建物 48 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
+| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格、DISA1 三種建物 48 格、警察局與消防局 32 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
 | HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列與圖表文字 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
@@ -52,6 +52,23 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 原版程式繼續負責模擬規則、亂數與存檔，HD 層改變呈現。玩家檔名、原版數值與商標保留原樣。
 重繪目標包含所有圖片與操作介面；其餘圖片、動畫與 Windows、Linux、macOS 正式封包仍在製作，尚無正式交付包。
 目前證據與限制以 [CONTEXT.md](CONTEXT.md) 及[驗收矩陣](docs/verification-matrix.md)為準；翻譯範圍見[完整來源覆蓋契約](docs/spec/033-localization-source-coverage.md)。
+
+<details>
+<summary>警察局與消防局：正常施工與五語系對照</summary>
+
+由新遊戲進入城市，以原版工具子選單建設警察局與消防局，再以 F11／F12 切換擷取。
+兩種完整施工圖共 32 格；正常施工、同次存讀檔與原版退出已通過遊玩抽驗，範圍見[警消設施契約](docs/spec/035-civic-facilities.md)。
+
+| 模式／語言 | 實際畫面 |
+|---|---|
+| 原版繁體中文 | ![原版警察局與消防局施工](workspace/screenshots/city-civic-original.png) |
+| HD 繁體中文 | ![HD 繁體中文警察局與消防局](workspace/screenshots/city-civic-zh-Hant.png) |
+| HD 簡體中文 | ![HD 簡體中文警察局與消防局](workspace/screenshots/city-civic-zh-Hans.png) |
+| HD 日文 | ![HD 日文警察局與消防局](workspace/screenshots/city-civic-ja.png) |
+| HD 韓文 | ![HD 韓文警察局與消防局](workspace/screenshots/city-civic-ko.png) |
+| HD 英文 | ![HD 英文警察局與消防局](workspace/screenshots/city-civic-en.png) |
+
+</details>
 
 ## 操作
 
@@ -123,6 +140,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 重生入口為 [readme_screenshots.sh](workspace/tools/readme_screenshots.sh)，以[匯出工具](workspace/tools/export_readme_screenshots.py)核對後收錄，只在 Docker 內執行；
 圖表使用 [chart_locale_gui.sh](workspace/tools/chart_locale_gui.sh) 擷取，經[整張畫面核對](workspace/tools/chart_locale_check.py)後[匯出](workspace/tools/export_chart_screenshots.py)。
 災難台北建物畫面使用[正常 GUI 入口](workspace/tools/disaster_building_gui.sh)重生，由[匯出工具](workspace/tools/export_building_screenshots.py)核對後收錄，包含原版與 HD 五語系。
+警消設施畫面使用[正常施工入口](workspace/tools/civic_facility_playtest.sh)的 `gui` 模式，經[設施像素與語言核對](workspace/tools/civic_facility_check.py)後[匯出](workspace/tools/export_civic_screenshots.py)。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
 
 ## 開發與文件

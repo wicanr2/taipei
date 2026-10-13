@@ -845,3 +845,11 @@ Docker 內 civic_facility_check.py 從原 ROM 與生成原件獨立重算 32 格
 Linux 已驗產品 bb8aa4271a403b0e1602c5a82faacda4554de48972b212bf00daef83fa589a5d 保留於 taipei-preview-civic-r1，抽驗完成後才提升為標準入口 taipei-preview。前版 Linux 及外平台保存副本均保留。沿原 Windows／macOS image 重編，ELF／PE／Mach-O 四架構核對通過，Windows 留有既有 YMFM 警告；僅編譯／結構，不宣稱真機或封包驗收。35 原始檔及 RAR 與盤點一致。來源、七補丁、image 與產物雜湊保存 civic-final-provenance.json，SHA-256 eaedd8f49cc91a2c72f0558e36f09bfe542f381c13654f4d65ce21788e6cbf6d。
 
 035 限本批呈現及已驗正常路徑 CONFORMED，README 六張截圖接續匯出。未走過動畫、長時間機器狀態對拍、全新 EXE 冷讀、真機與正式封包保留限制。指定 find 為空，本批容器均已自動刪除；未新增 image 或留下背景程序。
+
+### #57 README 截圖與收尾
+
+程式與驗證工具先提交 6c4a5efe28ec3911bc473cd533d51e83b7231832。Docker 內 `python3 /workspace/tools/export_civic_screenshots.py --source-commit 6c4a5efe28ec3911bc473cd533d51e83b7231832` 再核對原子收據、正常遊玩完成報告、實際設施像素及語言標籤後匯出六張 PNG，只有 screenshots 掛載可寫。原版與 HD 五語系使用相同原始畫面，沿用 Linux 真實遊玩擷取，不修改舊 34 張來源。
+
+README 現有 40 張唯一 1280×800 PNG，共 26,894,292 bytes；新增六張 6,994,014 bytes。manifest 的 civic_capture 保存本批 binary、來源提交、工具及報告 SHA，清單 SHA-256 9534063d7ef4e90047b1feea280a9bf235624367edfb42b7e6365818345d8d1e。README 功能表與對照圖、唯一現況表及驗收矩陣同步更新。新增 PNG 僅明列六檔開放版控，素材、字型、SAV、EXE 與原始收據仍排除。
+
+收尾回查文件職責與現況路由，40 個唯一 README 圖片參照與 manifest 完全一致；所有 PNG 雜湊／尺寸／1000:1000、工具語法及固定雜湊、五份文件連結、034 正對照與 035 索引、現行程式及四架構產物雜湊通過。git diff --check 通過，指定 find 為空，專案相關容器均已清理。遠端仍為 PRIVATE。明列檔案提交及推送，回寫 #57 與 #30；#30 其餘建物／相位及正式交付維持未完成。

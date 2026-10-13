@@ -48,6 +48,12 @@
 !/workspace/screenshots/city-disaster-ja.png
 !/workspace/screenshots/city-disaster-ko.png
 !/workspace/screenshots/city-disaster-en.png
+!/workspace/screenshots/city-civic-original.png
+!/workspace/screenshots/city-civic-zh-Hant.png
+!/workspace/screenshots/city-civic-zh-Hans.png
+!/workspace/screenshots/city-civic-ja.png
+!/workspace/screenshots/city-civic-ko.png
+!/workspace/screenshots/city-civic-en.png
 
 # 正式封包只留本機
 /dist-all/
