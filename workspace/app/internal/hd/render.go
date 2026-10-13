@@ -39,6 +39,7 @@ type Stats struct {
 	EndingScreen               string              `json:"ending_screen"`
 	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
+	CityBuildings              cityBuildingStats   `json:"city_buildings"`
 	Infrastructure             infrastructureStats `json:"infrastructure"`
 	Budget                     bool                `json:"budget"`
 	BudgetText                 [11]string          `json:"budget_text"`
@@ -92,6 +93,7 @@ type Renderer struct {
 	charts         *chartWindows
 	ending         *endingScreen
 	powerFacility  *powerFacilitySet
+	cityBuildings  *cityBuildingSet
 	infrastructure *infrastructureSet
 	budget         *budgetPanel
 	files          *fileDialogs
@@ -154,6 +156,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.budget = loadBudgetPanel(rom, dir)
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
+	r.cityBuildings = loadCityBuildings(rom, dir)
 	r.ending = loadEndingScreen(rom, dir)
 	r.charts = loadChartWindows(rom, dir)
 	r.extra = loadInterfaceSources(rom)
@@ -405,6 +408,27 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.PowerFacility.Images[candidate.image]++
 				} else {
 					stats.PowerFacility.Fallback++
+				}
+				continue
+			}
+			if candidate := r.cityBuildings.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.CityBuildings.Matched++
+				reason := r.cityBuildings.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				if stats.CityBuildings.Reasons == nil {
+					stats.CityBuildings.Reasons = map[string]int{}
+				}
+				stats.CityBuildings.Reasons[reason]++
+				if reason == "matched-city-building" {
+					stats.Painted++
+					stats.Fallback--
+					stats.CityBuildings.Painted++
+					if stats.CityBuildings.Images == nil {
+						stats.CityBuildings.Images = map[string]int{}
+					}
+					stats.CityBuildings.Images[fmt.Sprintf("%d/%d", candidate.member, candidate.image)]++
+				} else {
+					stats.CityBuildings.Fallback++
 				}
 				continue
 			}

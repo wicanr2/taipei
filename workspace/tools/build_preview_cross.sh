@@ -11,7 +11,7 @@ case "$target" in
   macos) image=sha256:d4c50a5cf3cf35164b83fb1531fe66f52b9224e826944363bf1bc4d7ba3c8d0c ;;
   *) exit 2 ;;
 esac
-timeout 300s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
+timeout 300s docker run --rm --label project=taipei --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" \
   --mount "type=bind,src=$project_dir/workspace/app,dst=/workspace/app,readonly" \
   --mount "type=bind,src=$project_dir/workspace/cache,dst=/workspace/cache" \

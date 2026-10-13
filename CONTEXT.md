@@ -56,6 +56,8 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 ## 文件入口
 
+- DISA1 首批建物：[034](docs/spec/034-disaster-city-buildings.md)、[來源工具](workspace/tools/disaster_building_sources.py)、[#56](https://github.com/wicanr2/taipei/issues/56)。先核對三種完整正常來源與 B 原型，再接產品；#30 的其餘建物繼續。
+
 - 遊玩抽驗回核與城市總覽：[accept_chart_playtest.py](workspace/tools/accept_chart_playtest.py)。#55 在固定 Docker image 內核對既有正常收據及現行產品，追加 README 城市截圖與 manifest，不修改遊戲或原始收據。
 
 - 六圖表正常五語系：[GUI 擷取](workspace/tools/chart_locale_gui.sh)、[獨立整幀核對](workspace/tools/chart_locale_check.py)、[README 匯出](workspace/tools/export_chart_screenshots.py)。#54 的正常收據在本機 `workspace/runs/chart-locales-r2/`；#55 依使用者指定的正常遊玩抽驗完成 #48，029 限本批 CONFORMED。

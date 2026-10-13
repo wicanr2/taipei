@@ -799,3 +799,21 @@ README 新增遊戲背景、城市治理玩法與原版五十萬人口目標，�
 Docker 內完成 Python 語法、五份 Markdown 相對連結、29 個唯一 README 圖片參照與 manifest 集合、全部 PNG SHA-256／尺寸／1000:1000、工具雜湊及文件索引正對照核對。首輪檢查在已通過上述斷言後，列印新圖資訊時錯把舊 manifest 記錄也當作有 batch 欄位；僅修診斷為 `.get()`，同 image 乾淨重跑全部通過，不屬產品缺陷。35 個原始檔及 RAR 與盤點雜湊一致。指定 find 為空，專案容器已清理，沒有新 image 或背景程序；`git diff --check` 通過。
 
 只明列提交文件、回核工具、manifest 與一張指定 PNG，提交及推送後回寫 #48／#55 並核對結案狀態。完整 RAM／CPU／RNG 對拍、本圖表流程施工至全新 EXE 冷讀、未走過分支、平台真機與正式封包仍未執行；依使用者標準不再阻塞本批驗收。全部圖片重繪與三平台交付仍由原母項繼續。
+
+## 2026-10-13：DISA1 三種建物與 48 格 B 高清 #56
+
+依使用者繼續指示，先核對 gh auth、遠端 Issues、乾淨工作樹與既有 Docker image，命中素材／規格閘門、正常玩家路徑及文件職責路由。#44 已先留言登記補查後續正常城市收據；排除重複後 14 種原始畫面仍未取得剩餘 18 張道路候選，回寫結果並停止相同探針，不猜補或縮減範圍。另建立 [#56](https://github.com/wicanr2/taipei/issues/56)，接續 #30 的正常 DISA1 已見建物。
+
+新增 034 DRAFT 及來源工具，同次索引至 AGENTS／CONTEXT。#54 正常原子收據完整核對三個 4×4 複合矩形，成員 34、35、36 各 16 格，索引 `4+24×row+col`；48 個不同來源、全部別名、ROM 檔案偏移與使用色盤保存本機 `disaster-buildings-v1/sources.json`，SHA-256 764054313fa809c6ab1e686a325751eb5fade49ada81fd99fabd569f6cac6272。只確認圖像來源，不從外觀推定建造與發展規則。
+
+使用內建 imagegen 依原版參考製作三張 B 重繪，沒有使用 CLI。三組完整提示詞、來源圖與生成原件保存在 `workspace/prototypes/hd-style/disaster-buildings-v1/34..36-prompt.txt`／`*-generated.png`。預設生成輸出唯讀掛入 Docker，再由 UID/GID 1000 複製至 workspace；沒有覆寫預設原件。完整插畫以 ImageMagick 6.9.11 Lanczos 1254→144 正規化後才按原格切片，保留布局及主要色彩。已檢視完整原位原型與實際繁中、英文及原版 GUI 圖。
+
+來源及原型審查後先固定 034 READY，再接產品。四個正式素材檔在乾淨目錄重生 byte 相同，manifest SHA-256 7dc484798f0d65962d35db56a33ac3153c7f65fb105daef3a28351018d6030e2。新增 city_buildings.go 並接既有城市來源閘門，僅辨識完整原圖與已用色盤，按 36×36 切片繪製；單成員 atlas 故障只讓該來源回退，其餘成員可繪。原版程式、七補丁、規則與存檔格式均未改。新增統計 city_buildings，原版／模態時為零。
+
+三項必要測試通過，包含完整三圖及 48 格／區外、3888 項來源失配、色盤、八項真正素材故障及正常來源／原版／阻塞／原點隔離。首輪測試忘記提供既有來源 helper 必需的收據 SHA，前兩項已通過，隔離項因測試輸入而失敗；補入 sources.json 早已固定的值，只重跑隔離項通過。沒有改產品或放寬核對。十一項火力／道路／圖表回歸無跳過通過，81.759 秒；鍵盤套件通過，日誌為 building-unit-r1.log、building-unit-r2.log、building-regression-r1.log。
+
+`bash workspace/tools/disaster_building_gui.sh` 在既有 image、1500 秒上限、network none、UID/GID 1000、3g／2 CPU／128 pids 與有 trap 的 Xvfb 中執行，原版及工具／素材唯讀。正常 DISA1 入口、原版 0 暫停、116 格本批實際繪製、F12 往返、F11 五語系、BLDG.SAV 原版寫入／同次讀回與 DOS 退出通過。收據 verification.json SHA-256 da0925ab7dd25e6c2e7c51d84e0aa6a7b1ebe2fa76044154828a0fde9504c84a；SAV 93567 bytes、SHA-256 c44e4889acd6aec4b2d1c0088f87d096043685236136095c656d12673cad9100。沒有快照、狀態注入或長時間 RAM／CPU／RNG 對拍。
+
+Docker 內 `python3 /workspace/tools/disaster_building_check.py --run /workspace/runs/gui-buildings-r1 --out /workspace/runs/gui-buildings-r1/pixel-verification.json` 通過六張各 1,024,000 像素整幀及六項正反對照。期望值來自 READY 前固定原型、原 ROM／原版畫面、#54 固定前件與已固定 Noto 文字矩形，不匯入產品呈現器；原版 F12 全畫面核對四倍原色。報告 SHA-256 01507a06ce27cb573b23d4f33682a1c9e42b3fe7062316dfe47e1a78b2bfcc78。
+
+Linux 新 binary 為 taipei-preview-buildings-r1，SHA-256 5933a1f2554ee51419eae97493708cb99b2de8da726011e7887c06d5c9c348c3。先保留舊四架構產品於 runs/buildings-baseline-v1，再由既有 Windows／macOS image 重新編譯；三個外平台架構完成，Windows 留有先前已知 YMFM 警告。跨平台工具加 project=taipei 容器標籤以便清理，沒有新建 image。034 限本批及已驗遊玩路徑 CONFORMED，README 截圖與現況收尾接續下筆紀錄；全部 HD、其他相位、全新 EXE 冷讀、平台真機及正式封包仍未完成。
