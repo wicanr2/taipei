@@ -810,6 +810,29 @@
       "batch": "chart-locales"
     },
     {
+      "file": "city-disaster-original.png",
+      "scene": "disaster-city",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "a78c87ee1f69e64b59c7ec1fd1fe9e1f1caca4201eabe3bea9a240bfaa73cf3d",
+      "capture_sha256": "35382b54808cd2e3444cc58b0707aaf4bb4cbda5e9b8094034979e4d70500d52",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1032000000,
+      "ticks": 34987,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-original-capture.zip"
+    },
+    {
       "file": "city-disaster-zh-Hant.png",
       "scene": "disaster-city",
       "language": "zh-Hant",
@@ -818,19 +841,111 @@
         1280,
         800
       ],
-      "png_sha256": "603fee2fb7ac13e1983a20a0143466cecf09275a5ca9c40a87d482151776bfd5",
-      "capture_sha256": "9a0587a7e0c2f8d3b966cb1a2d2add381b508fbca6c277406b1920a65b7094f9",
+      "png_sha256": "1a4f35a6b754da006dddbf5c2eb8a721b9b01132042dbc146f2cd488dd5fba90",
+      "capture_sha256": "a4583f980326c752484d6b8a2ca7ae87ee432dca66446c10bf42680f2b8f1426",
       "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
-      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
-      "steps": 1008000000,
-      "ticks": 33974,
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1056000000,
+      "ticks": 35816,
       "map_origin": {
         "X": 6,
         "Y": 22,
         "Valid": true
       },
-      "batch": "gameplay-overview",
-      "local_capture": "workspace/runs/chart-locales-r2/gui/city-paused-capture.zip"
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-disaster-zh-Hans.png",
+      "scene": "disaster-city",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "d6754229bcc326672b1cf156c6b3aa41eeaf0e9cf91de397aa99a827dd3a7069",
+      "capture_sha256": "592c30d12050eee10389cf6ed14c5d9a1d822b88e66be437e8c75d0aa09c71fd",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1080800000,
+      "ticks": 36673,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-disaster-ja.png",
+      "scene": "disaster-city",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "b6b9b343180ec9ee560490eb474b906e14dbdcae6b85d10fdd00bb08a643bf08",
+      "capture_sha256": "4b5b1c6192245be4b7d182901f6f23d8ce722fb1db820a93bd6193513bc5683e",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1103600000,
+      "ticks": 37461,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-ja-capture.zip"
+    },
+    {
+      "file": "city-disaster-ko.png",
+      "scene": "disaster-city",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "260e798f75f00b72385ef41908b1e0c2605cd135a942f7eca09d9fff2e29dfaa",
+      "capture_sha256": "cce193a826c8214dde78bbd10fc4072e4e23693c6a0ca11bf24b1352c79972be",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1124000000,
+      "ticks": 38166,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-ko-capture.zip"
+    },
+    {
+      "file": "city-disaster-en.png",
+      "scene": "disaster-city",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "5163843dabc4a7f5643d15ccb4071331499165e9e20d5930b0de22093a26dc27",
+      "capture_sha256": "ad94968d6caa265bc19d7a078e6e003321e54fd1e67a0e37feb58eb3265d3cc8",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+      "steps": 1148400000,
+      "ticks": 39009,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "disaster-buildings",
+      "local_capture": "workspace/runs/gui-buildings-r1/gui/city-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -876,5 +991,52 @@
     "cold_reload_tested": false,
     "long_state_sampling": false,
     "limits": "依正常遊玩抽驗完成，不宣稱完整機器狀態或亂數對拍、全部 HD、平台真機或正式封包完成。"
+  },
+  "buildings_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/56",
+    "source_commit": "ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed",
+    "captured_at": "2026-10-13T16:34:45.316446+08:00",
+    "binary_sha256": "5933a1f2554ee51419eae97493708cb99b2de8da726011e7887c06d5c9c348c3",
+    "catalog_sha256": "4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9",
+    "local_receipt": "workspace/runs/gui-buildings-r1/verification.json",
+    "local_receipt_sha256": "da0925ab7dd25e6c2e7c51d84e0aa6a7b1ebe2fa76044154828a0fde9504c84a",
+    "pixel_verification_sha256": "01507a06ce27cb573b23d4f33682a1c9e42b3fe7062316dfe47e1a78b2bfcc78",
+    "scenario": "DISA1.DSA, normal menu and original 0 pause",
+    "painted_cells": 116,
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "replaced_screenshot": {
+      "file": "city-disaster-zh-Hant.png",
+      "scene": "disaster-city",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "603fee2fb7ac13e1983a20a0143466cecf09275a5ca9c40a87d482151776bfd5",
+      "capture_sha256": "9a0587a7e0c2f8d3b966cb1a2d2add381b508fbca6c277406b1920a65b7094f9",
+      "frame_index_sha256": "d670174d73da0ea7050ef12421fb3bcf9914b13b6b156ae18406cf7b5889d1bb",
+      "source_commit": "b3cacf3dd13c2fdd1738a5e6f3d496e9353d69d5",
+      "steps": 1008000000,
+      "ticks": 33974,
+      "map_origin": {
+        "X": 6,
+        "Y": 22,
+        "Valid": true
+      },
+      "batch": "gameplay-overview",
+      "local_capture": "workspace/runs/chart-locales-r2/gui/city-paused-capture.zip"
+    },
+    "tools_sha256": {
+      "export_building_screenshots.py": "bf05dd728020291bdf1540c51b536c08f0b12e447b9e52cb5a36165dc32796f9",
+      "disaster_building_gui.py": "a23d773c559a1ca01e643f6e773295c1a29b8d46f4f2c65cdd9db0dc19e91109",
+      "disaster_building_gui.sh": "d4093235016bf165fcef60c1aa2a037772c4a9bd12f578dbf51a0a409882cb81",
+      "disaster_building_check.py": "1a552b974c2b36f27dbb2ce882ca07fd159e709d3cc61650ed6f040dc5809dc6"
+    },
+    "limits": "三種已見靜態來源及正常遊玩抽驗；原版統計、其餘建物／相位、真機與正式封包另案。"
   }
 }

@@ -817,3 +817,13 @@ Docker 內完成 Python 語法、五份 Markdown 相對連結、29 個唯一 REA
 Docker 內 `python3 /workspace/tools/disaster_building_check.py --run /workspace/runs/gui-buildings-r1 --out /workspace/runs/gui-buildings-r1/pixel-verification.json` 通過六張各 1,024,000 像素整幀及六項正反對照。期望值來自 READY 前固定原型、原 ROM／原版畫面、#54 固定前件與已固定 Noto 文字矩形，不匯入產品呈現器；原版 F12 全畫面核對四倍原色。報告 SHA-256 01507a06ce27cb573b23d4f33682a1c9e42b3fe7062316dfe47e1a78b2bfcc78。
 
 Linux 新 binary 為 taipei-preview-buildings-r1，SHA-256 5933a1f2554ee51419eae97493708cb99b2de8da726011e7887c06d5c9c348c3。先保留舊四架構產品於 runs/buildings-baseline-v1，再由既有 Windows／macOS image 重新編譯；三個外平台架構完成，Windows 留有先前已知 YMFM 警告。跨平台工具加 project=taipei 容器標籤以便清理，沒有新建 image。034 限本批及已驗遊玩路徑 CONFORMED，README 截圖與現況收尾接續下筆紀錄；全部 HD、其他相位、全新 EXE 冷讀、平台真機及正式封包仍未完成。
+
+### #56 截圖與交接收尾
+
+產品與工具已先提交 ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed，使截圖可回查確實包含新呈現程式的來源。正常 GUI 與六張圖已完成後，執行 Docker 內 `python3 /workspace/tools/export_building_screenshots.py --run /workspace/runs/gui-buildings-r1 --manifest /workspace/screenshots/manifest.json --source-commit ad8d6f9cb1450a4c516add1192cafc43c9f0d2ed`。沿用固定 image、90 秒上限、network none、UID/GID 1000、1g／1 CPU／64 pids，只有 screenshots 可寫，其餘 workspace 與原版唯讀。
+
+匯出前再核對正常完成報告、原子 ZIP、PNG 與完整獨立像素。依使用者持續要求更新 README 畫面，更新既有 DISA1 繁中圖並補原版／其他四語系，六張共 6,542,163 bytes；先前繁中圖片來源記錄保留於 manifest 的 replaced_screenshot，不改寫原始收據。README 現有 34 張唯一 PNG，共 19,900,278 bytes，全部 1280×800、1000:1000。來源清單 SHA-256 9e87c93d335487df029faf229a5331ac1d940b5395780d00782d1c0393c88d44。新六張皆已實際檢視，完整畫面與五語系字墨一致。
+
+正常 GUI 通過後才將已驗 Linux 研究產品複製到標準入口 taipei-preview。先核對四個前版保存副本與既有 provenance 相同；新四架構 ELF／PE／Mach-O、所有已記錄程式來源、正常及呈現報告雜湊另存 workspace/runs/buildings-final-provenance.json。35 個原始檔及 RAR 仍與原盤點一致。Windows／macOS 本次只有編譯與架構驗證，沒有真機或正式封包聲明。
+
+收尾回查 README 與文件職責路由，更新唯一現況表、驗收矩陣及 README 功能摘要。34 個唯一圖片參照與 manifest 集合、全部 PNG 雜湊／尺寸／擁有權、五份 Markdown 連結、工具語法與雜湊、034 索引及 029 正對照通過；git diff --check 通過。指定 find 為空，專案相關容器均已清理，沒有新 image、背景程序或全域清理。只明列提交文件、來源清單及指定六張 PNG；兩筆提交推送後回寫 #56 並核對結案，#30 保持 OPEN。其餘建物／動畫、未走過相位、全新 EXE 冷讀與三平台正式封包仍待接續。

@@ -19,7 +19,23 @@
 ![HD 繁體中文的災難台北城市實際畫面](workspace/screenshots/city-disaster-zh-Hant.png)
 
 上圖為 Linux 前端從正常「災難台北」選單進入 `DISA1.DSA` 的實際畫面，以原版 `0` 鍵暫停。
-顯示目前已接入的 HD 地景、道路與介面，尺寸為 1280×800；來源見[截圖清單](workspace/screenshots/manifest.json)。
+顯示已接入的 HD 地景、道路、首批三種建物與介面，尺寸為 1280×800；來源見[截圖清單](workspace/screenshots/manifest.json)。
+
+<details>
+<summary>災難台北建物：原版與 HD 五語系對照</summary>
+
+HD 繁體中文見上圖。以下沿用同一城市與原始畫面，透過 F11／F12 切換後擷取。
+首批三種建物共 48 個圖塊，包含完整及部分可見建物；範圍見[建物契約](docs/spec/034-disaster-city-buildings.md)。
+
+| 模式／語言 | 實際畫面 |
+|---|---|
+| 原版繁體中文 | ![原版災難台北城市畫面](workspace/screenshots/city-disaster-original.png) |
+| HD 簡體中文 | ![HD 簡體中文災難台北建物](workspace/screenshots/city-disaster-zh-Hans.png) |
+| HD 日文 | ![HD 日文災難台北建物](workspace/screenshots/city-disaster-ja.png) |
+| HD 韓文 | ![HD 韓文災難台北建物](workspace/screenshots/city-disaster-ko.png) |
+| HD 英文 | ![HD 英文災難台北建物](workspace/screenshots/city-disaster-en.png) |
+
+</details>
 
 ## 目前可玩範圍
 
@@ -28,7 +44,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格靜態圖塊、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
+| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格、DISA1 三種建物 48 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
 | HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列與圖表文字 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
@@ -106,7 +122,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 來源、程式與圖片雜湊見[截圖清單](workspace/screenshots/manifest.json)。
 重生入口為 [readme_screenshots.sh](workspace/tools/readme_screenshots.sh)，以[匯出工具](workspace/tools/export_readme_screenshots.py)核對後收錄，只在 Docker 內執行；
 圖表使用 [chart_locale_gui.sh](workspace/tools/chart_locale_gui.sh) 擷取，經[整張畫面核對](workspace/tools/chart_locale_check.py)後[匯出](workspace/tools/export_chart_screenshots.py)。
-災難台北城市畫面由[收據回核工具](workspace/tools/accept_chart_playtest.py)從同一批正常遊玩收據匯出。
+災難台北建物畫面使用[正常 GUI 入口](workspace/tools/disaster_building_gui.sh)重生，由[匯出工具](workspace/tools/export_building_screenshots.py)核對後收錄，包含原版與 HD 五語系。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
 
 ## 開發與文件

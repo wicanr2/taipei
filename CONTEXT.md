@@ -2,13 +2,13 @@
 
 核對日期：2026-10-13。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表已依使用者指定的正常遊玩抽驗通過，029 限本批呈現及已驗路徑 CONFORMED。README 已補遊戲背景及實際畫面，共 29 張截圖。全部圖片重繪與正式封包另案處理。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表及 DISA1 首批三種建物已依正常遊玩抽驗通過，029／034 限各批呈現及已驗路徑 CONFORMED。README 含遊戲背景與 34 張實際截圖。全部圖片重繪與正式封包另案處理。
 
 ## 有效決策
 
 - 私人儲存庫：[wicanr2/taipei](https://github.com/wicanr2/taipei)。Issues 已啟用。
 - 使用者已授權主機 gh、專案提交與推送，以及本範圍的 Issue 管理。
-- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#53](https://github.com/wicanr2/taipei/issues/53)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55)，選定的 29 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
+- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#53](https://github.com/wicanr2/taipei/issues/53)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55)、[#56](https://github.com/wicanr2/taipei/issues/56)，選定的 34 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
 - 使用者於 2026-10-13 指定「抽驗能由遊玩就算驗收通過」。已實作功能以正常玩家路徑抽驗為完成條件；與現行產品一致的已通過收據可沿用，長時間相同步數 RAM／CPU／RNG 對拍不列結案門檻。未製作的圖片、未走過的分支、未驗平台及封包仍分開記錄，不改成完成。
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
@@ -42,21 +42,22 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
 | 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
 | 發電廠 | 027 限火力已見 36 格靜態來源達 CONFORMED；162 份正常收據、雙向捲動同世界來源、F12、存退讀及兩次退出通過。兩側各 80.644 億步、336 點原版狀態與實際 SAV 相同 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)；核能及其他相位仍 DRAFT，不宣稱完整發電廠、全部 HD 或封包完成 |
+| DISA1 首批建物 | 034 限三種靜態建物、48 個完整來源與已驗路徑 CONFORMED。正常城市實際繪製 116 格；F12 往返、F11 五語系、原版同次存讀檔與 DOS 退出通過。六張整幀及六項正反對照、3888 項來源失配、八項真實資源故障、場景隔離與四架構編譯通過 | [034](docs/spec/034-disaster-city-buildings.md)、[#56](https://github.com/wicanr2/taipei/issues/56)。其他建物／相位、全新 EXE 冷讀、平台真機及封包未驗；不推定建造或發展規則 |
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
 | F4 圖表視窗 | 029 限本批呈現及已驗路徑 CONFORMED。六個真實入口、F12、電力圖 F11 五語系、十二次無輸入觀察與完整城市恢復、原版同次存讀檔及退出通過。34 張整幀與 14 項正反對照通過；六原型、資料／色盤／相位、十一種載入故障及家族隔離測試通過。#55 回核全部產品來源、四架構 binary 與 35 份擷取符合既有來源，依新標準完成 #48 驗收 | [029](docs/spec/029-chart-windows.md)、[#54](https://github.com/wicanr2/taipei/issues/54)、[#55](https://github.com/wicanr2/taipei/issues/55)。完整 RAM／CPU／RNG 對拍及本圖表流程施工至全新 EXE 冷讀未執行，保留為證據限制；未重跑平台真機或正式封包 |
 | 驗收方式 | 以正常遊玩抽驗驗收，沿用與現行產品一致的已通過收據。長時間狀態抽樣不再列必要完成條件 | 使用者 2026-10-13 定案及 #55；全部 HD 與正式交付仍未完成 |
 | HD 五語系 | 030–033 限已盤點來源與必要短流程 CONFORMED。225 鍵 TSV、1213 種 Noto 字元、146 筆可讀中文全有譯文；五語系各 77 種介面狀態、156 個開場階段、36 個城市訊息階段、三個結局合成測例及九筆圖片來源通過。正常 r15 取得三十個開場／上任信鍵與五類圖片文字，驗途中韓文 F11、原版 F12、環境、預算五語系、英文存讀檔及 DOS 退出；r17 驗缺譯警示與隨附 TSV 回退 | [033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49)。成功結局未走完整玩家流程，密碼分支未啟用，`245C4h` 用途未知但有譯文。IME、平台真機、完整 HD 圖片與正式包另驗；無長時間抽樣 |
 | Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。存讀檔與原版退出由 032／033 補驗；無長時間狀態抽樣與平台真機 |
-| README 背景與截圖 | 共 29 張 1280×800：原版與 HD 五語系城市／預算、Help 五語系、六圖表／電力圖原版與五語系，以及正常 DISA1 城市總覽。新增遊戲背景、城市治理玩法與原版五十萬人口目標；年代及廠商引用公開典藏，玩法回查已核對原版文字 | [來源清單](workspace/screenshots/manifest.json)、[#55](https://github.com/wicanr2/taipei/issues/55)。全部為正常 Linux GUI 擷取；原版／HD 圖組屬呈現比較，不宣稱完整機器狀態對拍或封包驗收 |
+| README 背景與截圖 | 共 34 張 1280×800：原版與 HD 五語系新城市／預算、Help 五語系、六圖表／電力圖對照，以及重繪建物後的 DISA1 原版與 HD 五語系。包含遊戲背景、城市治理玩法與原版五十萬人口目標；年代及廠商引用公開典藏，玩法回查已核對原版文字 | [來源清單](workspace/screenshots/manifest.json)、[#55](https://github.com/wicanr2/taipei/issues/55)、[#56](https://github.com/wicanr2/taipei/issues/56)。全部為正常 Linux GUI 擷取；原版／HD 圖組屬呈現比較，不宣稱完整機器狀態對拍或封包驗收 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 跨平台編譯 | 033 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端編譯通過；Linux 同來源重建與已驗 binary 相同。Windows Wine 冷啟動至城市為先前產品的預檢結果 | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
+| 跨平台編譯 | 034 現行 Linux amd64、Windows amd64、macOS amd64／arm64 研究前端重新編譯與架構核對通過；Linux 已驗 binary 為 5933a1f。來源與產物雜湊見本機 `workspace/runs/buildings-final-provenance.json`；前版四架構保留於 `buildings-baseline-v1/` | 本批未重跑 Wine，Windows／macOS 未真機執行；編譯及結構檢查不等於封包或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
 
-- DISA1 首批建物：[034](docs/spec/034-disaster-city-buildings.md)、[來源工具](workspace/tools/disaster_building_sources.py)、[#56](https://github.com/wicanr2/taipei/issues/56)。先核對三種完整正常來源與 B 原型，再接產品；#30 的其餘建物繼續。
+- DISA1 首批建物：[034](docs/spec/034-disaster-city-buildings.md)、[來源工具](workspace/tools/disaster_building_sources.py)、[素材匯出](workspace/tools/disaster_building_assets.py)、[獨立核對](workspace/tools/disaster_building_check.py)、[正常 GUI](workspace/tools/disaster_building_gui.sh)、[截圖匯出](workspace/tools/export_building_screenshots.py)、[#56](https://github.com/wicanr2/taipei/issues/56)。三種完整正常來源及 48 格已接產品並通過遊玩抽驗；#30 的其餘建物繼續。
 
 - 遊玩抽驗回核與城市總覽：[accept_chart_playtest.py](workspace/tools/accept_chart_playtest.py)。#55 在固定 Docker image 內核對既有正常收據及現行產品，追加 README 城市截圖與 manifest，不修改遊戲或原始收據。
 
