@@ -19,6 +19,7 @@ timeout 1800s docker run --rm --network none --label project=taipei --name "taip
   -e DISPLAY=:99 -e LIBGL_ALWAYS_SOFTWARE=1 -e PYTHONDONTWRITEBYTECODE=1 \
   -e "TAIPEI_CITY_MENU_RUN=$run_name" -e "TAIPEI_MAP_PHASE=${TAIPEI_MAP_PHASE:-hd}" \
   -e "TAIPEI_MAP_BINARY=${TAIPEI_MAP_BINARY:-taipei-preview-map-r2}" \
+  -e "TAIPEI_MAP_RECEIPT_UPDATES=${TAIPEI_MAP_RECEIPT_UPDATES:-1}" \
   sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3 bash -c '
     set -euo pipefail
     test "$(stat -c %u:%g /workspace/runs)" = 1000:1000

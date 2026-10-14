@@ -42,4 +42,8 @@
 
 實作入口 [map_completion.go](../../workspace/app/internal/hd/map_completion.go)，沿[render.go](../../workspace/app/internal/hd/render.go)既有場景閘門後呈現。區域字型未就緒保留原版，單一素材故障不阻斷其餘介面語言。測試 [map_completion_test.go](../../workspace/app/internal/hd/map_completion_test.go)；正常路徑 [map_completion_gui.sh](../../workspace/tools/map_completion_gui.sh)／[map_completion_gui.py](../../workspace/tools/map_completion_gui.py)。上述工具都在既有GUI image內執行，原版與兩份種子唯讀、輸出1000:1000、無網路、有界資源與Xvfb trap。
 
+抽驗鏡頭依既有正常原件確認每次捲動兩格，必須與目前原點同奇偶。r2七個原點依序(32,10)、(28,20)、(44,40)、(44,44)、(12,34)、(72,60)、(60,72)，世界位置保持相同。r1奇數目標往返是腳本錯誤，原件與勘誤留WORKLOG，不算產品失敗或完整玩家驗收。
+
 READY資產根manifest為 `be04e87136b05e09c3eb92402eea6173280687c9323fdf97cef77c2c8dd10a10`，三子manifest與候選相同。核心兩項測試10.616秒無跳過；24381種來源變異、301個已用色盤失配、十二個真實刪除／損壞及隔離、十三完整圖與全部區外、十五區域字墨與整圖通過。單格合成診斷1049種全部辨識、1045種可直接繪製；剩餘是空白與三種需要原版鄰格定位的同源來源，整圖正對照已補驗新增同源格，舊兩種沿既有正常收據保持完成。
+
+正常獨立核對入口 [map_completion_check.py](../../workspace/tools/map_completion_check.py)，直接重讀ROM與別名、真實PNG及封存圖，不信任呈現器自報完成數。文件匯出 [export_map_screenshots.py](../../workspace/tools/export_map_screenshots.py) 只選m34-b08／m34-b00各原版與五語系，共十二張。通過原版存退讀與退出後才匯出，原始收據留本機；其他批次截圖保留各自來源版本。

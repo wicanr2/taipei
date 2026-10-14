@@ -14,10 +14,10 @@ from facility_cursor import locate_small_cursor
 from infrastructure_catalog import sources
 from hd_source_audit import cell,scene,sha
 
-CASES=[('m37-b08','C1',[43,14],[32,9]),('m35-b00','C1',[38,24],[27,19]),
-       ('m34-b08','C1',[54,44],[43,39]),('m34-b00','C1',[54,49],[43,44]),
-       ('m36-b00','C1',[16,39],[5,34]),('m35-b12','C2',[83,64],[72,59]),
-       ('m36-b16','C2',[71,76],[60,71])]
+CASES=[('m37-b08','C1',[43,14],[32,10]),('m35-b00','C1',[38,24],[28,20]),
+       ('m34-b08','C1',[54,44],[44,40]),('m34-b00','C1',[54,49],[44,44]),
+       ('m36-b00','C1',[16,39],[12,34]),('m35-b12','C2',[83,64],[72,60]),
+       ('m36-b16','C2',[71,76],[60,72])]
 SEEDS={'C1':('/seed1/FUND.SAV','fdd4e3a9c0da6320bb0a2a4357f948589ebc34d0061d54ae624951b190bbc96f'),
        'C2':('/seed2/FUND.SAV','249faf6a9f4b16878dbd4faa9b8bc124b7698f5cac540beb20e492c0bbcfedf7')}
 
@@ -41,7 +41,7 @@ def main():
     results=[];shots=[];script=Path(__file__).read_bytes();(root/'executed-driver.py').write_bytes(script)
     with (root/'app.log').open('w') as log:
         game=subprocess.Popen([str(binary),'-original','/orig','-saves',str(saves),'-receipts',str(root),
-            '-mute','-steps-per-update','2000000','-receipt-every-updates','6','-theme','hd-b',
+            '-mute','-steps-per-update','2000000','-receipt-every-updates',os.environ.get('TAIPEI_MAP_RECEIPT_UPDATES','1'),'-theme','hd-b',
             '-materials','/workspace/prototypes/hd-style','-catalog','/workspace/app/locales/ui.tsv',
             '-stop-file',str(root/'stop')],stdout=log,stderr=subprocess.STDOUT)
         try:
@@ -49,6 +49,7 @@ def main():
             def navigate(case,label):
                 id,_,world,origin=case
                 for axis,goal in zip(['X','Y'],origin):
+                    assert (base.status()['map_origin'][axis]-goal)%2==0,'原版每次捲動兩格，拒絕不可達奇偶目標'
                     for i in range(128):
                         st=base.status()
                         if st['map_origin'][axis]==goal:break
