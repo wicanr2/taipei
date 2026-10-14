@@ -1133,3 +1133,15 @@ r19新候選已確認十圖、銀行五語系／F12及Help，但420秒驗證上�
 最小材料預檢先抓到工具layout的city-chrome-lime-v1.png相依缺漏；改讀三份已封存art_sha256相依表，不逐件猜補。586 runtime檔由實際HD載入器驗所有家族與五語系通過。原版inventory b9f1a573固定，35檔／RAR回核；只包RS201內23檔，不帶舊DOSBox。依實際二進位go version -m列連結元件，go list -m all曾試圖讀未下載的範例／測試依賴，改採實際連結清單，無需網路。
 
 建置、輸入鎖定、封裝、逐包內容／架構／材料與缺件反例、Linux預設音訊及Wine實際啟動工具已寫入workspace/tools，入口見040。沿用固定Linux／MinGW／osxcross及既有隔離音訊／Wine image與快取，不建立重複image。正式封包尚未驗收；macOS原生執行與使用者目錄寫入保留真機未驗，不以結構或stub稱遊玩通過。
+
+### #9 v.1.0.0-20261015 三平台本機驗收
+
+57c559695fa73ad610ed4fdbce38b0803e6c4b3b與不可變tag v.1.0.0-20261015已推送私人repo。從tag乾淨匯出原創app／工具與固定dosgolem／七補丁，四架構及macOS universal一次重建，沿既有快取，沒有新image。SourceInputs鎖定23原版／586 runtime檔／10個實際連結module及13授權通知；inputs21f06194。最小材料預檢與全部五語系已通過後才定tag。
+
+三包131770851／131547342／138670270 bytes，SHA依序4099d3c8／e298680f／1d846114，完整值見040與SHA256SUMS。逐包629檔的版本、權利、SHA、header、UTF-8／BOM／CRLF與實際材料載入器通過；實際撤除封存A4圖後同一載入器拒絕，還原原件。package-verification3ff6e824。一次啟動核對命令曾誤用容器內不存在的腳本路徑，未啟動產品、未改任何輸入；修正為實際/tools/package_check.py後乾淨執行通過。
+
+實包唯讀掛到/封包 測試，Linux與Wine的啟動器實際經過中文空白路徑，不能只由解包目錄名稱宣稱已驗Unicode。兩平台B開場、正式version／prototype=false、F11英文設定寫入預設使用者目錄、Help、F12完整原生最近鄰與返回及缺資料可見錯誤通過。Linux使用預設音訊／名義時鐘，五秒Pulse monitor峰值5584、459794非零samples，技術非靜音，人耳未驗。Windows明示Wine及靜音。兩份X11實窗PNG已檢視，Help八列字墨完整。Linux／Wine smoke65a686d2／63f0f445。這是實包啟動與前端／路徑抽驗，停止旗標不當原版DOS退出；完整原版存退讀／退出沿039同一呈現與模擬程式。
+
+macOS兩slice與個別build逐byte相同，11.0欄位、系統依賴、材料及launcher語法／版本通過。原生執行、使用者存檔目錄及音訊未驗，不以Linux helper或stub補成真機。版號tag沒有移動；tag後的工具修正只加強實際中文路徑抽驗及收尾彙整，沒有改程式或重建覆寫封包。
+
+release_accept回核三包、兩平台實際收據、mac結構、35原始檔／RAR、92張README及指定find，acceptance2d9e2201、最終索引49d2f0b9。全部輸出1000:1000，project=taipei容器清單空，沒有新image或其他專案資源清理。README加入穩定版本、三包入口、存檔位置及驗證限制，保留92張原版／五語系實圖與遊戲背景。封包／字型／HD／原版／SAV／WAV／原始收據均留本機，不入Git／Release。040限本次矩陣CONFORMED，#9附完成提交後結案；Windows／macOS真機、人耳、逐事件／成功結局仍屬明列限制。

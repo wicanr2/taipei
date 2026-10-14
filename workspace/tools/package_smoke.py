@@ -19,10 +19,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--platform', choices=['linux', 'windows'], required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--bundle', type=Path, default=Path('/封包 測試'))
     a = ap.parse_args()
     a.out.mkdir(exist_ok=True)
     assert a.out.stat().st_uid == os.getuid() and not (a.out/'smoke-result.json').exists()
-    bundle = Path('/bundle')
+    bundle = a.bundle
     manifest = json.loads((bundle/'manifest.json').read_text())
     assert manifest['platform'] == a.platform
     version = (bundle/'VERSION').read_text().strip()
@@ -45,7 +46,7 @@ def main():
         user_root = actual/'TaipeiDosgolem'
         stop = 'Z:'+str(a.out/'stop').replace('/','\\')
         batch = 'Z:'+str(bundle/'Start.cmd').replace('/','\\')
-        command = ['wine','cmd','/d','/c',batch,'-mute','-steps-per-update','400000','-stop-file',stop]
+        command = ['wine','cmd','/d','/c','call',batch,'-mute','-steps-per-update','400000','-stop-file',stop]
         version_command = ['wine',str(bundle/'Taipei.exe'),'-version']
     got_version = subprocess.check_output(version_command,env=env,text=True,stderr=subprocess.DEVNULL).strip()
     assert got_version == version
@@ -90,7 +91,7 @@ def main():
         first,raw = wait(lambda s:s.get('hd',{}).get('illustrations',{}).get('painted',0)>0,'packaged-B-opening',150)
         assert first['version'] == version and first['prototype'] is False and first['hd_enabled']
         assert first['original_sha256'] == '798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3'
-        assert first['original_root'].replace('\\','/').lower().endswith('/bundle/original')
+        assert first['original_root'].replace('\\','/').lower().endswith(str(bundle/'original').lower())
         capture('opening',raw)
         windows = subprocess.check_output(['xdotool','search','--onlyvisible','--name','模擬台北'],text=True).split()
         assert windows

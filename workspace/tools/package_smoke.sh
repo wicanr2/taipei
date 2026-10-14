@@ -19,7 +19,7 @@ test -d "$project_dir/workspace/tools"
 test ! -e "$dist/smoke/$platform"
 timeout 240s docker run --rm --network none --memory 3g --cpus 2 --pids-limit 128 \
   --user "$(id -u):$(id -g)" --label project=taipei \
-  --mount "type=bind,src=$bundle,dst=/bundle,readonly" \
+  --mount "type=bind,src=$bundle,dst=/封包 測試,readonly" \
   --mount "type=bind,src=$dist/smoke,dst=/smoke" \
   --mount "type=bind,src=$project_dir/workspace/tools,dst=/tools,readonly" \
   -e DISPLAY=:99 -e LIBGL_ALWAYS_SOFTWARE=1 -e GOMAXPROCS=2 -e "TAIPEI_SMOKE_PLATFORM=$platform" \

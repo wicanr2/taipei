@@ -2,6 +2,8 @@
 
 以 dosgolem 執行原版《模擬台北》，保留城市經營玩法，加入 1280×800 的 HD 呈現、Noto 高清黑體與五語系介面。
 
+本機交付版本：`v.1.0.0-20261015`。三平台完整包只留本機，來源 tag 保存在私人儲存庫。
+
 玩家須自備合法取得的原版資料。原版執行檔、資料、美術、音訊與權利未明的 HD 素材
 只留本機，不加入此儲存庫或公開封包。下列選定的文件截圖依使用者指示收錄於私人儲存庫，
 不納入自有程式授權。
@@ -89,7 +91,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
 
 原版程式繼續負責模擬規則、亂數與存檔，HD 層改變呈現。玩家檔名、原版數值與商標保留原樣。
-重繪目標包含所有圖片與操作介面；完整來源已分類並接入，開場與動畫按正常代表抽驗通過；未逐項走過所有事件／結局分支。Windows、Linux、macOS 正式封包仍在製作，尚無正式交付包。
+重繪目標包含所有圖片與操作介面；完整來源已分類並接入，開場與動畫按正常代表抽驗通過；未逐項走過所有事件／結局分支。Windows、Linux、macOS 本機封包已完成；Linux與Windows Wine已驗實際啟動，macOS保留真機未驗限制。
 目前證據與限制以 [CONTEXT.md](CONTEXT.md) 及[驗收矩陣](docs/verification-matrix.md)為準；翻譯範圍見[完整來源覆蓋契約](docs/spec/033-localization-source-coverage.md)。
 
 <details>
@@ -190,7 +192,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 以下為 Linux 前端從正常新遊戲入口擷取的實際畫面。城市以原版 `0` 鍵暫停，再以 F11／F12 切換。
 城市與預算各組的原版色號畫面及可見顏色一致；原版為 320×200 的四倍最近鄰放大，HD 為 1280×800。
-點圖片可看完整尺寸。截圖展示目前已接入的呈現，不代表全部圖片已重繪或三平台封包已驗收。
+點圖片可看完整尺寸。以下保留各批驗收版本，圖片來源清單載明實際程式；未逐項試玩所有事件與結局。封包驗證範圍見下方。
 
 | 模式／語言 | 城市 | 預算 |
 |---|---|---|
@@ -252,6 +254,32 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 核能電廠使用[既有城市正常入口](workspace/tools/nuclear_existing_playtest.sh)的 `hd` 階段，經[全圖與語言核對](workspace/tools/nuclear_check.py)後[匯出](workspace/tools/export_nuclear_screenshots.py)。
 港口與機場使用[正常冷讀入口](workspace/tools/transport_facility_playtest.sh)的 `hd` 階段，像素核對與匯出工具使用 `--scope transport`，逐項保留原版與五語系六張畫面。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
+
+## 本機封包與執行
+
+版本 `v.1.0.0-20261015`，位於專案的 `dist-all/v.1.0.0-20261015/full-local/`。
+完整包含本機原版資料及衍生 HD 素材，沒有上傳 GitHub 或公開 Release。
+
+| 平台／架構 | 封包 | 解壓後入口 |
+|---|---|---|
+| Linux amd64 | `Taipei-v.1.0.0-20261015-linux-amd64-full-local.tar.gz` | `start.sh` |
+| Windows amd64 | `Taipei-v.1.0.0-20261015-windows-amd64-full-local.zip` | `Start.cmd` |
+| macOS amd64／arm64 | `Taipei-v.1.0.0-20261015-macos-universal-full-local.zip` | `start.command` |
+
+請完整解壓後啟動，預設開啟 HD。`original/`、`materials/`、`locales/`須保留在程式旁。
+版本可用啟動器的 `-version` 查詢。Linux需要X11、ALSA及執行期系統函式庫，建置與測試環境為Debian 12。
+
+| 平台 | 存檔與語言設定位置 |
+|---|---|
+| Linux | `${XDG_DATA_HOME:-$HOME/.local/share}/taipei-dosgolem/saves/` |
+| Windows | `%LOCALAPPDATA%\TaipeiDosgolem\saves\` |
+| macOS | `$HOME/Library/Application Support/Taipei dosgolem/saves/` |
+
+三包的逐檔內容、必要素材與字型皆已核對。Linux與Windows Wine使用實際封包，驗B開場、F11／F12／Help、設定寫入及缺資料錯誤；Linux預設音訊已擷取確認非靜音。
+Windows Wine不等同Windows真機。macOS已驗universal兩個slice、內容、系統依賴及啟動器結構，原生執行與使用者目錄寫入未驗；封包未簽章或公證。
+完整正常存退讀與DOS退出沿[插畫與玩家抽驗](docs/spec/039-illustration-animation.md)，本次封包啟動抽驗不冒稱完整通關或音訊人耳確認。
+
+各包SHA-256與驗收索引在本機 `dist-all/v.1.0.0-20261015/SHA256SUMS.json`，詳細界線見[三平台封包契約](docs/spec/040-local-platform-packages.md)。
 
 ## 開發與文件
 
