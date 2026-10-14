@@ -39,6 +39,7 @@ type Stats struct {
 	EndingScreen               string              `json:"ending_screen"`
 	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
+	NuclearFacility            publicFacilityStats `json:"nuclear_facility"`
 	CivicFacilities            civicFacilityStats  `json:"civic_facilities"`
 	PublicFacilities           publicFacilityStats `json:"public_facilities"`
 	CityBuildings              cityBuildingStats   `json:"city_buildings"`
@@ -95,6 +96,7 @@ type Renderer struct {
 	charts           *chartWindows
 	ending           *endingScreen
 	powerFacility    *powerFacilitySet
+	nuclearFacility  *publicFacilitySet
 	civicFacilities  *civicFacilitySet
 	publicFacilities *publicFacilitySet
 	cityBuildings    *cityBuildingSet
@@ -160,6 +162,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.budget = loadBudgetPanel(rom, dir)
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
+	r.nuclearFacility = loadNuclearFacility(rom, dir)
 	r.civicFacilities = loadCivicFacilities(rom, dir)
 	r.publicFacilities = loadPublicFacilities(rom, dir)
 	r.cityBuildings = loadCityBuildings(rom, dir)
@@ -414,6 +417,30 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.PowerFacility.Images[candidate.image]++
 				} else {
 					stats.PowerFacility.Fallback++
+				}
+				continue
+			}
+			if candidate := r.nuclearFacility.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.NuclearFacility.Matched++
+				candidate, reason := r.nuclearFacility.resolve(tile, px, (x-5)/9, (y-34)/9)
+				if candidate != nil {
+					reason = r.nuclearFacility.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				}
+				if stats.NuclearFacility.Reasons == nil {
+					stats.NuclearFacility.Reasons = map[string]int{}
+				}
+				stats.NuclearFacility.Reasons[reason]++
+				if reason == "matched-nuclear-facility" {
+					stats.Painted++
+					stats.Fallback--
+					stats.NuclearFacility.Painted++
+					if stats.NuclearFacility.Facilities == nil {
+						stats.NuclearFacility.Facilities = map[string]int{}
+					}
+					stats.NuclearFacility.Facilities[candidate.id]++
+				} else {
+					stats.NuclearFacility.Fallback++
 				}
 				continue
 			}

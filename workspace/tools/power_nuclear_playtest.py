@@ -23,6 +23,7 @@ def main():
     assert seed.is_file() and seed.stat().st_size==93567
     expected=os.environ['TAIPEI_NUCLEAR_SAVE_SHA']; assert sha(seed.read_bytes())==expected
     root.mkdir(); saves=root/'saves'; saves.mkdir()
+    (root/'executed-driver.py').write_bytes(Path(__file__).read_bytes())
     shutil.copyfile(seed,saves/'FUND.SAV')
     assert sha((saves/'FUND.SAV').read_bytes())==expected
     binary=Path('/workspace/runs/taipei-preview')
@@ -75,23 +76,49 @@ def main():
                         key(f'{label}-{axis}-{cursor[axis]}',keys[direction>0]); cursor[axis]+=direction
                 assert base.status()['map_origin']==origin,'正常研究走位意外捲動，停止'
             def land(raw):return set(raw)<=MATERIAL and not set(raw)&set(range(144,148))
-            def eligible(raw):return raw in aliases and (not set(raw)<=MATERIAL or land(raw))
-            # 只選已識別的陸地／建物，避開水域與視窗邊界。
-            baseline=model_from(root/'funded-city-capture.zip')[1]
-            sites=[]
-            for row in range(2,8):
-                for col in range(2,16):
-                    tiles=[cell(baseline,5+x*9,34+y*9) for y in range(row,row+6) for x in range(col,col+6)]
-                    if all(eligible(t) for t in tiles):sites.append((sum(not land(t) for t in tiles),col,row))
-            assert sites,'目前視窗沒有已識別的完整六格陸地，不猜測其他位置'
-            _,left,top=min(sites)
+            def vacant_site(pixels):
+                for row in range(2,8):
+                    for col in range(2,16):
+                        if all(land(cell(pixels,5+x*9,34+y*9)) for y in range(row,row+6) for x in range(col,col+6)):
+                            return col,row
+                return None
+            def small_cursor(pixels):
+                variants=set()
+                for raw in aliases:
+                    v=bytearray(raw)
+                    for dx in range(9):v[dx]=15 if dx%2==0 else 0
+                    for dy in range(9):v[dy*9]=15; v[dy*9+8]=15
+                    for dx in range(9):v[72+dx]=15 if dx%2==0 else 0
+                    variants.add(bytes(v))
+                found=[(x,y) for y in range(15) for x in range(29)
+                    if cell(pixels,5+x*9,34+y*9) not in aliases and cell(pixels,5+x*9,34+y*9) in variants]
+                assert len(found)==1,('原版單格游標不唯一',found)
+                return found[0]
+            search=[]; site=vacant_site(frame)
+            for direction,limit in [('Right',96),('Down',32),('Left',96)]:
+                for i in range(limit):
+                    if site is not None:break
+                    key(f'land-search-{direction}-{i}',direction)
+                    base.wait_for(lambda s:s['map_origin']['Valid'],'land-map-drawn')
+                    st,frame=model(); assert scene(st,frame)
+                    search.append({'key':direction,'steps':st['steps'],'origin':st['map_origin']})
+                    site=vacant_site(frame)
+                if site is not None:break
+            assert site is not None,'有界正常捲動未找到完整空地，停止'
+            left,top=site; origin=st['map_origin']; cursor[:]=small_cursor(frame)
+            base.capture('vacant-site')
+            walk('nuclear-prepare',(16,3))
+            base.capture('cleared-site')  # Legacy evidence label; no demolition in this run.
+            st,frame=model()
             fee=int(st['hd']['footer_text'][0])
             def native_quit():
                 key('quit-menu','F1'); base.wait_for(lambda s:s['hd']['panel']=='city-f1','quit-menu-ready')
                 if base.status()['hd']['panel_selection']!=0:key('quit-choice','Down')
                 key('quit-confirm','space'); base.wait_for(lambda s:s['hd']['file_dialog']=='quit-confirm','quit-ready')
                 subprocess.run(['xdotool','type','--delay','150','Y'],check=True)
-                base.wait_for(lambda s:s['dos_blocked'] and s['hd']['ending_screen']=='achievement-base','ending',seconds=180)
+                base.wait_for(lambda s:s['dos_blocked'] and any(k.get('Via')=='int21-AH07' and k.get('Key')==89
+                    for k in s.get('key_reads') or []),'ending',seconds=180)
+                base.capture('native-ending')
                 front_key('space'); base.wait_for(lambda s:s.get('dos_exited'),'dos-exit'); assert game.wait(timeout=10)==0
             if phase=='plan':
                 native_quit()
@@ -101,22 +128,9 @@ def main():
                     'funds':initial_funds,'origin':origin,'cursor':cursor,'demolition_fee':fee,
                     'site':[left,top,6,6],'native_exit':True,'construction_tested':False},ensure_ascii=False,indent=2)+'\n')
                 return
-            assert initial_funds>=100000+36*fee
+            assert initial_funds>=100000
             clearing=[]
-            for row in range(top,top+6):
-                for col in range(left,left+6):
-                    walk('clear-target',(col,row))
-                    before=base.status(); key(f'clear-{col}-{row}','space')
-                    step=base.status()['steps']
-                    base.wait_for(lambda s:s['steps']>=step+24_000_000,'clear-drawing')
-                    after=base.status()
-                    clearing.append({'cell':[col,row],'before_funds':int(before['hd']['footer_text'][3]),
-                        'after_funds':int(after['hd']['footer_text'][3])})
             uncover=(left+6,top)
-            walk('clear-uncover',uncover)
-            _,frame=model()
-            assert all(land(cell(frame,5+x*9,34+y*9)) for y in range(top,top+6) for x in range(left,left+6))
-            base.capture('cleared-site')
             key('nuclear-toolbar','Tab'); key('nuclear-column','Right')
             for row in range(5):key(f'nuclear-row-{row}','Down')
             _,frame=model(); assert toolbar_selection(frame,pristine)==11
@@ -134,10 +148,12 @@ def main():
             assert int(st['hd']['footer_text'][3])>=100000
             small=model_from(root/'cleared-site-capture.zip')[1]
             large=[(x,y) for y in range(15) for x in range(29)
-                if cell(frame,5+x*9,34+y*9)!=cell(small,5+x*9,34+y*9)]
-            assert large and [min(x for x,y in large),min(y for x,y in large)]==cursor
+                if cell(frame,5+x*9,34+y*9)!=cell(small,5+x*9,34+y*9)
+                and cell(frame,5+x*9,34+y*9) not in aliases]
+            assert large,'核能選取後沒有新增可辨識游標外框'
+            cursor[:]=[min(x for x,y in large),min(y for x,y in large)]
             assert [max(x for x,y in large)-cursor[0]+1,max(y for x,y in large)-cursor[1]+1]==[6,6],('核能游標不是已見六格形態',large)
-            # 原版工具切換保留已見游標原點，完整施工前／後另核對。
+            # 依新增原版外框取得當前格座標，完整施工前／後另核對。
             walk('nuclear-target',(left,top)); base.capture('nuclear-before')
             before,old=model(); key('nuclear-place','space')
             def constructed():
@@ -159,7 +175,18 @@ def main():
                 for y in range(top,top+6) for x in range(left,left+6)]
             assert all(cell(new,5+r['cell'][0]*9,34+r['cell'][1]*9) in aliases and
                 not set(cell(new,5+r['cell'][0]*9,34+r['cell'][1]*9))<=MATERIAL for r in cells)
-            saved=save('NUCLEAR',saves); restore('NUCLEAR',saves); _,restored=model()
+            (root/'source-progress.json').write_text(json.dumps({'cells':cells,'origin':origin,
+                'funds':int(after['hd']['footer_text'][3]),'bounds':[left,top,6,6],'script_sha256':script_sha},indent=2)+'\n')
+            def uncover_after_load(label):
+                key(label+'-toolbar','Tab'); _,current_frame=model()
+                selected=toolbar_selection(current_frame,pristine); assert selected is not None
+                while selected//2:key(label+'-up','Up'); selected-=2
+                if selected%2==0:key(label+'-right','Right')
+                key(label+'-wire','space'); _,current_frame=model()
+                cursor[:]=small_cursor(current_frame); walk(label+'-move',(26,1))
+            uncover_after_load('before-save')
+            saved=save('NUCLEAR',saves); restore('NUCLEAR',saves)
+            uncover_after_load('after-read'); _,restored=model()
             assert all(sha(cell(restored,5+r['cell'][0]*9,34+r['cell'][1]*9))==r['source_sha256'] for r in cells)
             native_quit()
             report={'issue':46,'normal_gui':True,'checkpoint':False,'state_injection':False,'actions':[],
@@ -167,10 +194,11 @@ def main():
                     'receipt':'nuclear-complete-capture.zip','origin':origin,'known_changes':known,'unknown_changes':unknown}],
                 'seed_save_file':str(seed),'seed_save_sha256':expected,'seed_unchanged':sha(seed.read_bytes())==expected,
                 'script_sha256':script_sha,'binary_sha256':sha(binary.read_bytes()),'clearing':clearing,
+                'land_search':search,'construction_on_existing_terrain':True,
                 'initial_funds':initial_funds,'final_funds':int(after['hd']['footer_text'][3]),
                 'native_exit':True,'original_save_read':True,'save_sha256':saved,'cells':cells,
                 'ordinary_keys':base.ordinary_sync,'function_keys':base.sync,
-                'scope':'正常冷讀原版籌資 SAV、整地、核能施工及存讀退出；未接核能 HD。'}
+                'scope':'正常冷讀原版籌資 SAV、捲動尋找完整空地、核能施工及存讀退出；未接核能 HD。'}
             (root/'result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
         finally:
             if game.poll() is None:

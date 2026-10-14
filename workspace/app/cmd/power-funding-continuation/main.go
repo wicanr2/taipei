@@ -39,6 +39,7 @@ func main() {
 	if len(os.Args) != 3 && len(os.Args) != 4 {
 		panic("GUI-capture.zip new-output-dir [inspect]")
 	}
+	siteAudit := len(os.Args) == 4 && os.Args[3] == "site-audit"
 	z, e := zip.OpenReader(os.Args[1])
 	must(e)
 	defer z.Close()
@@ -82,7 +83,13 @@ func main() {
 	}
 	inputBytes, e := os.ReadFile(os.Args[1])
 	must(e)
-	if hash(inputBytes) != "110d7b85a6148743f876f8e41298b9157c460a833f24c9fb062ec31c3ced6534" {
+	expectedPrefix := "110d7b85a6148743f876f8e41298b9157c460a833f24c9fb062ec31c3ced6534"
+	expectedFunds := "98428"
+	if siteAudit {
+		expectedPrefix = "c3c6ad3afb4e3960addc4188e255ad1015d435722752ef91a6b686d59f3dfabe"
+		expectedFunds = "104415"
+	}
+	if hash(inputBytes) != expectedPrefix {
 		panic("unregistered GUI prefix")
 	}
 	rom, e := os.ReadFile("/orig/RS201.ROM")
@@ -92,10 +99,10 @@ func main() {
 		panic("renderer setup: " + why)
 	}
 	_, checked := r.Render(capturedFrame, captured.Palette, captured.Mode, captured.Blocked, true, captured.Origin)
-	if checked.FooterMask&2 == 0 || strings.TrimSpace(checked.FooterText[3]) != "98428" {
+	if checked.FooterMask&2 == 0 || strings.TrimSpace(checked.FooterText[3]) != expectedFunds {
 		panic(fmt.Sprintf("captured original footer setup failed: %+v", checked))
 	}
-	if len(os.Args) == 4 {
+	if len(os.Args) == 4 && !siteAudit {
 		if os.Args[3] != "inspect" {
 			panic("unknown mode")
 		}
@@ -111,6 +118,15 @@ func main() {
 	must(os.Mkdir(out, 0700))
 	scratch := filepath.Join(out, "saves")
 	must(os.Mkdir(scratch, 0700))
+	if siteAudit {
+		seed, e := os.ReadFile("/seed/FUND.SAV")
+		must(e)
+		if hash(seed) != "93918cfa7491b3538645abf77f2ee7615b9f519bd4b35b87c9da4263cd8bf391" {
+			panic("seed save mismatch")
+		}
+		// Import the unchanged disk input before replaying the native F2 load.
+		must(os.WriteFile(filepath.Join(scratch, "FUND.SAV"), seed, 0600))
+	}
 	exe, e := os.ReadFile("/orig/RS201.EXE")
 	must(e)
 	if hash(exe) != "798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3" {
@@ -177,6 +193,10 @@ func main() {
 	prefixProof, e := json.MarshalIndent(map[string]any{"prefix_steps": captured.Steps, "frame_palette_reads_files_equal": true, "receipt_sha256": hash(inputBytes), "origin": camera.Origin(m)}, "", "  ")
 	must(e)
 	must(os.WriteFile(filepath.Join(out, "prefix-verification.json"), append(prefixProof, '\n'), 0600))
+	if siteAudit {
+		dumpNuclearSite(m, exe, out, camera.Origin(m))
+		return
+	}
 	stats := func() hd.Stats {
 		_, s := r.Render(m.Indexed(), m.Palette(), int(m.VideoMode()), d.Blocked, true, camera.Origin(m))
 		return s
@@ -208,7 +228,7 @@ func main() {
 		run(2000000)
 	}
 	wait := func(label string, pred func(hd.Stats) bool) {
-		end := m.Steps + 120000000
+		end := m.Steps + 360000000
 		for m.Steps < end {
 			if pred(stats()) {
 				return
@@ -280,6 +300,12 @@ func main() {
 	wait("paused city", city)
 	data := save("0001")
 	path := filepath.Join(scratch, "0001.SAV")
+	beforeQuit, e := json.MarshalIndent(map[string]any{"issue": 46, "prefix_verified": true, "gui_acceptance": false,
+		"funded": funded, "funds": finalFunds, "steps": m.Steps, "save_file": path, "save_sha256": hash(data),
+		"prefix_native_save_sha256": hash(prefixSave), "samples": samples, "native_inputs": events,
+		"key_reads": d.KeyReads, "file_ops": d.FileOps, "native_exit": false}, "", "  ")
+	must(e)
+	must(os.WriteFile(filepath.Join(out, "before-quit.json"), append(beforeQuit, '\n'), 0600))
 	key(0x3b)
 	wait("quit menu", func(s hd.Stats) bool { return s.Panel == "city-f1" })
 	for stats().PanelSelection != 0 {

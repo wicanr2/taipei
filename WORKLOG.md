@@ -952,3 +952,19 @@ README 功能表及體育場對照同步更新，來源清單只新增本批六�
 續跑 r2 的固定末端比對通過，之後監測列印 funds=0 是沒有辨識值，不是原版資金。原因為 DRAFT 命令漏了現行前端的 SetLanguage 初始化，且誤要求左右兩欄 mask=3。回查 020 與實際 constructor／defer 契約後停止 r2；沒有將此件列為遊戲或模擬器缺陷。r3 先以固定原始收據的 inspect 模式確認合法右欄 mask=2、98428，exit 0，才重新執行。r3 末端比對後先用原版鍵盤 F2 保存 0000.SAV 保留進度，再按原版 3 續跑，最後另存 0001.SAV；不使用快照或自行改寫財政資料。
 
 `power-nuclear-preflight-r1` 正常 GUI 前置抽驗外層 exit 0。原版冷讀 FUND.SAV、焦點切換、整地工具與單格游標、陸地候選及原版退出通過，種子 SAV 雜湊不變。實見原點 (6,22)、游標 (9,8)、整地費用 10、6×6 候選 (11,7)。沒有整地或施工，因此不宣稱核能來源完成。此容器已刪除，目前僅 dosgolem r3 有界續跑容器。新增來源目錄維持 workspace/，DRAFT 工具入口已掛入 027。
+
+### 核能來源研究停止線與既有電廠
+
+r3 續跑保存 0001.SAV，93567 bytes、SHA-256 `93918cfa7491b3538645abf77f2ee7615b9f519bd4b35b87c9da4263cd8bf391`，原版資金 104415。末端前綴四項比對通過，但退出前 120000000 步上限不足而回傳 2，不稱整輪通過。後續 r4 只延長退出觀察並保留 before-quit.json；未重跑財政流程。施工 r1 整地後仍有區域／碎石，r2 的顏色選址無候選，兩件未成功建設核電廠，保留原件。
+
+IDA 9.4 窄查詢保留原始名稱、bytes 與位址。sub_19102 的工具 case 12 調用 sub_1A64C，檢查完整 6×6 的 dword_322BE=0 且 dword_322D8 非零；核能選項的返回值 3 在 sub_17BF8 形成索引 `18+30*row+col`。sub_17B52 確認寬度 dword_322F0、高度 dword_3233C。先前把 dword_322F2 當高度的假說撤回，正確資料及 bytes 保留於 ida-46/nuclear-dimensions.json。IDA 線性 0x322BE 對應 EXE 檔案偏移 0x242BE，MZ header 0x2000，載入空間偏移 0x222BE；各位址空間分開記錄。site-audit 從 EXE 重播正常 GUI 前綴並匹配四項末端，再唯讀匯出兩個原始陣列，實際城市為 105×89，沒有注入。
+
+原版地圖已在 (60,44) 含 type 0x85、variant 18 的核電廠，因此停止籌資及空地探針。依使用者正常遊玩抽驗，改從原版既有電廠取得完整來源，核能新建施工另外列未驗。#46 已預登記冷啟動、原版冷讀、捲動、五語系、F12、存讀與退出。gui-nuclear-baseline-r1 的多餘 Space 在 Tab 啟用工具後整地並扣款 10，腳本資金斷言拒絕，沒有列 PASS；r2 移除該 Space，同一 image／binary／種子重新執行。沒有修改產品、原版規則或資料。研究工具與輸出保持 1000:1000，已結束容器皆 --rm。
+
+### 核能來源與 READY 素材
+
+gui-nuclear-baseline-r2 wrapper 0，正常冷讀 DISA1 既有核電廠、原版捲動至 (52,40)、完整來源、F11／F12、同次存讀與原版退出通過。verification.json SHA-256 `359a09e4dc68d30053cc6a6162b92392c776031e8d8d095131dee34aff823565`，NUCLEAR.SAV `10ae70c129292142430417bfa7328c1a1546d152039e59fb6c3ec61ba31b1d9a`。nuclear_sources.py 逐格核對 36 格／35 種來源，完整複合圖與原版 ROM38 相符，沒有用完整退出替代施工分支。
+
+內建 imagegen 依完整正常參考生成一張 B 圖，保留原件，唯讀複製至 workspace/prototypes/hd-style/nuclear-v1/nuclear/。已檢視 216×216 與原版對照；原件、提示、來源與 READY seal 見 027。public_facility_assets.py 增加核能 stage 與 issue 參數，舊公共設施輸出不變。READY 兩檔在 nuclear-ready-repro-v1 乾淨重生，逐 byte 相同。獨立 nuclear_check.reference 重讀原版與生成原件，36 格、完整 186624 bytes RGBA 及色盤通過。
+
+核能載入器使用泛化的封存 atlas 載入函式，原公共設施仍用原 seal；呈現器新增 nuclear_facility 統計與同源格唯一鄰圖定位。沒有改 dosgolem、原版 EXE、時間、規則或 SAV。核能三項及公共設施四項測試通過，nuclear-tests-r2.log 86.055 秒，無跳過。初次測試 image.Image 型別的編譯失敗已修正並乾淨重跑。Linux binary `9e4fa21247dd36ef6879fd89440ca473708fae22786b9c7a664d7f681735f1ec` 保存在 taipei-preview-nuclear-r1，舊標準入口保留，正式 HD GUI 執行中。

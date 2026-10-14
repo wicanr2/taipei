@@ -2,6 +2,21 @@
 from hd_source_audit import cell, MATERIAL
 
 
+def locate_small_cursor(frame, aliases):
+    """Locate the observed one-cell border over an exact original ROM interior."""
+    variants=set()
+    for source in aliases:
+        raw=bytearray(source)
+        for dx in range(9):raw[dx]=15 if dx%2==0 else 0
+        for dy in range(9):raw[dy*9]=15; raw[dy*9+8]=15
+        for dx in range(9):raw[72+dx]=15 if dx%2==0 else 0
+        variants.add(bytes(raw))
+    found=[(x,y) for y in range(15) for x in range(29)
+        if cell(frame,5+x*9,34+y*9) not in aliases and cell(frame,5+x*9,34+y*9) in variants]
+    assert len(found)==1,('原版單格游標不唯一',found)
+    return list(found[0])
+
+
 class ConstructionGate:
     def __init__(self, aliases):
         self.sources={raw for raw in aliases if not set(raw)<=MATERIAL}

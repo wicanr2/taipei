@@ -34,12 +34,13 @@ type publicFacilityTile struct {
 }
 
 type publicFacilitySet struct {
-	tiles      map[[81]byte]*publicFacilityTile
-	variants   map[[81]byte][]*publicFacilityTile
-	facilities map[string][]*publicFacilityTile
-	palette    [256][3]byte
-	atlases    map[string]*image.RGBA
-	reason     string
+	tiles         map[[81]byte]*publicFacilityTile
+	variants      map[[81]byte][]*publicFacilityTile
+	facilities    map[string][]*publicFacilityTile
+	palette       [256][3]byte
+	atlases       map[string]*image.RGBA
+	reason        string
+	matchedReason string
 }
 
 // Read each alias through the actual ROM archive table, never a guessed stride.
@@ -75,13 +76,21 @@ func publicSource(rom []byte, member, index, pixel int) ([81]byte, bool) {
 }
 
 func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
-	u := &publicFacilitySet{tiles: map[[81]byte]*publicFacilityTile{}, variants: map[[81]byte][]*publicFacilityTile{}, facilities: map[string][]*publicFacilityTile{}, atlases: map[string]*image.RGBA{}, reason: "manifest-mismatch"}
+	expected := map[string][2]int{"waste": {4, 4}, "sewage": {4, 4}}
+	for _, id := range []string{"sun-yat-sen", "chiang-kai-shek", "palace-museum", "february-28", "art-museum", "amusement-park", "stadium", "confucius-temple", "zoo", "baseball-dome"} {
+		expected[id] = [2]int{6, 6}
+	}
+	return loadFacilityAtlases(rom, dir, "public-facilities-ready-v2", publicFacilitiesManifestSHA, "public", 392, 391, expected)
+}
+
+func loadFacilityAtlases(rom []byte, dir, subdir, seal, stage string, tiles, unique int, expected map[string][2]int) *publicFacilitySet {
+	u := &publicFacilitySet{tiles: map[[81]byte]*publicFacilityTile{}, variants: map[[81]byte][]*publicFacilityTile{}, facilities: map[string][]*publicFacilityTile{}, atlases: map[string]*image.RGBA{}, reason: "manifest-mismatch", matchedReason: "matched-" + stage + "-facility"}
 	if digest(rom) != romSHA {
 		return u
 	}
-	root := filepath.Join(dir, "public-facilities-ready-v2")
+	root := filepath.Join(dir, subdir)
 	raw, err := os.ReadFile(filepath.Join(root, "manifest.json"))
-	if err != nil || digest(raw) != publicFacilitiesManifestSHA {
+	if err != nil || digest(raw) != seal {
 		return u
 	}
 	var manifest struct {
@@ -108,11 +117,7 @@ func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
 			}
 		}
 	}
-	expected := map[string][2]int{"waste": {4, 4}, "sewage": {4, 4}}
-	for _, id := range []string{"sun-yat-sen", "chiang-kai-shek", "palace-museum", "february-28", "art-museum", "amusement-park", "stadium", "confucius-temple", "zoo", "baseball-dome"} {
-		expected[id] = [2]int{6, 6}
-	}
-	if json.Unmarshal(raw, &manifest) != nil || manifest.Schema != 1 || manifest.Stage != "public" || manifest.ROMSHA != romSHA || manifest.Tiles != 392 || manifest.UniqueSources != 391 || len(manifest.Facilities) != len(expected) {
+	if json.Unmarshal(raw, &manifest) != nil || manifest.Schema != 1 || manifest.Stage != stage || manifest.ROMSHA != romSHA || manifest.Tiles != tiles || manifest.UniqueSources != unique || len(manifest.Facilities) != len(expected) {
 		return u
 	}
 	for key, color := range manifest.Palette {
@@ -253,5 +258,5 @@ func (u *publicFacilitySet) paint(dst *image.RGBA, tile *publicFacilityTile, pal
 		}
 	}
 	draw.Draw(dst, image.Rect(20+col*36, 136+row*36, 56+col*36, 172+row*36), atlas, image.Pt(tile.col*36, tile.row*36), draw.Src)
-	return "matched-public-facility"
+	return u.matchedReason
 }

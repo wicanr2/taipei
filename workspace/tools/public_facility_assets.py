@@ -14,8 +14,9 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--inputs',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
-    ap.add_argument('--stage',choices=['DRAFT','public'],default='DRAFT')
+    ap.add_argument('--stage',choices=['DRAFT','public','nuclear'],default='DRAFT')
     ap.add_argument('--count',type=int,default=12)
+    ap.add_argument('--issue',type=int,default=58)
     a=ap.parse_args()
     assert not a.out.exists() and a.out.parent.stat().st_uid==os.getuid()
     rom=Path('/orig/RS201.ROM').read_bytes();assert sha(rom)==ROM_SHA
@@ -53,7 +54,7 @@ def main():
             (a.out/(case+'-comparison.png')).write_bytes(png(comparison,width*2,height))
         facilities.append({'id':case,'size':[w,h],'atlas':case+'.png','sha256':sha(encoded),'rgba_sha256':sha(raw),
             'source_proof_sha256':sha((root/'source.json').read_bytes()),'generated':generation,'tiles':proof['tiles']})
-    manifest={'schema':1,'stage':a.stage,'issue':58,'rom_sha256':ROM_SHA,'palette':palette,
+    manifest={'schema':1,'stage':a.stage,'issue':46 if a.stage=='nuclear' else a.issue,'rom_sha256':ROM_SHA,'palette':palette,
         'facilities':facilities,'tiles':sum(len(f['tiles']) for f in facilities),
         'unique_sources':len(source_occurrences),
         'shared_sources':[v for v in source_occurrences.values() if len(v)>1],

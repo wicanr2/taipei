@@ -1,6 +1,6 @@
 # 發電廠圖塊
 
-狀態：CONFORMED，限火力電廠已見完整來源的 36 格靜態呈現。核能電廠、其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。不宣稱完整發電廠、全部 HD、真機或正式封包完成。
+狀態：火力 36 格靜態呈現 CONFORMED；核能 36 格靜態呈現 READY，正常既有電廠 HD 待驗。其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。不宣稱全部 HD、真機或正式封包完成。
 
 沿用 B、1280×800、Noto、F12 及原版構圖。原版 EXE 管理火力／核能電廠選項、費用、建造、供電、發展、動畫與 SAV；本批只重繪已證實來源，不重寫規則。
 
@@ -65,6 +65,29 @@ r3 正常 GUI 依 [預登記](https://github.com/wicanr2/taipei/issues/46#issuec
 總核對在 `power-facility-thermal-native/final-verification-r1.json`，正式正常畫面原件為同目錄 `normal-power-hd-r3.png`，SHA-256 `2a89a2ccefa5515bf0f062898c7fa3c961e20fc5940f862d354fd4898e45b5b4`，直接取自真實正常收據，沒有後製。核能正常成功施工與其他相位尚無充分來源，#46 保持 OPEN。
 
 ## 核能接續研究入口
+
+[nuclear_existing_playtest.sh](../../workspace/tools/nuclear_existing_playtest.sh) 與 [nuclear_existing_playtest.py](../../workspace/tools/nuclear_existing_playtest.py) 是依使用者正常遊玩抽驗的既有電廠驗收入口。由全新 EXE 冷讀正常保存的 DISA1，經原版方向鍵至原點 (52,40)，世界 (60,44) 的核電廠位於原畫面 (77,70,54,54)。依序驗五語系、F12、原版存讀與退出；不注入狀態，不宣稱核能新建施工已驗。[nuclear_sources.py](../../workspace/tools/nuclear_sources.py) 逐 byte 對照完整 36 格與九圖庫全部別名，核能來源為 ROM 成員 38、索引 `18+30×row+col`。先完成來源與候選審查，再接正式 HD。
+
+### 核能靜態圖 READY 契約
+
+2026-10-14：`gui-nuclear-baseline-r2/verification.json` SHA-256 `359a09e4dc68d30053cc6a6162b92392c776031e8d8d095131dee34aff823565`，原版冷讀、捲動、完整 36 格、五語系／F12、同次存讀與原版退出通過。沒有新建核電廠。完整複合來源 SHA-256 `621a214f65a4e5e2e354fd25a0bb37b89f258f33544b2387fbc83b474ba42bf2`，全部別名與檔案偏移保留於 `nuclear-v1/nuclear/source.json`，SHA-256 `274c1057a1aa545dcda0104c6958ba6b4a23da04295c0ac3cf7fcff70fa8f0f6`。
+
+內建 imagegen 原件 `nuclear-v1/nuclear/generated.png` SHA-256 `87947595e47d354a52c7963f50c94879c2c33ed93fa708aedc4286fc0b548c3a`，提示及預設原件路徑保留於同目錄 `prompt.txt`／`generation.json`。已檢視原版與 216×216 B 圖，保留灰色圓頂、藍色建物、白色圖案四紅點及四棵樹。[public_facility_assets.py](../../workspace/tools/public_facility_assets.py) 以 `--count 1 --issue 46` 產生 DRAFT，`--count 1 --stage nuclear` 產生固定核能素材；完整圖只縮放一次，再按格使用。
+
+| 核能輸入 | SHA-256 |
+|---|---|
+| DRAFT `nuclear-prototype-v1/manifest.json` | `11a68f7b2abe4c80259e402a8b0ac4c1dfcbf9ddaf8e48905d44329ec31f0431` |
+| READY `nuclear-ready-v1/manifest.json` | `05b13ecfc0979b8b4f26e004b195d6068c8202c67cb3ef9ae2836ab9f5cda73a` |
+| READY `nuclear.png` | `3be3975c9fec7edde9da35e4e3d93c1cb046b59aedfc917165a1b4e5096c8a91` |
+| 216×216 RGBA 像素 | `2a1c8da6b7058cf52f533572192ca5a6fe56c1c02f34a034b2cd8c50ab5b215e` |
+
+正式核能只接受這 36 個位置、35 種完整 81 bytes 來源。ROM38 的 20 與 22 為同源格，依同電廠全部可見唯一原圖核對相對位置，至少一個完整錨點，唯一解才呈現；不足、游標遮擋或失配時回退原版。各唯一來源可在部分可見時按整格呈現，不猜補來源或動畫。維持原有場景／選單／阻塞／原點閘門，逐格驗已用色盤、素材尺寸、雜湊及不透明 alpha。每格只寫對應 36×36 矩形，不改原版輸入、財政、時間、亂數或 SAV。
+
+正常 HD 情境使用同一既有電廠路徑，另要求 36 格實際覆繪。獨立 [nuclear_check.py](../../workspace/tools/nuclear_check.py) 重讀 ROM 與生成原件，驗全圖、五語系及重算雜湊的來源／像素／統計／語言／同源格交換負對照。[export_nuclear_screenshots.py](../../workspace/tools/export_nuclear_screenshots.py) 核對後才匯出原版與 HD 五語系六張實際 PNG。新建核能施工、其他動畫相位、完整 RAM／CPU／RNG 對拍、外平台真機與正式封包未驗，不阻塞本次已授權的靜態呈現抽驗。
+
+正式載入入口為 [nuclear_facility.go](../../workspace/app/internal/hd/nuclear_facility.go)，沿用 [public_facilities.go](../../workspace/app/internal/hd/public_facilities.go) 的封存素材、來源別名與同源位置核對。針對正常核電廠來源的測試為 [nuclear_facility_test.go](../../workspace/app/internal/hd/nuclear_facility_test.go)。核能三項與既有公共設施四項測試在 `nuclear-tests-r2.log` 通過，86.055 秒，無跳過；包含完整原圖、區外隔離、裁切、缺鄰格、2,835 項來源失配、色盤與四項實際資源故障。初次編譯測試因 image.Image 沒有 RGBAAt 而拒絕，修正測試讀圖型別後同環境乾淨重跑；不列產品缺陷。
+
+[ida_nuclear_probe.py](../../workspace/tools/ida_nuclear_probe.py) 是原版正常 Space 施工的窄查詢。用已驗 IDA Pro 9.4 image、唯讀原版與 `.i64` 的一次性副本，預設匯出原名 `sub_16FF4`，以 `TAIPEI_IDA_TARGETS` 指定直接相關函式、`TAIPEI_IDA_OUTPUT` 指定本機 JSON。只保留原始指令、bytes、IDA 線性位址與獨立檔案偏移；未審查語意標為 unknown，不改名或寫回正式資料庫。
 
 [power_scenario_scan.sh](../../workspace/tools/power_scenario_scan.sh) 與 [power_scenario_scan.py](../../workspace/tools/power_scenario_scan.py) 從全新 EXE 的正常災難城市選單依顯示順序檢查六座城市。逐座暫停、解碼原版資金、正常 F2 保存與原版退出；遇到第一座至少 120000 的城市即停止。檔案讀取紀錄確認實際 DSA，SAV 保留原始 bytes 與 SHA-256。此研究不改寫城市、財政、時間或亂數，不重複已結束的 DISA1 極端預算探針，也不作核能施工完成證據。
 
