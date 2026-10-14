@@ -34,7 +34,7 @@ ROM0與ROMA3色盤經原始8-bit通道右移2位、VGA6-bit展開後相差七個
 
 相位組原型入口 [illustration_groups.py](../../workspace/tools/illustration_groups.py)，在既有 `illustrations-v1/groups/` 內按原始圖庫分組，保存每格來源／原生矩形、灰色間隙、原始別名與固定reference sha。原生寬高與相位數不由生成模型改動；生成後整張縮放再按已存矩形切格，不把灰色間隙放入遊戲。兩門樓已另有DRAFT，既有UI／Noto標題與七張城市預覽／游標分別核對，不將所有197種都當新生成需求。
 
-[copy_illustration_generations.py](../../workspace/tools/copy_illustration_generations.py) 只複製內建imagegen的明列輸出及提示，保留原預設檔案；metadata記錄來源／版面／提示／生成圖sha與權利。目前53組來源參考包含170相位，小游標組只作原型對照，52組可作美術批次。新生成的r25六相位與r42雙相位仍DRAFT；r42新增外側白邊與小人物手持細節尚未符合來源，不能接產品或算完成。細小不可辨識細節須保留原始形狀，不由生成模型猜武器、文字或用途。
+[copy_illustration_generations.py](../../workspace/tools/copy_illustration_generations.py) 只複製內建imagegen的明列輸出及提示，保留原預設檔案；metadata記錄來源／版面／提示／生成圖sha與權利。53組來源參考包含170相位，細小圖A35只作來源對照，52組作美術批次。初次r25六相位與r42雙相位仍DRAFT；r42-v1新增外側白邊與未證實手持細節，已拒絕。細小不可辨識細節保留原始形狀，不由生成模型猜武器、文字或用途。
 
 相位原型 [illustration_prototype.py](../../workspace/tools/illustration_prototype.py) 只輸出DRAFT。`illustrations-v1/prototype-v1/` 保留首次比較與原執行腳本；`prototype-v2/` 使用r42-v2背景板，人物／細小道具以原始形狀及B材質覆回，保留原位與相位，不猜用途。只去除原參考外緣沒有的新增近單色邊框，原件白邊每通道差3，容差5且參考原邊非單色才可去除。原版各相位相同的靜態區沿同一B底圖；小形狀區的四權重邊緣可隨鄰近相位變化。r42的(48,52,72,22)只覆前景色號形狀，原圖背景不整塊覆回，避免色塊接縫。類似圖庫逐張核對後才套用，仍未READY。
 
@@ -46,4 +46,16 @@ r2增加before／after原件及最大可見矩形，保留首次裁切。48份�
 
 色盤另保存8種與7個觀察事件。a05第一次繪圖時仍是前一色盤，不能把呼叫瞬間色盤當成最終發布畫面。正式配色／淡入仍需依實際發布狀態，不能只看PNG或ROMA3就宣稱完成。
 
-相位參考manifest `13c5aac1a68913b2562e2cfc86032be925d21f02aa7712388b482b400e0f2f0c`。目前只生成r25六相位與r42雙相位，加先前兩門樓；r42-v1被拒絕，v2作背景板與原形狀覆回。八張DRAFT原型v2 manifest為 `99c3de63409f85af4149cb032af3d050713c8031da0ead5bad851468b495022d`。完整批次、資源回退、正常GUI、README與封包均未完成，不把原型數當已交付。
+相位參考manifest `13c5aac1a68913b2562e2cfc86032be925d21f02aa7712388b482b400e0f2f0c`。初次生成r25六相位與r42雙相位，加先前兩門樓；r42-v1被拒絕，v2作背景板與原形狀覆回。八張DRAFT原型v2 manifest為 `99c3de63409f85af4149cb032af3d050713c8031da0ead5bad851468b495022d`，原件保留。
+
+## 完整 DRAFT 批次與發布色盤
+
+2026-10-15完成52組169相位，加兩門樓、七預覽及細小圖A35，共179張完整四倍圖。其餘18種由既有UI／Noto處理，197種來源全部有分類。A35用途仍未知，不推定輸入游標行為。`prototype-v10/manifest.json` SHA-256 `ebe1576eeb2899058aff4ef8a3bba4b64a1e24f56f9cbb4ed17b15fd54dc519b`；54份選用生成metadata含來源、提示與修訂雜湊。A16沿用A15同一背景板，57個原生差異包含眼鏡與嘴形，不能只稱嘴形動畫。
+
+[illustration_prototype_check.py](../../workspace/tools/illustration_prototype_check.py) 直接重讀ROM，核對209筆／197種來源、179個PNG及18個既有UI分類、54份生成metadata、尺寸與不透明性。驗108269個原255外背景格、3539個黑場格、63560個跨來源靜態格及1876個同角色格。四個有效反例為黑場亮點、外背景新墨、八方向缺相位、同街景背景改色。收據 `workspace/runs/illustration-prototype-v10-check.json` SHA-256 `9b62f6e54995669823ae2c192fb7237ec365d0d104abf53725c759977a04862d`。這證明明列結構條件，不替代正常GUI與整體美術驗收。
+
+R42–51共用背景板，人物與小道具由原形狀及相位差異覆回。前次逐像素複製共通色號造成角色鋸齒，已改成完整背景板及有證據的局部形狀；灰色間隙的漸層則依參考邊緣與已測色域排除。保留舊版本與執行腳本，沒有將結構檢查通過稱為美術通過。A33弧線差異包含14與195兩色，不把角色自身195號膚色覆成弧線。生成字、旗面及細小標誌改回原輪廓，不猜Unicode內容。
+
+[illustration_published_palette.py](../../workspace/tools/illustration_published_palette.py) 沿033正常冷啟動r15的標題、百貨、交通與獎章四份原版收據，重算原生PNG與64000色號／當時色盤逐像素相同；四者256項均為ROMA3的VGA6-bit展開。正常城市與ROMA3相差11項，包含四個城市運行改色；繪圖瞬間a05的31號綠色不能當最終黑背景。收據 `workspace/runs/illustration-published-palette-r1.json` SHA-256 `c8a44941e1290044db13de03ec28f6f0b2c523690d30cb05bcddd7214b77d50d`。這是既有正常原版證據，沒有驗新HD或新增平台聲明。
+
+產品仍使用038已驗版本。資源回退、新HD正常GUI、更新README照片與封包尚未完成；DRAFT圖片不得直接載入正式呈現器。

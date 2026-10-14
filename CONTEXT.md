@@ -1,6 +1,6 @@
 # 模擬台北：目前現況
 
-核對日期：2026-10-14。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
+核對日期：2026-10-15。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
 HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與84張實際截圖。開場／插畫／動畫重繪與正式封包仍未完成。
 
@@ -29,7 +29,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 | 項目 | 現況 | 證據或限制 |
 |---|---|---|
-| 開場與動畫 | #32 接續完整來源核對，ROM52–55的32筆IV2已完整解碼；先處理來源清單與原型，不接產品 | [039](docs/spec/039-illustration-animation.md) DRAFT；透明、裁切、用途與正常出現路徑仍需核對 |
+| 開場與動畫 | 179張完整四倍DRAFT與18種既有UI分類齊備。六原生呼叫／1362次完整合成、54份生成來源、結構正反例及四份正常發布色盤已核對 | [039](docs/spec/039-illustration-animation.md) DRAFT；新HD接入、遮擋、正常GUI與封包未完成。用途未知保留編號 |
 | 完整地圖圖庫 | 038限完整來源呈現與五種正常代表CONFORMED。新增301種非空來源、九圖庫1049種全部辨識；整圖／字墨／正反對照、136檔乾淨重生、42張真實GUI及C1原版存讀退出通過，93567-byte SAV與舊版相同 | [038](docs/spec/038-map-completion.md)、[#62](https://github.com/wicanr2/taipei/issues/62)。r3照片為正常來源前段，r4驗完整存讀退出；C2兩高階候選路由原因未定，正常出現分支未抽驗。開場／動畫及正式封包另驗 |
 | 港口與機場 | 037 限 72 格／72 種來源與已驗路徑 CONFORMED。正常 DISA4 冷讀／捲動、逐項 F11 五語系／F12、原版存讀與退出，十二張全圖／五項正反對照通過。原版 SAV 與無運輸 HD 基線相同；核心／核能／公共同源回歸及素材重生通過 | [037](docs/spec/037-transport-facilities.md)、[#61](https://github.com/wicanr2/taipei/issues/61)。標準 Linux 入口已提升，四架構重建；新建機場、其他相位、完整狀態對拍、外平台真機及封包未驗 |
 | 核能靜態呈現 | 原版 DISA1 既有核電廠 36 格／35 種完整來源已接入 B 圖。同源格依完整可見唯一鄰圖定位，失配回退。正常 EXE 冷讀、鍵盤捲動、F11 五語系／F12、原版存讀及退出通過；八圖與六項正反對照、區外／裁切／色盤／素材故障及既有回歸通過 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)。限靜態圖與已驗路徑 CONFORMED，SAV 與無核能 HD 基線完全相同。新建施工、其他相位、完整機器狀態對拍、外平台真機及封包未驗；失敗研究前件保留於 WORKLOG |
@@ -330,3 +330,6 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 - 中文字模證據：[docs/re/009-chinese-font-sources.md](docs/re/009-chinese-font-sources.md)，記錄字模定位、十二字正常畫面正對照、CP950 候選與尚未確認的語意。
 - 原版文字呼叫端：[ida_text_probe.py](workspace/tools/ida_text_probe.py)，依 #31 在既有唯讀 IDA 9.4 資料庫的副本查原始字串、交叉參照與窄範圍函式，輸出留在 `workspace/runs/ida-31/`。
 - 正常文字重播：[text-source-audit](workspace/app/cmd/text-source-audit/main.go)，依 #31 唯讀觀察正常輸入中的原版字串與字模呼叫，逐點核對原版繪製緩衝；不接入產品路徑。
+
+- 插畫完整原型核對：[illustration_prototype_check.py](workspace/tools/illustration_prototype_check.py)，直接重解原ROM與179圖、54份生成來源及四個有效反例；039仍DRAFT。
+- 開場實際發布色盤：[illustration_published_palette.py](workspace/tools/illustration_published_palette.py)，沿033正常GUI原件重算PNG／色號／色盤，不將舊收據當新HD驗收。

@@ -39,6 +39,13 @@ def main():
             'review':'完整圖／相位／色盤與裁切待核對，不能自動進production'}
         reference=p.get('reference_file','reference.png');assert Path(reference).name==reference
         record['tool_reference_sha256']=sha((root/reference).read_bytes())
+        paths=p.get('tool_reference_paths',[p['id']+'/'+reference])
+        assert paths and len(set(paths))==len(paths)
+        record['tool_reference_files']=[]
+        for path in paths:
+            assert re.fullmatch('[ar][0-9]{2}/(?:reference|generated(?:-v[1-9][0-9]*)?)\\.png',path)
+            item=a.root/path;assert item.is_file()
+            record['tool_reference_files'].append({'relative_path':path,'sha256':sha(item.read_bytes())})
         record['background_plate']=p.get('background_plate',False)
         (root/('generation'+suffix+'.json')).write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n');added+=1
         if a.select:
