@@ -1145,3 +1145,5 @@ r19新候選已確認十圖、銀行五語系／F12及Help，但420秒驗證上�
 macOS兩slice與個別build逐byte相同，11.0欄位、系統依賴、材料及launcher語法／版本通過。原生執行、使用者存檔目錄及音訊未驗，不以Linux helper或stub補成真機。版號tag沒有移動；tag後的工具修正只加強實際中文路徑抽驗及收尾彙整，沒有改程式或重建覆寫封包。
 
 release_accept回核三包、兩平台實際收據、mac結構、35原始檔／RAR、92張README及指定find，acceptance2d9e2201、最終索引49d2f0b9。全部輸出1000:1000，project=taipei容器清單空，沒有新image或其他專案資源清理。README加入穩定版本、三包入口、存檔位置及驗證限制，保留92張原版／五語系實圖與遊戲背景。封包／字型／HD／原版／SAV／WAV／原始收據均留本機，不入Git／Release。040限本次矩陣CONFORMED，#9附完成提交後結案；Windows／macOS真機、人耳、逐事件／成功結局仍屬明列限制。
+
+0d06912已提交推送交付文件與收尾工具。主機gh將完整證據回寫#9後關閉，留言 https://github.com/wicanr2/taipei/issues/9#issuecomment-6177984550 ，即時列舉OPEN結果[]。來源tag仍固定57c5596，未移動；本機三包與驗收雜湊不變。現況表更新為全部Issue結案，未驗平台／人耳／逐事件限制保留。
