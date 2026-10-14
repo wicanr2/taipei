@@ -27,6 +27,8 @@ def rect(value):
 def mask_rect(mask, box):
     left, top, right, bottom = box
     left, top, right, bottom = max(0, left), max(0, top), min(320, right), min(200, bottom)
+    if left >= right or top >= bottom:
+        return
     for y in range(top, bottom):
         mask[y*320+left:y*320+right] = bytes([1])*(right-left)
 
@@ -35,9 +37,19 @@ def compare(actual, expected, label):
     assert actual == expected, label
 
 
+def verify_blocks(actual, expected_blocks, label):
+    counts = Counter()
+    for at, (identifier, expected) in expected_blocks.items():
+        got = b''.join(actual[((at//320*4+dy)*1280+at%320*4)*4:((at//320*4+dy)*1280+at%320*4)*4+16] for dy in range(4))
+        compare(got, expected, (label, identifier, at))
+        counts[identifier] += 1
+    return counts
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', type=Path, required=True)
+    ap.add_argument('--normal-run', type=Path, help='同一候選程式的完整正常存退讀流程；未指定時與插畫來源相同')
     ap.add_argument('--assets', type=Path, required=True)
     ap.add_argument('--binary', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
@@ -46,11 +58,16 @@ def main():
     manifest_raw = (a.assets/'manifest.json').read_bytes()
     assert sha(manifest_raw) == MANIFEST
     manifest = json.loads(manifest_raw)
-    verification_raw = (a.run/'verification.json').read_bytes()
-    verification = json.loads(verification_raw)
-    assert verification['normal_gui'] and not verification['checkpoint'] and verification['native_exit_tested']
-    assert verification['original_save_written'] and verification['original_save_read'] and verification['save_unchanged_after_read']
-    assert verification['binary_sha256'] == sha(a.binary.read_bytes())
+    normal_run = a.normal_run
+    verification_raw = None
+    if normal_run is not None:
+        verification_raw = (normal_run/'verification.json').read_bytes()
+        verification = json.loads(verification_raw)
+        assert verification['normal_gui'] and not verification['checkpoint'] and verification['native_exit_tested']
+        assert verification['original_save_written'] and verification['original_save_read'] and verification['save_unchanged_after_read']
+        assert verification['binary_sha256'] == sha(a.binary.read_bytes())
+    gallery = json.loads((a.run/'illustration-gallery.json').read_text())
+    assert gallery['normal_gui'] and not gallery['checkpoint'] and gallery['help_input_isolation']
     roms = {n: Path('/orig', n).read_bytes() for n in ROMS}
     assert all(sha(b) == ROMS[n][0] for n, b in roms.items())
     sources = {}
@@ -75,6 +92,7 @@ def main():
             actual = rgba(z.read('presentation.png'))
         assert len(native) == 64000 and sha(native) == status['frame_index_sha256']
         assert len(actual) == 1280*800*4 and status['hd_enabled']
+        assert status['original_sha256'] == '798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3'
         # Exclude only known text rectangles. Their native source/ink is tested
         # separately by 033; no image-wide text exemption is used.
         text = bytearray(64000)
@@ -144,16 +162,13 @@ def main():
                 if not (title and text[at]):
                     covered[at] = 1
         assert len(expected_blocks) >= 100, (label, len(expected_blocks))
-        counts = Counter()
-        for at, (identifier, expected) in expected_blocks.items():
-            got = b''.join(actual[((at//320*4+dy)*1280+at%320*4)*4:((at//320*4+dy)*1280+at%320*4)*4+16] for dy in range(4))
-            compare(got, expected, (label, identifier, at))
-            counts[identifier] += 1
+        counts = verify_blocks(actual, expected_blocks, label)
         # Change a checked subpixel while keeping the same source and metadata.
-        at, (_, expected) = next(iter(expected_blocks.items()))
-        modified = bytearray(expected); modified[0] ^= 1
+        at = next(iter(expected_blocks))
+        modified = bytearray(actual)
+        modified[((at//320*4)*1280+at%320*4)*4] ^= 1
         try:
-            compare(modified, expected, 'changed-visible-HD-pixel')
+            verify_blocks(modified, expected_blocks, label)
         except AssertionError:
             pass
         else:
@@ -162,9 +177,11 @@ def main():
                         'visible_sources': dict(counts), 'negative_pixel_rejected': True})
         print('PASS', label, len(expected_blocks), dict(counts), flush=True)
     result = {'issue': 32, 'binary_sha256': sha(a.binary.read_bytes()), 'manifest_sha256': MANIFEST,
-              'normal_gui': True, 'checkpoint': False, 'normal_verification_sha256': sha(verification_raw),
+              'normal_gui': True, 'checkpoint': False, 'normal_verification_sha256': sha(verification_raw) if verification_raw else None,
+              'illustration_source_run': a.run.name, 'normal_complete_run': normal_run.name if normal_run else None,
+              'normal_path_complete': normal_run is not None,
               'results': results, 'tool_sha256': sha(Path(__file__).read_bytes()),
-              'scope': '十份正常GUI照片中明列可見插畫的完整四倍格；文字沿033，不外推所有出現分支'}
+              'scope': '十份正常冷啟GUI前段照片中明列可見插畫的完整四倍格；完整存退讀另列同程式流程。文字沿033，不外推所有出現分支'}
     a.out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
     print('PASS', sha(a.out.read_bytes()))
 

@@ -7,6 +7,7 @@
 
 | 範圍 | Issue | 必要證據 | 完成限制 |
 |---|---|---|---|
+| 開場、插畫與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 209別名／197種、179完整正式圖、261檔重生、六ABI唯讀、來源／色盤／素材／遮擋／未知屏障正反例、正常十圖與五語系、F12／Help及同程式存退讀 | [039](spec/039-illustration-animation.md) 限完整來源與正常代表CONFORMED。十圖165591格及十像素反例；r19正常前段、r20完整存退讀退出分列，不能把前段補為完整退出。92張README；全部出現分支、外平台及正式封包另驗 |
 | 完整地圖圖庫 | [#62](https://github.com/wicanr2/taipei/issues/62)、[#30](https://github.com/wicanr2/taipei/issues/30) | 九圖庫實際1134項／1049種、301種新增非空來源、十三整圖、十五區域Noto字墨、來源／色盤／真實資源故障、正常五種代表與C1存讀退出 | [038](spec/038-map-completion.md) 限來源呈現與實際抽樣CONFORMED；24381來源反例、12資源故障、136檔重生、42張真實GUI與42像素反例、93567-byte SAV與舊版相同。r3照片為正常來源前段，r4完成C1存讀退出；C2兩高階路由未知、成長／災害分支、外平台真機及正式封包未驗 |
 | 十二項環境與公共設施 | [#58](https://github.com/wicanr2/taipei/issues/58)、[#60](https://github.com/wicanr2/taipei/issues/60) | 十二份正常完整施工圖、392 格 B；同源鄰格辨識、來源／色盤／素材回退；正常跨組 F11／F12／存讀檔／DOS 退出 | [036](spec/036-public-facilities.md) v2 限靜態圖與已驗路徑 CONFORMED。391 種來源、26 項素材故障與隔離、全部區外、同源格原位／裁切／失配通過；八張 GUI 與六項正反對照含同源格交換。十三素材檔重生相同，四架構重編。其他相位、冷讀、外平台真機與正式封包未驗 |
 | 治理 | [#1](https://github.com/wicanr2/taipei/issues/1) | private／Issues 回讀、文件入口、排除規則、提交與推送 | 不證明遊戲可執行 |

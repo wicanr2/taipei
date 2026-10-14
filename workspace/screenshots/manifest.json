@@ -2108,6 +2108,150 @@
       "batch": "map-completion",
       "normal_path_complete": false,
       "local_capture": "workspace/runs/gui-map-r3/m34-b00-en-capture.zip"
+    },
+    {
+      "file": "illustration-bank-original.png",
+      "scene": "opening-bank",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "2080eb89212910a0c20a0baa507c62acc4fbeff0175f7e735c5e400f575ba515",
+      "capture_sha256": "9936e3b12188dcf62cf7d4c8510846c644242e2d31ddef25cdb41951e0e6d49b",
+      "frame_index_sha256": "701231161696deb6049ad24865ab4fe74013d17903ccc644e1b2f69c3322be71",
+      "steps": 504000000,
+      "ticks": 21559,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-original-capture.zip"
+    },
+    {
+      "file": "illustration-bank-zh-Hant.png",
+      "scene": "opening-bank",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "422f48f20082aab9d66de259147fa3116bbf9e2e70a7965ec5b40c41cbbf211b",
+      "capture_sha256": "5fe5cff8bcf4a3474e778a184c5b40fe9180caece63d68e3fbb101a2a0a40355",
+      "frame_index_sha256": "f50289b848015cd5d7e516f5a1ff7da23aceb0f6a3a5eab08af8e0a985d4db55",
+      "steps": 550400000,
+      "ticks": 23547,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-zh-Hant-capture.zip"
+    },
+    {
+      "file": "illustration-bank-zh-Hans.png",
+      "scene": "opening-bank",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e57de9c0bd4faab22815d5416ce0e38bd6a1b94c1d5058e784e3d53d4653782b",
+      "capture_sha256": "5d4604eb0974d4f2826ea8fa2b087e1fad23615cd166d2b5c3c6328619b52647",
+      "frame_index_sha256": "ef120c8cce2641f8cb51b00a1597cb9d3ded885dc171dfe3b0e4cdbe3abe87f3",
+      "steps": 573600000,
+      "ticks": 24541,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-zh-Hans-capture.zip"
+    },
+    {
+      "file": "illustration-bank-ja.png",
+      "scene": "opening-bank",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "0418387dd84ba0243d92ff285d2cac860c0090663df7fef68409d5d4a4683c3f",
+      "capture_sha256": "5fa09a8ad793dcdb19abb0d0ff61e2a80d4b020656596763828923b59be12188",
+      "frame_index_sha256": "4e98c3a2f147c80202001cb9fee10f3833bc6850aa34bfe35224b4f0526133b6",
+      "steps": 596800000,
+      "ticks": 25534,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-ja-capture.zip"
+    },
+    {
+      "file": "illustration-bank-ko.png",
+      "scene": "opening-bank",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "d29ee336a5e9ede4e15d58a7feaa4a2067b42af0fbe06f1d74142f37b09512ea",
+      "capture_sha256": "76d4855a88784cad22d238c525785b86d550db15250aa8e6c325282df7082776",
+      "frame_index_sha256": "2f91b5289ba4255575021c0b6443de8b21268c941153d0f21f25e3c8f007ffa9",
+      "steps": 620400000,
+      "ticks": 26545,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-ko-capture.zip"
+    },
+    {
+      "file": "illustration-bank-en.png",
+      "scene": "opening-bank",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "854bcd0283ebd8bd764660acee63fe38ef2ba81fc603fa74fd09953e912bed96",
+      "capture_sha256": "3ad4ef940f5d169f4f932f1d4173d237c51311f42cdc39da1621d59bf4bf67bb",
+      "frame_index_sha256": "ef120c8cce2641f8cb51b00a1597cb9d3ded885dc171dfe3b0e4cdbe3abe87f3",
+      "steps": 643200000,
+      "ticks": 27522,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/illustration-bank-en-capture.zip"
+    },
+    {
+      "file": "illustration-title-zh-Hant.png",
+      "scene": "opening-title",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "7d77f757f5f11ccfaad752933f2f6d57ca84608cc50ba72ff5d162e841e474df",
+      "capture_sha256": "c69d05d9a62c8703d0e528f95e685ef5d9e62669bbc693a5a45ca935c076498f",
+      "frame_index_sha256": "9f7e72f9e9293bccd077a1f2e8349feb2f488ba8d6221d671fda39205c36a4fa",
+      "steps": 144000000,
+      "ticks": 6137,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/opening-startup.title-capture.zip"
+    },
+    {
+      "file": "illustration-traffic-zh-Hant.png",
+      "scene": "opening-traffic",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "eb0d7bc9e5bd87648e7b009700071d3ca5e5e08d06507f3c5b489c873aaae867",
+      "capture_sha256": "4aa6923da8794731f5c8c440cffb5d07c67ded64aae9281a0b688d9f55758324",
+      "frame_index_sha256": "dd34d764844f09fe1ed83831f517f04c428150082a01fd49d0df55fd949564b3",
+      "steps": 928000000,
+      "ticks": 39723,
+      "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+      "batch": "illustrations",
+      "local_capture": "workspace/runs/interface-locale-cold-r19/gui/opening-intro.traffic-capture.zip"
     }
   ],
   "chart_capture": {
@@ -2358,5 +2502,28 @@
       "map_completion_check.py": "eae2b17eb185674626303d4ca4dd050bb985c02da04572fe6d70c1981ca83d59"
     },
     "limits": "完整原圖與五種正常代表；選定照片來自未完成退出的正常前段，另一C1冷啟完成存讀退出。C2高階建物、成長／災害分支、人耳與外平台真機未驗；封包另驗。"
+  },
+  "illustrations_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/32",
+    "source_commit": "12ed901d17c55417fdd6aaae80b45ed68c79ab4f",
+    "binary_sha256": "fa21269163c22123f0c7d1ad28da420150b3bc731f990aace951215a9396ea3e",
+    "catalog_sha256": "2909ecec7189e2248ae64dd4138d98fec6b81136db8fb2a1063e0c0af9594bdd",
+    "local_receipt": "workspace/runs/interface-locale-cold-r20/verification.json",
+    "illustration_source_run": "interface-locale-cold-r19",
+    "normal_complete_run": "interface-locale-cold-r20",
+    "normal_receipt_sha256": "e628e40f21941f91c36c3fe6cf1b85d65811d3a6ce10ba090030582d21af357e",
+    "pixel_verification_sha256": "9e8b94eea81e11851772a3dc2d94ec35200ce48486e924e37a237863905db7c1",
+    "gallery_sha256": "47c38e086b639efc10af6d1c7cfe9d7acd379fbefc2c8f49616e46d4ab08be2a",
+    "normal_gui": true,
+    "native_exit_tested": true,
+    "original_save_read": true,
+    "same_state_across_languages": false,
+    "long_state_sampling": false,
+    "limits": "同銀行背景上原版角色持續運行；不同語言照片不稱同狀態。正常代表抽驗，不外推所有事件／結局分支、真機或封包。",
+    "tools_sha256": {
+      "export_illustration_screenshots.py": "00d1cb2568d5d31408a7f68e22ee22aaced20556e1fe0208b89e5dbe2283a59c",
+      "illustration_gallery.py": "c77f63b89ad439c663e9b48cb6f45bbc43ae7c119f8bfef6dc9ef1bdb8c7723f",
+      "illustration_gui_check.py": "06da498e5c819e092397b6e5fa41beb2165a0f0335d5d19c80dc8fa6cce7d386"
+    }
   }
 }

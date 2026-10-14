@@ -99,6 +99,15 @@
 !/workspace/screenshots/city-map-zones-ko.png
 !/workspace/screenshots/city-map-zones-en.png
 
+!/workspace/screenshots/illustration-bank-original.png
+!/workspace/screenshots/illustration-bank-zh-Hant.png
+!/workspace/screenshots/illustration-bank-zh-Hans.png
+!/workspace/screenshots/illustration-bank-ja.png
+!/workspace/screenshots/illustration-bank-ko.png
+!/workspace/screenshots/illustration-bank-en.png
+!/workspace/screenshots/illustration-title-zh-Hant.png
+!/workspace/screenshots/illustration-traffic-zh-Hant.png
+
 # 正式封包只留本機
 /dist-all/
 .DS_Store

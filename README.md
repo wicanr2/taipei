@@ -40,6 +40,26 @@
 </details>
 
 <details>
+<summary>開場插畫：原版與 HD 五語系</summary>
+
+門樓、百貨、人物、街景與動畫沿原版來源覆繪，字型使用 Noto。以下皆為正常冷啟動後的實際畫面，見[插畫契約](docs/spec/039-illustration-animation.md)。銀行背景相同，角色仍隨原版時間移動，五張語言照片不宣稱同狀態。
+
+| 模式／語言 | 銀行場景 |
+|---|---|
+| 原版繁體中文 | ![原版銀行插畫](workspace/screenshots/illustration-bank-original.png) |
+| HD 繁體中文 | ![HD 繁中銀行插畫](workspace/screenshots/illustration-bank-zh-Hant.png) |
+| HD 簡體中文 | ![HD 簡中銀行插畫](workspace/screenshots/illustration-bank-zh-Hans.png) |
+| HD 日文 | ![HD 日文銀行插畫](workspace/screenshots/illustration-bank-ja.png) |
+| HD 韓文 | ![HD 韓文銀行插畫](workspace/screenshots/illustration-bank-ko.png) |
+| HD 英文 | ![HD 英文銀行插畫](workspace/screenshots/illustration-bank-en.png) |
+
+| HD 開場門樓 | HD 交通插畫 |
+|---|---|
+| ![HD 開場門樓與標題](workspace/screenshots/illustration-title-zh-Hant.png) | ![HD 交通與車輛插畫](workspace/screenshots/illustration-traffic-zh-Hant.png) |
+
+</details>
+
+<details>
 <summary>災難台北建物：原版與 HD 五語系對照</summary>
 
 以下保留首批建物驗收版本的實際畫面，透過 F11／F12 切換後擷取。最新地圖見上方。
@@ -63,13 +83,13 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質的完整九圖庫非空來源，涵蓋地景、道路電線、城市建物、電廠、港口機場與公共設施；另有城市框架、工具選單、預算與圖表外框、政績靜態底圖 |
+| HD 圖像 | B 細緻手繪材質的完整九圖庫非空來源，涵蓋地景、道路電線、城市建物、電廠、港口機場與公共設施；另有城市框架、工具選單、預算與圖表外框、政績底圖，以及開場門樓、插畫、人物／車輛及動畫相位 |
 | HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列、圖表及住／商／工區域標示 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
 
 原版程式繼續負責模擬規則、亂數與存檔，HD 層改變呈現。玩家檔名、原版數值與商標保留原樣。
-重繪目標包含所有圖片與操作介面；其餘圖片、動畫與 Windows、Linux、macOS 正式封包仍在製作，尚無正式交付包。
+重繪目標包含所有圖片與操作介面；完整來源已分類並接入，開場與動畫按正常代表抽驗通過；未逐項走過所有事件／結局分支。Windows、Linux、macOS 正式封包仍在製作，尚無正式交付包。
 目前證據與限制以 [CONTEXT.md](CONTEXT.md) 及[驗收矩陣](docs/verification-matrix.md)為準；翻譯範圍見[完整來源覆蓋契約](docs/spec/033-localization-source-coverage.md)。
 
 <details>

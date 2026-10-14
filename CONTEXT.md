@@ -2,15 +2,15 @@
 
 核對日期：2026-10-15。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與84張實際截圖。開場／插畫／動畫重繪與正式封包仍未完成。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與92張實際截圖。開場／插畫／動畫已完成來源接入與正常代表抽驗，正式封包尚未完成。
 
-主機gh已回讀#29城市框架、#30九圖庫地圖、#31 Noto文字、#44道路及#62補齊為CLOSED。#32／039繼續非9×9開場、插畫、移動物件與動畫；完整HD及封包母項保持未完成。未逐種玩過的成長／災害或C2路由保留證據限制，不自行重新開啟已完成呈現工作。
+主機gh已回讀#29城市框架、#30九圖庫地圖、#31 Noto文字、#44道路及#62補齊為CLOSED。039完成非9×9開場、插畫、移動物件與動畫的完整來源及正常代表抽驗；HD母項接續彙整，正式封包未完成。未逐種玩過的成長／災害或C2路由保留證據限制，不自行重新開啟已完成呈現工作。
 
 ## 有效決策
 
 - 私人儲存庫：[wicanr2/taipei](https://github.com/wicanr2/taipei)。Issues 已啟用。
 - 使用者已授權主機 gh、專案提交與推送，以及本範圍的 Issue 管理。
-- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#46](https://github.com/wicanr2/taipei/issues/46)、[#53](https://github.com/wicanr2/taipei/issues/53) 至 [#58](https://github.com/wicanr2/taipei/issues/58)、[#61](https://github.com/wicanr2/taipei/issues/61) 及 [#62](https://github.com/wicanr2/taipei/issues/62) 的截圖工作，選定的84張文件PNG收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。最新地圖已更新首頁，各批舊照片保留各自來源版本。
+- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#46](https://github.com/wicanr2/taipei/issues/46)、[#53](https://github.com/wicanr2/taipei/issues/53) 至 [#58](https://github.com/wicanr2/taipei/issues/58)、[#61](https://github.com/wicanr2/taipei/issues/61) 及 [#62](https://github.com/wicanr2/taipei/issues/62) 的截圖工作，選定的92張文件PNG收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。最新地圖已更新首頁，各批舊照片保留各自來源版本。
 - 使用者於 2026-10-13 指定「抽驗能由遊玩就算驗收通過」。已實作功能以正常玩家路徑抽驗為完成條件；與現行產品一致的已通過收據可沿用，長時間相同步數 RAM／CPU／RNG 對拍不列結案門檻。未製作的圖片、未走過的分支、未驗平台及封包仍分開記錄，不改成完成。
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
@@ -29,7 +29,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 | 項目 | 現況 | 證據或限制 |
 |---|---|---|
-| 開場與動畫 | 039來源／保守覆繪READY。179種正式圖片、260個去重PNG及manifest乾淨重生相同；六ABI、209原始別名／197種、遮擋／未知屏障／透明色／資源故障與五語系字墨通過 | [039](docs/spec/039-illustration-animation.md)、#32。候選r2為fa212691；r18正常存退讀退出通過但交通過窄guard未通過，r19已確認交通、銀行五語系及Help，完整結尾與獨立像素核對進行中。標準程式尚未提升 |
+| 開場與動畫 | 039限完整來源與正常代表CONFORMED。179種正式圖／260 PNG及manifest乾淨重生相同，209別名／197種、來源／遮擋／色盤／素材故障通過。十圖165591位置及十個有效像素反例通過；原版／五語系／Help、正常存讀與DOS退出通過 | [039](docs/spec/039-illustration-animation.md)、#32。r19是正常插畫前段，r20同程式完成存退讀，不能把r19補成完整退出。未逐項試玩所有事件／成功結局；外平台與封包另驗 |
 | 完整地圖圖庫 | 038限完整來源呈現與五種正常代表CONFORMED。新增301種非空來源、九圖庫1049種全部辨識；整圖／字墨／正反對照、136檔乾淨重生、42張真實GUI及C1原版存讀退出通過，93567-byte SAV與舊版相同 | [038](docs/spec/038-map-completion.md)、[#62](https://github.com/wicanr2/taipei/issues/62)。r3照片為正常來源前段，r4驗完整存讀退出；C2兩高階候選路由原因未定，正常出現分支未抽驗。開場／動畫及正式封包另驗 |
 | 港口與機場 | 037 限 72 格／72 種來源與已驗路徑 CONFORMED。正常 DISA4 冷讀／捲動、逐項 F11 五語系／F12、原版存讀與退出，十二張全圖／五項正反對照通過。原版 SAV 與無運輸 HD 基線相同；核心／核能／公共同源回歸及素材重生通過 | [037](docs/spec/037-transport-facilities.md)、[#61](https://github.com/wicanr2/taipei/issues/61)。標準 Linux 入口已提升，四架構重建；新建機場、其他相位、完整狀態對拍、外平台真機及封包未驗 |
 | 核能靜態呈現 | 原版 DISA1 既有核電廠 36 格／35 種完整來源已接入 B 圖。同源格依完整可見唯一鄰圖定位，失配回退。正常 EXE 冷讀、鍵盤捲動、F11 五語系／F12、原版存讀及退出通過；八圖與六項正反對照、區外／裁切／色盤／素材故障及既有回歸通過 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)。限靜態圖與已驗路徑 CONFORMED，SAV 與無核能 HD 基線完全相同。新建施工、其他相位、完整機器狀態對拍、外平台真機及封包未驗；失敗研究前件保留於 WORKLOG |
@@ -57,11 +57,11 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | HD 五語系 | 030–033 限已盤點來源與必要短流程 CONFORMED。033歷史225鍵／1213字元；現行038加039為230鍵／1214字元、146 筆可讀中文全有譯文；五語系各 77 種介面狀態、156 個開場階段、36 個城市訊息階段、三個結局合成測例及九筆圖片來源通過。正常 r15 取得三十個開場／上任信鍵與五類圖片文字，驗途中韓文 F11、原版 F12、環境、預算五語系、英文存讀檔及 DOS 退出；r17 驗缺譯警示與隨附 TSV 回退 | [033](docs/spec/033-localization-source-coverage.md)、[#52](https://github.com/wicanr2/taipei/issues/52)、[#49](https://github.com/wicanr2/taipei/issues/49)。成功結局未走完整玩家流程，密碼分支未啟用，`245C4h` 用途未知但有譯文。IME、平台真機、完整 HD 圖片與正式包另驗；無長時間抽樣 |
 | Help 說明 | 031 限八列操作與前端輸入 CONFORMED。五語系面板固定完整像素、區外透明與必要故障通過；正常冷啟動驗左右 Shift、F11 返回 Help、F12、Esc／同鍵關閉、持鍵隔離、輸入不穿透及原版 F1 保留 | [031](docs/spec/031-help.md)；`help-ui-cold-r1/verification.json`。存讀檔與原版退出由 032／033 補驗；無長時間狀態抽樣與平台真機 |
 | 警察局與消防局 | 035 限兩種正常施工圖及已驗路徑 CONFORMED。ROM37 共 32 格 B 圖像，來源／已用色盤與素材失配回退；正常新城市施工、F12、F11 五語系、CIVIC.SAV 同次存讀檔及 DOS 退出通過。六張設施像素／語言標籤與原版整張、五項正反對照、兩份正常來源區外隔離及四架構通過 | [035](docs/spec/035-civic-facilities.md)、[#57](https://github.com/wicanr2/taipei/issues/57)；本機 `workspace/runs/gui-civic-r1/`。未走過動畫、全新 EXE 冷讀、長時間狀態對拍、真機與正式封包未驗 |
-| README 背景與截圖 | 共 84 張 1280×800，包含原版／HD 五語系新城市、預算、Help、六圖表、DISA1、警消、兩項環境設施、體育場、核電廠、機場、港口、新建物與區域。遊戲背景有出處，玩法回查原版文字 | [來源清單](workspace/screenshots/manifest.json)、[#46](https://github.com/wicanr2/taipei/issues/46)、[#58](https://github.com/wicanr2/taipei/issues/58)、[#61](https://github.com/wicanr2/taipei/issues/61)。全為正常 Linux GUI 擷取，各批保留實際程式與來源；不宣稱完整機器狀態對拍或正式封包驗收 |
+| README 背景與截圖 | 共 92 張 1280×800，包含原版／HD 五語系新城市、預算、Help、六圖表、DISA1、警消、兩項環境設施、體育場、核電廠、機場、港口、新建物、區域與開場插畫。遊戲背景有出處，玩法回查原版文字 | [來源清單](workspace/screenshots/manifest.json)、[#46](https://github.com/wicanr2/taipei/issues/46)、[#58](https://github.com/wicanr2/taipei/issues/58)、[#61](https://github.com/wicanr2/taipei/issues/61)。全為正常 Linux GUI 擷取，各批保留實際程式與來源；不宣稱完整機器狀態對拍或正式封包驗收 |
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 目前程式與跨平台 | 完整地圖Linux amd64已驗87439f2f，標準 `workspace/runs/taipei-preview` 與固定副本 `taipei-preview-map-r2` 乾淨重建相同。Windows amd64、macOS amd64／arm64合併重建與架構核對完成；來源為42639ad與七補丁，完整雜湊見038 | 外平台僅編譯／結構，未重跑Wine、真機或正式封包；先前固定副本保留 |
+| 目前程式與跨平台 | Linux標準入口與已驗插畫r2乾淨重建相同，SHA fa212691。來源12ed901及固定dosgolem／七補丁 | 新Windows amd64／macOS兩架構由#9正式封包一次重建；既有038跨平台檔仍保留原版本，未當039新版本或真機驗收 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口
@@ -333,3 +333,5 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 - 插畫完整原型核對：[illustration_prototype_check.py](workspace/tools/illustration_prototype_check.py)，直接重解原ROM與179圖、54份生成來源及四個有效反例；原型維持DRAFT，正式素材依039 READY另行重建。
 - 開場實際發布色盤：[illustration_published_palette.py](workspace/tools/illustration_published_palette.py)，沿033正常GUI原件重算PNG／色號／色盤，不將舊收據當新HD驗收。
+
+- 插畫正常像素與README：[illustration_gui_check.py](workspace/tools/illustration_gui_check.py)、[export_illustration_screenshots.py](workspace/tools/export_illustration_screenshots.py)。十份正常前段照片與另一完整存退讀流程明列，92張照片來源見既有manifest。

@@ -1,6 +1,6 @@
 # 開場、插畫與動畫完整圖像
 
-狀態：READY，限下列完整來源與保守覆繪契約；正常新HD尚未驗收。對應 [#32](https://github.com/wicanr2/taipei/issues/32) 與來源母項 [#28](https://github.com/wicanr2/taipei/issues/28)。入口 [CONTEXT.md](../../CONTEXT.md)。沿用所有圖片與介面、B、1280×800、Noto、五語系及F12，原版構圖、透明、裁切、相位與時序保持原樣。
+狀態：CONFORMED，限完整來源、保守覆繪與下列正常代表抽驗；不外推所有事件／結局分支。對應 [#32](https://github.com/wicanr2/taipei/issues/32) 與來源母項 [#28](https://github.com/wicanr2/taipei/issues/28)。入口 [CONTEXT.md](../../CONTEXT.md)。沿用所有圖片與介面、B、1280×800、Noto、五語系及F12，原版構圖、透明、裁切、相位與時序保持原樣。
 
 來源先沿 [008盤點](../re/008-full-asset-inventory.md) 及 [033](033-localization-source-coverage.md) 已核對的raw、RLE、IV2與五個繪圖呼叫。不將原初盤每筆可解資料直接算插畫，105×89世界資料、字型、色盤與音樂另分類並附證據等級。未知用途保留數字編號；資料未知不猜補正式行為。
 
@@ -87,6 +87,27 @@ R42–51共用背景板，人物與小道具由原形狀及相位差異覆回。
 
 驗收先做實際ROM解析、裁切／raw255／透明色、重疊順序、未知屏障、來源單點失配、未知色盤、缺圖／竄改PNG／manifest及文字字型故障。再從正常冷啟動走開場門樓、百貨、透明角色／交通與獎章代表、F11五語系／F12／Help、城市原版存退讀及退出；不以合成或direct-entry取代正常GUI。依使用者正常遊玩抽驗，不重跑長RAM／CPU／RNG對拍。README使用新程式實際擷取照片；所有素材與原始收據只留本機，正式封包另驗。
 
-獨立正常插畫像素核對入口：[illustration_gui_check.py](../../workspace/tools/illustration_gui_check.py)。從兩ROM重解來源，讀封存READY PNG與正常冷啟動收據，驗十張照片明列可見插畫的完整四倍格及單像素破壞反例；字墨僅排除已列欄位，沿033另驗。正常存讀與退出主收據完成後才可執行，不將呈現器自報Painted當像素證據。
+獨立正常插畫像素核對入口：[illustration_gui_check.py](../../workspace/tools/illustration_gui_check.py)。從兩ROM重解來源，讀封存READY PNG與正常冷啟動收據，驗十張照片明列可見插畫的完整四倍格及單像素破壞反例；字墨僅排除已列欄位，沿033另驗。未提供`--normal-run`時只核對插畫前段，`normal_path_complete=false`；完整存退讀由獨立主收據閉合後才可匯出README及結案。不將呈現器自報Painted當像素證據。
+
+README匯出入口：[export_illustration_screenshots.py](../../workspace/tools/export_illustration_screenshots.py)。正常主流程、銀行五語系／F12／Help與十圖像素核對全部通過後，只複製八張明列原版及HD PNG並追加既有來源清單。原始收據與完整素材不入Git。
+
+正常抽驗可由同一候選程式的兩次冷啟組成，明列插畫來源前段與完整存退讀流程。r19已取得十份插畫／五語系照片與Help，420秒驗證上限在上任信`letter.easy`後截止，沒有完整退出聲明。保留該原件，以r20真實冷啟按Space略過片頭後完成核心存退讀；兩工具以 `--normal-run` 指定完整流程，不把r19寫成成功完整退出，不重跑已驗插畫。
 
 正式READY manifest為 `545b4f94b6454debc0de5110bab646d5e68ae19dfa126f700361cd12d9d276af`，179種／260 PNG／261檔。由同一固定輸入乾淨重生至 `workspace/runs/illustration-assets-repro-r1/`，261檔逐byte相同。候選Linux r2 SHA-256 `fa21269163c22123f0c7d1ad28da420150b3bc731f990aace951215a9396ea3e`；尚未提升標準入口，正常GUI驗收與跨平台另記。
+
+## 正常代表抽驗與交付入口
+
+2026-10-15完成039本範圍。179種正式圖、260個PNG與manifest共261檔乾淨重生相同；18種既有UI／Noto另列。完整原始圖像1343筆／1246種，包含地圖1134／1049及非地圖209／197。這是來源與呈現覆蓋，不宣稱每種原版出現分支均已走過。
+
+| 證據 | 已驗結果與SHA-256 |
+|---|---|
+| 正常插畫前段r19 | EXE冷啟無checkpoint，取得門樓／百貨／透明角色／交通／獎章插畫代表；銀行原版／五語系、F11 modal狀態、F12原生最近鄰及Help輸入隔離通過。gallery `47c38e086b639efc10af6d1c7cfe9d7acd379fbefc2c8f49616e46d4ab08be2a`；上任信末段420秒驗證上限截止，沒有完整退出聲明 |
+| 獨立插畫像素 | `interface-locale-cold-r19/illustration-pixel-check-r2.json`：十圖165591個原生位置的完整四倍格相同；改動實際解碼呈現緩衝後重跑同一全圖核對，十個單像素反例均拒絕。SHA `9e8b94eea81e11851772a3dc2d94ec35200ce48486e924e37a237863905db7c1`；只確認插畫前段，不補造完整流程 |
+| 完整正常r20 | 同一r2程式冷啟，以原版Space略過片頭，再進城、F11、兩場景F12、14次原版讀鍵／release、93567-byte LOCALE.SAV實際存讀及DOS退出。1,797,602,774步；verification `e628e40f21941f91c36c3fe6cf1b85d65811d3a6ce10ba090030582d21af357e` |
+| 原版SAV | `4152f923daa7535fbd49b6d6cabb780c1ef3b6a4cd3f8bd8c91395ca2a123b4c`，讀回後不變；未與未受控亂數的另一局宣稱逐byte parity |
+| 程式 | 來源提交 `12ed901d17c55417fdd6aaae80b45ed68c79ab4f`。Linux r2及標準入口由固定dosgolem／七補丁乾淨重建相同，SHA `fa21269163c22123f0c7d1ad28da420150b3bc731f990aace951215a9396ea3e`；新外平台版本由#9正式封包重建 |
+| README | 八張新真實PNG，合計92張／79,734,099 bytes；manifest `cc5847f66da27c44ab16df0465cd1afc20bc34273923f17b0108196833edff9c`。每張保留程式版本、來源、語系與原生畫面雜湊 |
+
+五語系各156開場階段／36城市訊息階段回歸、209別名／197來源／179素材／537色盤變體、五語系新增MAX／MIN字墨、實際缺圖／竄改PNG／manifest隔離、來源／色盤／raw255／透明色／遮擋／未知屏障及六ABI唯讀測試通過。原型、正式素材、原版、字型、SAV與原始收據只留本機。沒有長RAM／CPU／RNG對拍、人耳確認、逐事件／成功結局流程、外平台真機或正式封包完成聲明。
+
+指定find無root-owned檔或.md目錄；project=taipei容器已清空，未新增image。後續封包沿#9，不重新開啟已通過的來源／插畫與介面批次。
