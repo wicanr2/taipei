@@ -34,6 +34,7 @@ type infrastructureTile struct {
 }
 
 type infrastructureSet struct {
+	water    bool
 	tiles    map[[81]byte]*infrastructureTile
 	textures map[string]*image.RGBA
 	palette  [256][3]byte
@@ -177,6 +178,13 @@ func infrastructureMaterial(index byte) (string, int) {
 	return "", 1000
 }
 
+func (u *infrastructureSet) material(index byte) (string, int) {
+	if u.water && index >= 144 && index <= 147 {
+		return "water", 950 + int(index-144)*25
+	}
+	return infrastructureMaterial(index)
+}
+
 func infrastructureNearest(value int) byte {
 	q, r := value/300, value%300
 	if r < 0 {
@@ -192,7 +200,7 @@ func infrastructureNearest(value int) byte {
 func (u *infrastructureSet) color(index byte, wx, wy int, original [3]byte) [3]byte {
 	asphalt := u.textures["asphalt"]
 	at := (infrastructureMirror(wy*4)*materialSize + infrastructureMirror(wx*4)) * 4
-	name, factor := infrastructureMaterial(index)
+	name, factor := u.material(index)
 	if name != "" {
 		texture := u.textures[name]
 		if name != "asphalt" {
@@ -228,7 +236,7 @@ func (u *infrastructureSet) paint(dst *image.RGBA, tile *infrastructureTile, pal
 		if pal[index] != u.palette[index] {
 			return "palette-mismatch"
 		}
-		if name, _ := infrastructureMaterial(index); name != "" && u.textures[name] == nil {
+		if name, _ := u.material(index); name != "" && u.textures[name] == nil {
 			return name + "-mismatch"
 		}
 	}

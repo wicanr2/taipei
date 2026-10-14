@@ -45,6 +45,7 @@ type Stats struct {
 	PublicFacilities           publicFacilityStats `json:"public_facilities"`
 	CityBuildings              cityBuildingStats   `json:"city_buildings"`
 	Infrastructure             infrastructureStats `json:"infrastructure"`
+	MapCompletion              mapCompletionStats  `json:"map_completion"`
 	Budget                     bool                `json:"budget"`
 	BudgetText                 [11]string          `json:"budget_text"`
 	BudgetColors               [11]byte            `json:"budget_colors"`
@@ -102,6 +103,10 @@ type Renderer struct {
 	civicFacilities     *civicFacilitySet
 	publicFacilities    *publicFacilitySet
 	cityBuildings       *cityBuildingSet
+	mapComplex          *publicFacilitySet
+	mapZonesBase        *publicFacilitySet
+	mapZones            *publicFacilitySet
+	mapDetail           *infrastructureSet
 	infrastructure      *infrastructureSet
 	budget              *budgetPanel
 	files               *fileDialogs
@@ -169,6 +174,14 @@ func New(rom []byte, dir string) *Renderer {
 	r.civicFacilities = loadCivicFacilities(rom, dir)
 	r.publicFacilities = loadPublicFacilities(rom, dir)
 	r.cityBuildings = loadCityBuildings(rom, dir)
+	r.mapComplex = loadMapAtlases(rom, dir, false)
+	r.mapZonesBase = loadMapAtlases(rom, dir, true)
+	zones := *r.mapZonesBase
+	if zones.reason == "" {
+		zones.reason = "map-zone-font"
+	}
+	r.mapZones = &zones
+	r.mapDetail = loadMapDetail(rom, dir)
 	r.ending = loadEndingScreen(rom, dir)
 	r.charts = loadChartWindows(rom, dir)
 	r.extra = loadInterfaceSources(rom)
@@ -531,6 +544,14 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.CityBuildings.Images[fmt.Sprintf("%d/%d", candidate.member, candidate.image)]++
 				} else {
 					stats.CityBuildings.Fallback++
+				}
+				continue
+			}
+			if known, painted := r.paintMapCompletion(tile, px, pal, (x-5)/9, (y-34)/9, origin, &stats.MapCompletion); known {
+				stats.Matched++
+				if painted {
+					stats.Painted++
+					stats.Fallback--
 				}
 				continue
 			}

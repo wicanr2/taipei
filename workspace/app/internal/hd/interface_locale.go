@@ -67,6 +67,7 @@ func interfaceKeys() []string {
 		keys = append(keys, options...)
 	}
 	keys = append(keys, extraKeys()...)
+	keys = append(keys, "map.zone.residential", "map.zone.commercial", "map.zone.industrial")
 	return append(keys, remainingKeys()...)
 }
 

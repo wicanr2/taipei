@@ -224,3 +224,6 @@ locale.confirm	↑ ↓ 選擇 · Enter 確認 · Esc 取消	↑ ↓ 选择 · En
 locale.error.settings	語言設定無法讀寫，將使用本次選擇。	语言设置无法读写，将使用本次选择。	言語設定を保存・読込できません。今回の選択を使用します。	언어 설정을 읽거나 저장할 수 없어 현재 선택을 사용합니다.	Language settings unavailable; using this session's selection.
 locale.error.catalog	語言檔無法讀取，已使用隨附文字。	语言文件无法读取，已使用随附文本。	言語ファイルを読めないため、同梱のテキストを使用します。	언어 파일을 읽을 수 없어 기본 제공 텍스트를 사용합니다.	Catalog unavailable; using the bundled text.
 window.title	模擬台北 · F11 語言 · F12 原版／HD	模拟台北 · F11 语言 · F12 原版／HD	台北シミュレーション · F11 言語 · F12 オリジナル／HD	타이베이 시뮬레이션 · F11 언어 · F12 원본／HD	Taipei Simulation · F11 Language · F12 Original／HD
+map.zone.residential	住	住	住	주	R
+map.zone.commercial	商	商	商	상	C
+map.zone.industrial	工	工	工	공	I

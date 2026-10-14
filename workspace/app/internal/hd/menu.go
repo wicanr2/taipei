@@ -119,6 +119,7 @@ func (r *Renderer) SetLanguage(catalog *i18n.Catalog, language string) string {
 	if r.locale.reason != "" {
 		return r.locale.reason
 	}
+	r.prepareMapZones()
 	return r.menu.reason
 }
 
