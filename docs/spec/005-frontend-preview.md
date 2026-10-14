@@ -1,5 +1,7 @@
 # 原版前端、輸入與存檔
 
+研究收據參數見 [#59](https://github.com/wicanr2/taipei/issues/59)：`-receipt-every-updates N` 只改原子收據輸出間隔，預設 60，必須大於零。批次施工研究用 6，原版步進、輸入與規則不改；本參數不宣稱不同步數收據的精確對拍。建置入口為 [build_preview.sh](../../workspace/tools/build_preview.sh)，批次使用方式見 [036](036-public-facilities.md)。
+
 狀態：CONFORMED，限下列原版模式抽樣。核對日期：2026-10-11。對應 [#4](https://github.com/wicanr2/taipei/issues/4)。
 入口：[CONTEXT.md](../../CONTEXT.md)。原型已提供下列證據；本規格准許原版模式接入。HD 比較仍受 [010](010-hd-live-prototype.md) 的 DRAFT 範圍限制，正式封包另依 #9 驗收。
 

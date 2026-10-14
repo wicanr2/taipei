@@ -853,3 +853,33 @@ Linux 已驗產品 bb8aa4271a403b0e1602c5a82faacda4554de48972b212bf00daef83fa589
 README 現有 40 張唯一 1280×800 PNG，共 26,894,292 bytes；新增六張 6,994,014 bytes。manifest 的 civic_capture 保存本批 binary、來源提交、工具及報告 SHA，清單 SHA-256 9534063d7ef4e90047b1feea280a9bf235624367edfb42b7e6365818345d8d1e。README 功能表與對照圖、唯一現況表及驗收矩陣同步更新。新增 PNG 僅明列六檔開放版控，素材、字型、SAV、EXE 與原始收據仍排除。
 
 收尾回查文件職責與現況路由，40 個唯一 README 圖片參照與 manifest 完全一致；所有 PNG 雜湊／尺寸／1000:1000、工具語法及固定雜湊、五份文件連結、034 正對照與 035 索引、現行程式及四架構產物雜湊通過。git diff --check 通過，指定 find 為空，專案相關容器均已清理。遠端仍為 PRIVATE。明列檔案提交及推送，回寫 #57 與 #30；#30 其餘建物／相位及正式交付維持未完成。
+
+## 2026-10-14：環境設施與公共設施批次 #58–#60
+
+接續使用者加速完成指示，先核對主機 gh auth、遠端 Issue、現況、路由與專用 image，建立 #58 與 036 DRAFT。以原版 F2 的 BASE.SAV 重用城市，減少冷啟動。#59 讓收據間隔可指定，預設仍為 60，本批使用 6；#60 另查公共設施正常施工後的輸入問題。沒有修改原版程式、規則或 dosgolem 七補丁。
+
+垃圾場與污水處理廠各正常扣款 3000，取得完整 4×4 圖。來源證明、所有別名／偏移及色盤保存本機 public-facilities-v1。正確 ROM37 索引為 12+24*r+c、16+24*r+c。初版沿交接摘要誤寫 8／12，固定來源測試拒絕後回查 source.json，訂正規格與程式，未修改來源或放寬斷言。
+
+使用內建 imagegen 按完整原版參考生成兩張 B 素材，保留預設原件，唯讀掛入 Docker 複製至 workspace。提示、原件與雜湊均保存。完整圖縮放為 144×144，檢視 DRAFT 比較圖後才固定 READY。正式三檔在 public-facilities-ready-repro-v1 乾淨重生相同，manifest SHA-256 07319733ab01743a8e2e30cec7e6e042554b35982bf342ba556f21d84c2892e1。其餘十項 DRAFT，#58 保持 OPEN。
+
+共用 public_facilities.go 僅辨識這 32 個完整來源與已用色盤，各設施 atlas 故障獨立回退。核心兩測試通過，7.307 秒，含完整圖、區外、2592 項來源破壞、六項實際資源故障及正常原版來源。十二項既有回歸中十一項先通過；唯一失敗為 DISA1 收據環境誤指不存在的目錄。按固定 SHA 找回 chart-locales-r2/gui，只重跑該項通過，1.778 秒。keyboard 通過。日誌 public-tests-r1/r2.log、public-regression-r1/r2.log。
+
+TAIPEI_CITY_MENU_RUN=gui-environment-r1 bash workspace/tools/facility_batch_playtest.sh hd，在固定 c3d8835a9d39 image、network none、UID/GID 1000、3g／2 CPU／128 pids、外層逾時與有 trap 的 Xvfb 中完成正常冷啟動、新遊戲、兩項施工、F12、F11 五語系、PUBLIC.SAV 同次存讀檔及 DOS 退出。原版及素材唯讀，無快照、注入或長時間抽樣。93567-byte SAV SHA-256 660bfc71f309b96fe0bce6dcb743b8ca3635f2ebbd299060275ba86821097746，讀回不變。收據 SHA-256 82e4945f80375699d6da21174097a3cf3825ff086d7aa011c792b96bc5439fba。
+
+public_facility_check.py 由固定 DRAFT 原型、原 ROM 與生成原件重算來源，驗八張實際畫面的設施像素、五語系標籤及原版整張。一項正對照與四項同步重算雜湊的破壞通過，報告 SHA-256 f6d728f45cba4c5b387b7772bf2bfc4c84d48fce653926fc7c3a43a957a6cf4c。已檢視垃圾場 HD、污水英文 HD 與原版。036 限兩項及已驗路徑 CONFORMED。Linux 已驗 binary 21705e3c9521d247b86220bcaecb295db39958b6ba485d5501df42059063abf4 通過後才提升標準入口；Windows／macOS 延至後續合併重建，保留前版來源，不稱本批外平台已驗。程式先提交，再匯出 README 八張 PNG 以便回查來源。
+
+### 前件與 #60 診斷歷程
+
+以下由原 036 DRAFT 移入唯一 WORKLOG，保留歷史；正式契約只寫現況。
+
+探針修正：原版讀檔由多個 DOS read 組成，核對完整 93567 bytes，不以單次 read 作假設。r2 的工具列差異只有工具 9 的 84 個外框像素，色號由 186 變為 32；依 [004](../re/004-native-controls.md) 與 [019](019-city-chrome.md)，讀檔後以 Tab 回到工具列焦點，再核對原先保存的完整工具列來源。r1／r2 失敗屬驗證腳本，原版讀檔成功，前件保留；r3 用同一 image 與收據參數乾淨重跑。
+
+追加修正：r3 證實 Tab 後所選工具與游標重合時仍為紅框，不能要求回復紫框。改依 019 的十四個完整 22×22 圖示來源與白／紅／紫外框，辨識當前工具，四份既有正常來源離線核對通過。新城市原版存檔關窗後十四框均白，初始工具游標 0 依 004 已證實；此狀態獨立處理。r4 啟動後因離線初始狀態檢查未通過而提前停止，避免沿用舊版探針。垃圾設施來源保留 r1，r5 完成污水來源。
+
+r5 公共設施施工成功並扣除費用，但下一個 Left 持續按住直到原版讀取，120 秒內沒有被讀取。原版仍在執行且無缺指令；原生放鍵閘門為強推論，不把腳本等待當成產品缺陷。r6 改為先確認前端按下、立即放開並確認 break，再等待原版恰讀一鍵。仍保留完整原版讀鍵確認，不採盲目定時送鍵；既有來源不重做。
+
+r6 同樣未取得施工後 Left 讀取，單純持鍵假說不足。另開 [#60](https://github.com/wicanr2/taipei/issues/60)，以 [IDA 窄查詢](../../workspace/tools/ida_facility_probe.py) 核對取樣位置及呼叫端，輸出 `workspace/runs/ida-60/stall.json`。其餘已完成來源與素材沿用。
+
+[#60 診斷重播](../../workspace/tools/facility_diagnostic.go) 使用 r8 真實 GUI 的原始輸入與步數，從原版 EXE 冷啟動追蹤 BDA 頭尾改變及取樣 PC。用途限找出丟棄按鍵的原始指令，不能代替正常 GUI 驗收。
+
+IDA 9.4 核對固定 EXE 及資料庫輸入雜湊相同。兩次取樣落在原始 sub_24D96，IDA 0x24FB9／0x24FC2，呼叫端 sub_248E2／sub_27796／sub_289AE。原始函式遍歷 89×105 格並更新分類計數，語意為城市格統計的強推論，並非等待鍵盤放開的證據。暫存器陣列依 x86 編碼為 AX/CX/DX/BX/SP/BP/SI/DI，不把 SP 誤當 SI。r7 只恢復既有 60-update 正常探針在施工確認後的 24,000,000 步觀察窗，其他逐鍵仍用短收據；驗證較早送入的鍵是否在原版施工收尾被丟棄，不修改原版規則或時鐘。

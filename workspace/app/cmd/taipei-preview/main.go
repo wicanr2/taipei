@@ -82,6 +82,7 @@ type game struct {
 	out             string
 	stopFile        string
 	perUpdate       uint64
+	receiptEvery    uint64
 	frames          uint64
 	mouseButtons    uint16
 	inputs          []inputEvent
@@ -120,7 +121,7 @@ func (g *game) Update() error {
 	if g.frontendInput() {
 		g.refresh()
 		g.frames++
-		if g.frames%60 == 0 {
+		if g.frames%g.receiptEvery == 0 {
 			return g.receipt()
 		}
 		return nil
@@ -203,7 +204,7 @@ func (g *game) Update() error {
 	}
 	g.refresh()
 	g.frames++
-	if g.frames%60 == 0 {
+	if g.frames%g.receiptEvery == 0 {
 		if err := g.receipt(); err != nil {
 			return err
 		}
@@ -276,7 +277,13 @@ func (g *game) receipt() error {
 		"segments": g.m.CPU.Seg, "ip": g.m.CPU.IP, "ticks": g.m.Ticks,
 		"bios_ticks":  uint32(g.m.Read16(0x46c)) | uint32(g.m.Read16(0x46e))<<16,
 		"pit_divisor": g.m.PITDivisor(), "pit_hz": g.m.PITHz(),
-		"key_reads": g.d.KeyReads, "key_waits": g.d.KeyWaits, "irq1": g.m.KeyIRQs,
+		"key_reads": g.d.KeyReads, "key_waits": g.d.KeyWaits, "key_polls": g.d.KeyPolls, "irq1": g.m.KeyIRQs,
+		"keyboard_state": map[string]any{
+			"head": g.m.Read16(0x41a), "tail": g.m.Read16(0x41c),
+			"buffer_count": g.m.BIOSKeyCount(), "pending_scans": g.m.KeyCodes(),
+			"irq1_cs": g.m.Read16(0x26), "irq1_ip": g.m.Read16(0x24),
+			"cpu_flags": g.m.CPU.Flags,
+		},
 		"key_stacks":  g.keyStacks,
 		"mouse_polls": len(g.d.Mouse.Polls), "mouse_calls": g.d.Mouse.Calls, "file_ops": g.d.FileOps,
 		"missing": g.d.Missing, "unimplemented": g.d.UnimplementedDetails,
@@ -369,6 +376,7 @@ func main() {
 	checkpoint := flag.String("checkpoint", "", "診斷快照；正式冷啟動不使用")
 	stopFile := flag.String("stop-file", "", "研究驗證的正常結束請求檔")
 	steps := flag.Uint64("steps-per-update", 0, "每次更新固定指令數；0 採 dosgolem 名義時鐘")
+	receiptEvery := flag.Uint64("receipt-every-updates", 60, "研究收據輸出間隔；預設每 60 次更新，不改原版步進")
 	mute := flag.Bool("mute", false, "停用主機音訊裝置，仍驗證原版音訊合成")
 	traceKeyStack := flag.Bool("trace-key-stack", false, "診斷 INT16 讀鍵前的原始堆疊，不改原版狀態")
 	theme := flag.String("theme", "original", "比較原型主題 original 或 hd-b，F12 切換")
@@ -376,6 +384,9 @@ func main() {
 	language := flag.String("language", "", "本次語言 zh-Hant、zh-Hans、ja、ko、en；空值讀前端設定")
 	catalogPath := flag.String("catalog", "", "外部 UTF-8 TSV；預設執行檔旁 locales/ui.tsv")
 	flag.Parse()
+	if *receiptEvery == 0 {
+		log.Fatal("receipt-every-updates 必須大於零")
+	}
 	if *orig == "" || *saves == "" || *out == "" {
 		log.Fatal("請指定 -original、-saves、-receipts")
 	}
@@ -450,6 +461,7 @@ func main() {
 	}
 	g := &game{m: m, d: d, frame: ebiten.NewImage(1280, 800), rgba: image.NewRGBA(image.Rect(0, 0, 320, 200)), out: *out, stopFile: *stopFile, perUpdate: *steps, hdRenderer: hd.New(rom, *materials), hdEnabled: *theme == "hd-b"}
 	g.catalog, g.localUI, g.language, g.settingsPath = catalog, localUI, selected, settingsPath
+	g.receiptEvery = *receiptEvery
 	g.hdRenderer.SetLanguage(catalog, selected)
 	romA, romAErr := os.ReadFile(filepath.Join(*orig, "RS201A.ROM"))
 	if romAErr == nil {
