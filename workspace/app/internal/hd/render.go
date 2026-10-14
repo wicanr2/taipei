@@ -24,6 +24,7 @@ var materials = map[string]string{
 }
 
 type Stats struct {
+	Illustrations              illustrationStats   `json:"illustrations"`
 	SourceText                 int                 `json:"source_text_fields"`
 	SourceImages               int                 `json:"source_image_fields"`
 	SourceTextKey              string              `json:"source_text_key"`
@@ -86,6 +87,11 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
+	illustrations       *illustrationSet
+	illustrationDraws   []IllustrationDraw
+	lastTextRects       []image.Rectangle
+	imageUnderlays      map[image.Rectangle]*image.RGBA
+	illustrationRects   []image.Rectangle
 	lastTextKeys        []string
 	lastImageKeys       []string
 	textSources         *textSources
@@ -243,6 +249,33 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.LocaleReason = "matched-interface"
 				}
 				stats.SourceText, stats.SourceTextKey = r.paintTextSources(result, px, pal)
+				r.imageUnderlays = nil
+				if r.illustrations != nil && r.illustrations.reason == "" {
+					fields := r.prepareTextImageFields(px, pal)
+					for _, f := range fields {
+						for y := 0; y < f.background.Bounds().Dy(); y++ {
+							at := ((f.native.Min.Y*4+y)*1280 + f.native.Min.X*4) * 4
+							from := y * f.background.Stride
+							copy(result.Pix[at:at+f.background.Stride], f.background.Pix[from:from+f.background.Stride])
+						}
+					}
+					stats.Illustrations = r.paintIllustrations(result, px, pal, fields)
+					r.imageUnderlays = map[image.Rectangle]*image.RGBA{}
+					for _, f := range fields {
+						for _, box := range r.illustrationRects {
+							if !f.native.Overlaps(box) {
+								continue
+							}
+							patch := image.NewRGBA(f.background.Bounds())
+							for y := 0; y < patch.Bounds().Dy(); y++ {
+								at := ((f.native.Min.Y*4+y)*1280 + f.native.Min.X*4) * 4
+								copy(patch.Pix[y*patch.Stride:(y+1)*patch.Stride], result.Pix[at:at+patch.Stride])
+							}
+							r.imageUnderlays[f.native] = patch
+							break
+						}
+					}
+				}
 				stats.SourceImages, stats.SourceImageKey = r.paintTextImages(result, px, pal)
 				stats.SourceTextKeys, stats.SourceImageKeys = r.lastTextKeys, r.lastImageKeys
 				stats.LocalizedFields += stats.SourceText + stats.SourceImages

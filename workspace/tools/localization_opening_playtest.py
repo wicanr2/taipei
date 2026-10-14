@@ -1,5 +1,6 @@
 """#52: actual cold-start GUI text sources; invoked by interface playtest."""
 import json
+import os
 import subprocess
 import time
 import zipfile
@@ -7,6 +8,7 @@ import zipfile
 
 def verify(status, wait, key, capture, out, root):
     seen, images, partial = set(), set(), False
+    gallery = False
     end = time.monotonic() + 420
     while time.monotonic() < end:
         s = status()
@@ -21,6 +23,12 @@ def verify(status, wait, key, capture, out, root):
             images.add(picture)
             capture('opening-' + picture)
             print('original source picture', picture, s['steps'], flush=True)
+            if picture == 'art.bank' and os.environ.get('TAIPEI_ILLUSTRATION_GALLERY') == '1':
+                from illustration_gallery import verify as gallery_verify
+                started = time.monotonic()
+                gallery_verify(status, wait, key, capture, out, root)
+                end += time.monotonic()-started
+                gallery = True
         candidates = [d for d in (s.get('source_text') or [])
                       if d['original_ea'] == 0x14ed2 and 0 < d['visible_bytes'] < len(d['source_hex']) // 2]
         if not partial and candidates and h.get('source_text_fields', 0):
@@ -60,6 +68,8 @@ def verify(status, wait, key, capture, out, root):
     else:
         raise RuntimeError('opening sources timed out: ' + str(status().get('hd')))
     assert partial, 'no normal GUI typewriter language switch'
+    if os.environ.get('TAIPEI_ILLUSTRATION_GALLERY') == '1':
+        assert gallery, 'no normal illustration gallery'
     assert {'art.department_store', 'art.bank', 'art.protest', 'startup.title'} <= images, images
     assert {'intro.date', 'intro.sogo', 'intro.metro', 'intro.pollution', 'letter.citizens'} <= seen, seen
     for _ in range(3):

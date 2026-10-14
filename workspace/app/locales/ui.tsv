@@ -227,3 +227,5 @@ window.title	模擬台北 · F11 語言 · F12 原版／HD	模拟台北 · F11 �
 map.zone.residential	住	住	住	주	R
 map.zone.commercial	商	商	商	상	C
 map.zone.industrial	工	工	工	공	I
+art.maximum	最大	最大	最大	최대	MAX
+art.minimum	最小	最小	最小	최소	MIN

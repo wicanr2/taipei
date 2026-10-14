@@ -66,7 +66,7 @@ func remainingKeys() (out []string) {
 	for _, b := range remainingTextBindings {
 		out = append(out, b.key)
 	}
-	return append(out, "art.protest", "art.department_store", "art.pacific", "art.bank")
+	return append(out, "art.protest", "art.department_store", "art.pacific", "art.bank", "art.maximum", "art.minimum")
 }
 
 // InitTextSources follows spec/033 READY; all inputs stay read-only.
@@ -248,6 +248,7 @@ func (r *Renderer) SetTextDraws(texts []TextDraw, images []TextImageDraw) {
 
 func (r *Renderer) paintTextSources(dst *image.RGBA, px []byte, pal [256][3]byte) (int, string) {
 	r.lastTextKeys = nil
+	r.lastTextRects = nil
 	if r.textSources == nil || r.locale == nil || r.locale.reason != "" {
 		return 0, "source-resource-fallback"
 	}
@@ -366,6 +367,7 @@ func (r *Renderer) paintTextSources(dst *image.RGBA, px []byte, pal [256][3]byte
 				continue
 			}
 			draw.Draw(dst, patch.Bounds().Add(position), patch, image.Point{}, draw.Src)
+			r.lastTextRects = append(r.lastTextRects, rect)
 			painted++
 			r.lastTextKeys = append(r.lastTextKeys, key)
 			last = key

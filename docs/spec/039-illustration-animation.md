@@ -1,6 +1,6 @@
 # 開場、插畫與動畫完整圖像
 
-狀態：DRAFT。對應 [#32](https://github.com/wicanr2/taipei/issues/32) 與來源母項 [#28](https://github.com/wicanr2/taipei/issues/28)。入口 [CONTEXT.md](../../CONTEXT.md)。沿用所有圖片與介面、B、1280×800、Noto、五語系及F12，原版構圖、透明、裁切、相位與時序保持原樣。
+狀態：READY，限下列完整來源與保守覆繪契約；正常新HD尚未驗收。對應 [#32](https://github.com/wicanr2/taipei/issues/32) 與來源母項 [#28](https://github.com/wicanr2/taipei/issues/28)。入口 [CONTEXT.md](../../CONTEXT.md)。沿用所有圖片與介面、B、1280×800、Noto、五語系及F12，原版構圖、透明、裁切、相位與時序保持原樣。
 
 來源先沿 [008盤點](../re/008-full-asset-inventory.md) 及 [033](033-localization-source-coverage.md) 已核對的raw、RLE、IV2與五個繪圖呼叫。不將原初盤每筆可解資料直接算插畫，105×89世界資料、字型、色盤與音樂另分類並附證據等級。未知用途保留數字編號；資料未知不猜補正式行為。
 
@@ -59,3 +59,34 @@ R42–51共用背景板，人物與小道具由原形狀及相位差異覆回。
 [illustration_published_palette.py](../../workspace/tools/illustration_published_palette.py) 沿033正常冷啟動r15的標題、百貨、交通與獎章四份原版收據，重算原生PNG與64000色號／當時色盤逐像素相同；四者256項均為ROMA3的VGA6-bit展開。正常城市與ROMA3相差11項，包含四個城市運行改色；繪圖瞬間a05的31號綠色不能當最終黑背景。收據 `workspace/runs/illustration-published-palette-r1.json` SHA-256 `c8a44941e1290044db13de03ec28f6f0b2c523690d30cb05bcddd7214b77d50d`。這是既有正常原版證據，沒有驗新HD或新增平台聲明。
 
 產品仍使用038已驗版本。資源回退、新HD正常GUI、更新README照片與封包尚未完成；DRAFT圖片不得直接載入正式呈現器。
+
+## READY 呈現契約
+
+2026-10-15證據審查：六種繪圖ABI、三種完整解碼、原版1362次合成、正常發布色盤與179張原型的結構條件足以實作保守來源覆繪。用途與未抽驗的出現分支仍未知，不阻塞按原始來源辨識的呈現。原型保持DRAFT，正式素材須由下列工具重建為封存的READY manifest，不能直接改標籤載入。
+
+| 項目 | 輸入、邊界與失敗處理 |
+|---|---|
+| 固定輸入 | EXE `798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3`、ROM `0cfa01ab22c24de391b6bfc42b1d5786a16c8feecab8e004f87cfb7a759afc29`、ROMA `5d66f238dce650b8a407986100392ee4b8ac2aa23a033e80a7ca18ed91b3d9b0`。工具Go1.24.13／Python3.11.2，固定GUI image沿038 |
+| 來源解析 | ROM檔案偏移、零起算member／image。209筆／197種；raw寬高後恰好w×h，RLE完整輸入／輸出消耗且禁止零長游程，IV2 stride320、carry結束、未寫255、禁止literal255及越界。18種既有UI／Noto不重新蓋原圖 |
+| 唯讀觀察 | 六個已列IDA loader linear入口。far參數SP+4 x、+6 y、+8 off、+10 seg；裁切入口+4 off、+6 seg、+8 sx、+10 sy、+12 w、+14 h、+16 dx、+18 dy、+20透明色低byte。原始bytes及encoding必須完全吻合；161C3只接受已驗mul cl可表達的寬度範圍。保留位置、裁切、實際透明與透明色，不把raw255一律跳過 |
+| 順序與遮擋 | 最多8192個有界繪製紀錄，同來源／位置／裁切／呼叫移到最後。由新至舊驗原生色號，已確認較新遮擋及已完整核對的文字欄位可略過；其餘每個可見來源像素必須相同，至少兩種可見色號才覆繪。完全遮擋、單色碎片或失配回退。未知呼叫用可安全取得的目的矩形阻擋舊圖，無安全幾何時作全畫面屏障。只有新於屏障的已確認圖可覆繪 |
+| 色盤 | 接受ROM0、ROMA3或正常城市三個已知色盤家族，逐圖只核對實際會畫出的色號。原型R使用城市參考，A使用ROMA3；必要變體各子像素RGB加上該原生色號的目標／參考通道差並截在0–255。這是HD配色近似，原版色盤不變。未知淡入或改色回退原版 |
+| 正式素材 | `workspace/prototypes/hd-style/illustrations-ready-v1/`，179張來源及按內容去重的已知色盤變體。manifest必須READY、整檔SHA固定、每PNG SHA／四倍尺寸／不透明性核對；每圖故障只回退受影響圖。原始來源仍從兩ROM重解，不能信任素材自報像素 |
+| 文字疊合 | 沿033完整來源核對與固定Noto。先移除已驗圖片欄位的原點陣文字，再畫HD背景，最後在該HD底圖上畫Noto；普通逐字文字的已驗矩形保護不被圖片覆蓋。A6／A38標題可讓底圖穿過原字形；無字型、缺譯文或欄位失配時，相關圖片保持原版，避免蓋掉原文 |
+| 七張預覽 | R4–10同源MAX／MIN字墨已逐byte核對：左／右上矩形(1,22)–(18,27)、(127,22)–(144,27)，下方y101–106；只含原14號字墨及129號底色。正式圖清成129號，依同一完整原圖核對畫Noto五語系「最大／最小、최대／최소、MAX／MIN」，目標68×20、字級12–20。TSV新鍵僅顯示，不進DOS |
+
+垂直鏈為兩原版ROM → 嚴格來源解碼 → 唯讀呼叫紀錄 → 完整可見來源／已知色盤 → B圖片與Noto → 原版存檔。HD不持有可寫VM指標，不改原圖緩衝、時序、輸入、亂數或SAV。F12停用覆繪時全畫面回到原版；F11與Help沿既有前端契約。
+
+實作入口將使用 [illustration_assets.py](../../workspace/tools/illustration_assets.py)、[hd/illustrations.go](../../workspace/app/internal/hd/illustrations.go)、[original/illustrations.go](../../workspace/app/internal/original/illustrations.go)。新增檔案同次由本節索引；其內容必須遵循本READY契約。
+
+161C3邊界補證：既有IDA原bytes `AD 8B D8`先令AX／BX為完整寬度，`8B 4E 0C F6 E1`是AL×CL計算初始列偏移，`2B D9`及`03 F3`仍用完整BX作列距。不能以「寬度大於255」全部拒絕；sy=0的294／296寬開場圖列偏移正確。READY條件為 `(width & 255) * (sy & 255) == width * sy`，再驗來源矩形邊界。不滿足時保守回退，不擅自修正原版運算。來源為上列clipped.json、IDA loader linear 161D2／161D8／161DB／161F5／16201，推論等級已證實指令語意；正常新GUI另驗。前次過窄guard造成r18交通回退，列為呈現缺口，不能把該輪算交通HD通過。
+
+實際來源／素材故障及遮擋測試入口：[hd/illustrations_test.go](../../workspace/app/internal/hd/illustrations_test.go)、[original/illustrations_test.go](../../workspace/app/internal/original/illustrations_test.go)。七張預覽共用的兩個新顯示鍵使TSV為230鍵，字元集合仍1214種；不改原有228鍵或DOS語意。
+
+正常插畫五語系擷取入口：[illustration_gallery.py](../../workspace/tools/illustration_gallery.py)，由既有介面GUI工具設定 `TAIPEI_INTERFACE_OPENING=1 TAIPEI_ILLUSTRATION_GALLERY=1` 呼叫。銀行背景上使用真實F11／F12／Shift+F1，驗modal期間原版狀態不變；閉合選單後原版角色繼續運行，因此五張照片不宣稱同狀態。R4–10在正常圖表被中央動態資料覆寫，正式圖表仍沿029的完整來源／資料格及五語系契約，不以原圖沒全匹配認定029回歸。
+
+驗收先做實際ROM解析、裁切／raw255／透明色、重疊順序、未知屏障、來源單點失配、未知色盤、缺圖／竄改PNG／manifest及文字字型故障。再從正常冷啟動走開場門樓、百貨、透明角色／交通與獎章代表、F11五語系／F12／Help、城市原版存退讀及退出；不以合成或direct-entry取代正常GUI。依使用者正常遊玩抽驗，不重跑長RAM／CPU／RNG對拍。README使用新程式實際擷取照片；所有素材與原始收據只留本機，正式封包另驗。
+
+獨立正常插畫像素核對入口：[illustration_gui_check.py](../../workspace/tools/illustration_gui_check.py)。從兩ROM重解來源，讀封存READY PNG與正常冷啟動收據，驗十張照片明列可見插畫的完整四倍格及單像素破壞反例；字墨僅排除已列欄位，沿033另驗。正常存讀與退出主收據完成後才可執行，不將呈現器自報Painted當像素證據。
+
+正式READY manifest為 `545b4f94b6454debc0de5110bab646d5e68ae19dfa126f700361cd12d9d276af`，179種／260 PNG／261檔。由同一固定輸入乾淨重生至 `workspace/runs/illustration-assets-repro-r1/`，261檔逐byte相同。候選Linux r2 SHA-256 `fa21269163c22123f0c7d1ad28da420150b3bc731f990aace951215a9396ea3e`；尚未提升標準入口，正常GUI驗收與跨平台另記。

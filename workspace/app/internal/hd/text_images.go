@@ -7,12 +7,19 @@ import (
 	"image/draw"
 )
 
-func (r *Renderer) paintTextImages(dst *image.RGBA, px []byte, pal [256][3]byte) (int, string) {
-	r.lastImageKeys = nil
+type preparedImageField struct {
+	native     image.Rectangle
+	key        string
+	background *image.RGBA
+	target     image.Rectangle
+	ink        color.RGBA
+	maximum    int
+}
+
+func (r *Renderer) prepareTextImageFields(px []byte, pal [256][3]byte) (out []preparedImageField) {
 	if r.textSources == nil || r.locale == nil || r.locale.reason != "" {
-		return 0, ""
+		return nil
 	}
-	n, last := 0, ""
 	seen := map[image.Rectangle]bool{}
 	for _, d := range r.textImageDraws {
 		for _, s := range r.textSources.images {
@@ -68,17 +75,40 @@ func (r *Renderer) paintTextImages(dst *image.RGBA, px []byte, pal [256][3]byte)
 					fit := imageGreenSafe(s, box, field.Background).Inset(1)
 					target = image.Rect((fit.Min.X-box.Min.X)*4, (fit.Min.Y-box.Min.Y)*4, (fit.Max.X-box.Min.X)*4, (fit.Max.Y-box.Min.Y)*4)
 				}
+				backgroundPatch := image.NewRGBA(patch.Bounds())
+				copy(backgroundPatch.Pix, patch.Pix)
+				maximum := 112
+				if field.Key == "art.maximum" || field.Key == "art.minimum" {
+					maximum = 20
+				}
 				fg := pal[ink]
-				if e := r.locale.ui.DrawReveal(patch, r.locale.language, field.Key, target, 112, 12, 1, 1, color.RGBA{fg[0], fg[1], fg[2], 255}); e != nil {
+				if e := r.locale.ui.DrawReveal(patch, r.locale.language, field.Key, target, maximum, 12, 1, 1, color.RGBA{fg[0], fg[1], fg[2], 255}); e != nil {
 					continue
 				}
-				draw.Draw(dst, patch.Bounds().Add(image.Pt(native.Min.X*4, native.Min.Y*4)), patch, image.Point{}, draw.Src)
+				out = append(out, preparedImageField{native, field.Key, backgroundPatch, target, color.RGBA{fg[0], fg[1], fg[2], 255}, maximum})
 				seen[native] = true
-				n++
-				r.lastImageKeys = append(r.lastImageKeys, field.Key)
-				last = field.Key
 			}
 		}
+	}
+	return
+}
+
+func (r *Renderer) paintTextImages(dst *image.RGBA, px []byte, pal [256][3]byte) (int, string) {
+	r.lastImageKeys = nil
+	n, last := 0, ""
+	for _, field := range r.prepareTextImageFields(px, pal) {
+		patch := image.NewRGBA(field.background.Bounds())
+		copy(patch.Pix, field.background.Pix)
+		if underlay := r.imageUnderlays[field.native]; underlay != nil {
+			copy(patch.Pix, underlay.Pix)
+		}
+		if r.locale.ui.DrawReveal(patch, r.locale.language, field.key, field.target, field.maximum, 12, 1, 1, field.ink) != nil {
+			continue
+		}
+		draw.Draw(dst, patch.Bounds().Add(image.Pt(field.native.Min.X*4, field.native.Min.Y*4)), patch, image.Point{}, draw.Src)
+		n++
+		last = field.key
+		r.lastImageKeys = append(r.lastImageKeys, field.key)
 	}
 	return n, last
 }
