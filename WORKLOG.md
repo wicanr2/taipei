@@ -1125,3 +1125,11 @@ r19新候選已確認十圖、銀行五語系／F12及Help，但420秒驗證上�
 標準Linux入口乾淨重建為fa212691，與已驗候選相同。八張明列PNG已匯出，README合計92張／79,734,099 bytes，manifest cc5847f6；新增五語系銀行、原版銀行、門樓及交通。圖片保留各自來源版本，沒有把角色自然移動的五語系照片稱同狀態。原版資料、字型、素材、SAV及原始ZIP仍不入Git。
 
 回查規格／README路由，039限完整來源與正常代表升CONFORMED；全部圖像1343筆／1246種已分類，未知用途保留原編號、不推定每一事件都已玩過。正式封包及外平台新版本由#9接續，避免為同一素材重編兩次。指定find沒有root-owned檔或.md目錄；Python stat曾跟隨Wine的z:連到根目錄，這不是symlink本身的擁有權問題，沒有chown。project=taipei容器清單空，未新增image。
+
+### #9 固定來源與封包工具
+
+主機gh回讀#32／#28及#5–#8全部結案，僅#9開啟。040限三平台本機封包READY，版本v.1.0.0-20261015，來源tag在提交後建立且不移動。新增版本查詢／收據版本與原版／存檔路徑metadata，不改模擬或呈現規則。Ebitengine在main前初始化X11，無DISPLAY版本探針退出屬環境；直接程式版本在Xvfb驗，launcher可先讀VERSION供無顯示器查詢，沒有改GUI架構。
+
+最小材料預檢先抓到工具layout的city-chrome-lime-v1.png相依缺漏；改讀三份已封存art_sha256相依表，不逐件猜補。586 runtime檔由實際HD載入器驗所有家族與五語系通過。原版inventory b9f1a573固定，35檔／RAR回核；只包RS201內23檔，不帶舊DOSBox。依實際二進位go version -m列連結元件，go list -m all曾試圖讀未下載的範例／測試依賴，改採實際連結清單，無需網路。
+
+建置、輸入鎖定、封裝、逐包內容／架構／材料與缺件反例、Linux預設音訊及Wine實際啟動工具已寫入workspace/tools，入口見040。沿用固定Linux／MinGW／osxcross及既有隔離音訊／Wine image與快取，不建立重複image。正式封包尚未驗收；macOS原生執行與使用者目錄寫入保留真機未驗，不以結構或stub稱遊玩通過。

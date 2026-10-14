@@ -31,6 +31,9 @@ import (
 
 const originalSHA = "798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3"
 
+// The immutable release tag supplies this value with -ldflags -X main.version.
+var version = "development"
+
 type binding struct {
 	key  ebiten.Key
 	scan byte
@@ -292,7 +295,8 @@ func (g *game) receipt() error {
 		"missing": g.d.Missing, "unimplemented": g.d.UnimplementedDetails,
 		"dos_exited":      g.d.Exited,
 		"dos_blocked":     g.d.Blocked,
-		"original_sha256": originalSHA, "prototype": true,
+		"original_sha256": originalSHA, "prototype": version == "development", "version": version,
+		"original_root": g.d.Root, "save_root": g.d.Scratch,
 		"audio":       audioStats,
 		"audio_waits": g.audioWaits,
 		"source_text": g.text.Draws, "source_images": g.text.ImageMetadata(),
@@ -374,6 +378,7 @@ func loadCheckpoint(path string, m *dg.Machine, d *dg.DOS) error {
 }
 
 func main() {
+	showVersion := flag.Bool("version", false, "顯示完整版本並結束")
 	orig := flag.String("original", "", "原版 RS201.EXE 所在目錄")
 	saves := flag.String("saves", "", "獨立可寫存檔目錄")
 	out := flag.String("receipts", "", "研究收據目錄")
@@ -388,6 +393,10 @@ func main() {
 	language := flag.String("language", "", "本次語言 zh-Hant、zh-Hans、ja、ko、en；空值讀前端設定")
 	catalogPath := flag.String("catalog", "", "外部 UTF-8 TSV；預設執行檔旁 locales/ui.tsv")
 	flag.Parse()
+	if *showVersion {
+		fmt.Println(version)
+		return
+	}
 	if *receiptEvery == 0 {
 		log.Fatal("receipt-every-updates 必須大於零")
 	}

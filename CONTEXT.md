@@ -4,7 +4,7 @@
 
 HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與92張實際截圖。開場／插畫／動畫已完成來源接入與正常代表抽驗，正式封包尚未完成。
 
-主機gh已回讀#29城市框架、#30九圖庫地圖、#31 Noto文字、#44道路及#62補齊為CLOSED。039完成非9×9開場、插畫、移動物件與動畫的完整來源及正常代表抽驗；HD母項接續彙整，正式封包未完成。未逐種玩過的成長／災害或C2路由保留證據限制，不自行重新開啟已完成呈現工作。
+主機gh已回讀#29城市框架、#30九圖庫地圖、#31 Noto文字、#44道路及#62補齊為CLOSED。039完成非9×9開場、插畫、移動物件與動畫的完整來源及正常代表抽驗；主機gh已回讀#32／#28及#5–#8結案，現只剩#9正式封包。未逐種玩過的成長／災害或C2路由保留證據限制，不自行重新開啟已完成呈現工作。
 
 ## 有效決策
 
@@ -62,9 +62,11 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
 | 目前程式與跨平台 | Linux標準入口與已驗插畫r2乾淨重建相同，SHA fa212691。來源12ed901及固定dosgolem／七補丁 | 新Windows amd64／macOS兩架構由#9正式封包一次重建；既有038跨平台檔仍保留原版本，未當039新版本或真機驗收 |
-| 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
+| 封包 | 040 READY；預定v.1.0.0-20261015，固定tag乾淨重建三平台full-local。586個必要runtime檔的實際載入器／五語系預檢通過 | 正式封包、解包啟動／音訊／Wine仍進行中，沒有公開Release或外平台真機完成聲明 |
 
 ## 文件入口
+
+- 三平台本機封包：[040](docs/spec/040-local-platform-packages.md)、[#9](https://github.com/wicanr2/taipei/issues/9)。來源與HD驗收已完成，依固定tag與現行dist-all契約重建；未授權公開Release。
 
 - 警察局與消防局：[035](docs/spec/035-civic-facilities.md)、[正常施工入口](workspace/tools/civic_facility_playtest.sh)、[來源](workspace/tools/civic_facility_sources.py)、[素材](workspace/tools/civic_facility_assets.py)、[像素核對](workspace/tools/civic_facility_check.py)、[截圖匯出](workspace/tools/export_civic_screenshots.py)、[#57](https://github.com/wicanr2/taipei/issues/57)。32 格與正常玩家路徑已完成；其餘設施及相位留在 #30。
 
