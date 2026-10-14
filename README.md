@@ -44,7 +44,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格、DISA1 三種建物 48 格、警察局與消防局 32 格、垃圾場與污水處理廠 32 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
+| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力電廠 36 格、DISA1 三種建物 48 格、警察局與消防局 32 格、十二項環境與公共設施 392 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
 | HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列與圖表文字 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
@@ -82,7 +82,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 <details>
 <summary>垃圾場與污水處理廠：正常施工與五語系對照</summary>
 
-從原版新遊戲與工具子選單施工，各含 16 格 HD 圖。正常施工、F11／F12、同次存讀檔與原版退出已通過遊玩抽驗，範圍見[環境設施契約](docs/spec/036-public-facilities.md)。其他公共設施仍在製作。
+從原版新遊戲與工具子選單施工，各含 16 格 HD 圖。正常施工、F11／F12、同次存讀檔與原版退出已通過遊玩抽驗，範圍見[設施契約](docs/spec/036-public-facilities.md)。同一批另完成十項公共設施，各含 36 格。
 
 | 垃圾場 | 原版繁體中文 | HD 繁體中文 |
 |---|---|---|
@@ -96,6 +96,22 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 | HD 日文 | ![HD 日文污水處理廠](workspace/screenshots/city-sewage-ja.png) |
 | HD 韓文 | ![HD 韓文污水處理廠](workspace/screenshots/city-sewage-ko.png) |
 | HD 英文 | ![HD 英文污水處理廠](workspace/screenshots/city-sewage-en.png) |
+
+</details>
+
+<details>
+<summary>公共設施：體育場原版與 HD 五語系對照</summary>
+
+十項公共設施已取得完整正常施工來源並重繪，與兩項環境設施合計 392 格。以下從新遊戲建設體育場，再以 F11／F12 切換擷取；完整原圖、同源圖塊辨識、存讀檔及原版退出已通過抽驗，見[十二項設施契約](docs/spec/036-public-facilities.md)。其他動畫相位與正式封包另驗。
+
+| 模式／語言 | 實際畫面 |
+|---|---|
+| 原版繁體中文 | ![原版體育場施工](workspace/screenshots/city-stadium-original.png) |
+| HD 繁體中文 | ![HD 繁體中文體育場](workspace/screenshots/city-stadium-zh-Hant.png) |
+| HD 簡體中文 | ![HD 簡體中文體育場](workspace/screenshots/city-stadium-zh-Hans.png) |
+| HD 日文 | ![HD 日文體育場](workspace/screenshots/city-stadium-ja.png) |
+| HD 韓文 | ![HD 韓文體育場](workspace/screenshots/city-stadium-ko.png) |
+| HD 英文 | ![HD 英文體育場](workspace/screenshots/city-stadium-en.png) |
 
 </details>
 
@@ -161,7 +177,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 圖表使用 [chart_locale_gui.sh](workspace/tools/chart_locale_gui.sh) 擷取，經[整張畫面核對](workspace/tools/chart_locale_check.py)後[匯出](workspace/tools/export_chart_screenshots.py)。
 災難台北建物畫面使用[正常 GUI 入口](workspace/tools/disaster_building_gui.sh)重生，由[匯出工具](workspace/tools/export_building_screenshots.py)核對後收錄，包含原版與 HD 五語系。
 警消設施畫面使用[正常施工入口](workspace/tools/civic_facility_playtest.sh)的 `gui` 模式，經[設施像素與語言核對](workspace/tools/civic_facility_check.py)後[匯出](workspace/tools/export_civic_screenshots.py)。
-環境設施畫面使用[批次玩家入口](workspace/tools/facility_batch_playtest.sh)的 `hd` 模式，經[獨立像素核對](workspace/tools/public_facility_check.py)後[匯出](workspace/tools/export_public_screenshots.py)。
+環境與公共設施使用[批次玩家入口](workspace/tools/facility_batch_playtest.sh)的 `hd` 模式；整批以 `--scope public` 執行[獨立像素核對](workspace/tools/public_facility_check.py)與[匯出](workspace/tools/export_public_screenshots.py)。各批原始擷取與工具版本保存在來源清單。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
 
 ## 開發與文件

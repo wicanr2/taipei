@@ -62,6 +62,12 @@
 !/workspace/screenshots/city-sewage-ja.png
 !/workspace/screenshots/city-sewage-ko.png
 !/workspace/screenshots/city-sewage-en.png
+!/workspace/screenshots/city-stadium-original.png
+!/workspace/screenshots/city-stadium-zh-Hant.png
+!/workspace/screenshots/city-stadium-zh-Hans.png
+!/workspace/screenshots/city-stadium-ja.png
+!/workspace/screenshots/city-stadium-ko.png
+!/workspace/screenshots/city-stadium-en.png
 
 # 正式封包只留本機
 /dist-all/

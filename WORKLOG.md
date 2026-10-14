@@ -928,3 +928,11 @@ r11 正常建設剩餘九項，各費用 5000、完整 6×6 圖；移開游標�
 正常報告 a163522a7e18d0c40811acb898d4b64e4e453fb2990a255b5dcadc29793a1e56，像素報告 caa694687de1c71ec711516faacfdc3dddcb0bcca6625f5ae12826df11cd6a18。PUBLIC.SAV 93567 bytes、SHA-256 02ff88bf23cdd719b3c8e1c2b935257a729e6d0f430b0ee1a101fe550ad8a6bc，讀回不變。已檢視體育場原版、繁中及英文實際畫面，其他語言標籤按固定參考逐像素核對。Linux 通過後提升標準入口；來源、七補丁、素材與四架構記錄 public-v2-final-provenance.json。首次彙整發現 GUI image 沒有 file 指令，改用既有 Python 解析原始 header，不新增 image 或退回主機。
 
 036 v2 限十二項靜態圖及已驗路徑 CONFORMED，#60 以正常產品輸入／存讀／退出補驗。README 接續匯出體育場原版與五語系六張 PNG。其他相位、全新 EXE 冷讀、完整 RAM／CPU／RNG 對拍、外平台真機及正式封包未驗；完整 HD 與母項繼續。
+
+### #58 十二項整批截圖與收尾
+
+程式與驗證先提交 6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8。export_public_screenshots.py --run /workspace/runs/gui-public-r2 --scope public --source-commit 6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8，在既有 GUI image、network none、UID/GID 1000、2g／2 CPU／64 pids 與 120 秒上限核對正常收據及八張實際像素，再匯出體育場原版／HD 五語系六張 PNG。只有 screenshots 可寫；既有 48 張不改，各批來源提交仍保留。
+
+README 現有 54 張唯一 1280×800 圖，共 42,344,222 bytes，本批新增 6,950,595 bytes，manifest SHA-256 314b1edc9af196d06a149dcf654940a21663194a02f556e3370170c42b375530。已回查有 local_capture 的十二份既有來源，其中正常城市均無新增設施來源，不需要重生未受影響的 DISA1／警消畫面。移到 WORKLOG 的四個規格目錄相對連結已依實際原路徑重設到專案根，所有連結乾淨重查通過。
+
+README 功能表及體育場對照同步更新，來源清單只新增本批六張；CONTEXT 保持唯一現況。選定 PNG 明列加入 .gitignore 例外，素材、SAV、字型及原版檔仍排除。原版 35 檔、RAR、產品來源與七補丁、四架構雜湊、圖片尺寸／雜湊／擁有權及 Docker 清理另由最終收尾核對。其他相位、冷讀、外平台真機與正式封包仍未完成。

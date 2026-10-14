@@ -1268,6 +1268,144 @@
       },
       "batch": "environment-facilities",
       "local_capture": "workspace/runs/gui-environment-r1/sewage-en-capture.zip"
+    },
+    {
+      "file": "city-stadium-original.png",
+      "scene": "normal-stadium-construction",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e3645272d97c000aa28888459274dcbfb002628d0b916df032c2957f1c5dd3d7",
+      "capture_sha256": "6dae00b8f8bd4ed4edbc21a3dd12f6bdede73581af181bedf0759d4e4a05263d",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1572000000,
+      "ticks": 54771,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-original-capture.zip"
+    },
+    {
+      "file": "city-stadium-zh-Hant.png",
+      "scene": "normal-stadium-construction",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "19de36d6ab55001e72d8ffd8a3fbb9e1614517ad2baa6f156dfb72f3d42584dc",
+      "capture_sha256": "36dacf39a628dae1471717840e13d80ea6318e020e774914a26ad83ecb091fe5",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1574400000,
+      "ticks": 54854,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-stadium-zh-Hans.png",
+      "scene": "normal-stadium-construction",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ffdd50045de4c192d3906b4e9b080e0c5c7e917f0ad06d9803013578c1d44274",
+      "capture_sha256": "9f5fcbb6f2b3e7160affb2b1428e9d7df8b5e8f550f2dbf6817c423765e99352",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1578800000,
+      "ticks": 55006,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-stadium-ja.png",
+      "scene": "normal-stadium-construction",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "39ca828368a7ef040836c1f740de5c3c4e298c6eb79e1e029b696064883d7538",
+      "capture_sha256": "d58e97e99d2841bbf8107baf19613a9a463d296c74646af6b33c2b6b8a9da415",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1582800000,
+      "ticks": 55144,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-ja-capture.zip"
+    },
+    {
+      "file": "city-stadium-ko.png",
+      "scene": "normal-stadium-construction",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "57886c05bab3f371c9470035b2c92e2b76c986072b27185cb7bf8fe0a89e617c",
+      "capture_sha256": "4803c86ca1bab77ec9d7ee4abb4517733bd6c95c60f197e1894738faaccf1f98",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1584400000,
+      "ticks": 55199,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-ko-capture.zip"
+    },
+    {
+      "file": "city-stadium-en.png",
+      "scene": "normal-stadium-construction",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "515abb71c2f6a095787ceb8f376ebb7df334395deec6aea37b734e491790f3f3",
+      "capture_sha256": "bbe49adaa66f2a89ae0f45f7779528e44e8888c3c0dd3db90553606376451a4c",
+      "frame_index_sha256": "3a869526b6497122c57f6346b5effd711c1cc234bdef51433c1a174bfae9531a",
+      "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+      "steps": 1586800000,
+      "ticks": 55282,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "public-facilities",
+      "local_capture": "workspace/runs/gui-public-r2/stadium-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -1408,5 +1546,32 @@
       "public_facility_check.py": "b2aa16b6ae6338a6fdb922d1c43f1c57e33049274cff8025c37a4ffa8faa43ff"
     },
     "limits": "限兩種正常施工圖；公共設施、其他相位、真機及正式封包未完成。"
+  },
+  "public_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/58",
+    "source_commit": "6ff4e57134c6bdb3d406419f6aec551ae5a1cbf8",
+    "binary_sha256": "54d04177a5ed420f95cf7592e7907f9d8e750661fa0ace086409b169d960655c",
+    "local_receipt": "workspace/runs/gui-public-r2/verification.json",
+    "local_receipt_sha256": "a163522a7e18d0c40811acb898d4b64e4e453fb2990a255b5dcadc29793a1e56",
+    "pixel_verification_sha256": "caa694687de1c71ec711516faacfdc3dddcb0bcca6625f5ae12826df11cd6a18",
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "gui_facilities": [
+      "waste",
+      "stadium"
+    ],
+    "source_tiles": 392,
+    "unique_sources": 391,
+    "tools_sha256": {
+      "export_public_screenshots.py": "12e07de4b6091c9ec03a7751ba34810ee0ae249cb43eea9d2c6a210801aa9044",
+      "facility_batch_playtest.py": "72cf87e853586a5bab9ce2fe739eb6dd753d8e843f6e2dcb9e7c22eb8f03b9b0",
+      "facility_batch_playtest.sh": "1bd3077e135bbb8070f3fbea373c5c2943bb527c8283458934982a4cc8245bfc",
+      "public_facility_check.py": "362ce65130c2872c97f597fafbfb011edf78875a544ef017a25859993f74e60b",
+      "facility_cursor.py": "723285eb6f33e310591a54d114e1193d67e8139dec5b2688ab842f1a89b16e26"
+    },
+    "limits": "限已驗靜態施工圖與正常抽驗；其他相位、真機及正式封包未完成。"
   }
 }
