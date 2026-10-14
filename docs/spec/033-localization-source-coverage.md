@@ -45,7 +45,9 @@ EXE `245C4h–259A0h` 的 146 筆可讀中文字串與圖片來源另由覆蓋�
 
 ## 來源覆蓋與完成結果
 
-唯一 [ui.tsv](../../workspace/app/locales/ui.tsv) 現有 225 鍵、五個完整語系欄，SHA-256 `4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9`。實際 Noto／OFL 檢查涵蓋 1213 種字元。覆蓋工具 [localization_source_inventory.py](../../workspace/tools/localization_source_inventory.py) 直接讀固定 EXE 與兩個 ROM，輸出 `workspace/runs/localization-source-coverage.json`，SHA-256 `7db6132a25dc4b0f582bb1936dfc207d99b73bf2c585ffd3c69a6dda1377ff04`。
+本批驗收時唯一 [ui.tsv](../../workspace/app/locales/ui.tsv) 為225鍵、五個完整語系欄，SHA-256 `4ae6a237fe96d09411860d4e55156b922acc26f1bccca5431eeef094a1b92ad9`。當時實際Noto／OFL檢查涵蓋1213種字元。覆蓋工具 [localization_source_inventory.py](../../workspace/tools/localization_source_inventory.py) 直接讀固定 EXE 與兩個 ROM，輸出 `workspace/runs/localization-source-coverage.json`，SHA-256 `7db6132a25dc4b0f582bb1936dfc207d99b73bf2c585ffd3c69a6dda1377ff04`。
+
+後續[038](038-map-completion.md)增加三個區域字樣鍵，原225鍵全部五欄逐項不變。現行228鍵、1214種字元，TSV SHA-256 `b68456b42325baa572b614f85a2d285a98a61049f189d6ce03b59887b78d901b`；三字樣的實際Noto與五語系墨跡已驗。歷史225鍵收據保持原件，不重寫成新數量。
 
 | 來源家族 | 已完成 | 證據限制 |
 |---|---|---|
