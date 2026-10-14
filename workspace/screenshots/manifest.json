@@ -1406,6 +1406,144 @@
       },
       "batch": "public-facilities",
       "local_capture": "workspace/runs/gui-public-r2/stadium-en-capture.zip"
+    },
+    {
+      "file": "city-nuclear-original.png",
+      "scene": "existing-nuclear-plant",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "28cb2a5b4dade2d7dfb4f30b4a12fedd0a6b73eba77ad8fdf64c35f3747c74a9",
+      "capture_sha256": "96b5c200fa63304a2a4d80a4097a062e331f1d9714278ff1ce888a0a588196d6",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3444000000,
+      "ticks": 119724,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-original-capture.zip"
+    },
+    {
+      "file": "city-nuclear-zh-Hant.png",
+      "scene": "existing-nuclear-plant",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "de78dd1e9438edcc0da5c9135e2be61d905375f2ad89307a73c017ca1abd03ea",
+      "capture_sha256": "487355b5f63b8a8ce446aba129a997acd8460edd676e341ef4be13ea1a9cd3c1",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3456000000,
+      "ticks": 120139,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-nuclear-zh-Hans.png",
+      "scene": "existing-nuclear-plant",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e82e5d37d7c34944147c40d9938c50a776089732328ee3a4ddcfaa234b22f4f0",
+      "capture_sha256": "5c4b52ba242fe321fe04f33f43c6c691066cc35b0bef2c8d57790a42a8f75236",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3458000000,
+      "ticks": 120208,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-nuclear-ja.png",
+      "scene": "existing-nuclear-plant",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "3488f9862a7755e92c7f1d8fac75aa28a4fe3ac483cc91c0b432e5668807f678",
+      "capture_sha256": "98538efc6abd4ba8899d311899b8b2929045ff6eea907856957b8b842e6cb575",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3468000000,
+      "ticks": 120553,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-ja-capture.zip"
+    },
+    {
+      "file": "city-nuclear-ko.png",
+      "scene": "existing-nuclear-plant",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "43962329732c9a8827c37ac7fe74e943cfceabf48fd55412548228bd78ff2263",
+      "capture_sha256": "92f7f1224332d309f6c637ceec63710e865148c44bb8fb440f69da11aebd967c",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3470000000,
+      "ticks": 120622,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-ko-capture.zip"
+    },
+    {
+      "file": "city-nuclear-en.png",
+      "scene": "existing-nuclear-plant",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "8b1e71dd5b4ca07e83cca51a73eafd865f29b27a180e59c4d78b68573f41e260",
+      "capture_sha256": "370424a8c26da93bc5cbbad88983796393e0096d2f11181d70bdb62f94b6dcf3",
+      "frame_index_sha256": "57b594f5f60f12db541611ccb3566e770f776fae89ad63a0eeaf3c1d8ccdce4f",
+      "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+      "steps": 3474000000,
+      "ticks": 120761,
+      "map_origin": {
+        "X": 52,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "nuclear-plant",
+      "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -1573,5 +1711,25 @@
       "facility_cursor.py": "723285eb6f33e310591a54d114e1193d67e8139dec5b2688ab842f1a89b16e26"
     },
     "limits": "限已驗靜態施工圖與正常抽驗；其他相位、真機及正式封包未完成。"
+  },
+  "nuclear_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/46",
+    "source_commit": "c44b1abfef5cab176a15d924aed7d59ea28c8a02",
+    "binary_sha256": "9e4fa21247dd36ef6879fd89440ca473708fae22786b9c7a664d7f681735f1ec",
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "new_nuclear_construction_tested": false,
+    "long_state_sampling": false,
+    "local_receipt": "workspace/runs/gui-nuclear-hd-r1/verification.json",
+    "local_receipt_sha256": "f306c270e07e8936d010c304cb2ff3485f56d6bcab9f59a53e4293233311c8d0",
+    "pixel_verification_sha256": "5d3c576791e4aff6c7efe0fee615b100d187dd9337ff9a4a9603ca416c861ae6",
+    "tools_sha256": {
+      "export_nuclear_screenshots.py": "568a6b6a92a7f1ef7430ace919e0f6c1368d7f349fffbc14a7d434f3bf939114",
+      "nuclear_check.py": "7b7b2cce280a260b95aa66de84a86c5645750c8e2c437e068a3e6fa761fc4661",
+      "nuclear_existing_playtest.py": "d34544b0131c65a26f9508d9d18b4ded251ec7df3a5a5e49df34dcb7ef558953",
+      "nuclear_existing_playtest.sh": "2fb876e26a5ce021826cd9ebdb01d641a6cafb3f8d7b9a637f7c7f35f32cdbae"
+    },
+    "limits": "限正常冷讀既有核電廠的靜態圖與已驗路徑；新建施工、其他相位、真機及正式封包未驗。"
   }
 }

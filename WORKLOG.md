@@ -968,3 +968,17 @@ gui-nuclear-baseline-r2 wrapper 0，正常冷讀 DISA1 既有核電廠、原版�
 內建 imagegen 依完整正常參考生成一張 B 圖，保留原件，唯讀複製至 workspace/prototypes/hd-style/nuclear-v1/nuclear/。已檢視 216×216 與原版對照；原件、提示、來源與 READY seal 見 027。public_facility_assets.py 增加核能 stage 與 issue 參數，舊公共設施輸出不變。READY 兩檔在 nuclear-ready-repro-v1 乾淨重生，逐 byte 相同。獨立 nuclear_check.reference 重讀原版與生成原件，36 格、完整 186624 bytes RGBA 及色盤通過。
 
 核能載入器使用泛化的封存 atlas 載入函式，原公共設施仍用原 seal；呈現器新增 nuclear_facility 統計與同源格唯一鄰圖定位。沒有改 dosgolem、原版 EXE、時間、規則或 SAV。核能三項及公共設施四項測試通過，nuclear-tests-r2.log 86.055 秒，無跳過。初次測試 image.Image 型別的編譯失敗已修正並乾淨重跑。Linux binary `9e4fa21247dd36ef6879fd89440ca473708fae22786b9c7a664d7f681735f1ec` 保存在 taipei-preview-nuclear-r1，舊標準入口保留，正式 HD GUI 執行中。
+
+### 核能 HD 遊玩抽驗與 README 收尾
+
+實作與工具提交 `c44b1abfef5cab176a15d924aed7d59ea28c8a02` 已推送。gui-nuclear-hd-r1 正常冷啟動、FUND.SAV 冷讀、原版鍵盤捲動至既有核電廠、完整 36 格覆繪、五語系及 F12、原版 F2 保存／讀回與 DOS 退出通過，wrapper 0。主收據 SHA-256 `f306c270e07e8936d010c304cb2ff3485f56d6bcab9f59a53e4293233311c8d0`。獨立核對八張全圖與六項正反對照，報告 `5d3c576791e4aff6c7efe0fee615b100d187dd9337ff9a4a9603ca416c861ae6`；同源兩格交換並重算雜湊仍拒絕。已檢視實際 HD 繁中遊戲畫面。
+
+NUCLEAR.SAV 為 93567 bytes、SHA-256 `10ae70c129292142430417bfa7328c1a1546d152039e59fb6c3ec61ba31b1d9a`，與沒有核能 HD 的正常基線存檔逐 byte 相同，讀回不變。既有城市／警消／道路／火力四項回歸 28.077 秒；鍵盤與研究命令編譯通過，無跳過。這是正常遊玩與存檔證據，不冒稱完整 RAM／CPU／RNG 對拍，也不把既有電廠當作成功新建核能施工。
+
+沿用既有 Linux／Windows／macOS 三個 image 完成四架構重編。Windows 編譯保留既有 YMFM 警告，回傳 0，沒有新增模擬器修改。Linux 標準 build_preview.sh 從固定 dosgolem 與七補丁乾淨重建，與已驗核能 binary 完全相同，提升標準入口。四個 binary 完整 SHA-256 見 027 與 nuclear-final-verification.json；外平台只有編譯／格式，真機未驗。
+
+export_nuclear_screenshots.py 先重核正常收據與像素，再以來源提交 c44b1ab 匯出原版／HD 五語系六張實際 PNG。README 保留遊戲背景並增加核能對照，總計 60 張 1280×800、48,858,728 bytes。manifest SHA-256 `3f607a4d2b7de6250873fe2efd3142b488ee08ccb7e923765d0e06d57cd1be00`。僅這六張 PNG 加入明列例外，原版、HD 素材、字型、SAV、原始收據與 binary 均留本機。
+
+回查正常玩家路徑、規格閘門與文件職責入口後，027 限火力／核能靜態圖與已驗路徑 CONFORMED，CONTEXT 及驗收矩陣同步更新。nuclear_final_check.py 核對 35 原始檔／RAR 未變、所有 Go 來源及七補丁符合 c44b1ab、四架構 header、實際存檔、60 張 PNG 雜湊／尺寸／擁有權與文件連結通過，結果 SHA-256 `c65dbd65203385c33242244e0f4920dc828fa8441678d31dd69a775e901f745e`。指定 find 無 root-owned 輸出或 .md 目錄，本批相關容器全數 --rm，主機 docker ps -a 的 project=taipei 清單為空。
+
+新建核能施工、其他相位、完整機器狀態對拍、外平台真機與正式封包仍未驗。其他圖片與動畫繼續由 #30／#32 維護，完整 HD 母項保持 OPEN；失敗籌資與整地前件不再重新開啟相同研究。

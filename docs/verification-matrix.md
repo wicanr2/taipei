@@ -21,7 +21,8 @@
 | 城市介面 | [#29](https://github.com/wicanr2/taipei/issues/29) | 工具圖示、外框與選取狀態逐像素核對，原版命中範圍不變 | 十四個圖示內部不代表完整介面 |
 | 全部地圖 | [#30](https://github.com/wicanr2/taipei/issues/30) | 地景、道路、電線、建物、設施與災害的來源、遮擋及相位 | 未接入或未知回退仍列未完成 |
 | 道路與電線 | [#44](https://github.com/wicanr2/taipei/issues/44) | 完整來源、別名、固定整格、資源故障、有效負對照；正常施工／F12／雙向捲動／存退讀及原版狀態 | [026](spec/026-infrastructure-tiles.md) 限第一批 25 張 CONFORMED；105 正常收據、九格同世界像素、五項有效呈現破壞及 206 點原版狀態通過。其餘 18 張 DRAFT，完整批次及交付仍未完成 |
-| 火力電廠 | [#46](https://github.com/wicanr2/taipei/issues/46) | 完整 36 格來源／重組、回退、實際素材故障、有效負對照；正常施工／F12／雙向捲動／存退讀及兩次退出 | [027](spec/027-power-facility.md) 限已見靜態來源 CONFORMED；162 正常收據、36 格同世界來源、五項有效破壞及 336 點原版狀態與實際 SAV 相同。核能及其他相位 DRAFT，全部 HD／封包未完成 |
+| 火力電廠 | [#46](https://github.com/wicanr2/taipei/issues/46) | 完整 36 格來源／重組、回退、實際素材故障、有效負對照；正常施工／F12／雙向捲動／存退讀及兩次退出 | [027](spec/027-power-facility.md) 限已見靜態來源 CONFORMED；162 正常收據、36 格同世界來源、五項有效破壞及 336 點原版狀態與實際 SAV 相同。其他相位、全部 HD／封包未完成 |
+| 核能電廠 | [#46](https://github.com/wicanr2/taipei/issues/46) | 既有城市正常冷讀與捲動、36 格完整來源／同源格、F11／F12、存讀檔與原版退出；全圖、區外、裁切、資源故障及有效負對照 | [027](spec/027-power-facility.md) 限 36 格／35 種來源與已驗路徑 CONFORMED；八份整圖、六項正反對照及既有回歸通過。原版 SAV 與無核能 HD 基線完全相同。新建核電廠、其他相位、完整狀態對拍、外平台真機及封包未驗 |
 | 警察局與消防局 | [#57](https://github.com/wicanr2/taipei/issues/57) | 工具 5 正常施工兩種設施、32 格 B、來源／色盤／素材回退、F11／F12／存讀檔／DOS 退出 | [035](spec/035-civic-facilities.md) 限本批及已驗路徑 CONFORMED；六張設施像素與語言標籤、原版整張、五項正反對照；2592 項來源失配、四項真實素材故障、正常來源與全部區外隔離、12 項測試與四架構通過。二素材檔乾淨重生相同；其餘相位、全新 EXE 冷讀、長時間狀態對拍、真機與正式封包未驗 |
 | DISA1 首批建物 | [#56](https://github.com/wicanr2/taipei/issues/56) | 三種完整正常來源、48 格 B 重繪、色盤與資源回退、正常入口／F11／F12／存讀檔／退出 | [034](spec/034-disaster-city-buildings.md) 限本批及已驗路徑 CONFORMED；116 格正常繪製、六張完整畫面、六項正反對照、3888 項來源失配、八項真實資源故障、十一項既有回歸與四架構通過。三圖及 manifest 四檔乾淨重生相同；其他建物／相位、全新 EXE 冷讀、真機及正式封包未驗 |
 | 全部文字與視窗 | [#31](https://github.com/wicanr2/taipei/issues/31) | 原始文字來源、完整字串、實際 Noto 墨跡、安全矩形與正常 GUI | 字模候選不直接作正式覆字規則 |

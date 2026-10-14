@@ -68,6 +68,12 @@
 !/workspace/screenshots/city-stadium-ja.png
 !/workspace/screenshots/city-stadium-ko.png
 !/workspace/screenshots/city-stadium-en.png
+!/workspace/screenshots/city-nuclear-original.png
+!/workspace/screenshots/city-nuclear-zh-Hant.png
+!/workspace/screenshots/city-nuclear-zh-Hans.png
+!/workspace/screenshots/city-nuclear-ja.png
+!/workspace/screenshots/city-nuclear-ko.png
+!/workspace/screenshots/city-nuclear-en.png
 
 # 正式封包只留本機
 /dist-all/

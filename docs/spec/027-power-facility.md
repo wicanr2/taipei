@@ -1,6 +1,6 @@
 # 發電廠圖塊
 
-狀態：火力 36 格靜態呈現 CONFORMED；核能 36 格靜態呈現 READY，正常既有電廠 HD 待驗。其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。不宣稱全部 HD、真機或正式封包完成。
+狀態：CONFORMED，限火力 36 格及核能 36 格靜態呈現與已驗正常路徑。核能採既有電廠遊玩抽驗，新建施工未驗；其他相位維持 DRAFT。對應 [#46](https://github.com/wicanr2/taipei/issues/46)，依 [#30](https://github.com/wicanr2/taipei/issues/30)、[021](021-tool-submenus.md) 及 [026](026-infrastructure-tiles.md)。不宣稱全部 HD、真機或正式封包完成。
 
 沿用 B、1280×800、Noto、F12 及原版構圖。原版 EXE 管理火力／核能電廠選項、費用、建造、供電、發展、動畫與 SAV；本批只重繪已證實來源，不重寫規則。
 
@@ -86,6 +86,18 @@ r3 正常 GUI 依 [預登記](https://github.com/wicanr2/taipei/issues/46#issuec
 正常 HD 情境使用同一既有電廠路徑，另要求 36 格實際覆繪。獨立 [nuclear_check.py](../../workspace/tools/nuclear_check.py) 重讀 ROM 與生成原件，驗全圖、五語系及重算雜湊的來源／像素／統計／語言／同源格交換負對照。[export_nuclear_screenshots.py](../../workspace/tools/export_nuclear_screenshots.py) 核對後才匯出原版與 HD 五語系六張實際 PNG。新建核能施工、其他動畫相位、完整 RAM／CPU／RNG 對拍、外平台真機與正式封包未驗，不阻塞本次已授權的靜態呈現抽驗。
 
 正式載入入口為 [nuclear_facility.go](../../workspace/app/internal/hd/nuclear_facility.go)，沿用 [public_facilities.go](../../workspace/app/internal/hd/public_facilities.go) 的封存素材、來源別名與同源位置核對。針對正常核電廠來源的測試為 [nuclear_facility_test.go](../../workspace/app/internal/hd/nuclear_facility_test.go)。核能三項與既有公共設施四項測試在 `nuclear-tests-r2.log` 通過，86.055 秒，無跳過；包含完整原圖、區外隔離、裁切、缺鄰格、2,835 項來源失配、色盤與四項實際資源故障。初次編譯測試因 image.Image 沒有 RGBAAt 而拒絕，修正測試讀圖型別後同環境乾淨重跑；不列產品缺陷。
+
+收尾入口為 [nuclear_final_check.py](../../workspace/tools/nuclear_final_check.py)，在 Docker 掛載專案唯讀、只有 `workspace/runs/` 可寫，執行 `--source-commit <核能實作提交>`。核對 35 個原始檔與 RAR、正式／已驗 Linux binary 相同、四架構 header、60 張 README PNG 的雜湊／尺寸／擁有權、文件連結、所有 Go 來源及七補丁符合指定提交，並執行指定 find 衛生檢查。
+
+### 2026-10-14 核能正常 HD 驗收
+
+`TAIPEI_CITY_MENU_RUN=gui-nuclear-hd-r1 TAIPEI_NUCLEAR_PHASE=hd TAIPEI_NUCLEAR_BINARY=taipei-preview-nuclear-r1 bash workspace/tools/nuclear_existing_playtest.sh` 通過，外層 exit 0。全新 EXE 冷讀、原版鍵盤捲動、完整 36 格、F11 五語系、F12、原版 F2 保存／讀回與正常 DOS 退出，沒有狀態注入或長時間重播。實際資金保持 77413。主收據 SHA-256 `f306c270e07e8936d010c304cb2ff3485f56d6bcab9f59a53e4293233311c8d0`，八份完整畫面與六項正反對照的獨立像素報告 `5d3c576791e4aff6c7efe0fee615b100d187dd9337ff9a4a9603ca416c861ae6`。交換兩個同源格並重算雜湊仍拒絕。
+
+實際 NUCLEAR.SAV 93567 bytes，SHA-256 `10ae70c129292142430417bfa7328c1a1546d152039e59fb6c3ec61ba31b1d9a`，讀回不變，且與沒有核能 HD 的正常基線存檔完全相同。四項既有城市／警消／道路／火力回歸 28.077 秒，鍵盤與研究命令編譯通過。舊 UI 未改，沒有重跑已完成的長時間 RAM／CPU／RNG 抽樣。
+
+實作提交 `c44b1abfef5cab176a15d924aed7d59ea28c8a02` 已推送。已驗 Linux binary `9e4fa21247dd36ef6879fd89440ca473708fae22786b9c7a664d7f681735f1ec`，標準建置從固定 dosgolem 與七補丁乾淨重建逐 byte 相同。Windows amd64 `f19db018ace26d62d85994f932450fc0983b984357711bda669400f5faf2ae94`、macOS amd64 `c544e8afd53d950641602925403711b205690f4afd28a39a0fdaf7997d4156cd`、macOS arm64 `2f614df8187e28c259a924f7699ea397fe994eb284a7e996604648979d701936` 編譯與格式核對完成，真機仍未驗。
+
+核能靜態圖與已驗路徑達 CONFORMED。README 另收錄原版與 HD 五語系六張實際畫面，總計 60 張。新建施工、其他動畫相位、完整機器狀態對拍、外平台真機與正式封包仍未驗；整地及籌資前件保留於本規格與 WORKLOG，不作完成證據。
 
 [ida_nuclear_probe.py](../../workspace/tools/ida_nuclear_probe.py) 是原版正常 Space 施工的窄查詢。用已驗 IDA Pro 9.4 image、唯讀原版與 `.i64` 的一次性副本，預設匯出原名 `sub_16FF4`，以 `TAIPEI_IDA_TARGETS` 指定直接相關函式、`TAIPEI_IDA_OUTPUT` 指定本機 JSON。只保留原始指令、bytes、IDA 線性位址與獨立檔案偏移；未審查語意標為 unknown，不改名或寫回正式資料庫。
 
