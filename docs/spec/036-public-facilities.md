@@ -32,4 +32,6 @@
 
 十項公共設施因 #60 維持 DRAFT。[IDA 窄查詢](../../workspace/tools/ida_facility_probe.py) 與[診斷重播](../../workspace/tools/facility_diagnostic.go) 保存原始指令、BDA 變化及取樣 PC。診斷不能代替正常 GUI；公共設施尚未通過施工後輸入與存讀檔。
 
+施工探針的[就緒辨識](../../workspace/tools/facility_cursor.py) 只接受完整 ROM 格或 r10 已逐像素核對的原版游標外框。此閘門只控制下一個測試按鍵；來源匯出仍須移開游標並完整核對每格 81 bytes，不以游標遮罩生成正式來源或 HD 素材。
+
 本批 Linux binary SHA-256 `21705e3c9521d247b86220bcaecb295db39958b6ba485d5501df42059063abf4`。Windows／macOS 延至後續合併重建；其他相位、全新 EXE 冷讀、平台真機及正式封包未驗。

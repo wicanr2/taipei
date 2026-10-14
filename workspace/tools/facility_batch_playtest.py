@@ -11,6 +11,7 @@ import city_menu_playtest as base
 from chart_window_playtest import model
 from infrastructure_playtest import key as ordinary_key
 from infrastructure_catalog import sources
+from facility_cursor import ConstructionGate
 from hd_source_audit import cell, scene, sha, MATERIAL
 
 CASES=[('waste',9,0),('sewage',9,1)]+[(n,10,i) for i,n in enumerate([
@@ -143,6 +144,7 @@ def main():
     assert not root.exists() and root.parent.stat().st_uid==1000
     root.mkdir();saves=root/'saves';saves.mkdir()
     aliases=sources(Path('/orig/RS201.ROM').read_bytes())
+    construction_gate=ConstructionGate(aliases)
     manifest=json.loads(Path('/workspace/prototypes/hd-style/tool-menus-v1/manifest.json').read_text())
     entries={t:{s['source_sha256']:s['selection'] for s in manifest['states'] if s['id']==f'tool-{t:02d}'} for t in [9,10]}
     phase=os.environ.get('TAIPEI_FACILITY_PHASE','source')
@@ -151,7 +153,8 @@ def main():
     binary=Path('/workspace/runs')/('taipei-preview-public-probe-r1' if phase=='source' else 'taipei-preview-public-r1')
     if os.environ.get('TAIPEI_FACILITY_BINARY'):
         binary=Path(os.environ['TAIPEI_FACILITY_BINARY'])
-    results=[];shots=[]
+    results=[];shots=[];final_sha=None
+    script_sha=sha(Path(__file__).read_bytes())
     p=subprocess.Popen([str(binary),'-original','/orig','-saves',str(saves),'-receipts',str(root),
         '-mute','-steps-per-update','400000','-receipt-every-updates','6','-theme','hd-b','-materials','/workspace/prototypes/hd-style',
         '-catalog','/workspace/app/locales/ui.tsv','-stop-file',str(root/'stop')],stdout=(root/'app.log').open('w'),stderr=subprocess.STDOUT)
@@ -208,7 +211,16 @@ def main():
             # Preserve the completed-construction observation window used by
             # the validated 60-update probes; only other key waits are shorter.
             placed=base.status()['steps']
-            base.wait_for(lambda s:s['steps']>=placed+24_000_000,case+'-construction-fence')
+            if tool==10:
+                # #60: native AH=0Ch discards input queued during construction.
+                # Wait for the entire observed ROM composite, not a fixed delay.
+                def constructed():
+                    done,pixels=model()
+                    return scene(done,pixels) and done['map_origin']==initial['map_origin'] and construction_gate.ready(
+                        pixels,22,3,*span)
+                base.wait_for(lambda _:constructed(),case+'-complete-drawing')
+            else:
+                base.wait_for(lambda s:s['steps']>=placed+24_000_000,case+'-construction-fence')
             walk((16,3))
             st,frame=model();assert scene(st,frame) and st['map_origin']==initial['map_origin']
             known=[]
@@ -239,10 +251,15 @@ def main():
                 for lang in (LANGS if number==len(cases)-1 else ['zh-Hant']):
                     language(lang);shown,raw=screenshot(root,case+'-'+lang,shots)
                     assert raw==frame and shown['hd']['public_facilities']['painted']==expected
-        if phase=='hd':
+        if phase=='hd' or any(c.get('tool')==10 and c.get('known') for c in results):
             final_sha=save('PUBLIC',saves)
             restore('PUBLIC',saves)
-            assert base.status()['hd']['public_facilities']['painted']==len(results[-1]['known'])
+            if phase=='hd':
+                assert base.status()['hd']['public_facilities']['painted']==len(results[-1]['known'])
+            else:
+                _,loaded=model()
+                assert all(sha(cell(loaded,5+r['cell'][0]*9,34+r['cell'][1]*9))==r['source_sha256']
+                           for r in results[-1]['known'])
         key('quit-menu','F1');base.wait_for(lambda s:s['hd']['panel']=='city-f1','quit-menu-ready')
         if base.status()['hd']['panel_selection']!=0:key('quit-choice','Down')
         key('quit-confirm','space');base.wait_for(lambda s:s['hd']['file_dialog']=='quit-confirm','quit-ready')
@@ -251,10 +268,12 @@ def main():
         front_key('space');base.wait_for(lambda s:s.get('dos_exited'),'dos-exit')
         report={'issue':58,'phase':phase,'normal_gui':True,'state_injection':False,'checkpoint':False,
             'baseline_save_sha256':save_sha,'native_exit_tested':True,'binary_sha256':sha(binary.read_bytes()),
+            'script_sha256':script_sha,
             'receipt_every_updates':6,'steps_per_update':400000,
             'construction_input_fence_steps':24_000_000,
+            'public_construction_gate':'complete observed ROM rectangle before sending movement',
             'cases':results,'screenshots':shots,'actions':actions,'ordinary_sync':base.ordinary_sync,'arrow_sync':base.sync}
-        if phase=='hd':report.update(final_save_sha256=final_sha,original_save_read=True,save_unchanged_after_read=True,cold_reload_tested=False)
+        if final_sha is not None:report.update(final_save_sha256=final_sha,original_save_read=True,save_unchanged_after_read=True,cold_reload_tested=False)
         (root/'verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     finally:
         if p.poll() is None:
