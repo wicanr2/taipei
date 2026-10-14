@@ -1,6 +1,6 @@
 # 港口與機場靜態圖
 
-狀態：READY，限兩項完整靜態圖的呈現契約；正式 HD GUI 待驗。對應 [#61](https://github.com/wicanr2/taipei/issues/61)，母項 [#30](https://github.com/wicanr2/taipei/issues/30)。沿用 B、1280×800、Noto、F11 五語系及 F12。原版 EXE 繼續負責規則、施工、費用、時間、亂數及 SAV。
+狀態：CONFORMED，限兩項完整靜態圖與已驗既有城市正常路徑。對應 [#61](https://github.com/wicanr2/taipei/issues/61)，母項 [#30](https://github.com/wicanr2/taipei/issues/30)。沿用 B、1280×800、Noto、F11 五語系及 F12。原版 EXE 繼續負責規則、施工、費用、時間、亂數及 SAV。其他相位、新建機場、外平台真機與正式封包未驗。
 
 固定 EXE／ROM／dosgolem 與七補丁沿 [027](027-power-facility.md)。Docker 使用既有 GUI image `sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3`，原版唯讀、UID/GID 1000、有界資源及無網路。
 
@@ -48,3 +48,15 @@ r2 在完整候選補查後主動停止：世界 (25,5) 港口的 (26,5) 已是 
 呈現入口：[transport_facilities.go](../../workspace/app/internal/hd/transport_facilities.go)。正常來源、完整 atlas、區外、家族衝突、場景、來源／色盤與實際素材故障測試：[transport_facilities_test.go](../../workspace/app/internal/hd/transport_facilities_test.go)。
 
 收尾沿 [nuclear_final_check.py](../../workspace/tools/nuclear_final_check.py) 的 `--batch transport --source-commit <實作提交>`，核對本批正常 GUI、原版 SAV、四架構、72 張 README 圖、來源及原版輸入／擁有權，輸出 `workspace/runs/transport-final-verification.json`。舊核能預設分支保持不變，歷史結論依其固定提交與收據。
+
+## 正常 HD 遊玩驗收
+
+`TAIPEI_CITY_MENU_RUN=gui-transport-r1 TAIPEI_TRANSPORT_PHASE=hd TAIPEI_TRANSPORT_BINARY=taipei-preview-transport-r1 bash workspace/tools/transport_facility_playtest.sh` 通過，wrapper0。全新EXE冷讀DISA4，兩項正常捲動、完整36格、各六張原版／五語系、F12不送DOS鍵、原版TRANSP保存／讀回及正常退出。資金73455保持不變，沒有狀態注入、新建或長時間重播。
+
+主收據 SHA-256 `17fa9dc60428642b3ba11ee9a2cc50e449a40d2bd7cd649290417cb0f34994a4`。獨立核對72格固定來源／生成原件、十二張全圖與五項有效正反對照通過，像素報告 `07eb2a90eb4e9c51e9490c576ccf43ca8b8c6a37789128d9ae3f7209850d8793`。區外、5832項來源失配、已用／未用色盤、六項實際素材故障及家族隔離由正常來源Go測試核對；連同核能及公共同源回歸10.123秒，無跳過。
+
+原版TRANSP.SAV 93567 bytes，SHA-256 `8dfab3da2107cfb0d701d7aef796d25d5f5c5a2de473f7e418fa5c61ef123e27`，與沒有運輸HD的r4來源基線逐byte相同，讀回不變。READY三個素材檔在transport-ready-repro-v1乾淨重生，逐byte相同。沒有將此結果外推為完整RAM／CPU／RNG對拍。
+
+實作提交 `487953922bc0dec7e45b28155fdfa3ec438a33c0` 已推送。Linux已驗binary `d2c326607d0b111501371c6cc7db55d68bd1954d3f8e40f5bba1e076bed6f644`，標準build_preview.sh從固定dosgolem與七補丁乾淨重建相同。Windows amd64 `d52d0954888a9cf7c1bc4a166b02d56a669d65cf70d3f3545dde7504a3d28496`、macOS amd64 `e8ea6202509b0a84ab31e79739a5144cf4596fde20380a8c6943dd45e30402b6`、macOS arm64 `df4236850565647fca63e8430e1ca0db67da84cac3d089715cf8f6e10ed13761` 編譯與結構完成，外平台真機仍未驗。
+
+README新增兩項各六張實際畫面，合計72張；原始收據、生成原件、SAV與binary留本機。其他相位與全部圖片繼續由#30／#32維護，正式封包由#9驗收。

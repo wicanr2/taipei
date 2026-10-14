@@ -74,6 +74,18 @@
 !/workspace/screenshots/city-nuclear-ja.png
 !/workspace/screenshots/city-nuclear-ko.png
 !/workspace/screenshots/city-nuclear-en.png
+!/workspace/screenshots/city-airport-original.png
+!/workspace/screenshots/city-airport-zh-Hant.png
+!/workspace/screenshots/city-airport-zh-Hans.png
+!/workspace/screenshots/city-airport-ja.png
+!/workspace/screenshots/city-airport-ko.png
+!/workspace/screenshots/city-airport-en.png
+!/workspace/screenshots/city-port-original.png
+!/workspace/screenshots/city-port-zh-Hant.png
+!/workspace/screenshots/city-port-zh-Hans.png
+!/workspace/screenshots/city-port-ja.png
+!/workspace/screenshots/city-port-ko.png
+!/workspace/screenshots/city-port-en.png
 
 # 正式封包只留本機
 /dist-all/

@@ -1544,6 +1544,282 @@
       },
       "batch": "nuclear-plant",
       "local_capture": "workspace/runs/gui-nuclear-hd-r1/nuclear-en-capture.zip"
+    },
+    {
+      "file": "city-airport-original.png",
+      "scene": "existing-airport-facility",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c24a4040df55d14be36272ae32b5b94efd818e7579b2fbc022bb4b4154b91778",
+      "capture_sha256": "6939689f8ed5ff111c826210da7c02495beabc2706fb634ccde8956b84feabf5",
+      "frame_index_sha256": "5d9d1ae3f0342c55d1141590fb61dab08ab82c6a954d068f98d45f004ac7675f",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2700000000,
+      "ticks": 94057,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-original-capture.zip"
+    },
+    {
+      "file": "city-airport-zh-Hant.png",
+      "scene": "existing-airport-facility",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "85c82bc81edbfb416628b5a1958a0a5e3a735fff02905f8a7a3bd0f37c1ae351",
+      "capture_sha256": "f72977e67262af098cb1e8745caaa2112eeeede68e3f7d00b54584bc1363f029",
+      "frame_index_sha256": "1ddd60811264f2ece25abf9c91d1d83df534a159daa7d36dfe9478ff4a9a2060",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2712000000,
+      "ticks": 94472,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-airport-zh-Hans.png",
+      "scene": "existing-airport-facility",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "27c1323411ef31c9b9408ead1f2f680d1f65a749b3e2b5342b99e1f84c5b5f44",
+      "capture_sha256": "6e426f5a6e5f555df48ac5204b84036e8d5ac1bc15edcd1e1fa43b60655de5d3",
+      "frame_index_sha256": "1ddd60811264f2ece25abf9c91d1d83df534a159daa7d36dfe9478ff4a9a2060",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2722000000,
+      "ticks": 94817,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-airport-ja.png",
+      "scene": "existing-airport-facility",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e3f6dc91812c785357bab076cdf5ed1204220164f3772670997a7f70e561e1b2",
+      "capture_sha256": "714b26195a3baea19c3bceb90007c9581c3882ad0a0ab49069354b837e84015a",
+      "frame_index_sha256": "1ddd60811264f2ece25abf9c91d1d83df534a159daa7d36dfe9478ff4a9a2060",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2732000000,
+      "ticks": 95163,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-ja-capture.zip"
+    },
+    {
+      "file": "city-airport-ko.png",
+      "scene": "existing-airport-facility",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ad5e8021b726f5f9708d751beb559cba5ac7ccc81c76e8b474b4dd4255edaac9",
+      "capture_sha256": "f792ea9958106fd9e9ee56c4bc2fbfa2ca7c1997771b5dfc9fb50cb6bf214348",
+      "frame_index_sha256": "1ddd60811264f2ece25abf9c91d1d83df534a159daa7d36dfe9478ff4a9a2060",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2738000000,
+      "ticks": 95370,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-ko-capture.zip"
+    },
+    {
+      "file": "city-airport-en.png",
+      "scene": "existing-airport-facility",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "add9139c3608fb7abb900796559c8335869bc5e4d697d219d2627ceb56f0fd32",
+      "capture_sha256": "8c324726649166c7ba34626b0754f3c24885d607785c47cb2b7d49f57341fbca",
+      "frame_index_sha256": "b2f6b1c076745b9100c8641ea9403f1b085d0ca5edd1f59bbb4596728326aa9b",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 2744000000,
+      "ticks": 95577,
+      "map_origin": {
+        "X": 36,
+        "Y": 24,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/airport-en-capture.zip"
+    },
+    {
+      "file": "city-port-original.png",
+      "scene": "existing-port-facility",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "b6bafc127aa6b4b6b0dd11dc73f98f1f4de3d9299f808dc66569350e968d823b",
+      "capture_sha256": "29d49d6435e0a0979e45ded44e6d530532fa621be527cdcf8f56ba1c1f1dd822",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5684000000,
+      "ticks": 197156,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-original-capture.zip"
+    },
+    {
+      "file": "city-port-zh-Hant.png",
+      "scene": "existing-port-facility",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "b0ee5a1ec1bac7c66e09ee0e14dd4e34efcf587442cb1d2a235c61ed4c3e847e",
+      "capture_sha256": "691633d2eacb5095347fb4d3215a62ce935778afc77a69de65813c6c49dcc8ee",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5704000000,
+      "ticks": 197847,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-port-zh-Hans.png",
+      "scene": "existing-port-facility",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "420da8ad00d02ebcaf5cdf9f43aaeb0771ce8cb758828bec79485b8203ade1c7",
+      "capture_sha256": "dd67858d52ed639927993a7c610d7ffa82b0f14fe597de052766a1b812c19d62",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5714000000,
+      "ticks": 198193,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-port-ja.png",
+      "scene": "existing-port-facility",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "d128a5cc900d0e0ff57dee92cfab2edc002ccfb6c96cb2072851fb6d33678a5a",
+      "capture_sha256": "e70933f1b09f9c9a0392e1a90b30b59daca058f672edd9556ac14c26a95c4709",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5718000000,
+      "ticks": 198331,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-ja-capture.zip"
+    },
+    {
+      "file": "city-port-ko.png",
+      "scene": "existing-port-facility",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "6c090de7e8ef44c126742a687e106f36cafe94ca32b6e8b34a7b33992840fa70",
+      "capture_sha256": "83650bf81598d44bbc7bc7ef0731559b801a58363d3a1ad80d220907d38699a3",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5730000000,
+      "ticks": 198746,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-ko-capture.zip"
+    },
+    {
+      "file": "city-port-en.png",
+      "scene": "existing-port-facility",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "397dac09930ab10c1f19710a3d129bd9c84690db33ffa95bc4402e0ed7de0272",
+      "capture_sha256": "26754b8fb8dd795581100ffbf4e49356bea0d426cb43ec3c5dd5994393353da2",
+      "frame_index_sha256": "9708dc82e1107bb64ca56577e65a6d07c15341f205eefaef2f6522f761b44c46",
+      "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+      "steps": 5742000000,
+      "ticks": 199160,
+      "map_origin": {
+        "X": 32,
+        "Y": 68,
+        "Valid": true
+      },
+      "batch": "transport-facilities",
+      "local_capture": "workspace/runs/gui-transport-r1/port-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -1731,5 +2007,33 @@
       "nuclear_existing_playtest.sh": "2fb876e26a5ce021826cd9ebdb01d641a6cafb3f8d7b9a637f7c7f35f32cdbae"
     },
     "limits": "限正常冷讀既有核電廠的靜態圖與已驗路徑；新建施工、其他相位、真機及正式封包未驗。"
+  },
+  "transport_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/61",
+    "source_commit": "487953922bc0dec7e45b28155fdfa3ec438a33c0",
+    "binary_sha256": "d2c326607d0b111501371c6cc7db55d68bd1954d3f8e40f5bba1e076bed6f644",
+    "local_receipt": "workspace/runs/gui-transport-r1/verification.json",
+    "local_receipt_sha256": "17fa9dc60428642b3ba11ee9a2cc50e449a40d2bd7cd649290417cb0f34994a4",
+    "pixel_verification_sha256": "07eb2a90eb4e9c51e9490c576ccf43ca8b8c6a37789128d9ae3f7209850d8793",
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "gui_facilities": [
+      "airport",
+      "port"
+    ],
+    "source_tiles": 72,
+    "unique_sources": 72,
+    "tools_sha256": {
+      "export_public_screenshots.py": "b1d04260376b0db66f6db2f8dcdf82f7dab0c6a9add41e794f4abec3f279ae8d",
+      "transport_facility_playtest.py": "4bf022093104c600f2f484568c7c5ca37630718ad4333c89fcc2b5252f576d96",
+      "transport_facility_playtest.sh": "46bf8db1d8d2f0ab5da320b83c429f86dde4e23316f4c03cfd558bd87963054f",
+      "public_facility_check.py": "830c2edc1a377b2473446376bb1e08a56d6976b00258905c510323e993dae225",
+      "facility_cursor.py": "fc4ba8ba18cf419b2b8f2d7f98ee73a97b7aec761b4ee41d46a8b1f18a37b790"
+    },
+    "limits": "限正常冷讀既有港口／機場的靜態圖與已驗路徑；其他相位、真機及正式封包未驗。",
+    "new_construction_tested": false
   }
 }

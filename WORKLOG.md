@@ -1010,3 +1010,22 @@ r4 正常EXE冷讀DISA4、兩項原版捲動、完整來源、TRANSP存讀與原
 核心運輸兩項、核能三項與公共同源一項測試通過，transport-tests-r1.log 10.123秒，無跳過；驗完整圖／全部區外、場景、來源與色盤、家族衝突及六項實際素材故障隔離。Linux候選 `d2c326607d0b111501371c6cc7db55d68bd1954d3f8e40f5bba1e076bed6f644`，正式HD GUI執行中，標準入口仍保留9e4fa212。
 
 共用來源／素材／像素／匯出工具增加issue61與transport分支，舊公共設施原始像素報告相同。環境舊報告使用不同scope文案，不能以整份JSON相等判斷產品退化；其八份原件及五項有效對照均與新核對結果相同，歷史文案保留。首次回核誤用gui-public-r1路徑，改從截圖manifest讀取gui-environment-r1，不列產品缺陷。收尾工具新增--batch transport，舊核能預設保持原契約。所有分析／建置／GUI在既有image、原版唯讀、1000:1000執行；來源容器已刪除，現在僅有界HD GUI容器。
+
+### 港口與機場 HD 驗收及 README
+
+實作提交 `487953922bc0dec7e45b28155fdfa3ec438a33c0` 已推送。`gui-transport-r1` 正常冷啟動、冷讀 DISA4、兩項捲動、各六張原版／五語系、F12、原版存讀及正常退出通過，wrapper 0。已檢視實際機場與港口 HD 繁中遊戲畫面。
+
+| 驗證 | 結果 |
+|---|---|
+| 正常 GUI | 主收據 SHA-256 `17fa9dc60428642b3ba11ee9a2cc50e449a40d2bd7cd649290417cb0f34994a4`，兩項各36格實際覆繪，資金73455保持不變 |
+| 獨立像素 | 十二張全圖、原版整張及五項有效正反對照通過，報告 `07eb2a90eb4e9c51e9490c576ccf43ca8b8c6a37789128d9ae3f7209850d8793` |
+| 原版 SAV | 93567 bytes，`8dfab3da2107cfb0d701d7aef796d25d5f5c5a2de473f7e418fa5c61ef123e27`，與無運輸 HD 的 r4 基線逐 byte 相同，讀回不變 |
+| 素材重生 | `transport-ready-repro-v1` 的 manifest／airport.png／port.png 三檔與正式素材逐 byte 相同 |
+| 四架構 | Windows／macOS 兩架構編譯通過，保留既有 YMFM 編譯警告。Linux標準入口從固定 dosgolem 與七補丁乾淨重建，與已驗 d2c32660 相同；完整雜湊見037 |
+| README | 匯出兩項各六張實際PNG，共72張、61,351,056 bytes；manifest `bfb77f62ce56110cb4be8b45898c2269b47cda8253948e775c133f63eb61353e` |
+
+README 保留遊戲背景，新增機場／港口原版與五語系並列表。只有明列十二張文件 PNG 加入私人儲存庫，原版、素材、字型、SAV、原始收據與 binary 仍留本機。CONTEXT、037 及驗收矩陣同步更新，037 限本批靜態圖與正常既有城市路徑 CONFORMED。
+
+收尾重新核對正常遊玩、規格與文件職責契約。`nuclear_final_check.py --batch transport --source-commit 487953922bc0dec7e45b28155fdfa3ec438a33c0` 通過，輸出 `transport-final-verification.json`，SHA-256 `35e8631187eaeb690aaa2f179d7a91d86c523adbf5950a954464775f8642e314`。35個原始檔與RAR未變，全部Go來源及七補丁符合指定提交，四架構header、原版SAV、72張PNG尺寸／雜湊／1000:1000與文件連結通過。指定find無root-owned輸出或.md目錄，相關容器清單為空，沒有新增image。
+
+新建機場、其他動畫相位、完整機器狀態對拍、外平台真機與正式封包未驗。完整圖片與動畫由#30／#32接續，這批結案不宣稱全部HD完成。

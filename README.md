@@ -44,7 +44,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力與核能電廠 72 格、DISA1 三種建物 48 格、警察局與消防局 32 格、十二項環境與公共設施 392 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
+| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力與核能電廠 72 格、港口與機場 72 格、DISA1 三種建物 48 格、警察局與消防局 32 格、十二項環境與公共設施 392 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
 | HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列與圖表文字 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
@@ -116,6 +116,22 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 </details>
 
 ## 原版與 HD 五語系畫面
+
+<details>
+<summary>機場與港口：原版與 HD 五語系對照</summary>
+
+由全新 EXE 正常冷讀 `DISA4.DSA` 的原版城市存檔，經原版鍵盤捲動至完整機場與港口，再切換擷取。兩項合計 72 格，五語系、F12、原版存讀與正常退出已通過遊玩抽驗，見[運輸設施契約](docs/spec/037-transport-facilities.md)。本次 HD 流程採既有設施，新建機場與其他動畫相位未抽測。
+
+| 模式／語言 | 機場 | 港口 |
+|---|---|---|
+| 原版繁體中文 | ![原版既有機場](workspace/screenshots/city-airport-original.png) | ![原版既有港口](workspace/screenshots/city-port-original.png) |
+| HD 繁體中文 | ![HD 繁體中文機場](workspace/screenshots/city-airport-zh-Hant.png) | ![HD 繁體中文港口](workspace/screenshots/city-port-zh-Hant.png) |
+| HD 簡體中文 | ![HD 簡體中文機場](workspace/screenshots/city-airport-zh-Hans.png) | ![HD 簡體中文港口](workspace/screenshots/city-port-zh-Hans.png) |
+| HD 日文 | ![HD 日文機場](workspace/screenshots/city-airport-ja.png) | ![HD 日文港口](workspace/screenshots/city-port-ja.png) |
+| HD 韓文 | ![HD 韓文機場](workspace/screenshots/city-airport-ko.png) | ![HD 韓文港口](workspace/screenshots/city-port-ko.png) |
+| HD 英文 | ![HD 英文機場](workspace/screenshots/city-airport-en.png) | ![HD 英文港口](workspace/screenshots/city-port-en.png) |
+
+</details>
 
 <details>
 <summary>核能電廠：原版與 HD 五語系對照</summary>
@@ -195,6 +211,7 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 警消設施畫面使用[正常施工入口](workspace/tools/civic_facility_playtest.sh)的 `gui` 模式，經[設施像素與語言核對](workspace/tools/civic_facility_check.py)後[匯出](workspace/tools/export_civic_screenshots.py)。
 環境與公共設施使用[批次玩家入口](workspace/tools/facility_batch_playtest.sh)的 `hd` 模式；整批以 `--scope public` 執行[獨立像素核對](workspace/tools/public_facility_check.py)與[匯出](workspace/tools/export_public_screenshots.py)。各批原始擷取與工具版本保存在來源清單。
 核能電廠使用[既有城市正常入口](workspace/tools/nuclear_existing_playtest.sh)的 `hd` 階段，經[全圖與語言核對](workspace/tools/nuclear_check.py)後[匯出](workspace/tools/export_nuclear_screenshots.py)。
+港口與機場使用[正常冷讀入口](workspace/tools/transport_facility_playtest.sh)的 `hd` 階段，像素核對與匯出工具使用 `--scope transport`，逐項保留原版與五語系六張畫面。
 原始收據保存在本機工作區，未加入儲存庫。驗證界線見[驗收矩陣](docs/verification-matrix.md)。
 
 ## 開發與文件
