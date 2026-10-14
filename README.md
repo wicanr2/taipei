@@ -16,20 +16,39 @@
 除了建設新城市，也能接手「災難台北」等既有城市情境。原版說明設定的目標，是將新城市發展或將災難城市恢復為人口超過五十萬的都會區。
 玩法與目標可回查[原版說明來源](docs/spec/017-new-game-dialog.md)及[已核對的介面文字](workspace/app/locales/ui.tsv)。
 
-![HD 繁體中文的災難台北城市實際畫面](workspace/screenshots/city-disaster-zh-Hant.png)
+![HD 繁體中文的台北城市實際畫面](workspace/screenshots/city-map-buildings-zh-Hant.png)
 
-上圖為 Linux 前端從正常「災難台北」選單進入 `DISA1.DSA` 的實際畫面，以原版 `0` 鍵暫停。
-顯示已接入的 HD 地景、道路、首批三種建物與介面，尺寸為 1280×800；來源見[截圖清單](workspace/screenshots/manifest.json)。
+上圖為 Linux 前端正常讀取原版台北城市存檔的實際畫面，尺寸為 1280×800。
+九個地圖圖庫的非空原圖已接入 HD，包含其餘建物、道路地景及 Noto 區域標示。
+五種代表來源、五語系切換與 C1 原版存讀退出已抽驗；完整來源表與未抽驗分支見[地圖契約](docs/spec/038-map-completion.md)，每張圖片的版本與原始收據見[截圖清單](workspace/screenshots/manifest.json)。
+
+<details>
+<summary>目前地圖：原版、HD 建物與五語系區域標示</summary>
+
+區域原字「住、商、工」改用 Noto；韓文為주／상／공，英文為R／C／I。F12仍顯示原版繁中。
+以下圖片來自正常遊玩的完整來源前段，原版存讀與退出另由 C1 冷啟流程驗證。高階發展與災害分支沒有逐項試玩。
+
+| 模式／語言 | 建物 | 區域標示 |
+|---|---|---|
+| 原版繁體中文 | ![原版台北建物](workspace/screenshots/city-map-buildings-original.png) | ![原版區域標示](workspace/screenshots/city-map-zones-original.png) |
+| HD 繁體中文 | ![HD 繁中台北建物](workspace/screenshots/city-map-buildings-zh-Hant.png) | ![HD 繁中區域標示](workspace/screenshots/city-map-zones-zh-Hant.png) |
+| HD 簡體中文 | ![HD 簡中台北建物](workspace/screenshots/city-map-buildings-zh-Hans.png) | ![HD 簡中區域標示](workspace/screenshots/city-map-zones-zh-Hans.png) |
+| HD 日文 | ![HD 日文台北建物](workspace/screenshots/city-map-buildings-ja.png) | ![HD 日文區域標示](workspace/screenshots/city-map-zones-ja.png) |
+| HD 韓文 | ![HD 韓文台北建物](workspace/screenshots/city-map-buildings-ko.png) | ![HD 韓文區域標示](workspace/screenshots/city-map-zones-ko.png) |
+| HD 英文 | ![HD 英文台北建物](workspace/screenshots/city-map-buildings-en.png) | ![HD 英文區域標示](workspace/screenshots/city-map-zones-en.png) |
+
+</details>
 
 <details>
 <summary>災難台北建物：原版與 HD 五語系對照</summary>
 
-HD 繁體中文見上圖。以下沿用同一城市與原始畫面，透過 F11／F12 切換後擷取。
+以下保留首批建物驗收版本的實際畫面，透過 F11／F12 切換後擷取。最新地圖見上方。
 首批三種建物共 48 個圖塊，包含完整及部分可見建物；範圍見[建物契約](docs/spec/034-disaster-city-buildings.md)。
 
 | 模式／語言 | 實際畫面 |
 |---|---|
 | 原版繁體中文 | ![原版災難台北城市畫面](workspace/screenshots/city-disaster-original.png) |
+| HD 繁體中文 | ![首批 HD 繁中災難台北建物](workspace/screenshots/city-disaster-zh-Hant.png) |
 | HD 簡體中文 | ![HD 簡體中文災難台北建物](workspace/screenshots/city-disaster-zh-Hans.png) |
 | HD 日文 | ![HD 日文災難台北建物](workspace/screenshots/city-disaster-ja.png) |
 | HD 韓文 | ![HD 韓文災難台北建物](workspace/screenshots/city-disaster-ko.png) |
@@ -44,8 +63,8 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 | 功能 | 已接入內容 |
 |---|---|
-| HD 圖像 | B 細緻手繪材質地景、首批 25 張道路與電線、火力與核能電廠 72 格、港口與機場 72 格、DISA1 三種建物 48 格、警察局與消防局 32 格、十二項環境與公共設施 392 格、城市框架、工具與選單、預算和圖表外框、政績靜態底圖 |
-| HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列與圖表文字 |
+| HD 圖像 | B 細緻手繪材質的完整九圖庫非空來源，涵蓋地景、道路電線、城市建物、電廠、港口機場與公共設施；另有城市框架、工具選單、預算與圖表外框、政績靜態底圖 |
+| HD 文字 | Noto 高清黑體，包含啟動選單、城市功能、工具、視窗、預算、狀態列、圖表及住／商／工區域標示 |
 | 五語系 | 繁體中文、簡體中文、日文、韓文、英文；已盤點的 146 筆中文來源皆有譯文，涵蓋開場、上任信、介面、圖片可讀文字及逐字訊息 |
 | 遊戲中切換 | F11 選語言並保存設定；F12 切原版繁中／HD；Shift+F1 顯示五語系操作說明 |
 

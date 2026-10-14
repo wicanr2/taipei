@@ -1,6 +1,6 @@
 # 剩餘地圖圖庫補齊
 
-狀態：READY。對應 [#62](https://github.com/wicanr2/taipei/issues/62)，依 [#30](https://github.com/wicanr2/taipei/issues/30) 與 [026](026-infrastructure-tiles.md)、[034](034-disaster-city-buildings.md) 至 [037](037-transport-facilities.md)。沿用已確認的 B、1280×800、Noto、五語系與 F12，不重寫規則。
+狀態：CONFORMED，限完整來源呈現與下列正常抽樣。對應 [#62](https://github.com/wicanr2/taipei/issues/62)，依 [#30](https://github.com/wicanr2/taipei/issues/30) 與 [026](026-infrastructure-tiles.md)、[034](034-disaster-city-buildings.md) 至 [037](037-transport-facilities.md)。沿用已確認的 B、1280×800、Noto、五語系與 F12，不重寫規則。
 
 ## 來源與覆蓋
 
@@ -47,3 +47,26 @@
 READY資產根manifest為 `be04e87136b05e09c3eb92402eea6173280687c9323fdf97cef77c2c8dd10a10`，三子manifest與候選相同。核心兩項測試10.616秒無跳過；24381種來源變異、301個已用色盤失配、十二個真實刪除／損壞及隔離、十三完整圖與全部區外、十五區域字墨與整圖通過。單格合成診斷1049種全部辨識、1045種可直接繪製；剩餘是空白與三種需要原版鄰格定位的同源來源，整圖正對照已補驗新增同源格，舊兩種沿既有正常收據保持完成。
 
 正常獨立核對入口 [map_completion_check.py](../../workspace/tools/map_completion_check.py)，直接重讀ROM與別名、真實PNG及封存圖，不信任呈現器自報完成數。文件匯出 [export_map_screenshots.py](../../workspace/tools/export_map_screenshots.py) 只選m34-b08／m34-b00各原版與五語系，共十二張。通過原版存退讀與退出後才匯出，原始收據留本機；其他批次截圖保留各自來源版本。
+
+收尾入口 [map_completion_final.py](../../workspace/tools/map_completion_final.py) 以 `--source-commit <實際已驗程式提交>` 核對原始35檔與RAR、四架構header、已驗與標準入口相同、136檔素材乾淨重生、84張文件PNG、來源及七補丁、文件入口與擁有權。容器清理另由主機 `docker ps -a --filter label=project=taipei` 回讀；此工具不代替正式封包驗收。
+
+正常抽樣修訂：r3取得C1五種來源與30張PNG，但C2兩高階路由在舊／HD兩版都未達目標，原因未定，不當HD退化。依使用者代表抽驗，r4兩側正常冷啟C1，以商業區(38,24)／鏡頭(14,22)、ROM37-b08(54,24)／鏡頭(30,22)兩重複代表補完整存退讀退出。獨立工具以 `--prefix <r3原件> --run <r4完整流程> --baseline <r4原版基線>` 核對42張圖。完成範圍是五種不同正常來源與兩重複完整流程，不稱七種正常來源，也不將r3補成完成退出。高階圖的原圖身份／完整圖已驗，正常出現分支保留未抽驗。
+
+## 完成結果
+
+程式提交 `42639adb07abdf5f6134bdc8fb40263e1a882191` 已推送。`gui-map-r4`／`map-baseline-r4`皆正常冷啟、C1原版讀取、方向鍵、F11／F12、原版存讀與退出，wrapper0；HD另驗Help。r3五種來源與r4兩重複視圖共42張真實GUI，原版整張／B整圖／Noto字墨與背景及42項有效像素反例通過。原版、HD及讀回後MAPHD.SAV均為93567 bytes，SHA-256 `7ca351e35aa6ed8c3f5da525d88af43eab1f00add2989c0fd4b13bfe20efd55b`。
+
+| 證據 | SHA-256 |
+|---|---|
+| HD完整流程主收據 | `8d1c87725053437947e2935ae3f86932f73d1bd054da4b4406302147ac3f6aab` |
+| 舊版完整流程主收據 | `ea6973160c095555fa62caacdd54f9e8319803e150bef43f042b8b03a02808c7` |
+| 獨立42圖核對 | `e56bd100dc050efc7df1ef3b365d8d291114173517c1d5a5c1b15f93ac1d88b4` |
+| Linux amd64，標準與已驗候選相同 | `87439f2fb2b9758f3b5afb85cda7c51dd152355b9f0eae12c599688dfa7652f4` |
+| Windows amd64 | `fb5f40b87b34615e75350c502568537cdb3cd0874a0f36e98d9ea1e18b88bcc5` |
+| macOS amd64 | `f655423a97f0ef86be9a4bfaa04096af8540f3689623382552b2798aeb13099f` |
+| macOS arm64 | `28b636471bae365b630ad5f9c1cca202dd55e5b6aaebff2d20eafe699d3bfba9` |
+| README 84張manifest | `78e5b0f1873d3e51ba345102c42ca6ccdce24d8bf58d252f4361e8087f807621` |
+
+136檔READY素材乾淨重生逐byte相同。README新增十二張真正遊玩PNG，合計84張／75,683,303 bytes；首頁更新完整地圖，舊批次保持其來源版本。只收錄明列文件截圖，原版、素材、字型、SAV與原始收據留本機。039開場／插畫／動畫仍DRAFT，完整HD母項與正式封包未完成。
+
+收尾報告 `workspace/runs/map-completion-final.json` SHA-256 `77ac8656256286affdbbc340146823f95228ff39dcda272b6643a003a75805e1` 通過，原始35檔與RAR不變、程式及七補丁、四架構、136素材、84PNG與文件入口／擁有權均核對。指定find無root-owned或.md目錄，專案容器清單為空。C2高階路由、人耳、Windows／macOS真機、039圖片與正式封包仍未驗或未完成。

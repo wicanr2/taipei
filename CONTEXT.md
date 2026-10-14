@@ -2,13 +2,13 @@
 
 核對日期：2026-10-14。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表、DISA1 首批建物、警消、十二項環境／公共設施、核電廠及港口／機場已依正常遊玩抽驗通過，027／029／034–037 限各批呈現及已驗路徑 CONFORMED。README 含遊戲背景與 72 張實際截圖。全部圖片重繪與正式封包仍未完成。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與84張實際截圖。開場／插畫／動畫重繪與正式封包仍未完成。
 
 ## 有效決策
 
 - 私人儲存庫：[wicanr2/taipei](https://github.com/wicanr2/taipei)。Issues 已啟用。
 - 使用者已授權主機 gh、專案提交與推送，以及本範圍的 Issue 管理。
-- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#46](https://github.com/wicanr2/taipei/issues/46)、[#53](https://github.com/wicanr2/taipei/issues/53) 至 [#58](https://github.com/wicanr2/taipei/issues/58) 及 [#61](https://github.com/wicanr2/taipei/issues/61) 的截圖工作，選定的 72 張文件 PNG 收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。後續修改已展示的畫面時同步更新截圖與來源清單。
+- 使用者要求 README 放原版與 HD 五語系截圖及遊戲背景介紹。依 [#46](https://github.com/wicanr2/taipei/issues/46)、[#53](https://github.com/wicanr2/taipei/issues/53) 至 [#58](https://github.com/wicanr2/taipei/issues/58)、[#61](https://github.com/wicanr2/taipei/issues/61) 及 [#62](https://github.com/wicanr2/taipei/issues/62) 的截圖工作，選定的84張文件PNG收錄於私人儲存庫；原版檔、素材包、字型、存檔與原始收據仍留本機。最新地圖已更新首頁，各批舊照片保留各自來源版本。
 - 使用者於 2026-10-13 指定「抽驗能由遊玩就算驗收通過」。已實作功能以正常玩家路徑抽驗為完成條件；與現行產品一致的已通過收據可沿用，長時間相同步數 RAM／CPU／RNG 對拍不列結案門檻。未製作的圖片、未走過的分支、未驗平台及封包仍分開記錄，不改成完成。
 - 使用者指定所有工作區放在本專案的 `workspace/`。原始輸入保留原位並唯讀使用。
 - 原版規則、EXE 與存檔格式保持原樣。
@@ -28,7 +28,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 項目 | 現況 | 證據或限制 |
 |---|---|---|
 | 開場與動畫 | #32 接續完整來源核對，ROM52–55的32筆IV2已完整解碼；先處理來源清單與原型，不接產品 | [039](docs/spec/039-illustration-animation.md) DRAFT；透明、裁切、用途與正常出現路徑仍需核對 |
-| 剩餘地圖圖庫 | 038 READY，新增301種來源接入候選，九圖庫1049種全部辨識；十三整圖、十五語言區域墨跡、來源／色盤／實際資源故障測試通過。正常GUI與原版基線抽驗執行中 | [038](docs/spec/038-map-completion.md)、[#62](https://github.com/wicanr2/taipei/issues/62)。候選未提升標準入口；合成覆蓋不作正常玩家驗收，標準仍為已驗 d2c32660 |
+| 完整地圖圖庫 | 038限完整來源呈現與五種正常代表CONFORMED。新增301種非空來源、九圖庫1049種全部辨識；整圖／字墨／正反對照、136檔乾淨重生、42張真實GUI及C1原版存讀退出通過，93567-byte SAV與舊版相同 | [038](docs/spec/038-map-completion.md)、[#62](https://github.com/wicanr2/taipei/issues/62)。r3照片為正常來源前段，r4驗完整存讀退出；C2兩高階候選路由原因未定，正常出現分支未抽驗。開場／動畫及正式封包另驗 |
 | 港口與機場 | 037 限 72 格／72 種來源與已驗路徑 CONFORMED。正常 DISA4 冷讀／捲動、逐項 F11 五語系／F12、原版存讀與退出，十二張全圖／五項正反對照通過。原版 SAV 與無運輸 HD 基線相同；核心／核能／公共同源回歸及素材重生通過 | [037](docs/spec/037-transport-facilities.md)、[#61](https://github.com/wicanr2/taipei/issues/61)。標準 Linux 入口已提升，四架構重建；新建機場、其他相位、完整狀態對拍、外平台真機及封包未驗 |
 | 核能靜態呈現 | 原版 DISA1 既有核電廠 36 格／35 種完整來源已接入 B 圖。同源格依完整可見唯一鄰圖定位，失配回退。正常 EXE 冷讀、鍵盤捲動、F11 五語系／F12、原版存讀及退出通過；八圖與六項正反對照、區外／裁切／色盤／素材故障及既有回歸通過 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)。限靜態圖與已驗路徑 CONFORMED，SAV 與無核能 HD 基線完全相同。新建施工、其他相位、完整機器狀態對拍、外平台真機及封包未驗；失敗研究前件保留於 WORKLOG |
 | 十二項環境與公共設施 | 036 v2 限靜態施工圖及已驗路徑 CONFORMED。392 格、391 種來源；體育場同源格依完整可見鄰圖唯一定位，失配回退。十二份正常來源、完整圖與區外、391 項來源失配、26 項素材故障與隔離通過；垃圾場／體育場正常 F11／F12、存讀檔與 DOS 退出、八圖及六項正反對照通過 | [036](docs/spec/036-public-facilities.md)、[#58](https://github.com/wicanr2/taipei/issues/58)。十三素材檔乾淨重生相同；四架構重編完成。其他相位、全新 EXE 冷讀、外平台真機及正式封包未驗 |
@@ -46,7 +46,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
 | 存讀檔與離開提示 HD | 023 限完整兩家族達 CONFORMED；243 份來源、729 項單像素、雙選取、十四項實際資源故障、109 份正常 GUI、十八項有效破壞與四個正對照通過。F12、正常施工存退讀、原版狀態與四架構通過 | [023](docs/spec/023-file-dialogs.md)、[#38](https://github.com/wicanr2/taipei/issues/38)；外部刪檔／損壞、儲存故障、模態外、其他視窗及正式封包未完成 |
 | 預算與稅率視窗 | 025 限完整預算呈現達 CONFORMED。43 份來源、六張固定原型、233 項來源破壞、十二項真實資源故障及隔離通過。十七項 HD／鍵盤／原點測試無跳過；116 份正常收據、五列 F12、9／99 全新 EXE 讀回、十三項有效呈現破壞及 169 次原版狀態抽樣通過 | [025](docs/spec/025-budget-panel.md)；正常非零費用及淨額 -1 已抽樣，規則極值、其他介面與正式封包未完成 |
-| 道路與電線 | 026 限第一批 25 張達 CONFORMED。固定整格、2025 項來源破壞、七張正常原位 140 格、162 項資源故障及十六張世界材質測圖通過；105 份正常 GUI、施工／F12／雙向捲動、兩次原版退出及全新 EXE 讀回通過。兩側各 49.44 億步、206 點原版狀態及實際 SAV 相同 | [026](docs/spec/026-infrastructure-tiles.md)、[#44](https://github.com/wicanr2/taipei/issues/44)；其餘 18 張候選仍 DRAFT。正常交通及密度入口未取得這些來源，不推導其用途；完整來源研究、全部 HD 與正式封包繼續 |
+| 道路與電線 | 026首批25張的完整施工、雙向捲動、存退讀與兩次退出證據保留。038已將ROM39其餘45種非空來源接入，共70種；完整來源／色盤／資源診斷與正常C1地圖抽驗通過 | [026](docs/spec/026-infrastructure-tiles.md)、[038](docs/spec/038-map-completion.md)、[#44](https://github.com/wicanr2/taipei/issues/44)。表格覆蓋不推定每種交通／密度／災害變體的遊戲用途或已逐項玩過；正式封包另驗 |
 | 發電廠 | 027 限火力與核能共 72 格靜態呈現 CONFORMED。火力正常施工／雙向捲動／存退讀及兩次退出通過，既有完整狀態證據保留；核能採上述既有電廠正常遊玩抽驗 | [027](docs/spec/027-power-facility.md)、[#46](https://github.com/wicanr2/taipei/issues/46)。新建核能及其他相位未驗；全部 HD 與正式封包未完成 |
 | DISA1 首批建物 | 034 限三種靜態建物、48 個完整來源與已驗路徑 CONFORMED。正常城市實際繪製 116 格；F12 往返、F11 五語系、原版同次存讀檔與 DOS 退出通過。六張整幀及六項正反對照、3888 項來源失配、八項真實資源故障、場景隔離與四架構編譯通過 | [034](docs/spec/034-disaster-city-buildings.md)、[#56](https://github.com/wicanr2/taipei/issues/56)。其他建物／相位、全新 EXE 冷讀、平台真機及封包未驗；不推定建造或發展規則 |
 | 政績靜態底圖 | 028 限已見底圖達 CONFORMED。50 份正常收據、兩次政績 F12、施工存退讀與兩次原版退出、七項有效破壞及兩個正對照通過。兩側各 30.008 億步、125 點原版狀態與實際 SAV 相同；四架構及 Linux 乾淨重建通過 | [028](docs/spec/028-ending-achievement-base.md)、[#47](https://github.com/wicanr2/taipei/issues/47)；取得政績後的變化及動畫仍 DRAFT |
@@ -59,7 +59,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 目前程式與跨平台 | 含港口／機場的 Linux amd64 已驗 binary 為 d2c32660，標準入口 `workspace/runs/taipei-preview` 與固定副本 `taipei-preview-transport-r1` 乾淨重建相同。Windows amd64、macOS amd64／arm64 合併重建與架構核對完成；來源、七補丁與產物見 `workspace/runs/transport-final-verification.json` | 外平台僅編譯／結構，未重跑 Wine、真機或正式封包。先前 Linux 固定副本保留 |
+| 目前程式與跨平台 | 完整地圖Linux amd64已驗87439f2f，標準 `workspace/runs/taipei-preview` 與固定副本 `taipei-preview-map-r2` 乾淨重建相同。Windows amd64、macOS amd64／arm64合併重建與架構核對完成；來源為42639ad與七補丁，完整雜湊見038 | 外平台僅編譯／結構，未重跑Wine、真機或正式封包；先前固定副本保留 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口

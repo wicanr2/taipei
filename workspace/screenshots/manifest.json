@@ -1820,6 +1820,294 @@
       },
       "batch": "transport-facilities",
       "local_capture": "workspace/runs/gui-transport-r1/port-en-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-original.png",
+      "scene": "existing-map-buildings",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "e065171c8286219efd4a0411ba790025eb30e888e2759a6b5f2a595db5a97c85",
+      "capture_sha256": "2b59f86c621e2217c63f12661c23cabd889f30fed4ee12942356292c1874e856",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2662000000,
+      "ticks": 92523,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-original-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-zh-Hant.png",
+      "scene": "existing-map-buildings",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "c7044bf499de6ba166cfe6276a3374966a88dc5ad0af9067abcb36b1d43c72e8",
+      "capture_sha256": "41385029dbca4334fc5dc9e25d252558a9ffe16498c0ed43d6bbaf953be688e7",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2668000000,
+      "ticks": 92730,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-zh-Hans.png",
+      "scene": "existing-map-buildings",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "bf0da0cac8cb1406399f9a6a1aa584650b171841917ad16a261de95a5afa613d",
+      "capture_sha256": "5c9c160ee05d0cf176b189b6772e5fc91717697f361bad1d43ae7347991530f6",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2668000000,
+      "ticks": 92730,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-ja.png",
+      "scene": "existing-map-buildings",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "9eed2f5326d3612f3cdaf6432d0a5470ecb334ff78fb1fb832e50dd0782cbc1c",
+      "capture_sha256": "fc4a287fc1fc9bb37c9a0b48487dff986ab8fc08136a84d70841f9a6962b7f44",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2668000000,
+      "ticks": 92730,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-ja-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-ko.png",
+      "scene": "existing-map-buildings",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "7f0fe9b3f1917b6018fa6c024062da8f50a9674734b9fb8a0e78bf7a5a521515",
+      "capture_sha256": "9c39e911b80958f74b9e42d4b8f5fee2bb9b5204a932485a25019396d99f9c68",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2668000000,
+      "ticks": 92730,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-ko-capture.zip"
+    },
+    {
+      "file": "city-map-buildings-en.png",
+      "scene": "existing-map-buildings",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "fb3ad494a1da289723e587f63ccb8bc46e3214062d65c43962e863a252ecaf2e",
+      "capture_sha256": "ce5acd19b797be72f9af46a0a27b4844b890e1364bfdab791933928ce79a95e1",
+      "frame_index_sha256": "cb8d76ad72935ea2925f6c68df497236beb3d599a10dcc8a0cb661053bcaaee0",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2668000000,
+      "ticks": 92730,
+      "map_origin": {
+        "X": 44,
+        "Y": 40,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b08-en-capture.zip"
+    },
+    {
+      "file": "city-map-zones-original.png",
+      "scene": "existing-map-zones",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "f32e25b18213a6bb84e079e2d20bc2e096b2b9bd25c01f2d42f21ce03febf693",
+      "capture_sha256": "36d4a6ea78e72ae57b47dc421f990d3f61b982f00a84e08206f61c5f3be60fb0",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2892000000,
+      "ticks": 100469,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-original-capture.zip"
+    },
+    {
+      "file": "city-map-zones-zh-Hant.png",
+      "scene": "existing-map-zones",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "907319c237ec450a0124aa2f7fc889a80ba6c1c207681ec6189b940b05f0ea47",
+      "capture_sha256": "fcb65be81e1e7902b65c549d236ff086d0e8ea0e1ab6f299d7dc5b1fb0597ac8",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2898000000,
+      "ticks": 100677,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-map-zones-zh-Hans.png",
+      "scene": "existing-map-zones",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "71c97fcfaf6b3f3b279e862961b36986f4d25291c59f5219e219a0dcb63d3e81",
+      "capture_sha256": "44010351c75e27021da12d3a55560a5b1cbec86d00d6230f6dac50eed1d9948d",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2898000000,
+      "ticks": 100677,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-map-zones-ja.png",
+      "scene": "existing-map-zones",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "3ac9361a7710d80d79d433f3473b9d23b6ed0c60be76872fdcfbd50e75327feb",
+      "capture_sha256": "1578e75454c8e3a016c421d02dbad1c341bc658d49d485c9ee72b8df1113d07f",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2898000000,
+      "ticks": 100677,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-ja-capture.zip"
+    },
+    {
+      "file": "city-map-zones-ko.png",
+      "scene": "existing-map-zones",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "ca0583050b286e2b6f0a15d6f36121fcfe4526a12c30755c52e8f70100173c67",
+      "capture_sha256": "ddfb1da701bec915292239b7f23007177e408fc05f4c894479828274039bb48b",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2898000000,
+      "ticks": 100677,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-ko-capture.zip"
+    },
+    {
+      "file": "city-map-zones-en.png",
+      "scene": "existing-map-zones",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "8c8283404a567b19ce89586c71feb6da7fa39d0924efbd1347e8f4d86bdffdb9",
+      "capture_sha256": "1433525017baef78700ae40b85bb17767aea4a2a7fb51636fcdd9abe133c9be0",
+      "frame_index_sha256": "831faf213c5e2a56552629f7b53918b3d7ac2c5fb9c2084bf7a554d15709d873",
+      "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+      "steps": 2898000000,
+      "ticks": 100677,
+      "map_origin": {
+        "X": 44,
+        "Y": 44,
+        "Valid": true
+      },
+      "batch": "map-completion",
+      "normal_path_complete": false,
+      "local_capture": "workspace/runs/gui-map-r3/m34-b00-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -2035,5 +2323,40 @@
     },
     "limits": "限正常冷讀既有港口／機場的靜態圖與已驗路徑；其他相位、真機及正式封包未驗。",
     "new_construction_tested": false
+  },
+  "map_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/62",
+    "source_commit": "42639adb07abdf5f6134bdc8fb40263e1a882191",
+    "binary_sha256": "87439f2fb2b9758f3b5afb85cda7c51dd152355b9f0eae12c599688dfa7652f4",
+    "local_receipt": "workspace/runs/gui-map-r4/verification.json",
+    "local_receipt_sha256": "8d1c87725053437947e2935ae3f86932f73d1bd054da4b4406302147ac3f6aab",
+    "pixel_verification_sha256": "e56bd100dc050efc7df1ef3b365d8d291114173517c1d5a5c1b15f93ac1d88b4",
+    "normal_gui": true,
+    "state_injection": false,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "source_entries": 1134,
+    "unique_map_sources": 1049,
+    "new_nonempty_sources": 301,
+    "normal_representatives": 5,
+    "selected_scenes": {
+      "m34-b08": "map-buildings",
+      "m34-b00": "map-zones"
+    },
+    "screenshots": 12,
+    "source_prefix": {
+      "run": "gui-map-r3",
+      "normal_path_complete": false,
+      "source_cases": 5,
+      "progress_sha256": "a62196fee2aa7020d78ddbd1dbe09d1b7a6687a215328bbb97806801dd56c3f6",
+      "executed_driver_sha256": "2ae0bfd11692c44db1326fec44af9f5e9904774e32f518b44ab83528cc41b7a5"
+    },
+    "completed_session": "gui-map-r4",
+    "tools_sha256": {
+      "export_map_screenshots.py": "f89cee5c246b754b57380930697ef6ea233e68fdcabe6d16bed0d945d655536c",
+      "map_completion_gui.py": "fa45d982c41acf653f758a998928f1a491a0dc3e322730e3638d88df45eaf82a",
+      "map_completion_check.py": "eae2b17eb185674626303d4ca4dd050bb985c02da04572fe6d70c1981ca83d59"
+    },
+    "limits": "完整原圖與五種正常代表；選定照片來自未完成退出的正常前段，另一C1冷啟完成存讀退出。C2高階建物、成長／災害分支、人耳與外平台真機未驗；封包另驗。"
   }
 }

@@ -24,12 +24,13 @@ def main():
     assert out.stat().st_uid==path.stat().st_uid==os.getuid()
     m=json.loads(path.read_text());assert len(m['screenshots'])==72 and 'map_capture' not in m
     selected={'m34-b08':'map-buildings','m34-b00':'map-zones'};files={}
-    for shot in report['screenshots']:
+    for shot in pixels['screenshots']:
         if shot['case'] not in selected:continue
-        receipt=a.run/shot['file'].replace('.png','-capture.zip')
+        source_run=a.run.parent/shot['source_run']
+        receipt=source_run/shot['file'].replace('.png','-capture.zip')
         assert sha(receipt.read_bytes())==shot['capture_sha256']
         with zipfile.ZipFile(receipt) as z:s=json.loads(z.read('status.json'));raw=z.read('presentation.png')
-        assert raw==(a.run/shot['file']).read_bytes() and sha(raw)==shot['png_sha256']
+        assert raw==(source_run/shot['file']).read_bytes() and sha(raw)==shot['png_sha256']
         assert struct.unpack_from('>II',raw,16)==(1280,800)
         suffix=s['language'] if s['hd_enabled'] else 'original'
         name='city-'+selected[shot['case']]+'-'+suffix+'.png';assert not (out/name).exists()
@@ -39,7 +40,8 @@ def main():
             'size':[1280,800],'png_sha256':sha(raw),'capture_sha256':shot['capture_sha256'],
             'frame_index_sha256':shot['frame_index_sha256'],'source_commit':a.source_commit,
             'steps':shot['steps'],'ticks':shot['ticks'],'map_origin':shot['map_origin'],'batch':'map-completion',
-            'local_capture':'workspace/runs/'+a.run.name+'/'+shot['file'].replace('.png','-capture.zip')})
+            'normal_path_complete':shot['normal_path_complete'],
+            'local_capture':'workspace/runs/'+source_run.name+'/'+shot['file'].replace('.png','-capture.zip')})
     assert len(files)==12 and len(m['screenshots'])==len({s['file'] for s in m['screenshots']})==84
     m['map_capture']={'issue':'https://github.com/wicanr2/taipei/issues/62','source_commit':a.source_commit,
         'binary_sha256':report['binary_sha256'],'local_receipt':'workspace/runs/'+a.run.name+'/verification.json',
@@ -47,9 +49,10 @@ def main():
         'pixel_verification_sha256':sha((a.run/'pixel-verification.json').read_bytes()),
         'normal_gui':True,'state_injection':False,'original_save_read':True,'native_exit_tested':True,
         'source_entries':1134,'unique_map_sources':1049,'new_nonempty_sources':301,
-        'normal_representatives':7,'selected_scenes':selected,'screenshots':12,
+        'normal_representatives':pixels['unique_normal_representatives'],'selected_scenes':selected,'screenshots':12,
+        'source_prefix':pixels['source_prefix'],'completed_session':a.run.name,
         'tools_sha256':{p.name:sha(p.read_bytes()) for p in [Path(__file__),Path('/workspace/tools/map_completion_gui.py'),Path('/workspace/tools/map_completion_check.py')]},
-        'limits':'完整原圖表格與七種正常代表；沒有逐種成長／災害分支、人耳或外平台真機驗收。正式封包另驗。'}
+        'limits':'完整原圖與五種正常代表；選定照片來自未完成退出的正常前段，另一C1冷啟完成存讀退出。C2高階建物、成長／災害分支、人耳與外平台真機未驗；封包另驗。'}
     for name,raw in files.items():(out/name).write_bytes(raw)
     path.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
     print('Exported twelve actual GUI PNGs; 84 total',sha(path.read_bytes()))

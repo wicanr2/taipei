@@ -86,6 +86,18 @@
 !/workspace/screenshots/city-port-ja.png
 !/workspace/screenshots/city-port-ko.png
 !/workspace/screenshots/city-port-en.png
+!/workspace/screenshots/city-map-buildings-original.png
+!/workspace/screenshots/city-map-buildings-zh-Hant.png
+!/workspace/screenshots/city-map-buildings-zh-Hans.png
+!/workspace/screenshots/city-map-buildings-ja.png
+!/workspace/screenshots/city-map-buildings-ko.png
+!/workspace/screenshots/city-map-buildings-en.png
+!/workspace/screenshots/city-map-zones-original.png
+!/workspace/screenshots/city-map-zones-zh-Hant.png
+!/workspace/screenshots/city-map-zones-zh-Hans.png
+!/workspace/screenshots/city-map-zones-ja.png
+!/workspace/screenshots/city-map-zones-ko.png
+!/workspace/screenshots/city-map-zones-en.png
 
 # 正式封包只留本機
 /dist-all/
