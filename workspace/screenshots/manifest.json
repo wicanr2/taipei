@@ -1084,6 +1084,190 @@
       },
       "batch": "civic-facilities",
       "local_capture": "workspace/runs/gui-civic-r1/gui/city-en-capture.zip"
+    },
+    {
+      "file": "city-waste-original.png",
+      "scene": "normal-waste-construction",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "283eb8b59b1945321968e3c95fc84a23a3877e8abd410c143079e57460fbf56c",
+      "capture_sha256": "08418b9053e4c3b1de9bac0595a7f81e6f819bc4c41cfb77691361ed5e4d8640",
+      "frame_index_sha256": "7f5fdc7bd4f90fe6c98d4c9dcdfa5072e166d887502623553144c6cb0215ae7a",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1245600000,
+      "ticks": 43611,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/waste-original-capture.zip"
+    },
+    {
+      "file": "city-waste-zh-Hant.png",
+      "scene": "normal-waste-construction",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "5853baacb5f6e62a857469cde1ed906024bba37c407762432e92e050d104bc51",
+      "capture_sha256": "9938e20016829a440b58d94739d1bd96df541587469b60538552e163db9241e7",
+      "frame_index_sha256": "7f5fdc7bd4f90fe6c98d4c9dcdfa5072e166d887502623553144c6cb0215ae7a",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1248000000,
+      "ticks": 43694,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/waste-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-sewage-original.png",
+      "scene": "normal-sewage-construction",
+      "language": "zh-Hant",
+      "mode": "original",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "7e74b8aea82622df5ba7d47ad2a5d50936da183c25f23a7887ff207bdccd8e88",
+      "capture_sha256": "63965c91c384f69289c9754f8c0b49d7cb1c107570844cceb8318e3e816fb85c",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1538400000,
+      "ticks": 53728,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-original-capture.zip"
+    },
+    {
+      "file": "city-sewage-zh-Hant.png",
+      "scene": "normal-sewage-construction",
+      "language": "zh-Hant",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "d1cb69a10dd0e001f5e69128d3f6ab3924219f9d4303b31acacf6eaffc955d90",
+      "capture_sha256": "d04c42c56bce7c8bf29c5cbc92b159ca99f5c6a5e328b9e6e26497552d02d7fc",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1540800000,
+      "ticks": 53811,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-zh-Hant-capture.zip"
+    },
+    {
+      "file": "city-sewage-zh-Hans.png",
+      "scene": "normal-sewage-construction",
+      "language": "zh-Hans",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "56bfd56b41c943eb32d1277f8d8bd8def1c7cfa31e6c191af794026b58d1fd53",
+      "capture_sha256": "a54b23b5922ba6fbe5d95b111f29cbb6282967c4b3d4ef00485d908803f3d2c4",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1543600000,
+      "ticks": 53907,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-zh-Hans-capture.zip"
+    },
+    {
+      "file": "city-sewage-ja.png",
+      "scene": "normal-sewage-construction",
+      "language": "ja",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "3e3011db037f7855176beee90c22bbda2f2565d1702199535d4d6f796e18b60f",
+      "capture_sha256": "4d399041018aa86f528f7f37035e887d5776d43525fb9d2046a3e713f83adb00",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1545200000,
+      "ticks": 53963,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-ja-capture.zip"
+    },
+    {
+      "file": "city-sewage-ko.png",
+      "scene": "normal-sewage-construction",
+      "language": "ko",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "5f964e8ea6aa1888a22bdbb2cea85530febbb1656aa6f44f2d31a61d5b72d614",
+      "capture_sha256": "290d1b3884c437b1db93283d0498a5704b25e0dedd8c8fee82e227202eeedda6",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1549600000,
+      "ticks": 54115,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-ko-capture.zip"
+    },
+    {
+      "file": "city-sewage-en.png",
+      "scene": "normal-sewage-construction",
+      "language": "en",
+      "mode": "hd-b",
+      "size": [
+        1280,
+        800
+      ],
+      "png_sha256": "5648dbefa877ffc7730d2e15f8ffc020a73323dbbff7aca0b218a921677905e8",
+      "capture_sha256": "12d0253d30431f5a04cab41757710f91db688221280e04db9d647081f7136c5b",
+      "frame_index_sha256": "e7ad8f1f38e220800eea0208a639b754afeca2fed9432c03d20418c7999b3f8c",
+      "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+      "steps": 1552800000,
+      "ticks": 54225,
+      "map_origin": {
+        "X": 12,
+        "Y": 12,
+        "Valid": true
+      },
+      "batch": "environment-facilities",
+      "local_capture": "workspace/runs/gui-environment-r1/sewage-en-capture.zip"
     }
   ],
   "chart_capture": {
@@ -1200,5 +1384,29 @@
       "civic_facility_check.py": "52e7521348cc2fe40eba0840829ee0c40a05b1e899f0a723e47dea06907832be"
     },
     "limits": "限兩種正常施工圖、F11/F12、同次存讀檔與退出；其餘相位、真機、正式封包另案。"
+  },
+  "environment_capture": {
+    "issue": "https://github.com/wicanr2/taipei/issues/58",
+    "source_commit": "1559288e7e8baf18ec6d91982cf0e34fc2c8b896",
+    "binary_sha256": "21705e3c9521d247b86220bcaecb295db39958b6ba485d5501df42059063abf4",
+    "local_receipt": "workspace/runs/gui-environment-r1/verification.json",
+    "local_receipt_sha256": "82e4945f80375699d6da21174097a3cf3825ff086d7aa011c792b96bc5439fba",
+    "pixel_verification_sha256": "f6d728f45cba4c5b387b7772bf2bfc4c84d48fce653926fc7c3a43a957a6cf4c",
+    "normal_gui": true,
+    "original_save_read": true,
+    "native_exit_tested": true,
+    "cold_reload_tested": false,
+    "long_state_sampling": false,
+    "facilities": [
+      "waste",
+      "sewage"
+    ],
+    "tools_sha256": {
+      "export_public_screenshots.py": "c9840c4b1a1c54ac5fc980e006e34fa2d9b339298420c3daf88fbb61d40a6317",
+      "facility_batch_playtest.py": "9d2349b337e32f239f82c3c6e184313352087b8c96472fb1a553ddd0b1ab9c12",
+      "facility_batch_playtest.sh": "afbdc0d467bc78daaacc12da7f21b1e1efeb932993151b27226ecbb996b2caca",
+      "public_facility_check.py": "b2aa16b6ae6338a6fdb922d1c43f1c57e33049274cff8025c37a4ffa8faa43ff"
+    },
+    "limits": "限兩種正常施工圖；公共設施、其他相位、真機及正式封包未完成。"
   }
 }

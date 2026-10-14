@@ -54,6 +54,14 @@
 !/workspace/screenshots/city-civic-ja.png
 !/workspace/screenshots/city-civic-ko.png
 !/workspace/screenshots/city-civic-en.png
+!/workspace/screenshots/city-waste-original.png
+!/workspace/screenshots/city-waste-zh-Hant.png
+!/workspace/screenshots/city-sewage-original.png
+!/workspace/screenshots/city-sewage-zh-Hant.png
+!/workspace/screenshots/city-sewage-zh-Hans.png
+!/workspace/screenshots/city-sewage-ja.png
+!/workspace/screenshots/city-sewage-ko.png
+!/workspace/screenshots/city-sewage-en.png
 
 # 正式封包只留本機
 /dist-all/

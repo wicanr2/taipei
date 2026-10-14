@@ -883,3 +883,17 @@ r6 同樣未取得施工後 Left 讀取，單純持鍵假說不足。另開 [#60
 [#60 診斷重播](../../workspace/tools/facility_diagnostic.go) 使用 r8 真實 GUI 的原始輸入與步數，從原版 EXE 冷啟動追蹤 BDA 頭尾改變及取樣 PC。用途限找出丟棄按鍵的原始指令，不能代替正常 GUI 驗收。
 
 IDA 9.4 核對固定 EXE 及資料庫輸入雜湊相同。兩次取樣落在原始 sub_24D96，IDA 0x24FB9／0x24FC2，呼叫端 sub_248E2／sub_27796／sub_289AE。原始函式遍歷 89×105 格並更新分類計數，語意為城市格統計的強推論，並非等待鍵盤放開的證據。暫存器陣列依 x86 編碼為 AX/CX/DX/BX/SP/BP/SI/DI，不把 SP 誤當 SI。r7 只恢復既有 60-update 正常探針在施工確認後的 24,000,000 步觀察窗，其他逐鍵仍用短收據；驗證較早送入的鍵是否在原版施工收尾被丟棄，不修改原版規則或時鐘。
+
+### #58 README 截圖與來源收尾
+
+程式及工具先提交 1559288e7e8baf18ec6d91982cf0e34fc2c8b896。以同 GUI image、network none、UID/GID 1000、2g／2 CPU／64 pids、120 秒上限執行 export_public_screenshots.py；原版、workspace 與專案唯讀，只有 screenshots 可寫。匯出前再次核對正常完成收據、原子 ZIP、PNG 與獨立像素報告，加入垃圾場原版／繁中 HD，以及污水處理廠原版／HD 五語系八張 PNG。未替換舊 40 張；各批來源仍保留原始程式提交及雜湊。
+
+README 現有 48 張唯一 1280×800 PNG，共 35,393,627 bytes；本批新增 8,499,335 bytes。manifest SHA-256 b74fe56ad8323b8ade3f4221a4d8d8d139fd2f8337c3eba3ca2dffd650ed5489。README 更新設施對照與功能摘要，CONTEXT 及驗收矩陣同步記錄兩項完成、十項公共設施 DRAFT 與外平台前版。僅明列八張 PNG 開放版控，原素材、SAV、字型與原版資料仍排除。
+
+收尾回查正常玩家路徑與文件職責入口。48 張圖片參照與 manifest 集合、所有 PNG 雜湊／尺寸／1000:1000、Markdown 連結、產品來源與七補丁一致，35 原始檔及 RAR 未變；記錄 public-final-hygiene.json。指定 find 未發現 root-owned 輸出或 .md 目錄。產品抽驗與匯出容器均已 --rm；#60 的新診斷仍在有界容器執行，不提前宣稱全部研究已清理。
+
+### #60 原版清鍵證據
+
+r8 追加 BIOS 鍵盤頭尾、佇列、IRQ 向量、CPU flags 與 KeyPolls，只增觀測。從真實 GUI 輸入冷啟動的 headless 診斷重播到 1,300,000,000 步，原始圖雜湊與 r8 最後畫面相同，記錄 public-diagnostic-r1/diagnostic.json、memory.bin 及 provenance.json。此為診斷，不當成正常 GUI 驗收。
+
+BDA 頭尾追蹤證實，Left 入緩衝後在第 1,191,033,529 步由原版 CS 052D:0012 清掉。IDA 9.4 核對其原始位置 0x141E2 為 INT21 AH=0Ch，原函式 sub_141DC 保留原名及位址。早先單純持鍵假說不足；固定 24,000,000 步也早於施工收尾。新的 r9 改以完整已知 ROM 施工矩形作觀測條件後才送方向鍵，仍要求原版恰讀一鍵及原版退出，尚待本輪結果。不改原版規則或時鐘。
