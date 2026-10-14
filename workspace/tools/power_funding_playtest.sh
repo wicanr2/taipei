@@ -15,6 +15,11 @@ timeout 3600s docker run --rm --network none --user "$(id -u):$(id -g)" \
   -w /workspace -e DISPLAY=:99 -e LIBGL_ALWAYS_SOFTWARE=1 -e GOMAXPROCS=2 \
   -e "TAIPEI_CITY_MENU_RUN=$run_name" \
   -e "TAIPEI_POWER_MANAGED_BUDGET=${TAIPEI_POWER_MANAGED_BUDGET:-0}" \
+  -e "TAIPEI_POWER_TARGET_TAX=${TAIPEI_POWER_TARGET_TAX:-99}" \
+  -e "TAIPEI_POWER_TARGET_FUNDS=${TAIPEI_POWER_TARGET_FUNDS:-120000}" \
+  -e "TAIPEI_POWER_FUNDING_SAMPLES=${TAIPEI_POWER_FUNDING_SAMPLES:-}" \
+  -e "TAIPEI_POWER_STEPS_PER_UPDATE=${TAIPEI_POWER_STEPS_PER_UPDATE:-400000}" \
+  -e "TAIPEI_POWER_RECEIPT_UPDATES=${TAIPEI_POWER_RECEIPT_UPDATES:-60}" \
   sha256:c3d8835a9d39ec7229078a6f49c0036af2aaf1cee0f15e1a8b2cbb7f6d232ff3 bash -c '
     set -euo pipefail
     out="/workspace/runs/$TAIPEI_CITY_MENU_RUN"
@@ -27,7 +32,7 @@ timeout 3600s docker run --rm --network none --user "$(id -u):$(id -g)" \
     { go version; python3 --version; sha256sum /workspace/runs/taipei-preview /orig/RS201.EXE /orig/RS201.ROM; } > "$out/program-provenance.txt"
     Xvfb :99 -screen 0 1280x900x24 -nolisten tcp > "$out/xvfb.log" 2>&1 &
     xvfb_pid=$!
-    trap '\''kill "$xvfb_pid" 2>/dev/null || true; wait 2>/dev/null || true'\'' EXIT
+    trap '\''code=$?; trap - EXIT; kill "$xvfb_pid" 2>/dev/null || true; wait "$xvfb_pid" 2>/dev/null || true; exit "$code"'\'' EXIT
     for i in {1..50}; do test -S /tmp/.X11-unix/X99 && break; sleep .1; done
     PYTHONPATH=/workspace/tools python3 "$out/power_funding_playtest.py" > "$out/playtest.log" 2>&1
     find /workspace -user root -o -type d -name "*.md"

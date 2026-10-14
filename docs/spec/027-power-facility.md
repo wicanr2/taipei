@@ -63,3 +63,28 @@ r3 正常 GUI 依 [預登記](https://github.com/wicanr2/taipei/issues/46#issuec
 本批 GUI binary SHA-256 `2821c65bfb4daad6e46677bb0c72b199c13f772c8eeae7262dbc17b2e69ee9d1`，原創呈現實作提交 `d32b35d`，正常驗證工具提交 `f5e21ff`；dosgolem 與七補丁未變。Linux 乾淨重建逐 byte 相同，保留 `workspace/runs/taipei-preview-power-clean-r1`。Windows amd64 及 macOS amd64／arm64 編譯與結構通過，真機仍未驗。全部 HD 及鍵盤回歸通過；本批原始 35 檔與 RAR 雜湊不變，輸出 UID/GID 1000，指定 root-owned／`.md` 目錄檢查為空，相關容器均已刪除。
 
 總核對在 `power-facility-thermal-native/final-verification-r1.json`，正式正常畫面原件為同目錄 `normal-power-hd-r3.png`，SHA-256 `2a89a2ccefa5515bf0f062898c7fa3c961e20fc5940f862d354fd4898e45b5b4`，直接取自真實正常收據，沒有後製。核能正常成功施工與其他相位尚無充分來源，#46 保持 OPEN。
+
+## 核能接續研究入口
+
+[power_scenario_scan.sh](../../workspace/tools/power_scenario_scan.sh) 與 [power_scenario_scan.py](../../workspace/tools/power_scenario_scan.py) 從全新 EXE 的正常災難城市選單依顯示順序檢查六座城市。逐座暫停、解碼原版資金、正常 F2 保存與原版退出；遇到第一座至少 120000 的城市即停止。檔案讀取紀錄確認實際 DSA，SAV 保留原始 bytes 與 SHA-256。此研究不改寫城市、財政、時間或亂數，不重複已結束的 DISA1 極端預算探針，也不作核能施工完成證據。
+
+[power-funding-continuation](../../workspace/app/cmd/power-funding-continuation/main.go) 是 DRAFT 研究命令，僅在 Docker 內執行，參數為 `GUI-capture.zip new-output-dir`。從 EXE 重播 r6 實際輸入，必須先匹配末端原版畫面、色盤、讀鍵及檔案操作，才續跑最多 250 次、每次 24000000 步。資金達 102000 就暫停，未達上限也保存進度；存檔及退出均用原版鍵盤／DOS owner，不寫財政記憶體或 SAV bytes。這是原版來源研究，不代替正常 GUI 抽驗。
+
+[power_nuclear_playtest.sh](../../workspace/tools/power_nuclear_playtest.sh) 與 [power_nuclear_playtest.py](../../workspace/tools/power_nuclear_playtest.py) 為尚未執行的 DRAFT 探針。接受唯讀的原版籌資 SAV 與固定 SHA-256，預定由正常 GUI 冷讀、確認陸地、原版整地及核能施工，再正常存讀退出。成功來源與 READY 前不接核能 HD。執行前須在 #46 登記實際輸入及完整情境。
+
+六座城市已正常載入、原版 F2 保存與退出。`power-scenario-scan-r2/check.json` 以獨立原版底欄字形、DSA 讀取總長 93567、實際 SAV 雜湊／長度與最終 DOS 退出逐項核對，SHA-256 `830675c58177f173520a91580e893c3473629dca2db6354caec4c1902af98c40`。來源為 r1 第一座及 r2 其餘五座；r1 的第二次重複台北不計入六城。原版 Down 依欄序遞增選項，Right 不切欄。
+
+| 原版城市檔 | 正常畫面起始資金 |
+|---|---:|
+| DISA1.DSA | 77413 |
+| DISA2.DSA | 69679 |
+| DISA3.DSA | 52673 |
+| DISA4.DSA | 73455 |
+| DISA5.DSA | 78475 |
+| DISA6.DSA | 80000 |
+
+r6 完整預算按鍵與 480 次正常觀察已完成，稅率實際為 20、四項支出 0。最後年 117 月 8、資金 98428，仍未達核能成本。117 年 1 月曾見 98528，不當作末端資金。年度收入實見 11326／3089／3715／3085。後續由同一實際輸入的原版續跑保留進度，不重擲或修改財政條件。
+
+`power-nuclear-preflight-r1/preflight.json` 已完成正常 GUI 冷讀、工具列／地圖焦點、單格游標、陸地候選及原版退出。原版 FUND.SAV 保持 `fdd4e3a9c0da6320bb0a2a4357f948589ebc34d0061d54ae624951b190bbc96f`；原點 (6,22)、游標 (9,8)、整地費用 10，候選矩形為視窗格 (11,7,6,6)。這一件沒有整地或核能施工，只驗證探針的前置操作。
+
+續跑 r2 已從 EXE 完整重播到 15780000000 步，原版末端畫面、色盤、讀鍵與檔案操作符合 GUI；監測漏了現行 Renderer 的 SetLanguage 初始化而讀不到資金，已停止並保留原件。r3 執行前以固定原始收據的 `inspect` 模式確認右欄 mask=2、98428，才重播。右欄獨立有效即可讀資金，不要求左欄費用一起匹配。r3 先用原版鍵盤保存 0000.SAV，再續跑，最後保存不同名稱 0001.SAV，避免驗證工具錯誤時再次遺失原版可保存進度；仍不是核能施工完成證據。

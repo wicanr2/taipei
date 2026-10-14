@@ -19,6 +19,13 @@ def main():
     footer,budget=source(rom),references(rom)
     samples=[]
     managed=os.environ.get('TAIPEI_POWER_MANAGED_BUDGET','0')=='1'
+    target_tax=int(os.environ.get('TAIPEI_POWER_TARGET_TAX','99'))
+    target_funds=int(os.environ.get('TAIPEI_POWER_TARGET_FUNDS','120000'))
+    sample_limit=int(os.environ.get('TAIPEI_POWER_FUNDING_SAMPLES') or ('240' if managed else '120'))
+    step_batch=int(os.environ.get('TAIPEI_POWER_STEPS_PER_UPDATE','400000'))
+    receipt_updates=int(os.environ.get('TAIPEI_POWER_RECEIPT_UPDATES','60'))
+    assert 0<=target_tax<=99 and 100000<=target_funds<=120000 and 1<=sample_limit<=480
+    assert step_batch in [400000,2000000] and receipt_updates in [6,60]
     budget_actions=[]
     saves=Path(tempfile.mkdtemp(prefix='power-funding-saves.',dir='/workspace/runs'))
 
@@ -59,7 +66,8 @@ def main():
 
     with (root/'app.log').open('w') as log:
         game=subprocess.Popen(['/workspace/runs/taipei-preview','-original','/orig','-saves',str(saves),
-            '-receipts',str(root),'-mute','-steps-per-update','400000','-materials',
+            '-receipts',str(root),'-mute','-steps-per-update',str(step_batch),
+            '-receipt-every-updates',str(receipt_updates),'-materials',
             '/workspace/prototypes/hd-style','-theme','original','-stop-file',str(root/'stop')],
             stdout=log,stderr=subprocess.STDOUT)
         try:
@@ -83,7 +91,7 @@ def main():
                 current=decode_budget(model()[1],budget)
                 assert current is not None and current['selected_rows']==[0]
                 assert current['percent']==[10,100,100,100,100]
-                for row,target,direction in [(0,99,'Left')]+[(r,0,'Right') for r in range(1,5)]:
+                for row,target,direction in [(0,target_tax,'Left')]+[(r,0,'Right') for r in range(1,5)]:
                     if row:key(f'funding-budget-row-{row}','Down')
                     current=decode_budget(model()[1],budget)
                     assert current is not None and current['selected_rows']==[row]
@@ -104,7 +112,7 @@ def main():
                 assert scene(*model())
             key('funding-resume','3')
             funded=False
-            for i in range(240 if managed else 120):
+            for i in range(sample_limit):
                 step=base.status()['steps']
                 base.wait_for(lambda s:s.get('steps',0)>=step+24_000_000,f'funding-{i:03d}')
                 s,frame=model()
@@ -120,7 +128,7 @@ def main():
                     # 012 已實見年度預算自動計算時 BIOS 未阻塞，後續自行返回城市。
                     # 只觀察此相位；不向尚未等鍵的 owner 插入 Escape。
                     continue
-                elif money is not None and money>=120000:
+                elif money is not None and money>=target_funds:
                     key('funding-pause','0')
                     funded=True
                     break
@@ -129,7 +137,7 @@ def main():
             if funded:
                 s,frame=model()
                 actual_money=int(decode(frame,footer,1)[2])
-                assert actual_money>=120000
+                assert actual_money>=target_funds
                 key('funding-file-menu','F2')
                 key('funding-save-dialog','space')
                 for i,value in enumerate('0001'):key(f'funding-save-name-{i}',value)
@@ -150,6 +158,8 @@ def main():
             (root/'result.json').write_text(json.dumps({'issue':46,'normal_gui':True,'checkpoint':False,
                 'funded':funded,'funds':actual_money,'samples':samples,'save_dir':str(saves),
                 'managed_budget':managed,'budget_actions':budget_actions,
+                'target_tax':target_tax,'target_funds':target_funds,'sample_limit':sample_limit,
+                'steps_per_update':step_batch,'receipt_every_updates':receipt_updates,
                 'save_sha256':saved_sha,'native_exit':bool(base.status().get('dos_exited')),
                 'ordinary_acknowledgments':base.ordinary_sync,'arrow_acknowledgments':base.sync,
                 'scope':'原版正常城市／速度 3／原版預算操作及存檔；不注入資金或改寫資料。核能施工及 HD 另驗'},ensure_ascii=False,indent=2)+'\n')
