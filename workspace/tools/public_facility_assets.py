@@ -14,7 +14,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--inputs',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
-    ap.add_argument('--stage',choices=['DRAFT','public','nuclear'],default='DRAFT')
+    ap.add_argument('--stage',choices=['DRAFT','public','nuclear','transport'],default='DRAFT')
     ap.add_argument('--count',type=int,default=12)
     ap.add_argument('--issue',type=int,default=58)
     a=ap.parse_args()

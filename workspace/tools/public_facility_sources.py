@@ -17,6 +17,7 @@ def main():
     ap.add_argument('--run',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--case')
+    ap.add_argument('--issue',type=int,default=58)
     a=ap.parse_args()
     assert a.out.parent.is_dir() and a.out.parent.stat().st_uid==os.getuid()
     a.out.mkdir(exist_ok=True)
@@ -48,15 +49,20 @@ def main():
         png(root/'source.png',w*9,h*9,raster,bytes(v for c in s['palette'] for v in c))
         subprocess.run(['convert',str(root/'source.png'),'-filter','point','-resize','864x864!',
                         '-strip',str(root/'reference.png')],check=True)
-        report={'schema':1,'issue':58,'id':case['id'],'tool':case['tool'],'option':case['option'],
+        report={'schema':1,'issue':a.issue,'id':case['id'],'tool':case['tool'],'option':case['option'],
             'size':[w,h],'fee':case['fee'],'before_budget':case['before_budget'],'after_budget':case['after_budget'],
             'rom_sha256':ROM_SHA,'exe_sha256':EXE_SHA,'receipt':str(receipt),'receipt_sha256':sha(receipt.read_bytes()),
             'frame_index_sha256':sha(frame),'steps':s['steps'],'origin':s['map_origin'],'tiles':tiles,
             'used_palette':{str(i):s['palette'][i] for i in sorted(set(raster))},
             'source_png_sha256':sha((root/'source.png').read_bytes()),'reference_png_sha256':sha((root/'reference.png').read_bytes()),
             'address_space':'RS201.ROM file offsets; zero-based member/image, native pixels',
-            'level':'已證實，限原版子選單正常施工與移開游標後的完整圖像',
+            'level':'已證實，限原版子選單正常施工與移開游標後的完整圖像' if a.issue==58 else '已證實，限原版工具正常施工與移開游標後的完整圖像',
             'tool_version':'Python 3.11.2 / ImageMagick 6.9.11 / pinned GUI image c3d8835a9d39'}
+        if not case.get('construction_tested',True):
+            report.update(construction_tested=False,existing_city=case['existing_city'],native_world=case['native_world'],
+                level='已證實，限原版城市正常冷讀與捲動後的完整圖像；新建施工未抽測')
+        if case.get('source_prefix'):
+            report.update(source_prefix=True,normal_path_complete=False)
         (root/'source.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
         print(case['id'],[w,h],sha((root/'source.json').read_bytes()),flush=True)
 

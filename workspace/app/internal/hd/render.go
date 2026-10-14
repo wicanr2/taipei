@@ -40,6 +40,7 @@ type Stats struct {
 	EndingReason               string              `json:"ending_reason"`
 	PowerFacility              powerFacilityStats  `json:"power_facility"`
 	NuclearFacility            publicFacilityStats `json:"nuclear_facility"`
+	TransportFacilities        publicFacilityStats `json:"transport_facilities"`
 	CivicFacilities            civicFacilityStats  `json:"civic_facilities"`
 	PublicFacilities           publicFacilityStats `json:"public_facilities"`
 	CityBuildings              cityBuildingStats   `json:"city_buildings"`
@@ -84,37 +85,38 @@ type Origin struct {
 const materialSize = 1254
 
 type Renderer struct {
-	lastTextKeys     []string
-	lastImageKeys    []string
-	textSources      *textSources
-	textDraws        []TextDraw
-	textImageDraws   []TextImageDraw
-	textROM          []byte
-	extra            *interfaceSources
-	locale           *interfaceLocale
-	fontDir          string
-	charts           *chartWindows
-	ending           *endingScreen
-	powerFacility    *powerFacilitySet
-	nuclearFacility  *publicFacilitySet
-	civicFacilities  *civicFacilitySet
-	publicFacilities *publicFacilitySet
-	cityBuildings    *cityBuildingSet
-	infrastructure   *infrastructureSet
-	budget           *budgetPanel
-	files            *fileDialogs
-	footer           *cityFooter
-	chrome           *cityChrome
-	frame            *image.RGBA
-	sources          map[string]bool
-	shades           map[byte][]byte
-	reason           string
-	menu             *menuFont
-	icons            *toolIcons
-	dialog           *newGameDialog
-	panels           *panelSet
-	toolPanels       *panelSet
-	cityPanels       *panelSet
+	lastTextKeys        []string
+	lastImageKeys       []string
+	textSources         *textSources
+	textDraws           []TextDraw
+	textImageDraws      []TextImageDraw
+	textROM             []byte
+	extra               *interfaceSources
+	locale              *interfaceLocale
+	fontDir             string
+	charts              *chartWindows
+	ending              *endingScreen
+	powerFacility       *powerFacilitySet
+	nuclearFacility     *publicFacilitySet
+	transportFacilities *publicFacilitySet
+	civicFacilities     *civicFacilitySet
+	publicFacilities    *publicFacilitySet
+	cityBuildings       *cityBuildingSet
+	infrastructure      *infrastructureSet
+	budget              *budgetPanel
+	files               *fileDialogs
+	footer              *cityFooter
+	chrome              *cityChrome
+	frame               *image.RGBA
+	sources             map[string]bool
+	shades              map[byte][]byte
+	reason              string
+	menu                *menuFont
+	icons               *toolIcons
+	dialog              *newGameDialog
+	panels              *panelSet
+	toolPanels          *panelSet
+	cityPanels          *panelSet
 }
 
 func digest(p []byte) string { return fmt.Sprintf("%x", sha256.Sum256(p)) }
@@ -163,6 +165,7 @@ func New(rom []byte, dir string) *Renderer {
 	r.infrastructure = loadInfrastructure(rom, dir)
 	r.powerFacility = loadPowerFacilities(rom, dir)
 	r.nuclearFacility = loadNuclearFacility(rom, dir)
+	r.transportFacilities = loadTransportFacilities(rom, dir)
 	r.civicFacilities = loadCivicFacilities(rom, dir)
 	r.publicFacilities = loadPublicFacilities(rom, dir)
 	r.cityBuildings = loadCityBuildings(rom, dir)
@@ -441,6 +444,27 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 					stats.NuclearFacility.Facilities[candidate.id]++
 				} else {
 					stats.NuclearFacility.Fallback++
+				}
+				continue
+			}
+			if candidate := r.transportFacilities.tiles[tile]; candidate != nil {
+				stats.Matched++
+				stats.TransportFacilities.Matched++
+				reason := r.transportFacilities.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				if stats.TransportFacilities.Reasons == nil {
+					stats.TransportFacilities.Reasons = map[string]int{}
+				}
+				stats.TransportFacilities.Reasons[reason]++
+				if reason == "matched-transport-facility" {
+					stats.Painted++
+					stats.Fallback--
+					stats.TransportFacilities.Painted++
+					if stats.TransportFacilities.Facilities == nil {
+						stats.TransportFacilities.Facilities = map[string]int{}
+					}
+					stats.TransportFacilities.Facilities[candidate.id]++
+				} else {
+					stats.TransportFacilities.Fallback++
 				}
 				continue
 			}
