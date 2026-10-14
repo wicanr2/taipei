@@ -20,8 +20,15 @@ timeout 3600s docker run --rm --network none --label project=taipei --name "taip
     test "$(stat -c %u:%g /workspace/runs)" = 1000:1000
     Xvfb :99 -screen 0 1280x900x24 -nolisten tcp > "/workspace/runs/public-$TAIPEI_FACILITY_PHASE-xvfb.log" 2>&1 &
     xp=$!
-    trap '\''kill "$xp" 2>/dev/null || true; wait 2>/dev/null || true'\'' EXIT
+    trap '\''code=$?; trap - EXIT; kill "$xp" 2>/dev/null || true; wait "$xp" 2>/dev/null || true; exit "$code"'\'' EXIT
     for i in {1..50}; do test -S /tmp/.X11-unix/X99 && break; sleep .1; done
-    python3 /workspace/tools/facility_batch_playtest.py
+    driver_log="/workspace/runs/public-$TAIPEI_CITY_MENU_RUN-driver.log"
+    if python3 /workspace/tools/facility_batch_playtest.py > "$driver_log" 2>&1; then
+      tail -n 3 "$driver_log"
+    else
+      code=$?
+      tail -n 40 "$driver_log"
+      exit "$code"
+    fi
     find /workspace/runs -user root -o -type d -name "*.md"
   '

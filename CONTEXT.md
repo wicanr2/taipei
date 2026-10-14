@@ -2,7 +2,7 @@
 
 核對日期：2026-10-14。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表、DISA1 首批三種建物、警察局／消防局及垃圾場／污水處理廠施工圖已依正常遊玩抽驗通過，029／034–036 限各批呈現及已驗路徑 CONFORMED。README 含遊戲背景與 48 張實際截圖。十項公共設施維持 DRAFT；全部圖片重繪與正式封包仍未完成。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。六圖表、DISA1 首批建物、警消及十二項環境／公共設施已依正常遊玩抽驗通過，029／034–036 限各批呈現及已驗路徑 CONFORMED。README 含遊戲背景與 48 張截圖；體育場五語系截圖接續匯出。全部圖片重繪與正式封包仍未完成。
 
 ## 有效決策
 
@@ -27,8 +27,8 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 | 項目 | 現況 | 證據或限制 |
 |---|---|---|
-| 垃圾場與污水處理廠 | 036 限兩種正常施工圖與已驗路徑 CONFORMED。32 格 B 高清、F12、F11 五語系、原版同次存讀檔與 DOS 退出通過；八張 GUI 像素／文字、來源與色盤失配、六項素材故障及設施隔離通過 | [036](docs/spec/036-public-facilities.md)、[#58](https://github.com/wicanr2/taipei/issues/58)。十項公共設施維持 DRAFT，施工後讀鍵另查 #60；本批只更新 Linux，外平台待下一次合併重建 |
-| 施工探針收據 | #59 允許指定每幾次更新輸出收據，預設仍為 60；本批以 6 完成正常施工、切換、存讀檔與退出 | [005](docs/spec/005-frontend-preview.md)。只改觀測頻率；#60 追加 BIOS 鍵盤狀態，未改 dosgolem 七補丁或原版規則 |
+| 十二項環境與公共設施 | 036 v2 限靜態施工圖及已驗路徑 CONFORMED。392 格、391 種來源；體育場同源格依完整可見鄰圖唯一定位，失配回退。十二份正常來源、完整圖與區外、391 項來源失配、26 項素材故障與隔離通過；垃圾場／體育場正常 F11／F12、存讀檔與 DOS 退出、八圖及六項正反對照通過 | [036](docs/spec/036-public-facilities.md)、[#58](https://github.com/wicanr2/taipei/issues/58)。十三素材檔乾淨重生相同；四架構重編完成。其他相位、全新 EXE 冷讀、外平台真機及正式封包未驗 |
+| 施工探針 | #59 的可指定收據頻率已驗；#60 定位原版施工收尾 AH=0Ch 清鍵，改等完整圖或已見完整游標變體後送鍵。r9／r11 來源與 v2 產品正常存讀／退出補驗通過 | [005](docs/spec/005-frontend-preview.md)、[036](docs/spec/036-public-facilities.md)。未改原版、時鐘或 dosgolem 七補丁；r11 外層清理 143 的前件保留，v2 wrapper 乾淨回傳 0 |
 | 私人儲存庫 | 已由主機 gh 回讀 PRIVATE，Issues 啟用 | 遠端原為空儲存庫 |
 | 工作項目 | 初始 9 張 Issues 已建立 | 狀態只以 [遠端 Issues](https://github.com/wicanr2/taipei/issues) 為準 |
 | 本機 Git | 沿用使用者建立的空 clone，管理資料移至專案根目錄 | 原 clone 只有 `.git`，沒有提交或其他檔案 |
@@ -55,7 +55,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 目前程式與跨平台 | 036 Linux amd64 已驗 binary 為 21705e3c，標準入口 `workspace/runs/taipei-preview`，固定副本 `taipei-preview-public-r1`；來源與七補丁見 `workspace/runs/public-final-provenance.json`。Windows amd64、macOS amd64／arm64 保留 035 前版，來源見 `civic-final-provenance.json` | 本批外平台尚未重建，等待後續合併；未重跑 Wine、平台真機或正式封包 |
+| 目前程式與跨平台 | 036 v2 Linux amd64 已驗 binary 為 54d04177，標準入口 `workspace/runs/taipei-preview`，固定副本 `taipei-preview-public-r2`。Windows amd64、macOS amd64／arm64 本次合併重建與架構核對完成；來源、七補丁與產物見 `workspace/runs/public-v2-final-provenance.json` | 舊版 Linux 與外平台副本保留。外平台僅編譯／結構，未重跑 Wine、真機或正式封包 |
 | 封包 | 尚未建立 | 不宣稱正式 HD 完成或跨平台封包已驗 |
 
 ## 文件入口

@@ -441,7 +441,10 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 			if candidate := r.publicFacilities.tiles[tile]; candidate != nil {
 				stats.Matched++
 				stats.PublicFacilities.Matched++
-				reason := r.publicFacilities.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				candidate, reason := r.publicFacilities.resolve(tile, px, (x-5)/9, (y-34)/9)
+				if candidate != nil {
+					reason = r.publicFacilities.paint(r.frame, candidate, pal, (x-5)/9, (y-34)/9)
+				}
 				if stats.PublicFacilities.Reasons == nil {
 					stats.PublicFacilities.Reasons = map[string]int{}
 				}

@@ -12,8 +12,8 @@ import (
 	"strconv"
 )
 
-// 036: only the two complete, normally constructed environmental facilities.
-const publicFacilitiesManifestSHA = "07319733ab01743a8e2e30cec7e6e042554b35982bf342ba556f21d84c2892e1"
+// 036 v2: twelve complete, normally constructed facilities; presentation only.
+const publicFacilitiesManifestSHA = "cbbb76d9a14f71f540e310a073492c5b43f58b6a13ff3f99c081d55064ed1f32"
 
 type publicFacilityStats struct {
 	Matched    int            `json:"matched"`
@@ -30,56 +30,56 @@ type publicFacilityTile struct {
 	pixel     int
 	sourceSHA string
 	used      []byte
+	source    [81]byte
 }
 
 type publicFacilitySet struct {
-	tiles   map[[81]byte]*publicFacilityTile
-	palette [256][3]byte
-	atlases map[string]*image.RGBA
-	reason  string
+	tiles      map[[81]byte]*publicFacilityTile
+	variants   map[[81]byte][]*publicFacilityTile
+	facilities map[string][]*publicFacilityTile
+	palette    [256][3]byte
+	atlases    map[string]*image.RGBA
+	reason     string
+}
+
+// Read each alias through the actual ROM archive table, never a guessed stride.
+func publicSource(rom []byte, member, index, pixel int) ([81]byte, bool) {
+	var source [81]byte
+	if len(rom) < 2 || member < 0 || member >= int(binary.LittleEndian.Uint16(rom)) {
+		return source, false
+	}
+	header := 18 + member*16
+	if header+6 > len(rom) {
+		return source, false
+	}
+	off := int(binary.LittleEndian.Uint32(rom[header:]))
+	n := int(binary.LittleEndian.Uint16(rom[header+4:]))
+	if n < 4 || off < 0 || off+n > len(rom) {
+		return source, false
+	}
+	lib := rom[off : off+n]
+	count := int(binary.LittleEndian.Uint16(lib))
+	if index < 0 || index >= count || 2+count*2 > len(lib) {
+		return source, false
+	}
+	a := int(binary.LittleEndian.Uint16(lib[2+index*2:]))
+	b := len(lib)
+	if index+1 < count {
+		b = int(binary.LittleEndian.Uint16(lib[4+index*2:]))
+	}
+	if a < 2+count*2 || b > len(lib) || b-a != 85 || pixel != off+a+4 || binary.LittleEndian.Uint16(lib[a:]) != 9 || binary.LittleEndian.Uint16(lib[a+2:]) != 9 {
+		return source, false
+	}
+	copy(source[:], lib[a+4:b])
+	return source, true
 }
 
 func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
-	u := &publicFacilitySet{tiles: map[[81]byte]*publicFacilityTile{}, atlases: map[string]*image.RGBA{}, reason: "manifest-mismatch"}
+	u := &publicFacilitySet{tiles: map[[81]byte]*publicFacilityTile{}, variants: map[[81]byte][]*publicFacilityTile{}, facilities: map[string][]*publicFacilityTile{}, atlases: map[string]*image.RGBA{}, reason: "manifest-mismatch"}
 	if digest(rom) != romSHA {
 		return u
 	}
-	off := int(binary.LittleEndian.Uint32(rom[18+37*16:]))
-	n := int(binary.LittleEndian.Uint16(rom[22+37*16:]))
-	lib := rom[off : off+n]
-	if n != 8354 || binary.LittleEndian.Uint16(lib) != 96 {
-		return u
-	}
-	byID := map[string]map[[2]int]*publicFacilityTile{}
-	for _, definition := range []struct {
-		id    string
-		start int
-	}{{"waste", 12}, {"sewage", 16}} {
-		byID[definition.id] = map[[2]int]*publicFacilityTile{}
-		for row := 0; row < 4; row++ {
-			for col := 0; col < 4; col++ {
-				index := definition.start + row*24 + col
-				a := int(binary.LittleEndian.Uint16(lib[2+index*2:]))
-				b := int(binary.LittleEndian.Uint16(lib[4+index*2:]))
-				if b-a != 85 || binary.LittleEndian.Uint16(lib[a:]) != 9 || binary.LittleEndian.Uint16(lib[a+2:]) != 9 {
-					return u
-				}
-				var source [81]byte
-				copy(source[:], lib[a+4:b])
-				if u.tiles[source] != nil {
-					return u
-				}
-				tile := &publicFacilityTile{id: definition.id, col: col, row: row, image: index, pixel: off + a + 4, sourceSHA: digest(source[:])}
-				for i := 0; i < 256; i++ {
-					if bytes.Contains(source[:], []byte{byte(i)}) {
-						tile.used = append(tile.used, byte(i))
-					}
-				}
-				u.tiles[source], byID[definition.id][[2]int{col, row}] = tile, tile
-			}
-		}
-	}
-	root := filepath.Join(dir, "public-facilities-ready-v1")
+	root := filepath.Join(dir, "public-facilities-ready-v2")
 	raw, err := os.ReadFile(filepath.Join(root, "manifest.json"))
 	if err != nil || digest(raw) != publicFacilitiesManifestSHA {
 		return u
@@ -108,7 +108,11 @@ func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
 			}
 		}
 	}
-	if json.Unmarshal(raw, &manifest) != nil || manifest.Schema != 1 || manifest.Stage != "public" || manifest.ROMSHA != romSHA || manifest.Tiles != 32 || manifest.UniqueSources != 32 || len(manifest.Facilities) != 2 {
+	expected := map[string][2]int{"waste": {4, 4}, "sewage": {4, 4}}
+	for _, id := range []string{"sun-yat-sen", "chiang-kai-shek", "palace-museum", "february-28", "art-museum", "amusement-park", "stadium", "confucius-temple", "zoo", "baseball-dome"} {
+		expected[id] = [2]int{6, 6}
+	}
+	if json.Unmarshal(raw, &manifest) != nil || manifest.Schema != 1 || manifest.Stage != "public" || manifest.ROMSHA != romSHA || manifest.Tiles != 392 || manifest.UniqueSources != 391 || len(manifest.Facilities) != len(expected) {
 		return u
 	}
 	for key, color := range manifest.Palette {
@@ -120,31 +124,57 @@ func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
 	}
 	seen := map[string]bool{}
 	for _, facility := range manifest.Facilities {
-		if byID[facility.ID] == nil || seen[facility.ID] || facility.Size != [2]int{4, 4} || facility.Atlas != facility.ID+".png" || len(facility.Tiles) != 16 {
+		size, ok := expected[facility.ID]
+		if !ok || seen[facility.ID] || facility.Size != size || facility.Atlas != facility.ID+".png" || len(facility.Tiles) != size[0]*size[1] {
 			return u
 		}
 		seen[facility.ID] = true
 		cells := map[[2]int]bool{}
 		for _, record := range facility.Tiles {
-			tile := byID[facility.ID][record.Cell]
-			if tile == nil || cells[record.Cell] || record.SourceSHA != tile.sourceSHA || !bytes.Equal(record.Used, tile.used) || len(record.Sources) != 1 {
+			x, y := record.Cell[0], record.Cell[1]
+			if x < 0 || x >= size[0] || y < 0 || y >= size[1] || cells[record.Cell] || len(record.Sources) == 0 {
 				return u
 			}
 			cells[record.Cell] = true
-			source := record.Sources[0]
-			if source.Member != 37 || source.Image != tile.image || source.Pixel != tile.pixel {
+			first := record.Sources[0]
+			source, ok := publicSource(rom, first.Member, first.Image, first.Pixel)
+			if !ok || digest(source[:]) != record.SourceSHA {
 				return u
 			}
+			for _, alias := range record.Sources {
+				same, ok := publicSource(rom, alias.Member, alias.Image, alias.Pixel)
+				if !ok || same != source {
+					return u
+				}
+			}
+			tile := &publicFacilityTile{id: facility.ID, col: x, row: y, image: first.Image, pixel: first.Pixel, sourceSHA: record.SourceSHA, source: source}
+			for i := 0; i < 256; i++ {
+				if bytes.Contains(source[:], []byte{byte(i)}) {
+					if _, ok := manifest.Palette[strconv.Itoa(i)]; !ok {
+						return u
+					}
+					tile.used = append(tile.used, byte(i))
+				}
+			}
+			if !bytes.Equal(tile.used, record.Used) {
+				return u
+			}
+			if u.tiles[source] == nil {
+				u.tiles[source] = tile
+			}
+			u.variants[source] = append(u.variants[source], tile)
+			u.facilities[facility.ID] = append(u.facilities[facility.ID], tile)
 		}
 		raw, err := os.ReadFile(filepath.Join(root, facility.Atlas))
 		if err != nil || digest(raw) != facility.SHA {
 			continue
 		}
 		im, err := png.Decode(bytes.NewReader(raw))
-		if err != nil || im.Bounds() != image.Rect(0, 0, 144, 144) {
+		bounds := image.Rect(0, 0, size[0]*36, size[1]*36)
+		if err != nil || im.Bounds() != bounds {
 			continue
 		}
-		atlas := image.NewRGBA(im.Bounds())
+		atlas := image.NewRGBA(bounds)
 		draw.Draw(atlas, atlas.Bounds(), im, im.Bounds().Min, draw.Src)
 		opaque := true
 		for i := 3; i < len(atlas.Pix); i += 4 {
@@ -157,8 +187,56 @@ func loadPublicFacilities(rom []byte, dir string) *publicFacilitySet {
 			u.atlases[facility.ID] = atlas
 		}
 	}
+	if len(u.tiles) != manifest.UniqueSources {
+		return u
+	}
 	u.reason = ""
 	return u
+}
+
+// A shared original tile is positioned only by exact visible unique neighbors.
+func (u *publicFacilitySet) resolve(source [81]byte, frame []byte, col, row int) (*publicFacilityTile, string) {
+	if len(u.variants[source]) <= 1 {
+		return u.tiles[source], ""
+	}
+	if u.reason != "" {
+		return nil, u.reason
+	}
+	if len(frame) != 320*200 {
+		return nil, "source-ambiguous"
+	}
+	var chosen *publicFacilityTile
+	for _, candidate := range u.variants[source] {
+		anchors, valid := 0, true
+		for _, neighbor := range u.facilities[candidate.id] {
+			if len(u.variants[neighbor.source]) != 1 {
+				continue
+			}
+			x, y := col+neighbor.col-candidate.col, row+neighbor.row-candidate.row
+			if x < 0 || x >= 29 || y < 0 || y >= 15 {
+				continue
+			}
+			anchors++
+			var actual [81]byte
+			for dy := 0; dy < 9; dy++ {
+				copy(actual[dy*9:], frame[(34+y*9+dy)*320+5+x*9:(34+y*9+dy)*320+14+x*9])
+			}
+			if actual != neighbor.source {
+				valid = false
+				break
+			}
+		}
+		if valid && anchors > 0 {
+			if chosen != nil {
+				return nil, "source-ambiguous"
+			}
+			chosen = candidate
+		}
+	}
+	if chosen == nil {
+		return nil, "neighbors-mismatch"
+	}
+	return chosen, ""
 }
 
 func (u *publicFacilitySet) paint(dst *image.RGBA, tile *publicFacilityTile, pal [256][3]byte, col, row int) string {

@@ -148,9 +148,9 @@ def main():
     manifest=json.loads(Path('/workspace/prototypes/hd-style/tool-menus-v1/manifest.json').read_text())
     entries={t:{s['source_sha256']:s['selection'] for s in manifest['states'] if s['id']==f'tool-{t:02d}'} for t in [9,10]}
     phase=os.environ.get('TAIPEI_FACILITY_PHASE','source')
-    cases=CASES if phase=='source' else CASES[:2]
+    cases=CASES if phase=='source' else [CASES[0],CASES[8]]
     cases=[c for c in cases if c[0] not in os.environ.get('TAIPEI_FACILITY_SKIP','').split(',')]
-    binary=Path('/workspace/runs')/('taipei-preview-public-probe-r1' if phase=='source' else 'taipei-preview-public-r1')
+    binary=Path('/workspace/runs')/('taipei-preview-public-probe-r1' if phase=='source' else 'taipei-preview-public-r2')
     if os.environ.get('TAIPEI_FACILITY_BINARY'):
         binary=Path(os.environ['TAIPEI_FACILITY_BINARY'])
     results=[];shots=[];final_sha=None

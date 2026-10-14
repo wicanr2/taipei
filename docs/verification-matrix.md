@@ -7,7 +7,7 @@
 
 | 範圍 | Issue | 必要證據 | 完成限制 |
 |---|---|---|---|
-| 垃圾場與污水處理廠 | [#58](https://github.com/wicanr2/taipei/issues/58) | 兩種正常完整施工圖、32 格 B、來源／色盤／素材回退；正常 F11／F12／存讀檔／DOS 退出 | [036](spec/036-public-facilities.md) 限本批與已驗路徑 CONFORMED。八張 GUI 像素與文字、五項正反對照、2592 項來源失配、六項真實素材故障、設施及區外隔離通過；三個素材檔乾淨重生相同。十項公共設施仍 DRAFT，#60 追查正常施工；外平台本批尚未重建，真機及正式封包未驗 |
+| 十二項環境與公共設施 | [#58](https://github.com/wicanr2/taipei/issues/58)、[#60](https://github.com/wicanr2/taipei/issues/60) | 十二份正常完整施工圖、392 格 B；同源鄰格辨識、來源／色盤／素材回退；正常跨組 F11／F12／存讀檔／DOS 退出 | [036](spec/036-public-facilities.md) v2 限靜態圖與已驗路徑 CONFORMED。391 種來源、26 項素材故障與隔離、全部區外、同源格原位／裁切／失配通過；八張 GUI 與六項正反對照含同源格交換。十三素材檔重生相同，四架構重編。其他相位、冷讀、外平台真機與正式封包未驗 |
 | 治理 | [#1](https://github.com/wicanr2/taipei/issues/1) | private／Issues 回讀、文件入口、排除規則、提交與推送 | 不證明遊戲可執行 |
 | 原版輸入 | [#2](https://github.com/wicanr2/taipei/issues/2) | 檔案清單、SHA-256、啟動方式與版本證據 | 來源未知不猜填 |
 | dosgolem 啟動 | [#3](https://github.com/wicanr2/taipei/issues/3) | 固定 commit、真實入口、可操作畫面、重播與缺口 | 未實際走到的路徑不算支援 |

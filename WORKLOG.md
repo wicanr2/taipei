@@ -872,15 +872,15 @@ public_facility_check.py 由固定 DRAFT 原型、原 ROM 與生成原件重算�
 
 以下由原 036 DRAFT 移入唯一 WORKLOG，保留歷史；正式契約只寫現況。
 
-探針修正：原版讀檔由多個 DOS read 組成，核對完整 93567 bytes，不以單次 read 作假設。r2 的工具列差異只有工具 9 的 84 個外框像素，色號由 186 變為 32；依 [004](../re/004-native-controls.md) 與 [019](019-city-chrome.md)，讀檔後以 Tab 回到工具列焦點，再核對原先保存的完整工具列來源。r1／r2 失敗屬驗證腳本，原版讀檔成功，前件保留；r3 用同一 image 與收據參數乾淨重跑。
+探針修正：原版讀檔由多個 DOS read 組成，核對完整 93567 bytes，不以單次 read 作假設。r2 的工具列差異只有工具 9 的 84 個外框像素，色號由 186 變為 32；依 [004](docs/re/004-native-controls.md) 與 [019](docs/spec/019-city-chrome.md)，讀檔後以 Tab 回到工具列焦點，再核對原先保存的完整工具列來源。r1／r2 失敗屬驗證腳本，原版讀檔成功，前件保留；r3 用同一 image 與收據參數乾淨重跑。
 
 追加修正：r3 證實 Tab 後所選工具與游標重合時仍為紅框，不能要求回復紫框。改依 019 的十四個完整 22×22 圖示來源與白／紅／紫外框，辨識當前工具，四份既有正常來源離線核對通過。新城市原版存檔關窗後十四框均白，初始工具游標 0 依 004 已證實；此狀態獨立處理。r4 啟動後因離線初始狀態檢查未通過而提前停止，避免沿用舊版探針。垃圾設施來源保留 r1，r5 完成污水來源。
 
 r5 公共設施施工成功並扣除費用，但下一個 Left 持續按住直到原版讀取，120 秒內沒有被讀取。原版仍在執行且無缺指令；原生放鍵閘門為強推論，不把腳本等待當成產品缺陷。r6 改為先確認前端按下、立即放開並確認 break，再等待原版恰讀一鍵。仍保留完整原版讀鍵確認，不採盲目定時送鍵；既有來源不重做。
 
-r6 同樣未取得施工後 Left 讀取，單純持鍵假說不足。另開 [#60](https://github.com/wicanr2/taipei/issues/60)，以 [IDA 窄查詢](../../workspace/tools/ida_facility_probe.py) 核對取樣位置及呼叫端，輸出 `workspace/runs/ida-60/stall.json`。其餘已完成來源與素材沿用。
+r6 同樣未取得施工後 Left 讀取，單純持鍵假說不足。另開 [#60](https://github.com/wicanr2/taipei/issues/60)，以 [IDA 窄查詢](workspace/tools/ida_facility_probe.py) 核對取樣位置及呼叫端，輸出 `workspace/runs/ida-60/stall.json`。其餘已完成來源與素材沿用。
 
-[#60 診斷重播](../../workspace/tools/facility_diagnostic.go) 使用 r8 真實 GUI 的原始輸入與步數，從原版 EXE 冷啟動追蹤 BDA 頭尾改變及取樣 PC。用途限找出丟棄按鍵的原始指令，不能代替正常 GUI 驗收。
+[#60 診斷重播](workspace/tools/facility_diagnostic.go) 使用 r8 真實 GUI 的原始輸入與步數，從原版 EXE 冷啟動追蹤 BDA 頭尾改變及取樣 PC。用途限找出丟棄按鍵的原始指令，不能代替正常 GUI 驗收。
 
 IDA 9.4 核對固定 EXE 及資料庫輸入雜湊相同。兩次取樣落在原始 sub_24D96，IDA 0x24FB9／0x24FC2，呼叫端 sub_248E2／sub_27796／sub_289AE。原始函式遍歷 89×105 格並更新分類計數，語意為城市格統計的強推論，並非等待鍵盤放開的證據。暫存器陣列依 x86 編碼為 AX/CX/DX/BX/SP/BP/SI/DI，不把 SP 誤當 SI。r7 只恢復既有 60-update 正常探針在施工確認後的 24,000,000 步觀察窗，其他逐鍵仍用短收據；驗證較早送入的鍵是否在原版施工收尾被丟棄，不修改原版規則或時鐘。
 
@@ -907,3 +907,24 @@ r10 中正紀念堂完成繪圖，但其游標覆蓋四邊，純完整 ROM 格�
 新增 facility_cursor.py，只接受完整 ROM 格或上述已見完整外框變體，限制用途為下一個測試按鍵的就緒判斷。r8 無游標及 r10 有游標兩個完整複合圖均通過，逐格內部破壞及游標外框破壞共 74 項均拒絕；正式來源匯出仍要求移開游標後的全 81 bytes，不從遮罩猜補圖片。r11 使用同一 image／binary／原版乾淨重跑九項剩餘公共設施，另加入最終 PUBLIC.SAV 正常存讀與原圖核對，等待完成。
 
 國父紀念館依正常參考使用內建 imagegen 製作 B 原件，預設原件保留並唯讀複製至 workspace。generated.png SHA-256 ee049c6243f1f98aa7e2ce38010da3262b780f3c6977b42219f0a21b3739046e；提示與 generation.json 保存在同來源目錄。這張仍為 DRAFT，未接入產品或宣稱全部公共設施完成。
+
+## 2026-10-14：十二項設施整批完成 #58，施工探針修正 #60
+
+r11 正常建設剩餘九項，各費用 5000、完整 6×6 圖；移開游標後核對全部原始 81 bytes。最後 PUBLIC.SAV 原版存讀、施工格讀回及 DOS 退出均有收據，SHA-256 72d9f359193fc9cd9080f938c81d2aa1c4f611b96aee020133b47a0646867175；SAV d6601a5009ce1af565d41e6592a4a4690fe19db49644bd47b3425c53fc3ef91a。外層清理回傳 143，完整前件保留，不把 wrapper 稱為 PASS。後續 trap 只等待自己的 Xvfb，詳細日誌改寫 workspace/runs；信號原因未證實，不列原版缺陷。新產品整輪 wrapper 為 0。
+
+十項公共設施按完整原版參考使用內建 imagegen 製作 B 圖。二二八前兩個版本在下方綠地新增迴環路，未採用；最終版回復下方綠地及中間直路。預設生成原件保留，只唯讀複製選定版本；提示及雜湊保存在 generation.json。已檢視十二張完整圖與 144／216 像素對照。首次 montage 未指定可用字型而失敗，補明列既有 Noto 後同 image 重生 overview；屬檢視環境，不是產品缺陷。v1 保留，v2 DRAFT manifest 8a90556b3065244377ae9cfbc414389b76fb71150c618623a06a05116caf5428，READY manifest cbbb76d9a14f71f540e310a073492c5b43f58b6a13ff3f99c081d55064ed1f32。
+
+共 392 格、391 種原圖。體育場同源兩格依同設施全部可見唯一原圖定位，至少一個錨點、只准唯一解，否則回退。共用載入器按實際 ROM 表驗全部別名、雜湊、尺寸、偏移與使用色盤；成員數讀 header 69，末圖終點取成員長度，未把兩 ROM 合計 118 或不存在的 sentinel 套入單一 archive。未改原版程式、規則、時鐘或七補丁。
+
+| 驗證 | 結果與證據 |
+|---|---|
+| 核心四項 | public-v2-tests-r1.log，55.163 秒。十二圖／區外、391 項來源失配、色盤、26 項實際素材故障與隔離、十二正常來源、archive 首末／越界、同源格原位／裁切／缺鄰格／錯鄰格通過 |
+| 既有回歸 | public-v2-regression-r1.log，12.231 秒。警消、DISA1、道路、火力四項及 keyboard 通過；工具語法通過，無跳過 |
+| 素材重生 | public-facilities-ready-repro-v2 十三檔與正式輸入逐 byte 相同 |
+| 正常 GUI | TAIPEI_CITY_MENU_RUN=gui-public-r2 bash workspace/tools/facility_batch_playtest.sh hd，wrapper 0。真實新遊戲、垃圾場／體育場、F12、F11 五語系、PUBLIC.SAV 同次存讀及 DOS 退出；無快照、注入或長時間抽樣 |
+| 獨立像素 | public_facility_check.py --run /workspace/runs/gui-public-r2 --scope public。八圖完整設施／五語系標籤／原版整張與六項正反對照通過；交換同源兩格再重算雜湊仍拒絕 |
+| 四架構 | Linux amd64 54d04177；Windows amd64 0a9ac278；macOS amd64 3666e91c、arm64 0b2873ee。沿既有三 image 重編；原始 ELF／PE／Mach-O header 及 compiler objdump／otool 輸出核對，前版保留 |
+
+正常報告 a163522a7e18d0c40811acb898d4b64e4e453fb2990a255b5dcadc29793a1e56，像素報告 caa694687de1c71ec711516faacfdc3dddcb0bcca6625f5ae12826df11cd6a18。PUBLIC.SAV 93567 bytes、SHA-256 02ff88bf23cdd719b3c8e1c2b935257a729e6d0f430b0ee1a101fe550ad8a6bc，讀回不變。已檢視體育場原版、繁中及英文實際畫面，其他語言標籤按固定參考逐像素核對。Linux 通過後提升標準入口；來源、七補丁、素材與四架構記錄 public-v2-final-provenance.json。首次彙整發現 GUI image 沒有 file 指令，改用既有 Python 解析原始 header，不新增 image 或退回主機。
+
+036 v2 限十二項靜態圖及已驗路徑 CONFORMED，#60 以正常產品輸入／存讀／退出補驗。README 接續匯出體育場原版與五語系六張 PNG。其他相位、全新 EXE 冷讀、完整 RAM／CPU／RNG 對拍、外平台真機及正式封包未驗；完整 HD 與母項繼續。
