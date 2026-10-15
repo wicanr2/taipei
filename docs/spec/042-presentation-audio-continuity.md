@@ -1,6 +1,6 @@
 # 呈現重算與音訊連續性
 
-狀態：READY。對應 [#64](https://github.com/wicanr2/taipei/issues/64)，回鏈 [041](041-local-promo.md)。
+狀態：CONFORMED，限本機Linux技術音訊、正常玩家抽驗與三平台封包內容。對應 [#64](https://github.com/wicanr2/taipei/issues/64)，回鏈 [041](041-local-promo.md)。
 
 ## 已確認原因
 
@@ -32,3 +32,19 @@
 4. 新修訂版另建 tag 與三平台封包。舊 `v.1.0.0-20261015` 保留；人耳及 Windows／macOS 真機未驗仍保留。
 
 工具沿 [041](041-local-promo.md)，歷程見 [WORKLOG](../../WORKLOG.md)；目前限制只保存於 [CONTEXT](../../CONTEXT.md)。
+
+## 本版結果
+
+來源tag `v.1.0.1-20261015` 固定於 `b37d672`，舊tag及封包保留。完整app測試通過。`interface-locale-cold-r21/verification.json` 為正常新遊戲、F11／F12、原版存讀與DOS退出，SHA `716eaae40c3d9be4855460962d816748c20c7de3ea8e4d5cccd899e5c21853e3`；93567-byte SAV仍為 `4152f923daa7535fbd49b6d6cabb780c1ef3b6a4cd3f8bd8c91395ca2a123b4c`。
+
+r16原版／HD各20秒WAV，無新增ring補零、無拒收、削波0、峰值5584；收據在`workspace/runs/promo-v.1.0.0-20261015-r16/audio-probe.json`。週期收據的PCM差值不是精確wall-clock比率，判定以實際WAV與補零計數為準。固定視窗焦點及主機0／2核心是本輪測試條件，不推論其他硬體效能。背景執行預設為true，未將失焦判作已證實主因。
+
+正式實包重新核對629檔、全部材料與缺件反例。Linux與Wine實際啟動器經中文空白路徑，B開場、F11英文設定、Shift+F1 Help、F12全幀最近鄰及缺資料錯誤通過。Linux實包開場音樂約58秒及76秒成片音軌另由041檢查。macOS兩slice、min11.0、系統相依、材料及launcher結構通過，原生執行與音訊未驗。
+
+| 本機完整包 | SHA-256 |
+|---|---|
+| Linux amd64 | `b07070897e5201e9215b242fde78301f90304b66975498c85a4095eb7f232411` |
+| Windows amd64 | `4ebdd64b374d111967a6dd92975611ccef905af5b98328da52ffc18eb7fce0fc` |
+| macOS universal | `b2c3e8c4f90c79b6391452b4bdfd9cf54f8746b7a02b82f3069add63dae00127` |
+
+驗收檔為`dist-all/v.1.0.1-20261015/smoke/acceptance.json`，SHA `52389460f11b221c119df3351190debc43391a55cf82ab3156681e692d4f7fba`。原版35檔／RAR與92張README截圖未變。Windows／macOS真機、人耳及原版硬體逐週期一致仍未驗。

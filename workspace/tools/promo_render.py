@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 import wave
+import zipfile
 
 
 def run(args, **kwargs):
@@ -23,6 +24,14 @@ def sha(path):
 
 def probe(path):
     return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(path)]))
+
+
+def contact_sheet(paths, output):
+    # Use the same FFmpeg PNG decoder as extraction; keep montage independent
+    # of the installed ImageMagick montage runtime.
+    run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-f','image2pipe','-framerate','1','-i','pipe:0',
+         '-vf','scale=384:240,tile=3x3:nb_frames=9:padding=8:margin=8:color=0x18352a',
+         '-frames:v','1','-threads','1',output],input=b''.join(Path(p).read_bytes() for p in paths))
 
 
 def audio_check(wav):
@@ -52,15 +61,30 @@ def audio_check(wav):
 
 
 def main():
+    os.environ.setdefault('MAGICK_THREAD_LIMIT','1');os.environ.setdefault('OMP_NUM_THREADS','1')
     ap=argparse.ArgumentParser();ap.add_argument('--run',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--opening-run',type=Path)
+    ap.add_argument('--work',type=Path)
     a=ap.parse_args();r=a.run;out=a.out
     assert r.is_dir() and out.parent.is_dir() and not out.exists()
     assert out.parent.stat().st_uid==os.getuid()
     report=json.loads((r/'capture-result.json').read_text());assert report['normal_gui'] and report['all_five_locales']==['zh-Hant','zh-Hans','ja','ko','en']
     assert sha(r/'session.mkv')==report['session_sha256']
-    out.mkdir();build=r/'edit';assert not build.exists();build.mkdir()
+    out.mkdir();build=a.work or r/'edit'
+    if build.exists():assert build.is_dir() and not any(build.iterdir()) and build.stat().st_uid==os.getuid()
+    else:build.mkdir()
+    tool_source=Path(__file__).read_bytes();(build/'executed-render.py').write_bytes(tool_source)
     font=Path('/bundle/materials/fonts/NotoSansCJKtc-Regular.otf');assert font.is_file()
     events=report['events']
+    opening_run=a.opening_run or r
+    with zipfile.ZipFile(opening_run/'opening-hd-capture.zip') as z:
+        opening_status=json.loads(z.read('status.json'))
+        assert opening_status['version']==report['version'] and opening_status['prototype'] is False
+        assert opening_status['original_sha256']=='798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3'
+        assert opening_status['audio']['muted'] is False, '配樂須取實際開啟播放器的錄音'
+    opening_events=json.loads((opening_run/'events.json').read_text())
+    def opening_when(label):
+        return next(e['video_time'] for e in opening_events if e['label']==label)
     def when(label):
         return next(e['video_time'] for e in events if e['label']==label)
     # 第一份本作影片。從本作城市草綠介面取色，採格線、黑體、實機剪輯。
@@ -88,38 +112,36 @@ def main():
     ending=card('ending',[('把城市交還給玩家',64,200,'#f5f1dc'),('Windows · Linux · macOS',38,350,'#b9cd65'),
                           ('完整版含原版遊戲與 HD 素材',32,460,'#f5f1dc'),(report['version'],26,580,'#b9cd65')])
     timeline=[];segments=[];position=0
-    def add(name, seconds, start=None, image=None, kind='gameplay'):
+    def add(name, seconds, start=None, image=None, kind='gameplay', speed=1):
         nonlocal position
         part=build/(f'{len(segments):02d}-{name}.mp4')
         cmd=['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n']
         if image:cmd+=['-loop','1','-framerate','30','-i',str(image)]
-        else:cmd+=['-ss',str(max(0,start)),'-i',str(r/'session.mkv')]
-        cmd+=['-t',str(seconds),'-an','-r','30','-vf','setsar=1,format=yuv420p','-c:v','libx264','-preset','veryfast','-crf','19','-threads','2',part]
+        else:cmd+=['-ss',str(max(0,start)),'-i',str((opening_run if kind=='opening' else r)/'session.mkv')]
+        cmd+=['-t',str(seconds),'-an','-r','30','-vf',f'setpts=(PTS-STARTPTS)/{speed},setsar=1,format=yuv420p','-c:v','libx264','-preset','veryfast','-crf','19','-threads','2',part]
         run(cmd)
         timeline.append({'name':name,'start':round(position,3),'duration':seconds,'source_start':start,'kind':kind,
-                         'source':'session.mkv' if not image else image.name})
+                         'source':('opening/session.mkv' if kind=='opening' else 'session.mkv') if not image else image.name,'speed':speed})
         segments.append(part);position+=seconds
     add('title',4,image=intro,kind='card')
-    add('opening',6,start=when('opening-hd-return')+4,kind='opening')
-    # 完整正常施工輸入，不加速。長走路剪去中段，以實際游標及施工收尾呈現。
-    add('choose-road',6,start=when('gameplay-start'),kind='gameplay')
-    add('construction',10,start=when('road-place')-3,kind='gameplay')
-    add('city-scroll',10,start=when('gameplay-end')-10,kind='gameplay')
+    add('opening',6,start=opening_when('opening-hd-return')+4,kind='opening')
+    pan_start=when('gameplay-start');pan_duration=when('gameplay-end')-pan_start
+    add('city-explore',14,start=pan_start,kind='gameplay-navigation-edit',speed=pan_duration/14)
     add('switches',4,image=controls,kind='card')
     add('F12-original-HD',12,start=when('city-original')-1,kind='theme-switch')
     add('traditional-chinese',4,start=when('locale-zh-Hant'),kind='locale-reading')
     for lang in ['zh-Hans','ja','ko','en']:
-        start=when('picker-'+lang)-.5;end=when('locale-'+lang)+3.5
-        add('F11-'+lang,round(end-start,3),start=start,kind='locale-switch')
-    add('Help',4,start=when('help-en'),kind='help-reading')
+        start=when('picker-'+lang)-.3;end=when('locale-'+lang)
+        add('F11-picker-'+lang,3,start=start,kind='locale-picker-timelapse',speed=max(1,(end-start)/3))
+        add('F11-'+lang,4,start=end,kind='locale-reading')
     add('ending',4,image=ending,kind='card')
     (build/'concat.txt').write_text(''.join("file '"+str(p)+"'\n" for p in segments))
     run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-f','concat','-safe','0','-i',build/'concat.txt','-c','copy',build/'silent.mp4'])
     duration=float(probe(build/'silent.mp4')['format']['duration'])
     # 本次原版 OPL 播放的未加速開場錄音，保留原樣 WAV；剪輯配樂另製，明列交叉淡化循環。
-    music_start=3;music_duration=min(60,when('skip-opening')-music_start-2)
+    music_start=3;music_duration=min(60,opening_when('skip-opening')-music_start-2)
     assert music_duration>=40
-    run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-ss',str(music_start),'-i',r/'session.mkv','-t',str(music_duration),
+    run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-ss',str(music_start),'-i',opening_run/'session.mkv','-t',str(music_duration),
          '-vn','-ar','48000','-ac','2','-c:a','pcm_s16le',out/'original-game-music.wav'])
     source_audio=audio_check(out/'original-game-music.wav')
     assert not source_audio['silence_windows'], '開場配樂有長靜音，須回查來源'
@@ -149,7 +171,7 @@ def main():
     # 頻譜及波形便於人工複核，技術訊號不冒充人耳驗收。
     run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-i',out/'original-game-music.wav',
          '-lavfi','showspectrumpic=s=1280x480:legend=1','-frames:v','1',out/'music-spectrum.png'])
-    sample_names=['opening','construction','city-scroll','F12-original-HD','traditional-chinese','F11-zh-Hans','F11-ja','F11-ko','F11-en','Help']
+    sample_names=['opening','city-explore','F12-original-HD','traditional-chinese','F11-zh-Hans','F11-ja','F11-ko','F11-en']
     samples=[]
     for name in sample_names:
         item=next(t for t in timeline if t['name']==name)
@@ -159,13 +181,16 @@ def main():
             file=out/(name+('-'+str(j) if len(times)>1 else '')+'.png')
             run(['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-n','-ss',str(t),'-i',movie,'-frames:v','1','-threads','1',file])
             samples.append({'file':file.name,'time':round(t,3),'sha256':sha(file)})
-    run(['montage',*[out/s['file'] for s in samples],'-thumbnail','384x240','-tile','3x','-geometry','+8+8','-background','#18352a',out/'contact-sheet.png'])
+    contact_sheet([out/s['file'] for s in samples],out/'contact-sheet.png')
     rights={'schema':1,'distribution':'local-only; no public upload authorized','version':report['version'],
             'video_source':'actual packaged Linux GUI X11 capture, normal original EXE via dosgolem; approved HD presentation',
             'music_source':'same packaged original game live OPL output via fixed upstream YMFM, recorded from isolated PulseAudio monitor',
-            'music_edit':{'source_session_sha256':report['session_sha256'],'source_start_seconds':music_start,
+            'music_edit':{'source_session_sha256':sha(opening_run/'session.mkv'),'source_start_seconds':music_start,
                           'source_duration_seconds':music_duration,'crossfade_loop_seconds':.8,'looped':True,
                           'synchronized_gameplay_audio':False,'gain':2,'tempo_change':False},
+            'video_edit':'actual gameplay cuts; city navigation and locale-picker waits are time-compressed, listed per shot; no invented gameplay frames',
+            'opening_capture':{'file':str(opening_run),'session_sha256':sha(opening_run/'session.mkv'),
+                'completed_flow':opening_run==r,'scope':'valid normal opening and music; earlier run stopped at unsupported empty-land assumption; not a completed gameplay receipt'},
             'original_game_sha256':'798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3',
             'music_public_distribution_rights':'not established; local only',
             'native_windows_macos_audio_tested':False,'human_listening':False}
@@ -177,7 +202,7 @@ def main():
             'full_decode_passed':True,'black_intervals':[],'freeze_events':re.findall(r'freeze_(?:start|end|duration): [0-9.]+',check.stderr),
             'freeze_policy':'paused city, native budget/Help reading and title cards intentionally hold; actual operations retained',
             'text_geometry':geometry,'sample_frames':samples,'human_visual_review_pending':True,
-            'tool_sha256':sha(Path(__file__).read_bytes()),'original_packages_unchanged':True}
+            'tool_sha256':hashlib.sha256(tool_source).hexdigest(),'original_packages_unchanged':True}
     (out/'verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     files=[{'file':str(p.relative_to(out)),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.iterdir()) if p.is_file()]
     (out/'SHA256SUMS.json').write_text(json.dumps({'schema':1,'version':report['version'],'local_only':True,'files':files},ensure_ascii=False,indent=2)+'\n')

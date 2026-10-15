@@ -2,9 +2,9 @@
 
 以 dosgolem 執行原版《模擬台北》，保留城市經營玩法，加入 1280×800 的 HD 呈現、Noto 高清黑體與五語系介面。
 
-本機交付版本：`v.1.0.0-20261015`。三平台完整包只留本機，來源 tag 保存在私人儲存庫。
+本機交付版本：`v.1.0.1-20261015`。三平台完整版均含遊戲與 HD 素材，完整解壓後即可遊玩。
 
-玩家須自備合法取得的原版資料。原版執行檔、資料、美術、音訊與權利未明的 HD 素材
+本儲存庫保存原創程式與建置工具。本機完整版使用使用者提供的原版資料；原版執行檔、資料、美術、音訊與權利未明的 HD 素材
 只留本機，不加入此儲存庫或公開封包。下列選定的文件截圖依使用者指示收錄於私人儲存庫，
 不納入自有程式授權。
 
@@ -257,14 +257,14 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 
 ## 本機封包與執行
 
-版本 `v.1.0.0-20261015`，位於專案的 `dist-all/v.1.0.0-20261015/full-local/`。
-完整包含本機原版資料及衍生 HD 素材，沒有上傳 GitHub 或公開 Release。
+版本 `v.1.0.1-20261015`，位於專案的 `dist-all/v.1.0.1-20261015/full-local/`。
+每包含 23 個原版遊戲檔、586 個執行期素材及程式／授權等文件，共 629 檔。包含 `RS201.EXE`、兩份 ROM、DT0–9 與 DSA1–6，不需要另行匯入遊戲。完整包只留本機。
 
 | 平台／架構 | 封包 | 解壓後入口 |
 |---|---|---|
-| Linux amd64 | `Taipei-v.1.0.0-20261015-linux-amd64-full-local.tar.gz` | `start.sh` |
-| Windows amd64 | `Taipei-v.1.0.0-20261015-windows-amd64-full-local.zip` | `Start.cmd` |
-| macOS amd64／arm64 | `Taipei-v.1.0.0-20261015-macos-universal-full-local.zip` | `start.command` |
+| Linux amd64 | `Taipei-v.1.0.1-20261015-linux-amd64-full-local.tar.gz` | `start.sh` |
+| Windows amd64 | `Taipei-v.1.0.1-20261015-windows-amd64-full-local.zip` | `Start.cmd` |
+| macOS amd64／arm64 | `Taipei-v.1.0.1-20261015-macos-universal-full-local.zip` | `start.command` |
 
 請完整解壓後啟動，預設開啟 HD。`original/`、`materials/`、`locales/`須保留在程式旁。
 版本可用啟動器的 `-version` 查詢。Linux需要X11、ALSA及執行期系統函式庫，建置與測試環境為Debian 12。
@@ -275,11 +275,17 @@ F4 六圖表已依正常遊玩抽驗通過，包含開啟、F12 切換、返回�
 | Windows | `%LOCALAPPDATA%\TaipeiDosgolem\saves\` |
 | macOS | `$HOME/Library/Application Support/Taipei dosgolem/saves/` |
 
-三包的逐檔內容、必要素材與字型皆已核對。Linux與Windows Wine使用實際封包，驗B開場、F11／F12／Help、設定寫入及缺資料錯誤；Linux預設音訊已擷取確認非靜音。
+三包的逐檔內容、必要素材與字型皆已核對。Linux與Windows Wine使用實際封包，驗B開場、F11／F12／Help、設定寫入及缺資料錯誤。Linux原版／HD各20秒錄音沒有新增缺料補零，約58秒遊戲開場錄音與影片音軌通過非靜音、無削波及無半秒以上長靜音檢查。
 Windows Wine不等同Windows真機。macOS已驗universal兩個slice、內容、系統依賴及啟動器結構，原生執行與使用者目錄寫入未驗；封包未簽章或公證。
-完整正常存退讀與DOS退出沿[插畫與玩家抽驗](docs/spec/039-illustration-animation.md)，本次封包啟動抽驗不冒稱完整通關或音訊人耳確認。
+本版正常新遊戲、F11／F12、存讀檔與DOS退出通過，原版存檔與前版相同；範圍見[音訊與呈現修正](docs/spec/042-presentation-audio-continuity.md)。技術錄音不等於人耳確認或完整通關。
 
-各包SHA-256與驗收索引在本機 `dist-all/v.1.0.0-20261015/SHA256SUMS.json`，詳細界線見[三平台封包契約](docs/spec/040-local-platform-packages.md)。
+各包SHA-256與驗收索引在本機 `dist-all/v.1.0.1-20261015/SHA256SUMS.json`。封裝方式沿[三平台契約](docs/spec/040-local-platform-packages.md)，新版驗證見[042](docs/spec/042-presentation-audio-continuity.md)。
+
+## 本機推廣影片
+
+`dist-all/v.1.0.1-20261015/promo/Taipei-v.1.0.1-20261015-promo.mp4`，76 秒、1280×800、H.264／AAC。
+
+影片包含實際城市操作、F12 原版／HD 切換，以及 F11 繁中、簡中、日文、韓文與英文切換。導航與選單等待經剪輯，配樂取自同一正式封包的開場錄音。影片、預覽圖、原版配樂 WAV、來源與雜湊只留本機，詳細範圍見[影片契約](docs/spec/041-local-promo.md)。
 
 ## 開發與文件
 

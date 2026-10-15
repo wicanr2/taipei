@@ -12,7 +12,7 @@ import tarfile
 import time
 import zipfile
 
-from hd_source_audit import cell, MATERIAL, scene
+from hd_source_audit import scene
 from promo_render import audio_check
 
 LANGS = ['zh-Hant', 'zh-Hans', 'ja', 'ko', 'en']
@@ -113,21 +113,82 @@ def audio_probe(out):
         'cpu_affinity':sorted(os.sched_getaffinity(0)),'results':results},ensure_ascii=False,indent=2)+'\n')
 
 
+def accept_prefix(out):
+    """只回核已完成的必要前段，不將後續 Help 自動化失敗改寫成成功。"""
+    manifest=json.loads(Path('/bundle/manifest.json').read_text())
+    events=json.loads((out/'events.json').read_text())
+    shots=[];states={}
+    required=['city-hd','city-scrolled','city-original','city-HD-return']+['locale-'+l for l in LANGS]
+    for label in required:
+        raw=(out/(label+'-capture.zip')).read_bytes()
+        with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            s=json.loads(z.read('status.json'))
+            assert sha(z.read('frame-index.bin'))==s['frame_index_sha256']
+            assert s['version']==manifest['version'] and s['prototype'] is False
+            assert s['original_sha256']=='798db7f69e287690814f4e7b588be733fc0ad28a6ad943eb397d1f82528db3b3'
+            assert not s.get('unimplemented')
+            if label=='city-original':
+                def rgba(data, scale=False):
+                    cmd=['convert','png:-']+(['-filter','point','-resize','1280x800!'] if scale else [])
+                    return subprocess.check_output(cmd+['-depth','8','rgba:-'],input=data)
+                assert rgba(z.read('frame.png'),True)==rgba(z.read('presentation.png'))
+        states[label]=s
+        shots.append({'label':label,'capture_sha256':sha(raw),'language':s['language'],'hd_enabled':s['hd_enabled']})
+    assert states['city-scrolled']['map_origin']['X']>states['city-hd']['map_origin']['X']
+    for label in ['city-original','city-HD-return']:
+        for field in ['frame_index_sha256','key_reads','map_origin','file_ops']:
+            assert states[label][field]==states['city-scrolled'][field]
+    for lang in LANGS:
+        s=states['locale-'+lang]
+        assert s['language']==lang and s['hd_enabled'] and s['hd']['budget'] and s['hd']['localized_fields']>=25
+        for field in ['frame_index_sha256','key_reads','palette']:
+            assert s[field]==states['locale-zh-Hant'][field]
+    pans=[e for e in events if e['label'].startswith('city-pan-')]
+    assert len(pans)==32 and all(e['original_read']['Word']==0x4d00 for e in pans)
+    full=json.loads((out/'full-package-check.json').read_text());index=json.loads(Path('/dist/SHA256SUMS.json').read_text())
+    assert full['version']==index['version']==manifest['version']
+    assert {p['sha256'] for p in full['packages']}=={p['sha256'] for p in index['packages']}
+    end=next(e['video_time'] for e in events if e['label']=='budget-close')
+    result={'schema':1,'issue':63,'version':manifest['version'],'source_commit':manifest['source_commit'],
+        'binary_sha256':sha(Path('/bundle/Taipei').read_bytes()),'normal_gui':True,'checkpoint':False,'state_injection':False,
+        'scenario':'DISA1.DSA','actual_package_launcher':True,'default_unmuted_timing':False,'host_audio_muted':True,
+        'custom_steps_per_update':False,'construction_tested':False,'city_scroll_verified':True,'native_dos_exit_tested':False,
+        'all_five_locales':LANGS,'f12_same_indexed_frame':True,
+        'f12_palette_identical':states['city-original']['palette']==states['city-scrolled']['palette'],
+        'f12_scope':'same city, indexed pixels, DOS key reads and files; native clock/palette may continue between captures',
+        'audio':states['locale-en']['audio'],
+        'events':events,'screenshots':shots,'session_sha256':sha((out/'session.mkv').read_bytes()),
+        'capture_prefix_validated':True,'raw_flow_completed':False,'last_valid_video_time':end,
+        'unused_tail':'optional Help chord automation failed; subsequent quit menu and timeout excluded from movie',
+        'capturing_driver_sha256':None,'capturing_driver_limit':'driver was edited after process start; original inputs/receipts/video preserved; future runs snapshot executed source',
+        'acceptor_tool_sha256':sha(Path(__file__).read_bytes())}
+    (out/'capture-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+    print('PASS 回核必要遊玩前段；後續 Help 失敗與未驗原版退出如實保留',flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--audio-probe', action='store_true')
+    ap.add_argument('--muted', action='store_true')
+    ap.add_argument('--accept-prefix', action='store_true')
     a = ap.parse_args(); out = a.out
     assert out.stat().st_uid == os.getuid() and not (out/'capture-result.json').exists()
+    if a.accept_prefix:
+        accept_prefix(out);return
     if a.audio_probe:
         audio_probe(out);return
     package_check(out)
+    driver_source=Path(__file__).read_bytes()
+    (out/'executed-driver.py').write_bytes(driver_source)
     bundle = Path('/bundle'); manifest = json.loads((bundle/'manifest.json').read_text())
     env = os.environ.copy(); env['XDG_DATA_HOME'] = str(out/'user-data')
     receipts = out/'user-data/taipei-dosgolem/receipts'
     events = []; shots = []; recorder = None; recording_start = None
     log = (out/'app.log').open('wb')
     command = [str(bundle/'start.sh'), '-stop-file', str(out/'stop')]
+    if a.muted:
+        command += ['-mute', '-receipt-every-updates', '6']
     game = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
 
     def current():
@@ -220,31 +281,8 @@ def main():
         assert any(f.get('Op')=='read' and f.get('Name','').lower()=='disa1.dsa' for f in initial['file_ops'])
         assert scene(initial, frame)
         mark('gameplay-start');time.sleep(2)
-        # 原生工具列從 0 開始，Down 選公路／捷運。遊標與施工均由 DOS 處理。
-        native('Down','road-tool');native('space','road-submenu')
-        wait(lambda s:s.get('hd',{}).get('panel')=='tool-02','road-menu-ready');time.sleep(2)
-        native('space','road-confirm')
-        # DISA1 的完整已知陸地，選離左上最近的 5×5 地景，避免猜測畫面。
-        frame = current()[2]
-        candidates = [(x,y) for y in range(2,13) for x in range(2,26)
-                      if all(set(cell(frame,5+(x+dx)*9,34+(y+dy)*9))<=MATERIAL and
-                             not set(cell(frame,5+(x+dx)*9,34+(y+dy)*9)) & set(range(144,148))
-                             for dy in range(-2,3) for dx in range(-2,3))]
-        assert candidates, 'DISA1 沒有完整已知施工陸地'
-        target = min(candidates,key=lambda p:p[0]+p[1]);cursor=[0,0]
-        for axis, names in [(0,('Left','Right')),(1,('Up','Down'))]:
-            while cursor[axis]!=target[axis]:
-                d=1 if cursor[axis]<target[axis] else -1
-                native(names[d>0], 'road-walk');cursor[axis]+=d
-        before = current()[0];old_budget=int(before['hd']['footer_text'][3])
-        native('space','road-place')
-        native('Right','uncover-road');native('Right','uncover-road-2')
-        placed, frame = shot('road-constructed')
-        assert int(placed['hd']['footer_text'][3])<old_budget, '原版未扣施工費'
-        mark('construction-verified',before_budget=old_budget,after_budget=int(placed['hd']['footer_text'][3]),cell=list(target))
-        time.sleep(4)
-        # Tab 回工具列，再選工具零；正常方向鍵捲動到新區域。
-        native('Tab','toolbar-return');native('Up','bulldozer-tool');native('space','map-cursor')
+        # 正常選工具零並移動游標；只導航，不假設城市有可施工空地。
+        native('space','map-cursor')
         for i in range(32): native('Right','city-pan-'+str(i))
         wait(lambda s:s.get('map_origin',{}).get('X',0)>initial['map_origin']['X'],'city-scrolled')
         shot('city-scrolled');mark('gameplay-end');time.sleep(3)
@@ -267,25 +305,20 @@ def main():
             assert after['key_reads']==before['key_reads']
             shot('locale-'+lang);time.sleep(4)
         native('Escape','budget-close')
-        # 影片尾聲回城市，保持英文選擇，展示前端 Help。
-        subprocess.run(['xdotool','keydown','Shift_L'],check=True)
-        try:front('F1')
-        finally:subprocess.run(['xdotool','keyup','Shift_L'],check=True)
-        wait(lambda s:s.get('help_panel') is True,'help');shot('help-en');time.sleep(4)
-        front('Escape');wait(lambda s:s.get('help_panel') is False,'help-close')
         shot('final-city');time.sleep(3)
         final=current()[0];mark('recording-end')
         recorder.send_signal(signal.SIGINT);assert recorder.wait(timeout=20) in (0,255);video_log.close();recorder=None
         result={'schema':1,'issue':63,'version':manifest['version'],'source_commit':manifest['source_commit'],
             'binary_sha256':sha((bundle/'Taipei').read_bytes()),'normal_gui':True,'checkpoint':False,'state_injection':False,
-            'scenario':'DISA1.DSA','actual_package_launcher':True,'default_unmuted_timing':True,
+            'scenario':'DISA1.DSA','actual_package_launcher':True,'default_unmuted_timing':not a.muted,
+            'host_audio_muted':a.muted,'custom_steps_per_update':False,
             'cpu_affinity':sorted(os.sched_getaffinity(0)),
-            'construction_verified_by_native_cost':True,'native_dos_exit_tested':False,
+            'construction_tested':False,'city_scroll_verified':True,'native_dos_exit_tested':False,
             'all_five_locales':LANGS,'f12_original_hd_same_native_frame':True,
             'audio':final['audio'],'events':events,'screenshots':shots,'recording_command':recording_command,
-            'session_sha256':sha((out/'session.mkv').read_bytes()),'tool_sha256':sha(Path(__file__).read_bytes())}
+            'session_sha256':sha((out/'session.mkv').read_bytes()),'tool_sha256':sha(driver_source)}
         (out/'capture-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
-        print('PASS 正式封包遊玩、施工、捲動、F12、F11 五語系與音訊擷取',flush=True)
+        print('PASS 正式封包正常城市捲動、預算、F12、F11 五語系與擷取',flush=True)
     finally:
         if recorder and recorder.poll() is None:
             recorder.send_signal(signal.SIGINT)

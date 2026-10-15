@@ -7,6 +7,8 @@
 
 | 範圍 | Issue | 必要證據 | 完成限制 |
 |---|---|---|---|
+| 完整版回核與推廣片 | [#63](https://github.com/wicanr2/taipei/issues/63) | 三實包23個原版檔／629總檔；正式Linux正常城市捲動、F12、F11五語系；76秒H.264／AAC、原版實際錄音、完整解碼／音訊／黑幀／動作抽樣及來源清單 | [041](spec/041-local-promo.md) CONFORMED。有效前段回核，不把後續腳本失敗改為完整流程。字卡／五語系已讀圖；只留本機，人耳及外平台真機未驗 |
+| 音訊連續性修正 | [#64](https://github.com/wicanr2/taipei/issues/64) | 低水位補給、呈現快取／浮層隔離與全色四倍像素；完整app測試、原版／HD各20秒實際WAV、正常存退讀、三平台新實包 | [042](spec/042-presentation-audio-continuity.md) CONFORMED，限Linux技術音訊與已驗範圍。v.1.0.1-20261015三包各629檔，Linux／Wine Help及F11／F12通過；原版SAV與前版相同。Windows／macOS原生音訊與人耳未驗 |
 | 三平台本機封包 | [#9](https://github.com/wicanr2/taipei/issues/9) | 固定tag四架構／universal、三包逐檔／版本／權利／SHA、實際材料與缺件反例；Linux／Wine實包啟動、中文空白路徑、設定／F11／F12／Help及可見缺資料錯誤 | [040](spec/040-local-platform-packages.md) 限本機內容與已測平台CONFORMED。v.1.0.0-20261015三包各629檔；Linux預設音訊非靜音。Mac兩slice／系統依賴／內容與launcher結構已驗，原生執行／存檔目錄／音訊未驗；Windows為Wine。無公開Release |
 | 開場、插畫與動畫 | [#32](https://github.com/wicanr2/taipei/issues/32) | 209別名／197種、179完整正式圖、261檔重生、六ABI唯讀、來源／色盤／素材／遮擋／未知屏障正反例、正常十圖與五語系、F12／Help及同程式存退讀 | [039](spec/039-illustration-animation.md) 限完整來源與正常代表CONFORMED。十圖165591格及十像素反例；r19正常前段、r20完整存退讀退出分列，不能把前段補為完整退出。92張README；全部出現分支、外平台及正式封包另驗 |
 | 完整地圖圖庫 | [#62](https://github.com/wicanr2/taipei/issues/62)、[#30](https://github.com/wicanr2/taipei/issues/30) | 九圖庫實際1134項／1049種、301種新增非空來源、十三整圖、十五區域Noto字墨、來源／色盤／真實資源故障、正常五種代表與C1存讀退出 | [038](spec/038-map-completion.md) 限來源呈現與實際抽樣CONFORMED；24381來源反例、12資源故障、136檔重生、42張真實GUI與42像素反例、93567-byte SAV與舊版相同。r3照片為正常來源前段，r4完成C1存讀退出；C2兩高階路由未知、成長／災害分支、外平台真機及正式封包未驗 |

@@ -2,7 +2,7 @@
 
 核對日期：2026-10-15。目標是完成原版與 dosgolem 整合，並提供 HD 呈現。
 
-HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源已全部接入，038限來源呈現與五種正常代表CONFORMED；C1存讀退出及四架構編譯通過。README 含遊戲背景與92張實際截圖。開場／插畫／動畫已完成來源接入與正常代表抽驗，本機三平台封包v.1.0.0-20261015已驗內容、Linux／Wine實際啟動與Linux音訊；macOS原生執行未驗。
+HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。九個地圖圖庫的非空來源、開場／插畫／動畫與正常代表已完成。現行本機交付為v.1.0.1-20261015，三平台各629檔且包含完整遊戲；音訊補給修正、正常存退讀、Linux／Wine實包啟動及Linux技術音訊通過。另交付76秒遊玩／原版HD／五語系影片。README保留92張實圖與背景介紹；macOS原生執行與人耳未驗。
 
 主機gh已回讀#29城市框架、#30九圖庫地圖、#31 Noto文字、#44道路及#62補齊為CLOSED。039完成非9×9開場、插畫、移動物件與動畫的完整來源及正常代表抽驗；#32／#28及#5–#9已結案。使用者本次追加#63影片與#64音樂連續性，另由041／042接續；沒有公開Release。未逐種玩過的成長／災害或C2路由保留證據限制，不自行重新開啟已完成呈現工作。
 
@@ -27,17 +27,18 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 
 ## 目前狀態表
 
-本次追加工作為 [#63](https://github.com/wicanr2/taipei/issues/63)：回核完整版包含遊戲，錄製正常遊玩、原版／HD 與五語系切換，並檢查音樂。契約與工具見 [041](docs/spec/041-local-promo.md)。既有封包與來源 tag 保持不變。
+本次追加 [#63](https://github.com/wicanr2/taipei/issues/63) 已完成完整版回核及76秒影片，契約與工具見 [041](docs/spec/041-local-promo.md)。舊版封包與tag保留，新交付由 [042](docs/spec/042-presentation-audio-continuity.md) 的音訊修正另建。
 
-音樂連續性追加 [#64](https://github.com/wicanr2/taipei/issues/64)。現行 v.1.0.0 封包已證實含完整遊戲，但在本機無視訊錄影也有 PCM 不足，先前非靜音檢查不足以證明連續播放正常。修正契約見 [042](docs/spec/042-presentation-audio-continuity.md)，不得將舊包音樂稱為已通過連續性驗收。
+音樂連續性 [#64](https://github.com/wicanr2/taipei/issues/64) 由042完成本輪範圍。舊v.1.0.0雖含完整遊戲，先前的非靜音檢查不足以證明連續性；目前交付使用v.1.0.1。
 
-042候選已在原版／HD各20秒實際WAV通過無新增補零、無削波與無長靜音，收據為`workspace/runs/promo-v.1.0.0-20261015-r16/audio-probe.json`。主機更新30次但音訊按原版虛擬時鐘補給；靜音研究60次／固定單批不變。完整app測試通過，正常存退讀另驗後建立`v.1.0.1-20261015`新tag／實包，不覆寫舊版。技術錄音不等於人耳或外平台真機確認。
+042已在原版／HD各20秒實際WAV通過無新增補零、無削波與無長靜音，正式實包約58秒開場錄音及76秒影片音軌另驗。主機更新30次，音訊按原版虛擬時鐘補給；靜音研究60次／固定單批不變。完整app測試與正常存退讀退出通過，93567-byte原版SAV與前版相同。技術錄音不等於人耳或外平台真機確認。
 
-現行交付以040及下方「本機交付」為準。個別舊批次的未驗限制只限該份收據，不重新開啟已由038／039／040閉合的工作。
+現行交付以042及下方「本機交付」為準，封裝方式沿040。個別舊批次的未驗限制只限該份收據，不重新開啟已由038／039／040閉合的工作。
 
 | 項目 | 現況 | 證據或限制 |
 |---|---|---|
-| 本機交付 | v.1.0.0-20261015；來源tag57c5596。Linux amd64、Windows amd64、macOS universal三包各629檔，原版／586材料／授權／SHA與缺件反例通過。Linux與Wine實包B開場、F11／F12／Help、設定寫入及缺資料錯誤通過；Linux預設音訊非靜音 | [040](docs/spec/040-local-platform-packages.md)。唯一交付根dist-all/v.1.0.0-20261015/，完整版只留本機；Windows／macOS真機、人耳與所有事件／成功結局分支未驗 |
+| 本機交付 | v.1.0.1-20261015；來源tag b37d672。Linux amd64、Windows amd64、macOS universal三包各629檔，完整23個遊戲檔、586材料、授權／SHA與缺件反例通過。Linux與Wine實包B開場、F11／F12／Help、設定及缺資料錯誤通過 | [042](docs/spec/042-presentation-audio-continuity.md)。唯一交付根dist-all/v.1.0.1-20261015/，完整版只留本機；Windows／macOS真機、人耳與全部事件分支未驗 |
+| 推廣影片 | 76秒、1280×800、H.264／AAC，實際城市捲動、原版／HD及五語系；實包開場錄音作配樂，完整解碼／音訊／黑幀及抽樣動作通過，標題與五語系已讀圖 | [041](docs/spec/041-local-promo.md)。movie SHA b77100db，完整版與影片來源／未使用失敗尾段明列；只留本機 |
 | 開場與動畫 | 039限完整來源與正常代表CONFORMED。179種正式圖／260 PNG及manifest乾淨重生相同，209別名／197種、來源／遮擋／色盤／素材故障通過。十圖165591位置及十個有效像素反例通過；原版／五語系／Help、正常存讀與DOS退出通過 | [039](docs/spec/039-illustration-animation.md)、#32。r19是正常插畫前段，r20同程式完成存退讀，不能把r19補成完整退出。未逐項試玩所有事件／成功結局；外平台與封包另驗 |
 | 完整地圖圖庫 | 038限完整來源呈現與五種正常代表CONFORMED。新增301種非空來源、九圖庫1049種全部辨識；整圖／字墨／正反對照、136檔乾淨重生、42張真實GUI及C1原版存讀退出通過，93567-byte SAV與舊版相同 | [038](docs/spec/038-map-completion.md)、[#62](https://github.com/wicanr2/taipei/issues/62)。r3照片為正常來源前段，r4驗完整存讀退出；C2兩高階候選路由原因未定，正常出現分支未抽驗。開場／動畫及正式封包另驗 |
 | 港口與機場 | 037 限 72 格／72 種來源與已驗路徑 CONFORMED。正常 DISA4 冷讀／捲動、逐項 F11 五語系／F12、原版存讀與退出，十二張全圖／五項正反對照通過。原版 SAV 與無運輸 HD 基線相同；核心／核能／公共同源回歸及素材重生通過 | [037](docs/spec/037-transport-facilities.md)、[#61](https://github.com/wicanr2/taipei/issues/61)。標準 Linux 入口已提升，四架構重建；新建機場、其他相位、完整狀態對拍、外平台真機及封包未驗 |
@@ -51,7 +52,7 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 啟動入口 | `模擬台北/RS201/RS201.EXE /A /D /x` | 兩個 EXE 同雜湊；批次檔與兩個 config 一致 |
 | dosgolem 啟動 | 冷啟動到主選單與城市選擇通過，兩次主選單畫面及暫存器一致；新增 Caps Lock 補丁通過核心與硬體讀鍵測試 | [啟動基線](docs/re/002-dosgolem-startup.md)、[Caps Lock](docs/spec/007-bios-caps-lock.md)；補丁只在隔離副本與本專案保存 |
 | 原版前端與存讀檔 | 正常 GUI 冷啟動、新遊戲、電線施工、檔名退格、原版存檔、離開與全新啟動讀檔通過；施工格讀回相同 | [#4](https://github.com/wicanr2/taipei/issues/4)、[前端契約](docs/spec/005-frontend-preview.md)；限已抽樣玩家路徑 |
-| 即時音訊 | OPL2 節奏與旋律串流已接實際播放器；冷啟動 monitor 非靜音，延後聚焦及有界緩衝通過 | [音訊契約](docs/spec/009-opl2-audio.md)；硬體規格近似，尚未做人耳與平台真機確認 |
+| 即時音訊 | 原版OPL2節奏／旋律維持固定YMFM與原版時鐘，新增低水位補給；Linux原版／HD各20秒無新增補零，實包約58秒音源及76秒成片非靜音／無削波／無長靜音 | [009](docs/spec/009-opl2-audio.md)、[042](docs/spec/042-presentation-audio-continuity.md)。硬體規格近似，人耳與Windows／macOS真機未驗 |
 | HD 範圍 | 所有圖片與操作介面已定案；完整來源初盤為 118 個 ROM 成員、1317 筆圖片來源，保留別名與未知項；另取得 402 個中文字模及原始字碼 | [完整範圍](docs/spec/015-full-hd-scope.md)、[來源盤點](docs/re/008-full-asset-inventory.md)、[字模證據](docs/re/009-chinese-font-sources.md)；數量不代表全部重繪完成 |
 | HD 接入 | 已接入 B 地景、六 Noto 標題、六功能下拉選單、十四工具、五工具子選單、說明與啟動選單、城市框架／F1–F6、底部費用／年月／資金、存讀檔與離開提示、完整預算面板及六圖表。025 的 116 份正常收據、十三項有效呈現破壞、施工存退讀與兩次退出通過；兩側各 40.56 億步、169 次明示抽樣原版狀態及實際存檔相同 | [預算契約](docs/spec/025-budget-panel.md)、[檔案視窗](docs/spec/023-file-dialogs.md)、[圖表契約](docs/spec/029-chart-windows.md)；其他圖片、尚未重繪的視窗、場景／動畫及正式封包未完成 |
 | 城市六功能選單 | 限六個完整下拉面板、二十九選取達 CONFORMED；完整來源、固定面板及區外、實際資源、正常 GUI、存退讀與原版狀態通過，四平台編譯通過 | [022](docs/spec/022-city-function-menus.md)、[#37](https://github.com/wicanr2/taipei/issues/37)；確認後的功能視窗及完整 HD 另驗 |
@@ -70,10 +71,13 @@ HD 五語系已完成已盤點來源與必要短流程，範圍見 030–033。�
 | 預算驗收工具 | #42 的 2400 秒整批上限與 #43 的正常冷讀後 0 鍵暫停，已由 `gui-budget-cold-r4/` 完整通過。施工格、資金 79980、預算 9／99、兩次原版退出及實際存檔通過；前件保留 | [#42](https://github.com/wicanr2/taipei/issues/42)、[#43](https://github.com/wicanr2/taipei/issues/43)；同一 binary、image 與遊戲時間，只修驗證條件 |
 | 普通按鍵研究同步 | #41 的明示 ASCII 讀取與 release 確認已由正常災難台北開預算驗證；九鍵各讀一次，六個普通鍵及三個方向／功能鍵通過，保留片頭特殊入口 | [#41](https://github.com/wicanr2/taipei/issues/41)；`budget-native-source-ready/`；只改驗證工具，不改產品或遊戲速度 |
 | 預算操作的時間缺口 | 024 限時間來源修正達 CONFORMED。#40 修正 DOS 時間從 raw PIT IRQ 改讀 BIOS 計數；四組受控反例轉綠，正常預算操作 41 份及完整 HD 施工存退讀 45 份通過，兩次原版退出。四架構編譯通過 | [024](docs/spec/024-dos-system-clock.md)；時間採既有整數近似，沒有新增真機或逐週期一致聲明 |
-| 目前程式與跨平台 | 正式來源tag57c5596，四架構及macOS universal均重建。Linux f7ce345a、Windows 95b0ef99、macOS amd64 ab4ed7be／arm64 6e8aa328／universal 94a654d6；完整SHA在本機inputs.json與040 | 039已驗fa212691研究入口保留；正式三包使用完整版本字串，meta之外無模擬／呈現改動。Mac僅結構／內容，非真機 |
-| 封包 | 040限本機交付範圍CONFORMED，三包與SHA256SUMS／smoke驗收已完成 | dist-all/v.1.0.0-20261015/full-local/；acceptance 2d9e2201，完整SHA見040。未上傳原版／HD或建立公開Release |
+| 目前程式與跨平台 | 正式來源tag b37d672，四架構及macOS universal由乾淨tag重建；完整二進位SHA在workspace/runs/release-v.1.0.1-20261015/inputs.json | 042只改呈現負載與音訊補給，原版EXE／規則／格式不變。Mac僅結構／內容，非真機 |
+| 封包 | 042限本機交付範圍CONFORMED，三包、SHA256SUMS、Linux／Wine實包與promo均完成 | dist-all/v.1.0.1-20261015/；acceptance 52389460，根索引2646c8b3，影片verification 6cceeb34。未上傳原版／HD／音訊／影片或建立公開Release |
 
 ## 文件入口
+
+- 本機76秒影片與完整遊戲回核：[041](docs/spec/041-local-promo.md)、[擷取／前段回核](workspace/tools/promo_capture.py)、[Docker入口](workspace/tools/promo_capture.sh)、[合成](workspace/tools/promo_render.py)、[既有成片收尾](workspace/tools/promo_finalize.py)。
+- 音訊補給與新版封包：[042](docs/spec/042-presentation-audio-continuity.md)、[#64](https://github.com/wicanr2/taipei/issues/64)。舊版與失敗原件保留，不重新開啟無關HD工作。
 
 - 三平台本機封包：[040](docs/spec/040-local-platform-packages.md)、[#9](https://github.com/wicanr2/taipei/issues/9)。來源與HD驗收已完成，依固定tag與現行dist-all契約重建；未授權公開Release。
 

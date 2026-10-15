@@ -124,10 +124,14 @@ def main():
             assert english['save_root'] == str(user_root/'saves')
         subprocess.run(['xdotool','keydown','Shift_L'],check=True)
         try:
-            key('F1')
+            shift_before=sum(i.get('kind')=='keyboard' and i.get('scan')==42 for i in english.get('inputs',[]))
+            wait(lambda s:sum(i.get('kind')=='keyboard' and i.get('scan')==42 for i in s.get('inputs',[]))>shift_before,
+                 'packaged-Shift-ack')
+            subprocess.run(['xdotool','keydown','F1'],check=True)
+            opened,raw=wait(lambda s:s.get('help_panel') is True,'packaged-Help')
         finally:
+            subprocess.run(['xdotool','keyup','F1'],check=True)
             subprocess.run(['xdotool','keyup','Shift_L'],check=True)
-        opened,raw = wait(lambda s:s.get('help_panel') is True,'packaged-Help')
         capture('help-en',raw)
         subprocess.run(['import','-window',window,str(a.out/'x11-window.png')],check=True,timeout=10)
         key('Escape')

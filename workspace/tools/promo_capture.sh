@@ -29,6 +29,7 @@ timeout 1200s docker run --rm --pull never --network none --memory 4g --cpus 4 -
   -e "TAIPEI_AUDIO_PROBE=${TAIPEI_AUDIO_PROBE:-}" \
   -e "TAIPEI_PROBE_BINARY=${TAIPEI_PROBE_BINARY:-}" \
   -e "TAIPEI_AUDIO_NO_PERIODIC=${TAIPEI_AUDIO_NO_PERIODIC:-}" \
+  -e "TAIPEI_CAPTURE_MUTED=${TAIPEI_CAPTURE_MUTED:-}" \
   --entrypoint bash sha256:d831720f8dfa388af8ad175fa8adeae8f2814dd4637be1e3db6a43274b26f36c -c '
     set -euo pipefail
     test "$(stat -c %u:%g /runs)" = "$(id -u):$(id -g)"
@@ -45,6 +46,7 @@ timeout 1200s docker run --rm --pull never --network none --memory 4g --cpus 4 -
     for i in {1..50}; do pactl info >/dev/null 2>&1 && break; sleep .1; done
     pactl info > "$out/device.txt"
     probe_args=(); test -z "$TAIPEI_AUDIO_PROBE" || probe_args+=(--audio-probe)
+    test -z "$TAIPEI_CAPTURE_MUTED" || probe_args+=(--muted)
     python3 /tools/promo_capture.py --out "$out" "${probe_args[@]}"
     find "$out" -user root -o -type d -name "*.md"
   '
