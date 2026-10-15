@@ -1179,3 +1179,9 @@ ImageMagick montage連續SIGABRT，限制執行緒仍失敗，分類為縮圖工
 release_accept重新回核三包、兩實包GUI、mac結構、35原始檔／RAR、92張README與擁有權，acceptance52389460。追加promo後根索引2646c8b3，影片verification6cceeb34，完整值在版本目錄。041／042限本輪範圍升CONFORMED；README更新現行完整版、含遊戲說明、76秒影片入口與音訊界線。影片／原音／原始收據及素材只留本機。人耳、Windows／macOS真機與所有事件／結局未驗，沒有以技術檢測代替。
 
 收尾再次從實檔核對三包、成片、acceptance及promo清單23檔的位元組與SHA，全數相符。四個Python工具語法與擷取shell語法通過，產品程式自b37d672未再變更。Docker內find檢查workspace／dist-all無root-owned檔或誤建的*.md目錄；新工具／工作紀錄／影片驗證檔均1000:1000。專案標籤容器清單為空，沒有新增或替換工具映像。
+
+### 2026-10-15 #65 README 遊戲故事與推廣文案
+
+依使用者要求補寫「遊戲故事與背景」，以市長上任、城市建設、災難城市復興及五十萬人口目標串接原作玩法，接續介紹HD、F12與F11五語系特色。另依使用者追加指示，原句引用「保留這個台灣本土開發的模擬城市遊戲」，作為專案保存理念。內容依017及ui.tsv的help.goal、上任信、預算、民意與圖表來源，沒有新增原作角色或固定劇情。
+
+載入README標準及文件職責路由；回讀奧米加典藏與中文模擬類目錄，1992／聯邦／資策科技資料相符。Docker內核對README的141個本機連結與圖片引用，無缺件；git diff --check通過。README擁有權1000:1000，workspace／dist-all的find無root-owned或誤建*.md目錄，專案容器清單為空。僅更新README與本歷程，不重跑遊戲、改動封包或版號；明確列檔提交並推送私人儲存庫。
