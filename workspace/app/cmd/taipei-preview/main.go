@@ -66,40 +66,43 @@ var bindings = []binding{
 }
 
 type game struct {
-	illustrations   original.Illustrations
-	catalog         *i18n.Catalog
-	localUI         *localui.UI
-	language        string
-	settingsPath    string
-	localeOpen      bool
-	localeSelection int
-	localeFence     bool
-	localeOverlay   *image.RGBA
-	localeWarning   string
-	helpOpen        bool
-	helpOverlay     *image.RGBA
-	heldScans       map[byte]bool
-	m               *dg.Machine
-	d               *dg.DOS
-	frame           *ebiten.Image
-	rgba            *image.RGBA
-	out             string
-	stopFile        string
-	perUpdate       uint64
-	receiptEvery    uint64
-	frames          uint64
-	mouseButtons    uint16
-	inputs          []inputEvent
-	textMods        keyboard.Modifiers
-	keyStacks       []map[string]any
-	presentation    *image.RGBA
-	hdRenderer      *hd.Renderer
-	hdStats         hd.Stats
-	hdEnabled       bool
-	sound           *sound.Session
-	audioWaits      uint64
-	camera          original.Camera
-	text            original.Text
+	illustrations       original.Illustrations
+	catalog             *i18n.Catalog
+	localUI             *localui.UI
+	language            string
+	settingsPath        string
+	localeOpen          bool
+	localeSelection     int
+	localeFence         bool
+	localeOverlay       *image.RGBA
+	localeWarning       string
+	helpOpen            bool
+	helpOverlay         *image.RGBA
+	heldScans           map[byte]bool
+	m                   *dg.Machine
+	d                   *dg.DOS
+	frame               *ebiten.Image
+	rgba                *image.RGBA
+	out                 string
+	stopFile            string
+	perUpdate           uint64
+	receiptEvery        uint64
+	frames              uint64
+	mouseButtons        uint16
+	inputs              []inputEvent
+	textMods            keyboard.Modifiers
+	keyStacks           []map[string]any
+	presentation        *image.RGBA
+	presentationCache   presentationCache
+	presentationHash    [32]byte
+	presentationWritten bool
+	hdRenderer          *hd.Renderer
+	hdStats             hd.Stats
+	hdEnabled           bool
+	sound               *sound.Session
+	audioWaits          uint64
+	camera              original.Camera
+	text                original.Text
 }
 
 type inputEvent struct {
@@ -123,7 +126,6 @@ func (g *game) Update() error {
 		g.inputs = append(g.inputs, inputEvent{Step: g.m.Steps, Kind: "theme", Text: fmt.Sprint(g.hdEnabled)})
 	}
 	if g.frontendInput() {
-		g.refresh()
 		g.frames++
 		if g.frames%g.receiptEvery == 0 {
 			return g.receipt()
@@ -190,24 +192,28 @@ func (g *game) Update() error {
 	}
 	if g.sound != nil && !g.sound.CanAdvance(g.perUpdate) {
 		g.audioWaits++
-		g.refresh()
 		return nil
 	}
-	end := g.m.Steps + g.perUpdate
-	for g.m.Steps < end && !g.d.Exited && !g.m.CPU.Halted {
-		g.camera.Observe(g.m)
-		g.text.Observe(g.m)
-		g.illustrations.Observe(g.m)
-		if err := g.m.Step(); err != nil {
-			return err
+	for batch := 0; ; batch++ {
+		end := g.m.Steps + g.perUpdate
+		for g.m.Steps < end && !g.d.Exited && !g.m.CPU.Halted {
+			g.camera.Observe(g.m)
+			g.text.Observe(g.m)
+			g.illustrations.Observe(g.m)
+			if err := g.m.Step(); err != nil {
+				return err
+			}
+		}
+		if g.sound != nil {
+			if err := g.sound.Submit(g.m); err != nil {
+				return err
+			}
+		}
+		if g.sound == nil || g.d.Exited || g.m.CPU.Halted || batch >= 7 ||
+			!g.sound.NeedsRefill() || !g.sound.CanAdvance(g.perUpdate) {
+			break
 		}
 	}
-	if g.sound != nil {
-		if err := g.sound.Submit(g.m); err != nil {
-			return err
-		}
-	}
-	g.refresh()
 	g.frames++
 	if g.frames%g.receiptEvery == 0 {
 		if err := g.receipt(); err != nil {
@@ -247,11 +253,25 @@ func (g *game) refresh() {
 	}
 	g.hdRenderer.SetIllustrationDraws(g.illustrations.Draws)
 	g.hdRenderer.SetTextDraws(g.text.Draws, g.text.Images)
-	g.presentation, g.hdStats = g.hdRenderer.Render(px, pal, int(g.m.VideoMode()), g.d.Blocked, g.hdEnabled, g.camera.Origin(g.m))
+	origin := g.camera.Origin(g.m)
+	key := presentationKey{Pixels: sha256.Sum256(px), Palette: pal, Mode: int(g.m.VideoMode()),
+		Blocked: g.d.Blocked, HD: g.hdEnabled, Language: g.language, Origin: origin,
+		TextRevision: g.text.Revision, IllustrationRevision: g.illustrations.Revision}
+	g.presentation, g.hdStats = g.presentationCache.render(key, func() (*image.RGBA, hd.Stats) {
+		return g.hdRenderer.Render(px, pal, key.Mode, key.Blocked, key.HD, origin)
+	})
 	g.paintFrontend()
-	g.frame.WritePixels(g.presentation.Pix)
+	presented := sha256.Sum256(g.presentation.Pix)
+	if !g.presentationWritten || presented != g.presentationHash {
+		g.frame.WritePixels(g.presentation.Pix)
+		g.presentationHash, g.presentationWritten = presented, true
+	}
 }
-func (g *game) Draw(screen *ebiten.Image)  { screen.DrawImage(g.frame, nil) }
+func (g *game) Draw(screen *ebiten.Image) {
+	// Render visible frames, not each undisplayed VM catch-up batch.
+	g.refresh()
+	screen.DrawImage(g.frame, nil)
+}
 func (g *game) Layout(int, int) (int, int) { return 1280, 800 }
 
 func atomic(path string, data []byte) error {
@@ -265,6 +285,7 @@ func (g *game) receipt() error {
 	if g.out == "" {
 		return nil
 	}
+	g.refresh()
 	var audioStats any
 	if g.sound != nil {
 		audioStats = g.sound.Stats()
@@ -313,11 +334,12 @@ func (g *game) receipt() error {
 		return err
 	}
 	var buf bytes.Buffer
-	if err = png.Encode(&buf, g.rgba); err != nil {
+	encoder := png.Encoder{CompressionLevel: png.BestSpeed}
+	if err = encoder.Encode(&buf, g.rgba); err != nil {
 		return err
 	}
 	var presented bytes.Buffer
-	if err = png.Encode(&presented, g.presentation); err != nil {
+	if err = encoder.Encode(&presented, g.presentation); err != nil {
 		return err
 	}
 	if err = atomic(filepath.Join(g.out, "presentation.png"), presented.Bytes()); err != nil {
@@ -523,6 +545,11 @@ func main() {
 	ebiten.SetWindowTitle(catalog.Get(selected, "window.title"))
 	ebiten.SetWindowSize(1280, 800)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
+	if g.sound != nil && !*mute {
+		// 042: PCM consumption paces the VM; fewer host updates leave time for
+		// HD drawing. Each emulation batch and OPL timestamp remains unchanged.
+		ebiten.SetTPS(30)
+	}
 	runErr := ebiten.RunGame(g)
 	if g.sound != nil {
 		g.sound.Close()

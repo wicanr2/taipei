@@ -12,11 +12,12 @@ import (
 // Text observes the original call contract indexed in spec/033. It never writes
 // the VM, handles keys, or reads translated strings.
 type Text struct {
-	Draws   []hd.TextDraw
-	Images  []hd.TextImageDraw
-	Sources []hd.TextImage
-	active  int
-	start   uint16
+	Revision uint64 // Presentation invalidation only; never written to the DOS VM.
+	Draws    []hd.TextDraw
+	Images   []hd.TextImageDraw
+	Sources  []hd.TextImage
+	active   int
+	start    uint16
 }
 
 // ImageMetadata excludes captured pixels from the lightweight status receipt.
@@ -37,6 +38,7 @@ func (t *Text) Observe(m *dg.Machine) {
 	pc := uint32(m.CPU.Seg[dg.CS])*16 + uint32(m.CPU.IP)
 	ea := pc - m.ImageBase + 0x10000
 	if ea == 0x14e97 || ea == 0x14fe6 {
+		t.Revision++
 		if t.active >= 0 && t.active < len(t.Draws) {
 			d := &t.Draws[t.active]
 			if (ea == 0x14e97 && d.Style == 0x14d74) || (ea == 0x14fe6 && d.Style == 0x14ed2) {
@@ -52,6 +54,7 @@ func (t *Text) Observe(m *dg.Machine) {
 	if ea != 0x149b8 && ea != 0x14a92 && ea != 0x14ed2 && ea != 0x14d74 && ea != 0x160c5 && ea != 0x16164 && ea != 0x1605e && ea != 0x16129 && ea != 0x16210 {
 		return
 	}
+	t.Revision++
 	sp := uint32(m.CPU.Seg[dg.SS])*16 + uint32(m.CPU.R[dg.SP])
 	arg := func(n uint32) uint16 { return m.Read16(sp + n) }
 	x, y := int(arg(4)), int(arg(6))

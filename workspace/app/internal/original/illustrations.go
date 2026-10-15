@@ -11,8 +11,9 @@ import (
 // Illustrations observes six original blitters. Unknown calls protect older
 // pictures; neither this observer nor the renderer can write original memory.
 type Illustrations struct {
-	Sources []hd.IllustrationSource
-	Draws   []hd.IllustrationDraw
+	Revision uint64 // Presentation invalidation only; never written to the DOS VM.
+	Sources  []hd.IllustrationSource
+	Draws    []hd.IllustrationDraw
 }
 
 func (t *Illustrations) Observe(m *dg.Machine) {
@@ -23,6 +24,7 @@ func (t *Illustrations) Observe(m *dg.Machine) {
 	if ea != 0x1605e && ea != 0x160c5 && ea != 0x16129 && ea != 0x16164 && ea != 0x161c3 && ea != 0x16210 {
 		return
 	}
+	t.Revision++
 	sp := uint32(m.CPU.Seg[dg.SS])*16 + uint32(m.CPU.R[dg.SP])
 	if sp+22 > uint32(len(m.Mem)) {
 		return

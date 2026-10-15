@@ -70,6 +70,12 @@ func (s *Session) CanAdvance(steps uint64) bool {
 	stats := s.ring.Stats()
 	return stats.Capacity-stats.Buffered >= frames*4
 }
+
+// Keep 350 ms ready independently of the graphics scheduler. A
+// dropped host update must not permanently starve the fixed-clock OPL stream.
+func (s *Session) NeedsRefill() bool {
+	return !s.muted && !s.closed && s.ring != nil && s.ring.Stats().Buffered < 67200
+}
 func (s *Session) Submit(m *dg.Machine) error {
 	s.events += uint64(len(m.OPL))
 	for _, e := range m.OPL {

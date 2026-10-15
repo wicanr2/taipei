@@ -293,18 +293,7 @@ func (r *Renderer) Render(px []byte, pal [256][3]uint8, mode int, blocked, enabl
 		stats.Reason = "frame-shape"
 		return r.frame, stats
 	}
-	for y := 0; y < 200; y++ {
-		for x := 0; x < 320; x++ {
-			c := pal[px[y*320+x]]
-			for dy := 0; dy < 4; dy++ {
-				at := ((y*4+dy)*1280 + x*4) * 4
-				for dx := 0; dx < 4; dx++ {
-					copy(r.frame.Pix[at+dx*4:at+dx*4+3], c[:])
-					r.frame.Pix[at+dx*4+3] = 255
-				}
-			}
-		}
-	}
+	expandIndexed4x(r.frame, px, pal)
 	if !enabled {
 		stats.ChartReason = "original"
 		stats.EndingReason = "original"
